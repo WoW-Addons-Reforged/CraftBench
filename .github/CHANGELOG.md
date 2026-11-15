@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Code Quality & Packaging Infrastructure (`.luacheckrc`, `.gitignore`, `.gitattributes`, `.github/workflows/quality.yml`)**: Added `luacheck` configuration, `Code Quality` GitHub Actions workflow (`luacheck` + `.toc` validation), and export/packaging ignores for dev scripts (`*.js`, `*.py`).
 
 ### Changed
+- **Directory Structure & External Libraries (`Core/`, `Data/`, `Utils/`, `Scripts/`, `Skillet.toc`, `.pkgmeta`, `UI/DetailFrame.lua`)**:
+  - Reorganized root Lua files into `Core/`, `Data/`, and `Utils/`, and moved developer scripts into `Scripts/` (excluded from packaging via `.pkgmeta` and `.gitattributes`).
+  - Removed embedded `Libs/EasySkillet/` and replaced `EasySkillet(...)` in `UI/DetailFrame.lua` with `MenuUtil.CreateContextMenu` (with `EasyMenu` fallback).
+  - Updated `.pkgmeta` externals for `LibStub`, `CallbackHandler-1.0`, and all `Ace3` libraries to pull directly from `https://github.com/WoWUIDev/Ace3`.
 - **Release Workflow & Packaging (`.github/workflows/release.yml`, `.pkgmeta`, `Skillet.toc`)**: Updated GitHub Actions to `actions/checkout@v4` and `BigWigsMods/packager@v2` with `.github/CHANGELOG.md` support, excluded dev scripts in `.pkgmeta`, and fixed `## X-License: GPL-3.0` syntax in `Skillet.toc`.
 
 ### Fixed

@@ -8,6 +8,4 @@ CHANGELOG.md export-ignore
 README.md export-ignore
 LICENSE export-ignore
 LICENSE.txt export-ignore
-ScrapeWowhead.js export-ignore
-SkillLevelsConverter2.py export-ignore
-generate-scrollData-retail.py export-ignore
+Scripts export-ignore

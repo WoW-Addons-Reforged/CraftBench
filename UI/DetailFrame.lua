@@ -1439,10 +1439,20 @@ function Skillet:ReagentButtonOnClick(button, mouse, skillIndex, reagentIndex)
 			newRecipe = self:GetRecipe(newRecipeID)
 			self:PushSkill(self.currentPlayer, self.currentTrade, self.selectedSkill)
 			self:SetTradeSkill(newPlayer, newRecipe.tradeID, skillIndexLookup[newRecipeID])
-		else
+		elseif MenuUtil and MenuUtil.CreateContextMenu then
+			MenuUtil.CreateContextMenu(UIParent, function(_, rootDescription)
+				for _, entry in ipairs(self.data.recipeMenuTable) do
+					rootDescription:CreateButton(entry.text, function()
+						if entry.func then
+							entry.func(entry.arg1, entry.arg2)
+						end
+					end)
+				end
+			end)
+		elseif EasyMenu then
 			local x, y = GetCursorPosition()
 			local uiScale = UIParent:GetEffectiveScale()
-			EasySkillet(self.data.recipeMenuTable, self.recipeMenu, _G["UIParent"], x/uiScale,y/uiScale, "MENU", 5)
+			EasyMenu(self.data.recipeMenuTable, self.recipeMenu, _G["UIParent"], x / uiScale, y / uiScale, "MENU", 5)
 		end
 	end
 end

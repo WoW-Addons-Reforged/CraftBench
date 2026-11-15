@@ -49,8 +49,6 @@ Libs\LibPeriodicTable-3.1\LibPeriodicTable-3.1.lua
 Libs\LibPeriodicTable-3.1\LibPeriodicTable-3.1-Tradeskill\LibPeriodicTable-3.1-Tradeskill.lua
 Libs\LibPeriodicTable-3.1\LibPeriodicTable-3.1-TradeskillResultMats\LibPeriodicTable-3.1-TradeskillResultMats.lua
 Libs\LibPeriodicTable-3.1\LibPeriodicTable-3.1-TradeskillLevels\LibPeriodicTable-3.1-TradeskillLevels.lua
-## Libs\EasySkillet\EasySkillet.lua
-## Libs\EasySkillet\UIDropDownSkillet.xml
 
 #### Localization files
 Locale\Locale-enUS.lua
@@ -64,27 +62,31 @@ Locale\Locale-ruRU.lua
 Locale\Locale-zhCN.lua
 Locale\Locale-zhTW.lua
 
-#### Main files
-Skillet.lua
-SkilletOptions.lua
-SkilletTables.lua
-SkilletData.lua
-SkilletNewsGUI.lua
-SkilletNewsData.lua
-TradeskillInfo.lua
-SkilletQueue.lua
-ThirdPartyHooks.lua
-Upgrades.lua
-SkillLevelData.lua
-SkillLevelData12.lua [AllowLoadGameType standard]
-SkillLevelData1.lua [AllowLoadGameType camelot]
-RecipeGroups.lua
-Inventory.lua
-SkilletPlugin.lua
-FormatMoney.lua
-DebugAids.lua
+#### Core files
+Core\Skillet.lua
+Core\SkilletOptions.lua
+Core\SkilletTables.lua
+Core\SkilletData.lua
+Core\SkilletNewsGUI.lua
+Core\SkilletNewsData.lua
+Core\TradeskillInfo.lua
+Core\SkilletQueue.lua
+Core\ThirdPartyHooks.lua
+Core\Upgrades.lua
+Core\RecipeGroups.lua
+Core\Inventory.lua
+Core\SkilletPlugin.lua
+
+#### Data files
+Data\SkillLevelData.lua
+Data\SkillLevelData12.lua [AllowLoadGameType standard]
+Data\SkillLevelData1.lua [AllowLoadGameType camelot]
+
+#### Utility files
+Utils\FormatMoney.lua
+Utils\DebugAids.lua
 ## Only needed for serious debugging.
-## DeepCopy.lua 
+## Utils\DeepCopy.lua
 
 #### Plugins
 Plugins\AckisRecipeList.lua

@@ -29,8 +29,8 @@ ignore = {
 }
 
 exclude_files = {
-    "SkillLevelData1.lua",
-    "SkillLevelData12.lua",
+    "Data/SkillLevelData1.lua",
+    "Data/SkillLevelData12.lua",
     "Locale/**",
 }
 
