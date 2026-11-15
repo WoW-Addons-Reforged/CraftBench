@@ -22,7 +22,7 @@
 - **Smart Reagent & Inventory Tracking**: Tracks materials across bags, bank, warband/reagent bank, and alts, with recursive craftability counts and automatic vendor reagent purchasing.
 - **Shopping List & Bank/AH Integration**: Displays required materials at banks, guild banks, and auction houses with one-click item retrieval and Auctionator/TSM/OribosExchange integration.
 - **Recipe Notes & Ignored Materials**: Attach custom notes to recipes and reagents, and exclude materials you do not want tracked or purchased.
-- **Planned Expansion**: Built-in one-click material processing (Prospecting, Milling, Disenchanting, Lockpicking, Salvaging) — *Molinari-style integration coming next*.
+- **One-Click Material Processing (`Molinari`-style)**: Hold a configurable modifier key (`Alt` / `Ctrl` / `Shift`) and click items directly in your bags to **Disenchant**, **Prospect**, **Mill**, or **Pick Lock**, with optional glow highlight and max disenchant quality protection.
 
 ## Supported WoW Versions
 - **Retail** (`12.01.05`, `12.01.07`)

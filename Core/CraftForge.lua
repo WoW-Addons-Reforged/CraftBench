@@ -115,6 +115,14 @@ local defaults = {
 		transparency = 1.0,
 		scale = 1.0,
 		ttscale = 1.0,
+		process_enabled = true,
+		process_modifier = "ALT",
+		process_disenchant = true,
+		process_prospect = true,
+		process_mill = true,
+		process_lockpick = true,
+		process_max_quality = 4,
+		process_glow = true,
 		plugins = {},
 		SavedQueues = {},
 	},
@@ -804,6 +812,9 @@ function CraftForge:OnEnable()
 --
 	self:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
 	self:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
+	if self.InitializeProcessing then
+		self:InitializeProcessing()
+	end
 --
 -- MERCHANT_SHOW, MERCHANT_HIDE, MERCHANT_UPDATE events needed for auto buying.
 --

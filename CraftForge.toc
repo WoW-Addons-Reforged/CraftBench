@@ -71,6 +71,7 @@ Core\Upgrades.lua
 Core\RecipeGroups.lua
 Core\Inventory.lua
 Core\CraftForgePlugin.lua
+Core\CraftForgeProcess.lua
 
 #### Data files
 Data\SkillLevelData.lua

@@ -30,3 +30,22 @@ local L = LibStub("AceLocale-3.0"):NewLocale("CraftForge", "deDE")
 if not L then return end
 
 --@localization(locale="deDE", format="lua_additive_table", handle-unlocalized="english", handle-subnamespaces="concat")@
+
+L["Material Processing"] = "Materialverarbeitung"
+L["PROCESSINGDESC"] = "Ein-Klick-Entzaubern, Sondieren, Mahlen und Schlossknacken (Molinari-Stil) konfigurieren"
+L["PROCESSENABLEDNAME"] = "Ein-Klick-Materialverarbeitung aktivieren"
+L["PROCESSENABLEDDESC"] = "Ermöglicht Entzaubern, Sondieren, Mahlen und Schlossknacken per Modifier-Taste + Klick direkt auf Taschen-Items"
+L["PROCESSMODIFIERNAME"] = "Modifier-Taste"
+L["PROCESSMODIFIERDESC"] = "Taste, die beim Überfahren und Anklicken von Taschen-Items gedrückt gehalten werden muss"
+L["PROCESSMAXQUALITYNAME"] = "Max. Entzauber-Qualität"
+L["PROCESSMAXQUALITYDESC"] = "Höchste Gegenstandsqualität, die per Ein-Klick entzaubert werden darf"
+L["PROCESSDISENCHANTNAME"] = "Entzaubern aktivieren"
+L["PROCESSDISENCHANTDESC"] = "Ein-Klick-Entzaubern für geeignete Ausrüstung erlauben"
+L["PROCESSPROSPECTNAME"] = "Sondieren aktivieren"
+L["PROCESSPROSPECTDESC"] = "Ein-Klick-Sondieren für Erz-Stapel ab 5 Stück erlauben"
+L["PROCESSMILLNAME"] = "Mahlen aktivieren"
+L["PROCESSMILLDESC"] = "Ein-Klick-Mahlen für Kräuter-Stapel ab 5 Stück erlauben"
+L["PROCESSLOCKPICKNAME"] = "Schlossknacken aktivieren"
+L["PROCESSLOCKPICKDESC"] = "Ein-Klick-Schlossknacken für verschlossene Truhen erlauben (Schurke)"
+L["PROCESSGLOWNAME"] = "Leucht-Hervorhebung anzeigen"
+L["PROCESSGLOWDESC"] = "Zeigt einen animierten Leuchtrahmen um verarbeitbare Items, solange die Modifier-Taste gehalten wird"

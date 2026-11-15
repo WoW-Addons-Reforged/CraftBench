@@ -403,6 +403,126 @@ CraftForge.options =
 				},
 			}
 		},
+		processing = {
+			type = 'group',
+			name = L["Material Processing"],
+			desc = L["PROCESSINGDESC"],
+			order = 3,
+			args = {
+				process_enabled = {
+					type = "toggle",
+					name = L["PROCESSENABLEDNAME"],
+					desc = L["PROCESSENABLEDDESC"],
+					get = function()
+						return CraftForge.db.profile.process_enabled
+					end,
+					set = function(_, value)
+						CraftForge.db.profile.process_enabled = value
+					end,
+					width = "full",
+					order = 1,
+				},
+				process_modifier = {
+					type = "select",
+					name = L["PROCESSMODIFIERNAME"],
+					desc = L["PROCESSMODIFIERDESC"],
+					values = {
+						ALT = "Alt",
+						CTRL = "Ctrl",
+						SHIFT = "Shift",
+					},
+					get = function()
+						return CraftForge.db.profile.process_modifier
+					end,
+					set = function(_, value)
+						CraftForge.db.profile.process_modifier = value
+					end,
+					order = 2,
+				},
+				process_max_quality = {
+					type = "select",
+					name = L["PROCESSMAXQUALITYNAME"],
+					desc = L["PROCESSMAXQUALITYDESC"],
+					values = {
+						[2] = ITEM_QUALITY2_DESC or "Uncommon",
+						[3] = ITEM_QUALITY3_DESC or "Rare",
+						[4] = ITEM_QUALITY4_DESC or "Epic",
+					},
+					get = function()
+						return CraftForge.db.profile.process_max_quality
+					end,
+					set = function(_, value)
+						CraftForge.db.profile.process_max_quality = value
+					end,
+					order = 3,
+				},
+				process_disenchant = {
+					type = "toggle",
+					name = L["PROCESSDISENCHANTNAME"],
+					desc = L["PROCESSDISENCHANTDESC"],
+					get = function()
+						return CraftForge.db.profile.process_disenchant
+					end,
+					set = function(_, value)
+						CraftForge.db.profile.process_disenchant = value
+					end,
+					width = "full",
+					order = 4,
+				},
+				process_prospect = {
+					type = "toggle",
+					name = L["PROCESSPROSPECTNAME"],
+					desc = L["PROCESSPROSPECTDESC"],
+					get = function()
+						return CraftForge.db.profile.process_prospect
+					end,
+					set = function(_, value)
+						CraftForge.db.profile.process_prospect = value
+					end,
+					width = "full",
+					order = 5,
+				},
+				process_mill = {
+					type = "toggle",
+					name = L["PROCESSMILLNAME"],
+					desc = L["PROCESSMILLDESC"],
+					get = function()
+						return CraftForge.db.profile.process_mill
+					end,
+					set = function(_, value)
+						CraftForge.db.profile.process_mill = value
+					end,
+					width = "full",
+					order = 6,
+				},
+				process_lockpick = {
+					type = "toggle",
+					name = L["PROCESSLOCKPICKNAME"],
+					desc = L["PROCESSLOCKPICKDESC"],
+					get = function()
+						return CraftForge.db.profile.process_lockpick
+					end,
+					set = function(_, value)
+						CraftForge.db.profile.process_lockpick = value
+					end,
+					width = "full",
+					order = 7,
+				},
+				process_glow = {
+					type = "toggle",
+					name = L["PROCESSGLOWNAME"],
+					desc = L["PROCESSGLOWDESC"],
+					get = function()
+						return CraftForge.db.profile.process_glow
+					end,
+					set = function(_, value)
+						CraftForge.db.profile.process_glow = value
+					end,
+					width = "full",
+					order = 8,
+				},
+			},
+		},
 		appearance = {
 			type = 'group',
 			name = L["Appearance"],
