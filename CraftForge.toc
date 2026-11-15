@@ -23,7 +23,7 @@
 ## X-Website: https://github.com/gOOvER/CraftForge
 ## SavedVariables: CraftForgeDB
 ## SavedVariablesPerCharacter: CraftForgeWho, CraftForgeDBPC, CraftForgeMemory, CraftForgeProfile
-## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, TradeSkillMaster, OribosExchange, BeanCounter, Auctionator, Journalator, CraftInfoAnywhere, DataStore, tekDebug
+## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, AckisRecipeList, AuctionDB, Auctionator, BeanCounter, CanIMogIt, CraftInfoAnywhere, DataStore, DataStore_Auctions, Journalator, OribosExchange, Overachiever, TradeSkillMaster, tekDebug
 ## X-Embeds: Ace3, LibStub, CallbackHandler-1.0, LibWindow-1.1, LibPeriodicTable-3.1
 
 #### List of embedded libraries
@@ -93,8 +93,6 @@ Plugins\Overachiever.lua
 Plugins\DataStoreAuctions.lua
 Plugins\OribosExchange.lua
 Plugins\AuctionDB.lua
-#### Obsolete or Unused Addons
-## Plugins\TheUndermineJournal.lua
 
 #### UI files
 UI\Utils.lua

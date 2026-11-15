@@ -97,8 +97,8 @@ function CraftForge:RegisterRecipeNamePlugin(moduleName, priority)
 end
 
 function CraftForge:IsRecipeNamePluginRegistered(moduleName)
-	if type(moduleName)	 == "string" then
-		return CraftForge.RecipeNamePlugins[moduleName] ~= nil
+	if type(moduleName) == "string" then
+		return (CraftForge.RecipeNamePrefixes[moduleName] ~= nil) or (CraftForge.RecipeNameSuffixes[moduleName] ~= nil)
 	end
 end
 

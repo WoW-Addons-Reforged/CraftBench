@@ -21,6 +21,7 @@ CraftForge.ARLPlugin = {}
 
 local plugin = CraftForge.ARLPlugin
 local L = CraftForge.L
+local ARLProfessionInitialized = {}
 
 plugin.options =
 {

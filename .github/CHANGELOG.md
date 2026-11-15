@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Release Workflow & Packaging (`.github/workflows/release.yml`, `.pkgmeta`, `Skillet.toc`)**: Updated GitHub Actions to `actions/checkout@v4` and `BigWigsMods/packager@v2` with `.github/CHANGELOG.md` support, excluded dev scripts in `.pkgmeta`, and fixed `## X-License: GPL-3.0` syntax in `Skillet.toc`.
 
 ### Fixed
+- **Plugin Integration Fixes (`Core/CraftForgePlugin.lua`, `Plugins/AckisRecipeList.lua`, `CraftForge.toc`)**:
+  - Fixed `CraftForge:IsRecipeNamePluginRegistered` referencing non-existent `CraftForge.RecipeNamePlugins` instead of `RecipeNamePrefixes` / `RecipeNameSuffixes`.
+  - Initialized `local ARLProfessionInitialized = {}` in `Plugins/AckisRecipeList.lua` to prevent nil indexing and global leaks.
+  - Added missing plugin addons (`AckisRecipeList`, `AuctionDB`, `CanIMogIt`, `DataStore_Auctions`, `Overachiever`) to `## OptionalDeps:` in `CraftForge.toc` and removed obsolete `Plugins/TheUndermineJournal.lua`.
 - **BeanCounter Gold Sorting (`Plugins/BeanCounter.lua`)**: Removed `or 0` on multi-return `plugin.GetBCValues(...)` call in `SortGoldEarned` which discarded the 5th return value (`itemValueA`/`itemValueB`) and caused it to always evaluate to `0`.
 - **Undefined `tradeskill` & Global Leak in `UI/Sorting.lua`**: Passed `tradeskill` properly into `get_suffix(tradeskill, recipe, first)` and localized `actualRecipe`.
 - **Debug Stack Bug in `DeepCopy.lua`**: Added missing `stack` parameter to `DA.deepcopy_push(stack, ...)` and fixed `stack_top` typo to `stack._top`.
