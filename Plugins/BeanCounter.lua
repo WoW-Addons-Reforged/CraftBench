@@ -65,8 +65,8 @@ function plugin.SortGoldEarned(skill,a,b)
 	while b.subGroup and #b.subGroup.entries>0 do
 		b = b.subGroup.entries[1]
 	end
-	local _, _, _, _, itemValueA = plugin.GetBCValues(a.itemID) or 0
-	local _, _, _, _, itemValueB = plugin.GetBCValues(b.itemID) or 0
+	local _, _, _, _, itemValueA = plugin.GetBCValues(a.itemID)
+	local _, _, _, _, itemValueB = plugin.GetBCValues(b.itemID)
 	itemValueA = itemValueA or 0
 	itemValueB = itemValueB or 0
 	return (itemValueA > itemValueB)

@@ -145,15 +145,15 @@ local function sort_recipe_by_index(tradeskill, a, b)
 	end
 end
 
-local function get_suffix(recipe, first)
+local function get_suffix(tradeskill, recipe, first)
 	local ret = recipe.suffix
 	if not ret and recipe.recipeData then
 		ret = recipe.recipeData.suffix
 	end
 	if first and ret == nil and recipe.recipeID then
-		actualRecipe = Skillet:GetRecipe(recipe.recipeID)
+		local actualRecipe = Skillet:GetRecipe(recipe.recipeID)
 		Skillet:RecipeNameSuffix(tradeskill, actualRecipe)
-		ret = get_suffix(actualRecipe, false)
+		ret = get_suffix(tradeskill, actualRecipe, false)
 	end
 	return ret
 end
@@ -162,8 +162,8 @@ local function sort_recipe_by_suffix(tradeskill, a, b)
 	if a.subGroup or b.subGroup then
 		return NOSORT(tradeskill, a, b)
 	end
-	local as = get_suffix(a, true)
-	local bs = get_suffix(b, true)
+	local as = get_suffix(tradeskill, a, true)
+	local bs = get_suffix(tradeskill, b, true)
 	if as == bs then
 		return (a.skillIndex or 0) < (b.skillIndex or 0)
 	else

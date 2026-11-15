@@ -184,7 +184,7 @@ function Skillet:UpdateOptionalListWindow()
 		local  needed = _G[button:GetName() .. "Needed"]
 		button:SetWidth(width)
 		if itemIndex <= numItems then
-			oreagentID = self.cachedOptionalList.reagents[itemIndex].itemID
+			local oreagentID = self.cachedOptionalList.reagents[itemIndex].itemID
 			if oreagentID then
 				button.oreagentID = oreagentID
 				local oreagentName, oreagentLink = C_Item.GetItemInfo(oreagentID)
@@ -222,7 +222,7 @@ function Skillet:UpdateOptionalListWindow()
 				button:SetID(itemIndex)
 				button:Show()
 			else
-				ocurrencyID = self.cachedOptionalList.reagents[itemIndex].currencyID
+				local ocurrencyID = self.cachedOptionalList.reagents[itemIndex].currencyID
 				button.ocurrencyID = ocurrencyID
 				local info = C_CurrencyInfo.GetCurrencyInfo(ocurrencyID)
 				local oreagentName = info.name

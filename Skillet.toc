@@ -17,7 +17,7 @@
 ## Category-ruRU: Профессии
 ## Category-zhCN: 专业
 ## Category-zhTW: 專業技能
-## X-License GPL v3 or later
+## X-License: GPL-3.0
 ## X-Credits lilsparky, nogudnik (creator of Skillet), Slartie (for ASTW)
 ## X-Curse-Project-ID: 445339
 ## X-WoWI-ID: 7571

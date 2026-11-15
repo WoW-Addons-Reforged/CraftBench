@@ -302,7 +302,7 @@ function Skillet:GetModifiedItemLink(skillIndex, index)
 	if skillIndex and index then
 		local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
 		if recipe and self.cachedModifiedList then
-			mreagentID = self.cachedModifiedList[index].itemID
+			local mreagentID = self.cachedModifiedList[index].itemID
 			local name, link = C_Item.GetItemInfo(mreagentID)
 			return link
 		end
@@ -389,7 +389,7 @@ function Skillet:ModifiedItemCount(this, button, count)
 	--DA.DEBUG(1,"ModifiedItemCount: itemID= "..tostring(itemID)..", have= "..tostring(have)..", use= "..tostring(use)..", itemIndex= "..tostring(itemIndex))
 	local mreagents = self.modifiedSelected[self.cachedModifiedIndex]
 	--DA.DEBUG(1,"ModifiedItemCount: (before) mreagents= "..DA.DUMP1(mreagents))
-	name = parent:GetName()
+	local name = parent:GetName()
 	local input = _G[name.."Input"]
 	local val = input:GetNumber()
 	--DA.DEBUG(1,"ModifiedItemCount: val= "..tostring(val))

@@ -309,7 +309,7 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 			local tools = ""
 			local sep = ""
 			for _, recipeRequirement in ipairs(requirements) do
-				toolName = recipeRequirement.name
+				local toolName = recipeRequirement.name
 				if not recipeRequirement.met then
 					toolName = COLORRED..toolName.."|r"
 				end

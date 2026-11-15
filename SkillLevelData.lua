@@ -205,7 +205,7 @@ function Skillet:GetTradeSkillLevels(itemID, spellID)
 							levels = skillLevels[itemID][spellID]
 						else
 							for spell, strng in pairs(levels) do
-								name = getSpellName(spell)
+								local name = getSpellName(spell)
 								--DA.DEBUG(1,"GetTradeSkillLevels: name= "..tostring(name))
 								if name == spellID then
 									levels = strng
@@ -311,7 +311,7 @@ function Skillet:GetTradeSkillLevels(itemID, spellID)
 				levels = skillLevels[itemID][spellID]
 			else
 				for spell, strng in pairs(levels) do
-					name = getSpellName(spell)
+					local name = getSpellName(spell)
 					--DA.DEBUG(1,"GetTradeSkillLevels: name= "..tostring(name))
 					if name == spellID then
 						levels = strng

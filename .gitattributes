@@ -1,0 +1,13 @@
+.github export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+.luacheckrc export-ignore
+.pkgmeta export-ignore
+assets export-ignore
+CHANGELOG.md export-ignore
+README.md export-ignore
+LICENSE export-ignore
+LICENSE.txt export-ignore
+ScrapeWowhead.js export-ignore
+SkillLevelsConverter2.py export-ignore
+generate-scrollData-retail.py export-ignore

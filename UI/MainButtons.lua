@@ -113,6 +113,7 @@ function Skillet:TradeButtonAdditional_OnEnter(this)
 	local spellID = this:GetID()
 	local spellName = C_Spell.GetSpellName(spellID)
 	if this.Toy then
+		local _
 		_, spellName = C_ToyBox.GetToyInfo(spellID)
 	end
 	--DA.DEBUG(1,"TradeButtonAdditional_OnEnter: spellName= "..tostring(spellName))
@@ -301,7 +302,7 @@ function Skillet:UpdateTradeButtons(player)
 		local additionalSpellName = additionalSpellTab[2]
 		local additionalToy = additionalSpellTab[3]
 		local additionalPet = additionalSpellTab[4]
-		local spellInfo, spellName, spellIcon, petGUID
+		local spellInfo, spellName, spellIcon, petGUID, _
 		if additionalToy then
 			if (PlayerHasToy(additionalSpellId) and C_ToyBox.IsToyUsable(additionalSpellId)) then
 				_, spellName, spellIcon = C_ToyBox.GetToyInfo(additionalSpellId)
@@ -309,7 +310,7 @@ function Skillet:UpdateTradeButtons(player)
 				spellName = nil
 			end
 		else
-			local spellInfo = C_Spell.GetSpellInfo(additionalSpellId)
+			spellInfo = C_Spell.GetSpellInfo(additionalSpellId)
 			if spellInfo then
 				--DA.DEBUG(1,"UpdateTradeButtons: spellInfo= "..DA.DUMP1(spellInfo))
 				spellName = spellInfo.name

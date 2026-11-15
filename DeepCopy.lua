@@ -305,13 +305,13 @@ do
 	
 	do
 		local ORIG, COPY, RETTO, STATE, SIZE = 0, 1, 2, 3, 4
-		function DA.deepcopy_push(...)
+		function DA.deepcopy_push(stack, ...)
 			local arg_list_len = select('#', ...)
 			local stack_offset = stack._top+1
 			for arg_i = 1, arg_list_len do
 				stack[stack_offset+arg_i] = select(arg_i, ...)
 			end
-			stack._top = stack_top+arg_list_len
+			stack._top = stack._top+arg_list_len
 		end
 		function DA.deepcopy_pop(stack, count)
 			stack._top = stack._top-count

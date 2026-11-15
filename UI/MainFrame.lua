@@ -1132,11 +1132,11 @@ function Skillet:SkillButton_OnEnter(button)
 --
 --	Add Skillet specific information to the tooltip
 --
-	local num, numrecursive, numwvendor, numwalts, numowned = 0, 0, 0, 0, 0
+	local num, numrecursive, numwvendor, numwalts = 0, 0, 0, 0
 	if skill.skillData then
 		num, numrecursive, numwvendor, numwalts = get_craftable_counts(skill.skillData, recipe.numMade)
 	end
-	numowned = C_Item.GetItemCount(recipe.itemID,true,false,true,true)
+	local numowned = C_Item.GetItemCount(recipe.itemID,true,false,true,true)
 --
 -- How many are there already
 --

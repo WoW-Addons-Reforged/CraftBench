@@ -130,12 +130,8 @@ function Skillet:InventorySkillIterations(tradeID, recipe)
 		for _,reagent in pairs(reagents) do
 			local reagentID = reagent.reagentID
 			local numNeeded = reagent.numNeeded
-			local reagentBags = 0
-			local reagentAvailable = 0
-			local reagentCraftable = 0
-			local reagentCraftableVendor = 0
 			local reagentAvailableAlts = 0
-			reagentBags, reagentAvailable, reagentCraftable, reagentCraftableVendor = self:GetInventory(player, reagentID)
+			local reagentBags, reagentAvailable, reagentCraftable, reagentCraftableVendor = self:GetInventory(player, reagentID)
 			if Skillet.isForever then
 				reagentAvailable = reagentBags
 			end

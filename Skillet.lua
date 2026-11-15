@@ -615,7 +615,7 @@ function Skillet:InitializeDatabase(player)
 		return
 	end
 	local clean = Skillet.CleanDatabase
-	if clean then action = "Clean" else action = "Initialize" end
+	local action = clean and "Clean" or "Initialize"
 	DA.DEBUG(0,action.." database for "..tostring(player))
 --
 -- Session data

@@ -127,7 +127,7 @@ local function queueAppendReagent(command, reagentID, need, queueCraftables, mre
 --
 		--DA.DEBUG(2,"queueAppendReagent: mreagent= "..DA.DUMP(mreagent))
 		for k=1, #mreagent.schematic.reagents, 1 do
-			mitem = mreagent.schematic.reagents[k].itemID
+			local mitem = mreagent.schematic.reagents[k].itemID
 			have = have + C_Item.GetItemCount(mitem,true,false,true,true)
 		end
 	end
@@ -987,7 +987,7 @@ end
 --
 function Skillet:ContinueCast(spellID)
 	if self.enabledState then
-		name = C_Spell.GetSpellName(spellID)
+		local name = C_Spell.GetSpellName(spellID)
 		DA.DEBUG(0,"ContinueCast("..tostring(spellID).."), "..tostring(name))
 		if spellID == self.processingSpellID then
 			DA.DEBUG(1,"ContinueCast: processingCount= "..tostring(Skillet.processingCount))
@@ -1041,7 +1041,7 @@ end
 --
 function Skillet:StopCast(spellID)
 	if self.enabledState then
-		name = C_Spell.GetSpellName(spellID)
+		local name = C_Spell.GetSpellName(spellID)
 		--DA.DEBUG(0,"StopCast("..tostring(spellID).."), "..tostring(name))
 		DA.MARK3(L["Crafting error"]..", spell= "..tostring(spellID)..", "..tostring(name))
 		self.queuecasting = false
@@ -1061,7 +1061,7 @@ end
 --
 function Skillet:IgnoreCast(spellID)
 	if self.enabledState then
-		name = C_Spell.GetSpellName(spellID)
+		local name = C_Spell.GetSpellName(spellID)
 		DA.DEBUG(4,"IgnoreCast("..tostring(spellID).."), "..tostring(name))
 	end
 end

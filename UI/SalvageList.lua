@@ -187,7 +187,7 @@ function Skillet:UpdateSalvageListWindow()
 		local  needed = _G[button:GetName() .. "Needed"]
 		button:SetWidth(width)
 		if itemIndex <= numItems then
-			sreagentID = self.cachedSalvageList[itemIndex].itemID
+			local sreagentID = self.cachedSalvageList[itemIndex].itemID
 			button.sreagentID = sreagentID
 			local sreagentName, sreagentLink = C_Item.GetItemInfo(sreagentID)
 			local sreagentQuality
@@ -327,7 +327,7 @@ function Skillet:GetSalvageItemLink(skillIndex, index)
 	if skillIndex and index then
 		local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
 		if recipe and self.cachedSalvageList then
-			sreagentID = self.cachedSalvageList[index].itemID
+			local sreagentID = self.cachedSalvageList[index].itemID
 			local name, link = C_Item.GetItemInfo(sreagentID)
 			return link
 		end
