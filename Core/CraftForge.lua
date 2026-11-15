@@ -196,17 +196,19 @@ end
 
 function CraftForge:EnableBlizzardFrame()
 	DA.DEBUG(0,"EnableBlizzardFrame()")
+	local blizzFrame = ProfessionsFrame or TradeSkillFrame
+	if not blizzFrame then return end
 	if self.BlizzardTradeSkillFrame ~= nil then
 		self.BlizzardTradeSkillFrame = nil
-		ProfessionsFrame:SetScript("OnHide", self.tradeSkillHide)
+		blizzFrame:SetScript("OnHide", self.tradeSkillHide)
 		self.tradeSkillHide = nil
 	end
 	if CraftForge.isRetail or self.db.profile.hide_blizzard_frame then
-		ShowUIPanel(ProfessionsFrame)
+		ShowUIPanel(blizzFrame)
 	elseif self.db.profile.scale_blizzard_frame then
-		ProfessionsFrame:SetScale(self.db.profile.scale_blizzard_up or 1.0)
+		blizzFrame:SetScale(self.db.profile.scale_blizzard_up or 1.0)
 	end
-	self.BlizzardUIshowing = true	
+	self.BlizzardUIshowing = true
 end
 
 --
@@ -1800,10 +1802,12 @@ function CraftForge:SetSelectedSkill(skillIndex)
 		self:ConfigureRecipeControls(false)
 		if CraftForge.BlizzardUIshowing or CraftForge.isForever then
 			local skill = self:GetSkill(self.currentPlayer, self.currentTrade, skillIndex)
-			local recipeInfo = C_TradeSkillUI.GetRecipeInfo(skill.id)
-			if recipeInfo then
-				EventRegistry:TriggerEvent("ProfessionsRecipeListMixin.Event.OnRecipeSelected", recipeInfo, ProfessionsFrame.CraftingPage.RecipeList)
-				ProfessionsFrame.CraftingPage.RecipeList:SelectRecipe(recipeInfo, true)
+			if skill and ProfessionsFrame and ProfessionsFrame.CraftingPage and ProfessionsFrame.CraftingPage.RecipeList then
+				local recipeInfo = C_TradeSkillUI.GetRecipeInfo(skill.id)
+				if recipeInfo then
+					EventRegistry:TriggerEvent("ProfessionsRecipeListMixin.Event.OnRecipeSelected", recipeInfo, ProfessionsFrame.CraftingPage.RecipeList)
+					ProfessionsFrame.CraftingPage.RecipeList:SelectRecipe(recipeInfo, true)
+				end
 			end
 		end
 		self.selectedSkill = skillIndex

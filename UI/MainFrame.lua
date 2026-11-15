@@ -706,7 +706,7 @@ function CraftForge:UpdateTradeSkillWindow()
 --
 		width = width - 20
 	end
-	local text, color, skillIndex
+	local text
 	local pretext, preid, prelink
 	local max_text_width = width
 	local showOwned = self:GetTradeSkillOption("filterInventory-owned") -- count from Altoholic

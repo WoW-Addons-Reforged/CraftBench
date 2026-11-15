@@ -157,14 +157,22 @@ function CraftForge:BlizzardUIButton_OnClick(this,button)
 		end
 		self.BlizzardUIshowing = false
 	else
-		if CraftForge.isRetail or self.db.profile.hide_blizzard_frame then
-			ShowUIPanel(ProfessionsFrame)
-			ProfessionsFrame.CloseButton:HookScript("OnClick",function(...) CraftForge.BlizzardUIshowing = false end)
-		elseif self.db.profile.scale_blizzard_frame then
-			ProfessionsFrame:SetScale(self.db.profile.scale_blizzard_up or 1.0)
+		local blizzFrame = ProfessionsFrame or TradeSkillFrame
+		if blizzFrame then
+			if CraftForge.isRetail or self.db.profile.hide_blizzard_frame then
+				ShowUIPanel(blizzFrame)
+				if blizzFrame.CloseButton and not blizzFrame.CloseButton.craftForgeHooked then
+					blizzFrame.CloseButton:HookScript("OnClick", function(...) CraftForge.BlizzardUIshowing = false end)
+					blizzFrame.CloseButton.craftForgeHooked = true
+				end
+			elseif self.db.profile.scale_blizzard_frame then
+				blizzFrame:SetScale(self.db.profile.scale_blizzard_up or 1.0)
+			end
+			if blizzFrame.Refresh then
+				blizzFrame:Refresh()
+			end
+			self.BlizzardUIshowing = true
 		end
-		ProfessionsFrame:Refresh()
-		self.BlizzardUIshowing = true
 		if CraftForgeFrame.selectedSkill and CraftForgeFrame.selectedSkill ~= -1 then
 			self:SetSelectedSkill(CraftForgeFrame.selectedSkill)
 		end

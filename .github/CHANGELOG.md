@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Release Workflow & Packaging (`.github/workflows/release.yml`, `.pkgmeta`, `Skillet.toc`)**: Updated GitHub Actions to `actions/checkout@v4` and `BigWigsMods/packager@v2` with `.github/CHANGELOG.md` support, excluded dev scripts in `.pkgmeta`, and fixed `## X-License: GPL-3.0` syntax in `Skillet.toc`.
 
 ### Fixed
+- **Blizzard Frame Compatibility & Duplicate Hook Guards (`Core/CraftForge.lua`, `Core/CraftForgeOptions.lua`, `UI/MainButtons.lua`, `UI/MainFrame.lua`)**:
+  - Added nil-safe `ProfessionsFrame or TradeSkillFrame` guards in `EnableBlizzardFrame`, `SetSelectedSkill`, `CraftForgeOptions` (`btsui`), and `UI/MainButtons.lua` to prevent crashes on clients without `ProfessionsFrame`.
+  - Prevented duplicate `HookScript("OnClick", ...)` registrations on `CloseButton` in `UI/MainButtons.lua`.
+  - Removed unused `color`/`skillIndex` declarations in `UI/MainFrame.lua`.
 - **Auctionator, AuctionDB, OribosExchange & BeanCounter Plugin Fixes (`Plugins/Auctionator.lua`, `UI/DetailFrame.lua`, `Plugins/AuctionDB.lua`, `Plugins/OribosExchange.lua`, `Plugins/BeanCounter.lua`)**:
   - Enabled the Auctionator search button in `UI/DetailFrame.lua` on Classic clients (`AuctionFrame` in addition to `AuctionHouseFrame`), added API/empty-list/scrollName guards in `AuctionatorSearch`, fixed duplicate `order` key in options, and guarded Journalator `failedCount` with `or 0`.
   - Fixed `Plugins/OribosExchange.lua` `RecipeNameSuffix` returning `nil` due to out-of-scope `local value` and fixed Classic reagent ID lookup (`v.id` vs `v.reagentID`).

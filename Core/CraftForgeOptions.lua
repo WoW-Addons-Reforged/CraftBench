@@ -1250,11 +1250,13 @@ CraftForge.options =
 			end,
 			set = function(self,value)
 				CraftForge.data.btsui = value
+				local blizzFrame = ProfessionsFrame or TradeSkillFrame
+				if not blizzFrame then return end
 				if value then
-					ShowUIPanel(ProfessionsFrame)
+					ShowUIPanel(blizzFrame)
 					CraftForge.BlizzardUIshowing = true
 				else
-					HideUIPanel(ProfessionsFrame)
+					HideUIPanel(blizzFrame)
 					CraftForge.BlizzardUIshowing = false
 				end
 			end,
