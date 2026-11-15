@@ -156,18 +156,21 @@ end
 -- Returns a text representation of value, numerical value (for sorting purposes)
 --
 function plugin.RecipeNameSuffix(skill, recipe)
-	local text
+	local text, value
 	if recipe then
 		local itemID = recipe.itemID
 		if OEMarketInfo and CraftForge.db.profile.plugins.OE.enabled and itemID then
-			local value = OEMarketValue(itemID)
+			value = OEMarketValue(itemID)
 			if value then
-				value = value * recipe.numMade
+				value = value * (recipe.numMade or 1)
 				local matsum = 0
-				for k,v in pairs(recipe.reagentData) do
-					local iprice = OEMarketValue(v.reagentID)
-					if iprice then
-						matsum = matsum + v.numNeeded * iprice
+				if recipe.reagentData then
+					for _, v in pairs(recipe.reagentData) do
+						local rid = (CraftForge.isRetail or CraftForge.isForever) and v.reagentID or v.id
+						local iprice = rid and OEMarketValue(rid)
+						if iprice then
+							matsum = matsum + (v.numNeeded or 0) * iprice
+						end
 					end
 				end
 				value = value - matsum
@@ -181,8 +184,8 @@ function plugin.RecipeNameSuffix(skill, recipe)
 				end
 			end
 		end
+		recipe.suffix = value
 	end
-	recipe.suffix = value
 	return text, value
 end
 

@@ -80,7 +80,7 @@ function plugin.SortSoldAmount(skill,a,b)
 		b = b.subGroup.entries[1]
 	end
 	local _, _, itemValueA = plugin.GetBCValues(a.recipeData.itemID)
-	local _, _, itemValueB = plugin.GetBCValues(a.recipeData.itemID)
+	local _, _, itemValueB = plugin.GetBCValues(b.recipeData.itemID)
 	itemValueA = itemValueA or 0
 	itemValueB = itemValueB or 0
 	return (itemValueA > itemValueB)

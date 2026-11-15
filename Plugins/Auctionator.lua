@@ -158,7 +158,6 @@ plugin.options =
 			type = "select",
 			name = "Suffix",
 			desc = "Primary suffix text",
-			order = 1,
 			get = function() 
 				return CraftForge.db.profile.plugins.ATR.suffix
 			end,
@@ -818,10 +817,10 @@ function plugin.SortSalesRate(skill,a,b)
 	salesRateA = 0
 	salesRateB = 0
 	if Journalator and Journalator.API and itemNameA and itemNameB then
-		successCountA = Journalator.API.v1.GetRealmSuccessCountByItemName(addonName, itemNameA)
-		failedCountA = Journalator.API.v1.GetRealmFailureCountByItemName(addonName, itemNameA)
-		successCountB = Journalator.API.v1.GetRealmSuccessCountByItemName(addonName, itemNameB)
-		failedCountB = Journalator.API.v1.GetRealmFailureCountByItemName(addonName, itemNameB)
+		successCountA = Journalator.API.v1.GetRealmSuccessCountByItemName(addonName, itemNameA) or 0
+		failedCountA = Journalator.API.v1.GetRealmFailureCountByItemName(addonName, itemNameA) or 0
+		successCountB = Journalator.API.v1.GetRealmSuccessCountByItemName(addonName, itemNameB) or 0
+		failedCountB = Journalator.API.v1.GetRealmFailureCountByItemName(addonName, itemNameB) or 0
 		if successCountA > 0 then
 			salesRateA = successCountA / (successCountA + failedCountA) * 100
 		end
@@ -1276,7 +1275,9 @@ function CraftForge:AuctionatorSearch(whichOne)
 			if recipe.tradeID == 7411 and not CraftForge.isCraft then
 				if recipe.scrollID then
 					local scrollName = C_Item.GetItemInfo(recipe.scrollID)
-					table.insert(items, scrollName)
+					if scrollName then
+						table.insert(items, scrollName)
+					end
 				end
 			elseif not recipe.salvage then
 				table.insert(items, shoppingListName)
@@ -1354,7 +1355,7 @@ function CraftForge:AuctionatorSearch(whichOne)
 		return
 	end
 --]]
-	if CraftForge.auctionOpen then
+	if CraftForge.auctionOpen and #items > 0 and Auctionator and Auctionator.API and Auctionator.API.v1 then
 		if useSearchExact and Auctionator.API.v1.MultiSearchExact then
 			--DA.DEBUG(0, "AuctionatorSearch: (exact) addonName= "..tostring(addonName)..", items= "..DA.DUMP1(items))
 			Auctionator.API.v1.MultiSearchExact(addonName, items)

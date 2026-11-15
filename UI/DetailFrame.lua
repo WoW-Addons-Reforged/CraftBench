@@ -343,7 +343,7 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 --
 -- Check for Auction House
 --
-	if AuctionHouseFrame and Auctionator and self.ATRPlugin and self.db.profile.plugins.ATR.enabled and self.auctionOpen then
+	if self.auctionOpen and (AuctionHouseFrame or AuctionFrame) and Auctionator and self.ATRPlugin and self.db.profile.plugins.ATR.enabled then
 		CraftForgeAuctionatorButton:Show()
 	else
 		CraftForgeAuctionatorButton:Hide()

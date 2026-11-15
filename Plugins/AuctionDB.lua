@@ -167,6 +167,7 @@ function plugin.OnInitialize()
 end
 
 local function AHDB_Price(itemID)
+	if not itemID then return 0 end
 --
 -- AuctionDB-v1.09.0
 --
@@ -239,7 +240,7 @@ function plugin.GetExtraText(skill, recipe)
 				local value = AHDB_Price(id) * needed
 				local buyFactor = CraftForge.db.profile.plugins.AHDB.buyFactor or buyFactorDef
 				if CraftForge:VendorSellsReagent(id) then
-					toConcatLabel[#toConcatLabel+1] = string.format("   %d x %s  |cff808080(%s)|r", needed, reagentName, L["buyable"])
+					toConcatLabel[#toConcatLabel+1] = string.format("   %d x %s  |cff808080(%s)|r", needed, reagentName or "Unknown", L["buyable"])
 					if CraftForge.db.profile.plugins.AHDB.buyablePrices then
 						if CraftForge.db.profile.plugins.AHDB.useVendorCalc then
 							local sellValue = select(11, C_Item.GetItemInfo(id))
@@ -284,7 +285,7 @@ function plugin.RecipeNameSuffix(skill, recipe)
 				if CraftForge.isRetail or CraftForge.isForever then
 					id = recipe.reagentData[i].reagentID
 				end
-				local value = AHDB_Price(id) * recipe.numMade
+				local value = AHDB_Price(id) * needed
 				local buyFactor = CraftForge.db.profile.plugins.AHDB.buyFactor or buyFactorDef
 				if CraftForge:VendorSellsReagent(id) then
 					if CraftForge.db.profile.plugins.AHDB.buyablePrices then

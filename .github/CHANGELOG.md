@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Release Workflow & Packaging (`.github/workflows/release.yml`, `.pkgmeta`, `Skillet.toc`)**: Updated GitHub Actions to `actions/checkout@v4` and `BigWigsMods/packager@v2` with `.github/CHANGELOG.md` support, excluded dev scripts in `.pkgmeta`, and fixed `## X-License: GPL-3.0` syntax in `Skillet.toc`.
 
 ### Fixed
+- **Auctionator, AuctionDB, OribosExchange & BeanCounter Plugin Fixes (`Plugins/Auctionator.lua`, `UI/DetailFrame.lua`, `Plugins/AuctionDB.lua`, `Plugins/OribosExchange.lua`, `Plugins/BeanCounter.lua`)**:
+  - Enabled the Auctionator search button in `UI/DetailFrame.lua` on Classic clients (`AuctionFrame` in addition to `AuctionHouseFrame`), added API/empty-list/scrollName guards in `AuctionatorSearch`, fixed duplicate `order` key in options, and guarded Journalator `failedCount` with `or 0`.
+  - Fixed `Plugins/OribosExchange.lua` `RecipeNameSuffix` returning `nil` due to out-of-scope `local value` and fixed Classic reagent ID lookup (`v.id` vs `v.reagentID`).
+  - Fixed `Plugins/AuctionDB.lua` multiplying reagent cost by `recipe.numMade` instead of `needed`, guarded `nil` `itemID` in `AHDB_Price`, and guarded `nil` `reagentName` in `string.format`.
+  - Fixed `Plugins/BeanCounter.lua` `SortSoldAmount` comparing `a.recipeData.itemID` against itself instead of `b.recipeData.itemID`.
 - **Plugin Integration Fixes (`Core/CraftForgePlugin.lua`, `Plugins/AckisRecipeList.lua`, `CraftForge.toc`)**:
   - Fixed `CraftForge:IsRecipeNamePluginRegistered` referencing non-existent `CraftForge.RecipeNamePlugins` instead of `RecipeNamePrefixes` / `RecipeNameSuffixes`.
   - Initialized `local ARLProfessionInitialized = {}` in `Plugins/AckisRecipeList.lua` to prevent nil indexing and global leaks.
