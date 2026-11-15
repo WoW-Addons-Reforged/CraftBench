@@ -97,15 +97,45 @@ local function populateAltResults(scroll, query)
 		end
 	end
 
-	if _G.DataStore and _G.DataStore.GetCharacters and _G.DataStore.GetContainerItemCount and CraftForge.data and CraftForge.data.reagentToRecipe then
+	local hasAltoholic = _G.Altoholic
+		or (C_AddOns and C_AddOns.IsAddOnLoaded and C_AddOns.IsAddOnLoaded("Altoholic"))
+		or (IsAddOnLoaded and IsAddOnLoaded("Altoholic"))
+	if hasAltoholic and _G.DataStore and _G.DataStore.GetCharacters then
 		for charName, charKey in pairs(_G.DataStore:GetCharacters()) do
-			if not invDB[charName] then
+			-- Altoholic / DataStore_Crafts: search learned recipes on alts not yet in CraftForge skillDB
+			if not skillDB[charName] and _G.DataStore.GetProfessions and _G.DataStore.GetNumCraftLines and _G.DataStore.GetCraftLineInfo then
+				local profs = _G.DataStore:GetProfessions(charKey)
+				if type(profs) == "table" then
+					for profName, prof in pairs(profs) do
+						local numLines = _G.DataStore:GetNumCraftLines(prof) or 0
+						for lineIdx = 1, numLines do
+							local isHeader, _, spellID = _G.DataStore:GetCraftLineInfo(prof, lineIdx)
+							if not isHeader and spellID then
+								local rName = (C_Spell and C_Spell.GetSpellName and C_Spell.GetSpellName(spellID))
+									or (GetSpellInfo and GetSpellInfo(spellID))
+								if rName and rName:lower():find(q, 1, true) then
+									table.insert(recipeHits, {
+										name = rName,
+										player = charName,
+										trade = tostring(profName),
+										recipeID = spellID,
+									})
+								end
+							end
+						end
+					end
+				end
+			end
+
+			-- Altoholic / DataStore_Containers + DataStore_Mails: search bags, bank, and mail
+			if not invDB[charName] and _G.DataStore.GetContainerItemCount and CraftForge.data and CraftForge.data.reagentToRecipe then
 				for itemID in pairs(CraftForge.data.reagentToRecipe) do
 					if type(itemID) == "number" then
 						local itemName = C_Item.GetItemInfo(itemID)
 						if itemName and itemName:lower():find(q, 1, true) then
 							local bags, bank = _G.DataStore:GetContainerItemCount(charKey, itemID)
-							local total = (bags or 0) + (bank or 0)
+							local mail = (_G.DataStore.GetMailItemCount and _G.DataStore:GetMailItemCount(charKey, itemID)) or 0
+							local total = (bags or 0) + (bank or 0) + mail
 							if total > 0 then
 								table.insert(invHits, {
 									name = itemName,

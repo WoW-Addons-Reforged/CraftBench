@@ -36,9 +36,35 @@
 - `/craftforge find` — Open the account-wide Alt Recipe & Inventory Finder
 - `/craftforge process` — Open the Material Processing batch panel
 - `/craftforge fish` — Open the Fishing tracker, catch log & auto-lure window
+- `/craftforge level` — Open the Smart Profession Leveling Planner
+- `/craftforge cd` — Open the account-wide Crafting Cooldowns tracker
+- `/craftforge watch` — Pin/unpin a recipe or toggle the on-screen Recipe Watch HUD
+- `/craftforge gather` — Open the Herbalism, Mining & Skinning Gathering Guide
+- `/craftforge contacts` — Open the Trade Contacts browser with TomTom waypoints
+- `/craftforge camp` — Open the WoW Forever Camping tracker
 - `/craftforge options` — Open standalone options window
 - `/craftforge minimap` — Toggle the minimap button
 - `/craftforge export` / `/craftforge import` / `/craftforge sendqueue` — Share crafting queues
+
+## Supported Addons & Integrations
+All integrations are **optional** and automatically activate only when the respective addon is installed:
+
+| Addon | What It Provides |
+| :--- | :--- |
+| **Auctionator** | Live buyout values, reagent costs, net profit / profit %, and AH shopping list search |
+| **TradeSkillMaster (TSM)** | Market/crafting cost & profit calculation (`DBMarket`, `DBMinBuyout`, `DBHistorical`, etc.) |
+| **OribosExchange** | Realm & region market pricing, reagent costs, and profit suffixes |
+| **AuctionDB** | Auction house item & reagent pricing and profit calculation |
+| **Altoholic / DataStore** | Alt professions & learned recipes (`DataStore_Crafts`), alt bags/bank/mail counts (`DataStore_Containers`, `DataStore_Mails`), and `DataStore_Auctions` in `/cf find` |
+| **AllTheThings (ATT)** | Recipe acquisition sources in tooltips and collection status prefixes in the recipe list |
+| **AckisRecipeList (ARL)** | Unlearned recipe source lookup and filtering |
+| **CanIMogIt** | Transmog collection status (`Known` / `Unknown`) prefixes on craftable gear |
+| **Overachiever** | Achievement indicators on profession recipes |
+| **BeanCounter** | Historical auction purchase/sale cost & profit data |
+| **TomTom** | One-click map waypoints for visited Trade Contacts (vendors & trainers) |
+| **ElvUI** | Optional ElvUI skin toggle (native Dark-Gold UI stays active unless explicitly enabled) |
+| **Baganator / Syndicator, BetterBags, Bagnon, Combuctor, ArkInventory, AdiBags, LiteBag** | Bag & bank slot hooks for one-click modifier-key Material Processing (Disenchant, Prospect, Mill, Pick Lock) |
+| **Pawn** | Equipment upgrade value tooltips on craftable items |
 
 ## Attribution & License
 **CraftForge** is based on **Skillet** (by *yossa*, *bsmorgan*, *lilsparky*, *nogudnik*, and *Slartie*) and licensed under the **GNU General Public License v3.0 (GPL-3.0)**. See [LICENSE.txt](LICENSE.txt) for details.

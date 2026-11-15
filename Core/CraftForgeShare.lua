@@ -88,12 +88,13 @@ function Share:SetupMinimapIcon()
 					CraftForge:DisplayShoppingList(true)
 				end
 			else
-				if CraftForge.ShowStandaloneQueue then
-					if CraftForge.craftforgeStandaloneQueue and CraftForge.craftforgeStandaloneQueue:IsVisible() then
-						CraftForge.craftforgeStandaloneQueue:Hide()
-					else
-						CraftForge:ShowStandaloneQueue()
-					end
+				if not CraftForge.craftforgeStandaloneQueue and CraftForge.CreateTradeSkillWindow then
+					CraftForge:CreateTradeSkillWindow()
+				end
+				if CraftForge.craftforgeStandaloneQueue and CraftForge.craftforgeStandaloneQueue:IsVisible() then
+					CraftForge.craftforgeStandaloneQueue:Hide()
+				elseif CraftForge.ShowQueueView and _G.CraftForgeStandaloneQueue then
+					CraftForge:ShowQueueView()
 				end
 			end
 		end,
@@ -103,6 +104,12 @@ function Share:SetupMinimapIcon()
 			local queue = CraftForge.db and CraftForge.db.realm and CraftForge.db.realm.queueData and CraftForge.db.realm.queueData[CraftForge.currentPlayer]
 			local count = queue and #queue or 0
 			tooltip:AddLine(string.format("%s: %d", L["Queue"], count), 0.85, 0.90, 0.96)
+			if CraftForge.Cooldowns and CraftForge.Cooldowns.GetReadyCount then
+				local readyCD = CraftForge.Cooldowns:GetReadyCount()
+				if readyCD > 0 then
+					tooltip:AddLine(string.format("|cff40ff40%s: %d|r", L["CD_READY_COUNT"] or "Ready Cooldowns", readyCD))
+				end
+			end
 			tooltip:AddLine(" ")
 			tooltip:AddLine(L["|cff00ff00Left-Click:|r Toggle Queue Window"], 0.9, 0.9, 0.9)
 			tooltip:AddLine(L["|cff00ff00Shift-Left-Click:|r Toggle Shopping List"], 0.9, 0.9, 0.9)
@@ -150,7 +157,7 @@ function Share:SetupTabCompletion()
 	if not AceTab or AceTab:IsTabCompletionRegistered("CraftForgeSlash") then return end
 
 	local baseCmds = {
-		"config", "options", "standby", "shopping", "queue", "export", "import", "sendqueue", "minimap", "prof", "version", "find", "process", "fish",
+		"config", "options", "standby", "shopping", "queue", "export", "import", "sendqueue", "minimap", "prof", "version", "find", "process", "fish", "cd", "watch", "level", "gather", "contacts", "camp",
 	}
 
 	AceTab:RegisterTabCompletion("CraftForgeSlash", { "/craftforge ", "/cf " }, function(t, text, pos)

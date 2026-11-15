@@ -375,6 +375,9 @@ function CraftForge:CreateTradeSkillWindow()
 	self.fullView = true
 	self.saved_full_button_count = 0
 	self.saved_SA_button_count = 0
+	if self.CreateMainSideToolsDock then
+		self:CreateMainSideToolsDock(frame)
+	end
 	return frame
 end
 

@@ -2432,7 +2432,7 @@ CraftForge.options =
 					order = 5,
 				},
 				cast_key = {
-					type = 'input',
+					type = 'keybinding',
 					name = L["FISH_CAST_KEY"] or "Cast / Apply Lure Keybind",
 					desc = L["FISH_CAST_KEY_DESC"],
 					get = function()
@@ -2451,7 +2451,7 @@ CraftForge.options =
 					order = 6,
 				},
 				swap_key = {
-					type = 'input',
+					type = 'keybinding',
 					name = L["FISH_SWAP_KEY"] or "Swap Pole / Weapons Keybind",
 					desc = L["FISH_SWAP_KEY_DESC"],
 					get = function()
@@ -2518,6 +2518,107 @@ CraftForge.options =
 			end,
 			order = 122
 		},
+		cd = {
+			type = 'execute',
+			name = L["CD_TITLE"] or "Crafting Cooldowns",
+			desc = "Open account-wide Crafting Cooldowns window (/cf cd)",
+			func = function()
+				if CraftForge.ShowCooldowns then CraftForge:ShowCooldowns() end
+			end,
+			order = 123
+		},
+		watch = {
+			type = 'input',
+			name = L["WATCH_TITLE"] or "Recipe Watch",
+			desc = "Pin/unpin a recipe or toggle the Watch HUD (/cf watch [name])",
+			get = function() return "" end,
+			set = function(_, val)
+				if CraftForge.Watch and CraftForge.Watch.PinCurrentOrByName then
+					CraftForge.Watch:PinCurrentOrByName(val)
+				end
+			end,
+			order = 124
+		},
+		level = {
+			type = 'execute',
+			name = L["LVL_TITLE"] or "Leveling Planner",
+			desc = "Open Smart Profession Leveling Planner (/cf level)",
+			func = function()
+				if CraftForge.ShowLeveling then CraftForge:ShowLeveling() end
+			end,
+			order = 125
+		},
+		gather = {
+			type = 'execute',
+			name = L["GATHER_TITLE"] or "Gathering Guide",
+			desc = "Open Herbalism, Mining & Skinning Guide (/cf gather)",
+			func = function()
+				if CraftForge.ShowGathering then CraftForge:ShowGathering() end
+			end,
+			order = 126
+		},
+		contacts = {
+			type = 'execute',
+			name = L["CONTACTS_TITLE"] or "Trade Contacts",
+			desc = "Open visited Vendors & Trainers browser with TomTom waypoints (/cf contacts)",
+			func = function()
+				if CraftForge.ShowContacts then CraftForge:ShowContacts() end
+			end,
+			order = 127
+		},
+		camp = {
+			type = 'execute',
+			name = L["CAMP_TITLE"] or "Camping (WoW Forever)",
+			desc = "Open WoW Forever Camping tracker (/cf camp)",
+			func = function()
+				if CraftForge.ShowCamping then CraftForge:ShowCamping() end
+			end,
+			order = 128
+		},
+		tools = {
+			type = 'group',
+			name = L["TOOLS_TITLE"] or "All-in-One Tools",
+			order = 3.6,
+			args = {
+				header = { type = 'header', name = L["TOOLS_TITLE"] or "All-in-One Tools", order = 1 },
+				open_level = {
+					type = 'execute',
+					name = L["LVL_TITLE"] or "Leveling Planner (/cf level)",
+					func = function() if CraftForge.ShowLeveling then CraftForge:ShowLeveling() end end,
+					order = 2,
+				},
+				open_cd = {
+					type = 'execute',
+					name = L["CD_TITLE"] or "Crafting Cooldowns (/cf cd)",
+					func = function() if CraftForge.ShowCooldowns then CraftForge:ShowCooldowns() end end,
+					order = 3,
+				},
+				open_watch = {
+					type = 'execute',
+					name = L["WATCH_TITLE"] or "Recipe Watch HUD (/cf watch)",
+					func = function() if CraftForge.ToggleWatchHUD then CraftForge:ToggleWatchHUD() end end,
+					order = 4,
+				},
+				open_gather = {
+					type = 'execute',
+					name = L["GATHER_TITLE"] or "Gathering Guide (/cf gather)",
+					func = function() if CraftForge.ShowGathering then CraftForge:ShowGathering() end end,
+					order = 5,
+				},
+				open_contacts = {
+					type = 'execute',
+					name = L["CONTACTS_TITLE"] or "Trade Contacts (/cf contacts)",
+					func = function() if CraftForge.ShowContacts then CraftForge:ShowContacts() end end,
+					order = 6,
+				},
+				open_camp = {
+					type = 'execute',
+					name = L["CAMP_TITLE"] or "Camping (WoW Forever) (/cf camp)",
+					func = function() if CraftForge.ShowCamping then CraftForge:ShowCamping() end end,
+					order = 7,
+				},
+			},
+		},
 		bagclear = {
 			type = 'execute',
 			name = "bagclear",
@@ -2557,6 +2658,7 @@ function CraftForge:ConfigureOptions()
 			appearance = self.options.args.appearance,
 			processing = self.options.args.processing,
 			fishing = self.options.args.fishing,
+			tools = self.options.args.tools,
 			plugins = CraftForge.pluginsOptions,
 			profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db),
 		},

@@ -137,6 +137,23 @@ local function scanTrainer()
 	local num = GetNumTrainerServices() or 0
 	if num <= 0 then return end
 
+	local recipes = {}
+	for i = 1, num do
+		local sName, sRank, sCat
+		if GetTrainerServiceInfo then
+			sName, sRank, sCat = GetTrainerServiceInfo(i)
+		end
+		if sName and sCat ~= "header" then
+			local cost = GetTrainerServiceCost and GetTrainerServiceCost(i) or 0
+			table.insert(recipes, {
+				name = sName,
+				rank = sRank,
+				category = sCat,
+				price = cost,
+			})
+		end
+	end
+
 	db.trainers[npcID] = {
 		name = npcName,
 		zone = zone,
@@ -146,6 +163,7 @@ local function scanTrainer()
 		y = y,
 		greeting = profTitle,
 		services = num,
+		recipes = recipes,
 		seen = time(),
 	}
 end
@@ -213,5 +231,90 @@ function Contacts:Initialize()
 				appendContactTooltip(tooltip, itemID)
 			end
 		end)
+	end
+end
+
+function Contacts:GetAllEntries(kindFilter, query)
+	local db = ensureDB()
+	if not db then return {} end
+	local list = {}
+	local q = query and query ~= "" and string.lower(query) or nil
+	local function addBucket(bucket, kind)
+		for id, rec in pairs(bucket or {}) do
+			if type(rec) == "table" then
+				local match = true
+				if q then
+					local hay = string.lower((rec.name or "") .. " " .. (rec.zone or "") .. " " .. (rec.subzone or "") .. " " .. (rec.skill or ""))
+					match = string.find(hay, q, 1, true) ~= nil
+					if not match and rec.items then
+						for _, it in pairs(rec.items) do
+							if it.name and string.find(string.lower(it.name), q, 1, true) then
+								match = true
+								break
+							end
+						end
+					end
+					if not match and rec.recipes then
+						for _, r in ipairs(rec.recipes) do
+							if r.name and string.find(string.lower(r.name), q, 1, true) then
+								match = true
+								break
+							end
+						end
+					end
+				end
+				if match then
+					table.insert(list, {
+						id = id,
+						kind = kind,
+						name = rec.name or "?",
+						zone = rec.zone or "?",
+						subzone = rec.subzone,
+						mapID = rec.mapID,
+						x = rec.x,
+						y = rec.y,
+						skill = rec.skill,
+						items = rec.items,
+						recipes = rec.recipes,
+						seen = rec.seen or 0,
+					})
+				end
+			end
+		end
+	end
+	if not kindFilter or kindFilter == "all" or kindFilter == "vendors" then
+		addBucket(db.vendors, "vendor")
+	end
+	if not kindFilter or kindFilter == "all" or kindFilter == "trainers" then
+		addBucket(db.trainers, "trainer")
+	end
+	table.sort(list, function(a, b)
+		if (a.seen or 0) ~= (b.seen or 0) then
+			return (a.seen or 0) > (b.seen or 0)
+		end
+		return (a.name or "") < (b.name or "")
+	end)
+	return list
+end
+
+function Contacts:SetWaypoint(rec)
+	if not rec or not rec.mapID or not rec.x or not rec.y then
+		CraftForge:Print(CraftForge.L["CONTACTS_NO_COORDS"] or "No coordinates recorded for this contact.")
+		return
+	end
+	if _G.TomTom and _G.TomTom.AddWaypoint then
+		_G.TomTom:AddWaypoint(rec.mapID, rec.x / 100, rec.y / 100, {
+			title = rec.name .. " (" .. (rec.zone or "?") .. ")",
+			persistent = false,
+			minimap = true,
+			world = true,
+		})
+		CraftForge:Print(string.format(CraftForge.L["CONTACTS_WAYPOINT_SET"] or "TomTom waypoint set: %s (%.1f, %.1f)", rec.name, rec.x, rec.y))
+	elseif C_Map and C_Map.SetUserWaypoint and UiMapPoint then
+		local point = UiMapPoint.CreateFromCoordinates(rec.mapID, rec.x / 100, rec.y / 100)
+		C_Map.SetUserWaypoint(point)
+		CraftForge:Print(string.format(CraftForge.L["CONTACTS_WAYPOINT_SET"] or "Waypoint set: %s (%.1f, %.1f)", rec.name, rec.x, rec.y))
+	else
+		CraftForge:Print(string.format("%s — %s (%.1f, %.1f)", rec.name, rec.zone or "?", rec.x, rec.y))
 	end
 end

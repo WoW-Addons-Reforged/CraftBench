@@ -444,12 +444,16 @@ local function renderOptionGroup(parent, optTable, parentChain, basePath, startY
 
 			local ddBtn
 			if UIStyle and UIStyle.CreateButton then
-				ddBtn = UIStyle.CreateButton(parent, 250, 24, curText .. "  v", "secondary")
+				ddBtn = UIStyle.CreateButton(parent, 250, 24, curText, "secondary")
 			else
 				ddBtn = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
 				ddBtn:SetSize(250, 24)
 				ddBtn:SetText(curText)
 			end
+			local arrow = ddBtn:CreateTexture(nil, "OVERLAY")
+			arrow:SetSize(14, 14)
+			arrow:SetPoint("RIGHT", ddBtn, "RIGHT", -6, 0)
+			arrow:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
 			ddBtn:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, y)
 			if disabled then
 				ddBtn:Disable()
@@ -562,6 +566,117 @@ local function renderOptionGroup(parent, optTable, parentChain, basePath, startY
 				end
 			end)
 			attachTooltip(eb, label, desc)
+			y = y - 30
+		elseif oType == "keybinding" then
+			local lbl = parent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+			lbl:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, y)
+			lbl:SetJustifyH("LEFT")
+			lbl:SetText(label)
+			lbl:SetTextColor(0.92, 0.85, 0.55)
+			if UIStyle then UIStyle.ApplyFont(lbl, -1) end
+			y = y - (lbl:GetStringHeight() or 14) - 4
+
+			local curVal = resolveMethod(opt, parentChain, "get", info) or ""
+			local bindBtn = CreateFrame("Button", nil, parent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+			bindBtn:SetSize(222, 24)
+			bindBtn:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, y)
+			if UIStyle and UIStyle.ApplyBox then
+				UIStyle.ApplyBox(bindBtn, 0.08, 0.09, 0.13, 1, 0.35, 0.38, 0.45, 1)
+			end
+			local bfs = bindBtn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+			bfs:SetAllPoints()
+			bfs:SetJustifyH("CENTER")
+			bindBtn._fs = bfs
+			bindBtn._listening = false
+
+			local function updateBindText()
+				if bindBtn._listening then
+					bfs:SetText("|cffffd100" .. (L["KEYBIND_PRESS"] or "Press key / mouse button...") .. "|r")
+					if bindBtn.SetBackdropBorderColor then bindBtn:SetBackdropBorderColor(0.95, 0.80, 0.25, 1) end
+				elseif curVal ~= "" then
+					bfs:SetText("|cff40ff40" .. tostring(curVal) .. "|r")
+					if bindBtn.SetBackdropBorderColor then bindBtn:SetBackdropBorderColor(0.35, 0.38, 0.45, 1) end
+				else
+					bfs:SetText("|cff888888" .. (L["KEYBIND_NONE"] or "Not Bound (Click to set)") .. "|r")
+					if bindBtn.SetBackdropBorderColor then bindBtn:SetBackdropBorderColor(0.35, 0.38, 0.45, 1) end
+				end
+			end
+			updateBindText()
+
+			local function stopListening(saveKey)
+				bindBtn._listening = false
+				bindBtn:EnableKeyboard(false)
+				bindBtn:EnableMouseWheel(false)
+				if saveKey ~= nil then
+					curVal = saveKey
+					resolveMethod(opt, parentChain, "set", info, saveKey)
+					onRefresh()
+					return
+				end
+				updateBindText()
+			end
+
+			local function modPrefix()
+				local p = ""
+				if IsAltKeyDown and IsAltKeyDown() then p = p .. "ALT-" end
+				if IsControlKeyDown and IsControlKeyDown() then p = p .. "CTRL-" end
+				if IsShiftKeyDown and IsShiftKeyDown() then p = p .. "SHIFT-" end
+				return p
+			end
+
+			bindBtn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+			bindBtn:SetScript("OnClick", function(_, button)
+				if disabled then return end
+				if button == "RightButton" and not bindBtn._listening then
+					stopListening("")
+					return
+				end
+				bindBtn._listening = true
+				bindBtn:EnableKeyboard(true)
+				bindBtn:EnableMouseWheel(true)
+				updateBindText()
+			end)
+			bindBtn:SetScript("OnMouseDown", function(_, button)
+				if not bindBtn._listening then return end
+				if button == "LeftButton" then return end
+				if button == "RightButton" then
+					stopListening(nil)
+					return
+				end
+				local mapped = (button == "MiddleButton") and "BUTTON3" or string.upper(tostring(button))
+				stopListening(modPrefix() .. mapped)
+			end)
+			bindBtn:SetScript("OnMouseWheel", function(_, delta)
+				if not bindBtn._listening then return end
+				stopListening(modPrefix() .. (delta > 0 and "MOUSEWHEELUP" or "MOUSEWHEELDOWN"))
+			end)
+			bindBtn:SetScript("OnKeyDown", function(_, key)
+				if not bindBtn._listening then return end
+				if key == "LSHIFT" or key == "RSHIFT" or key == "LCTRL" or key == "RCTRL" or key == "LALT" or key == "RALT" then
+					return
+				end
+				if key == "ESCAPE" then
+					stopListening(nil)
+					return
+				end
+				stopListening(modPrefix() .. tostring(key))
+			end)
+
+			local clearBtn = UIStyle and UIStyle.CreateButton and UIStyle.CreateButton(parent, 24, 24, "x", "secondary")
+				or CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
+			clearBtn:SetPoint("LEFT", bindBtn, "RIGHT", 4, 0)
+			clearBtn:SetScript("OnClick", function()
+				if not disabled then
+					stopListening("")
+				end
+			end)
+
+			if disabled then
+				bindBtn:Disable()
+				bindBtn:SetAlpha(0.45)
+				clearBtn:Disable()
+			end
+			attachTooltip(bindBtn, label, desc)
 			y = y - 30
 		elseif oType == "color" then
 			local cr, cg, cb, ca = resolveMethod(opt, parentChain, "get", info)
