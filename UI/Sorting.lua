@@ -18,6 +18,75 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
 local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+
+function CraftForge:GetItemMarketOrVendorPrice(itemID)
+	if not itemID or itemID == 0 then return 0, false end
+	local pref = self.db and self.db.profile and self.db.profile.plugins and self.db.profile.plugins.preferredAHAddon or "Auto"
+	local function queryAuctionator()
+		if _G.Auctionator and _G.Auctionator.API and _G.Auctionator.API.v1 and _G.Auctionator.API.v1.GetAuctionPriceByItemID then
+			local ok, price = pcall(_G.Auctionator.API.v1.GetAuctionPriceByItemID, "CraftForge", itemID)
+			if ok and type(price) == "number" and price > 0 then return price end
+		end
+	end
+	local function queryTSM()
+		if self.GetTSMPrice then
+			local p = self:GetTSMPrice(itemID)
+			if p and p > 0 then return p end
+		end
+	end
+	local function queryOE()
+		if _G.OEMarketInfo then
+			local ok, info = pcall(_G.OEMarketInfo, itemID)
+			if ok and type(info) == "table" and type(info.market) == "number" and info.market > 0 then
+				return info.market
+			end
+		end
+	end
+	local order = { queryAuctionator, queryTSM, queryOE }
+	if pref == "TSM" then
+		order = { queryTSM, queryAuctionator, queryOE }
+	elseif pref == "OribosExchange" then
+		order = { queryOE, queryAuctionator, queryTSM }
+	end
+	for _, fn in ipairs(order) do
+		local p = fn()
+		if p and p > 0 then
+			return p, true
+		end
+	end
+	local _, _, _, _, _, _, _, _, _, _, sellPrice = C_Item.GetItemInfo(itemID)
+	if type(sellPrice) == "number" and sellPrice > 0 then
+		return sellPrice, false
+	end
+	return 0, false
+end
+
+function CraftForge:GetRecipeCostAndProfit(recipe)
+	if not recipe then return nil, nil, nil end
+	local cost = 0
+	if recipe.reagentData then
+		for i = 1, #recipe.reagentData do
+			local reagent = recipe.reagentData[i]
+			if reagent and reagent.reagentID and reagent.numNeeded then
+				local unitPrice = self:GetItemMarketOrVendorPrice(reagent.reagentID)
+				if unitPrice <= 0 and self.VendorSellsReagent and self:VendorSellsReagent(reagent.reagentID) then
+					local _, _, _, _, _, _, _, _, _, _, sellPrice = C_Item.GetItemInfo(reagent.reagentID)
+					unitPrice = (sellPrice and sellPrice > 0) and (sellPrice * 4) or 0
+				end
+				cost = cost + (unitPrice * reagent.numNeeded)
+			end
+		end
+	end
+	local value = 0
+	if recipe.itemID and recipe.itemID ~= 0 then
+		local unitVal = self:GetItemMarketOrVendorPrice(recipe.itemID)
+		value = unitVal * (recipe.numMade or 1)
+	end
+	if cost == 0 and value == 0 then
+		return nil, nil, nil
+	end
+	return cost, value, (value - cost)
+end
 --
 -- Table of difficulty colors defined in CraftForgeData.lua
 --
@@ -208,6 +277,23 @@ local function SkillIsFilteredOut(skillIndex)
 		return true
 	end
 
+	if CraftForge:GetTradeSkillOption("onlyProfitable") then
+		local _, _, profit = CraftForge:GetRecipeCostAndProfit(recipe)
+		if not profit or profit <= 0 then
+			return true
+		end
+	end
+
+	if CraftForge:GetTradeSkillOption("hasSourceOnly") then
+		local src = C_TradeSkillUI and C_TradeSkillUI.GetRecipeSourceText and skill.id and C_TradeSkillUI.GetRecipeSourceText(skill.id)
+		if (not src or src == "") and CraftForge.ATTPlugin and CraftForge.ATTPlugin.GetRecipeSource then
+			src = CraftForge.ATTPlugin.GetRecipeSource(skill, recipe)
+		end
+		if not src or src == "" then
+			return true
+		end
+	end
+
 --
 -- Are we hiding anything that is trivial (has no chance of giving a skill point)
 --
@@ -274,7 +360,7 @@ local function SkillIsFilteredOut(skillIndex)
 		end
 		if searchText then
 			searchText = string.lower(searchText)
-			local wordList = { string.split(" ",filter) }
+			local wordList = { strsplit(" ",filter) }
 			for v,word in pairs(wordList) do
 				if string.find(searchText, word, 1, true) == nil then
 					return true
@@ -380,6 +466,24 @@ function CraftForge:InitializeSorting()
 	table.insert(sorters, 4, {["name"]=L["By Item Level"], ["sorter"]=sort_recipe_by_item_level})
 	table.insert(sorters, 5, {["name"]=L["By Quality"], ["sorter"]=sort_recipe_by_item_quality})
 	table.insert(sorters, 6, {["name"]=L["By Suffix"], ["sorter"]=sort_recipe_by_suffix})
+	table.insert(sorters, 7, {["name"]=L["By Profit"], ["sorter"]=function(tradeskill, a, b)
+		while a.subGroup and #a.subGroup.entries > 0 do
+			a = a.subGroup.entries[1]
+		end
+		while b.subGroup and #b.subGroup.entries > 0 do
+			b = b.subGroup.entries[1]
+		end
+		local ra = a.recipeID and CraftForge:GetRecipe(a.recipeID)
+		local rb = b.recipeID and CraftForge:GetRecipe(b.recipeID)
+		local _, _, pa = CraftForge:GetRecipeCostAndProfit(ra)
+		local _, _, pb = CraftForge:GetRecipeCostAndProfit(rb)
+		pa = pa or -999999999
+		pb = pb or -999999999
+		if pa == pb then
+			return (a.skillIndex or 0) < (b.skillIndex or 0)
+		end
+		return pa > pb
+	end})
 
 	recipe_sort_method = sort_recipe_by_index
 	CraftForgeSortAscButton:SetScript("OnClick", function()
@@ -533,13 +637,20 @@ end
 --
 function CraftForge:SortDropdown_Initialize()
 	recipe_sort_method = NOSORT
+	local currentSort = CraftForge:GetTradeSkillOption("sortmethod")
+	local matched = false
 	local info
 	for i=1, #sorters, 1 do
 		local entry = sorters[i]
 		info = UIDropDownMenu_CreateInfo()
 		info.text = entry.name
-		if entry.name == CraftForge:GetTradeSkillOption("sortmethod") then
+		info.isNotRadio = true
+		if entry.name == currentSort or (i == 1 and currentSort == "None") then
 			recipe_sort_method = entry.sorter
+			info.checked = true
+			matched = true
+		else
+			info.checked = false
 		end
 		info.func = CraftForge.SortDropdown_OnClick
 		info.value = i
@@ -547,6 +658,9 @@ function CraftForge:SortDropdown_Initialize()
 			info.owner = self:GetParent()
 		end
 		UIDropDownMenu_AddButton(info)
+	end
+	if not matched and sorters[1] then
+		recipe_sort_method = sorters[1].sorter
 	end
 --
 -- Can't call show_sort_toggle() here as the sort

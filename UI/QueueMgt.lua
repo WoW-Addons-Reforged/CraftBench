@@ -37,6 +37,7 @@ function CraftForge:CraftForgeQueueLoadDropdown_Initialize()
 	local i=1
 	info = UIDropDownMenu_CreateInfo()
 	info.text = ""
+	info.isNotRadio = true
 	info.func = CraftForge.QueueLoadDropdown_OnClick
 	info.value = i
 	i = i + 1
@@ -47,6 +48,7 @@ function CraftForge:CraftForgeQueueLoadDropdown_Initialize()
 	for k,v in pairs(CraftForge.db.profile.SavedQueues) do
 		info = UIDropDownMenu_CreateInfo()
 		info.text = k
+		info.isNotRadio = true
 		info.func = CraftForge.QueueLoadDropdown_OnClick
 		info.value = i
 		i = i + 1

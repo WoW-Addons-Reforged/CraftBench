@@ -251,7 +251,7 @@
 			<OnLoad>
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 				self:RegisterForDrag("LeftButton")
-				self:EnableKeyboard(false)
+				if not InCombatLockdown() then self:EnableKeyboard(false) end
 			</OnLoad>
 			<OnClick>
 				CraftForge:InventoryFilterButtons_Hide()
@@ -274,7 +274,7 @@
 			</OnEnter>
 			<OnHide>
 				if self == CraftForge.mouseOver then
-					CraftForgeFrame:EnableKeyboard(false)
+					if not InCombatLockdown() then CraftForgeFrame:EnableKeyboard(false) end
 					CraftForge.mouseOver = nil
 				end
 			</OnHide>
@@ -287,10 +287,12 @@
 					if self == CraftForge.mouseOver then
 --						CraftForge:SkillButton_OnEnter(CraftForge.mouseOver)
 					end
-					if IsControlKeyDown() then
-						CraftForgeFrame:EnableKeyboard(true)
-					else
-						CraftForgeFrame:EnableKeyboard(false)
+					if not InCombatLockdown() then
+						if IsControlKeyDown() then
+							CraftForgeFrame:EnableKeyboard(true)
+						else
+							CraftForgeFrame:EnableKeyboard(false)
+						end
 					end
 				end
 			</OnEvent>
@@ -298,15 +300,15 @@
 	</Button>
 	<Button name="CraftForgeSkillButtonTemplate" hidden="true" virtual="true">
 		<Size>
-			<AbsDimension x="293" y="16" />
+			<AbsDimension x="293" y="20" />
 		</Size>
 		<!--  3 pieces of text: required level, name, craftable counts
 		-->
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString name="$parentLevel" inherits="GameFontNormalSmall" justifyH="LEFT">
+				<FontString name="$parentLevel" inherits="GameFontNormal" justifyH="RIGHT">
 					<Size>
-						<AbsDimension x="25" y="0" />
+						<AbsDimension x="20" y="0" />
 					</Size>
 					<Anchors>
 						<Anchor point="LEFT">
@@ -317,7 +319,7 @@
 					</Anchors>
 					<Color r="1" g="1" b="1" a="1" />
 				</FontString>
-				<FontString name="$parentCounts" inherits="GameFontNormalSmall" justifyH="RIGHT">
+				<FontString name="$parentCounts" inherits="GameFontNormal" justifyH="RIGHT">
 					<Size>
 						<AbsDimension x="100" y="0" />
 					</Size>
@@ -328,12 +330,16 @@
 				</FontString>
 				<FontString name="$parentName" inherits="GameFontNormal" justifyH="LEFT">
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="$parentLevel" relativePoint="RIGHT" />
+						<Anchor point="LEFT" relativeTo="$parentLevel" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="4" y="0"/>
+							</Offset>
+						</Anchor>
 						<Anchor point="RIGHT" relativeTo="$parentCounts" relativePoint="LEFT" />
 					</Anchors>
 					<Color r="1" g="1" b="1" a="1" />
 				</FontString>
-				<FontString name="$parentSuffix" inherits="GameFontNormalSmall" justifyH="RIGHT">
+				<FontString name="$parentSuffix" inherits="GameFontNormal" justifyH="RIGHT">
 					<Anchors>
 						<Anchor point="RIGHT" relativeTo="$parentCounts" relativePoint="LEFT" />
 					</Anchors>
@@ -412,7 +418,7 @@
 			<OnLoad>
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 				self:RegisterForDrag("LeftButton")
-				self:EnableKeyboard(false)
+				if not InCombatLockdown() then self:EnableKeyboard(false) end
 			</OnLoad>
 			<OnClick>
 				CraftForge:InventoryFilterButtons_Hide()
@@ -436,8 +442,10 @@
 			</OnEnter>
 			<OnHide>
 				if self == CraftForge.mouseOver then
-					CraftForgeFrame:EnableKeyboard(false)
+					if not InCombatLockdown() then CraftForgeFrame:EnableKeyboard(false) end
 					CraftForge.mouseOver = nil
+					if CraftForge.gttScale then GameTooltip:SetScale(CraftForge.gttScale) end
+					GameTooltip:Hide()
 				end
 			</OnHide>
 			<OnLeave>
@@ -446,16 +454,20 @@
 				local r,g,b = ct:GetTextColor()
 				_G[self:GetName().."Name"]:SetTextColor(r, g, b)
 				CraftForge.mouseOver = nil
+				if CraftForge.gttScale then GameTooltip:SetScale(CraftForge.gttScale) end
+				GameTooltip:Hide()
 			</OnLeave>
 			<OnEvent>
 				if event == "MODIFIER_STATE_CHANGED" then
 					if self == CraftForge.mouseOver then
 						CraftForge:SkillButton_OnEnter(CraftForge.mouseOver)
 					end
-					if IsControlKeyDown() then
-						CraftForgeFrame:EnableKeyboard(true)
-					else
-						CraftForgeFrame:EnableKeyboard(false)
+					if not InCombatLockdown() then
+						if IsControlKeyDown() then
+							CraftForgeFrame:EnableKeyboard(true)
+						else
+							CraftForgeFrame:EnableKeyboard(false)
+						end
 					end
 				end
 			</OnEvent>
@@ -472,16 +484,16 @@
 		-->
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString name="$parentLevel" inherits="GameFontNormalSmall" justifyH="LEFT">
+				<FontString name="$parentLevel" inherits="GameFontNormal" justifyH="RIGHT">
 					<Size>
-						<AbsDimension x="25" y="0" />
+						<AbsDimension x="20" y="0" />
 					</Size>
 					<Anchors>
 						<Anchor point="LEFT" />
 					</Anchors>
 					<Color r="1" g="1" b="1" a="1" />
 				</FontString>
-				<FontString name="$parentCounts" inherits="GameFontNormalSmall" justifyH="RIGHT">
+				<FontString name="$parentCounts" inherits="GameFontNormal" justifyH="RIGHT">
 					<Size>
 						<AbsDimension x="100" y="0" />
 					</Size>
@@ -840,45 +852,17 @@
 	</Frame>
 	<!--
 	#
-	# Tool tip to be used when hovering over recipe lines in the skill list
-	#
-	-->
-	<!--
-	<GameTooltip name="CraftForgeTradeskillTooltip" frameStrata="TOOLTIP" hidden="true" inherits="GameTooltipTemplate">
-		<Layers>
-			<Layer level="ARTWORK">
-				<FontString name="$parentTextLeft1" inherits="GameTooltipTextSmall" hidden="true">
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="10" y="-10"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-				<FontString name="$parentTextRight1" inherits="GameTooltipTextSmall" hidden="true">
-					<Anchors>
-						<Anchor point="RIGHT" relativeTo="$parentTextLeft1" relativePoint="LEFT">
-							<Offset>
-								<AbsDimension x="40" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
-	</GameTooltip>
-	-->
-	<!--
-	#
 	#   Frames
 	#
 	# Don't change the name 'CraftForgeFrame' as other addons may depend on it
 	-->
-	<Frame name="CraftForgeFrame" toplevel="true" movable="true" clampedToScreen="true" resizable="true" parent="UIParent" enableMouse="true" hidden="true" inherits="BackdropTemplate">
+	<Frame name="CraftForgeFrame" toplevel="true" movable="true" clampedToScreen="true" resizable="false" parent="UIParent" enableMouse="true" hidden="true" inherits="BackdropTemplate">
 		<Size>
-			<AbsDimension x="750" y="580"/>
+			<AbsDimension x="900" y="620"/>
 		</Size>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
 		<Frames>
 			<!--
 			#
@@ -960,7 +944,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="CraftForgeFrame" relativePoint="TOPLEFT">
 						<Offset>
-							<AbsDimension x="70" y="-32"/>
+							<AbsDimension x="88" y="-34"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -986,7 +970,7 @@
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="CraftForgeRecipeGroupDropdownButton" relativePoint="RIGHT">
 						<Offset>
-							<AbsDimension x="-2" y="0"/>
+							<AbsDimension x="5" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -1007,9 +991,9 @@
 			-->
 			<Frame name="CraftForgeSortDropdown" inherits="UIDropDownMenuTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeRecipeGroupDropdown" relativePoint="BOTTOMLEFT">
+					<Anchor point="LEFT" relativeTo="CraftForgeRecipeGroupOperations" relativePoint="RIGHT">
 						<Offset>
-							<AbsDimension x="0" y="6"/>
+							<AbsDimension x="54" y="-2"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -1037,7 +1021,7 @@
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="CraftForgeSortDropdownButton" relativePoint="RIGHT">
 						<Offset>
-							<AbsDimension x="0" y="0"/>
+							<AbsDimension x="5" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -1051,7 +1035,7 @@
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="CraftForgeSortDropdownButton" relativePoint="RIGHT">
 						<Offset>
-							<AbsDimension x="0" y="0"/>
+							<AbsDimension x="5" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -1064,9 +1048,9 @@
 			-->
 			<Frame name="CraftForgeFilterDropdown" inherits="UIDropDownMenuTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeSortDropdown" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeRecipeGroupDropdown" relativePoint="BOTTOMLEFT">
 						<Offset>
-							<AbsDimension x="0" y="6"/>
+							<AbsDimension x="0" y="-2"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -1092,7 +1076,7 @@
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="CraftForgeFilterDropdownButton" relativePoint="RIGHT">
 						<Offset>
-							<AbsDimension x="-2" y="0"/>
+							<AbsDimension x="5" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -1130,12 +1114,12 @@
 			-->
 			<EditBox name="CraftForgeSearchBox" letters="50" historyLines="0" autoFocus="false">
 				<Size>
-					<AbsDimension x="126" y="20"/>
+					<AbsDimension x="152" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeFilterDropdown" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeSortDropdown" relativePoint="BOTTOMLEFT">
 						<Offset>
-							<AbsDimension x="22" y="4"/>
+							<AbsDimension x="18" y="-4"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -1243,12 +1227,12 @@
 			-->
 			<StatusBar name="CraftForgeRankFrame" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="0">
 				<Size>
-					<AbsDimension x="297" y="14"/>
+					<AbsDimension x="360" y="18"/>
 				</Size>
 				<Anchors>
 					<Anchor point="TOPRIGHT">
 						<Offset>
-							<AbsDimension x="-12" y="-62"/>
+							<AbsDimension x="-10" y="-58"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -1258,7 +1242,7 @@
 							<Anchors>
 								<Anchor point="TOP" relativeTo="CraftForgeRankFrame">
 									<Offset>
-										<AbsDimension x="0" y="-1"/>
+										<AbsDimension x="0" y="-2"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
@@ -1267,7 +1251,7 @@
 							<Anchors>
 								<Anchor point="TOP" relativeTo="CraftForgeRankFrame">
 									<Offset>
-										<AbsDimension x="0" y="-24"/>
+										<AbsDimension x="0" y="-20"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
@@ -1307,12 +1291,12 @@
 			-->
 			<Frame name="CraftForgeSkillListParent" parent="CraftForgeFrame" inherits="BackdropTemplate">
 				<Size>
-					<AbsDimension x="360" y="430"/>
+					<AbsDimension x="360" y="446"/>
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="CraftForgeFrame" relativePoint="TOPLEFT">
 						<Offset>
-							<AbsDimension x="10" y="-130"/>
+							<AbsDimension x="10" y="-114"/>
 						</Offset>
 					</Anchor>
 					<Anchor point="BOTTOM" relativeTo="CraftForgeFrame" relativePoint="BOTTOM">
@@ -1772,12 +1756,12 @@
 			-->
 			<Frame name="CraftForgeReagentParent" parent="CraftForgeFrame" inherits="BackdropTemplate">
 				<Size>
-					<AbsDimension x="360" y="300"/>
+					<AbsDimension x="360" y="316"/>
 				</Size>
 				<Anchors>
 					<Anchor point="TOPRIGHT" relativeTo="CraftForgeFrame" relativePoint="TOPRIGHT">
 						<Offset>
-							<AbsDimension x="-10" y="-130"/>
+							<AbsDimension x="-10" y="-114"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -2189,7 +2173,7 @@
 			-->
 			<Button name="CraftForgeRecipeNotesButton" inherits="UIPanelButtonTemplate" parent="CraftForgeFrame">
 				<Size>
-					<AbsDimension x="75" y="20"/>
+					<AbsDimension x="82" y="22"/>
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeReagentParent" relativePoint="TOPRIGHT">
@@ -2207,12 +2191,12 @@
 			</Button>
 			<Button name="CraftForgeQueueManagementButton" inherits="UIPanelButtonTemplate" parent="CraftForgeFrame">
 				<Size>
-					<AbsDimension x="95" y="20"/>
+					<AbsDimension x="115" y="22"/>
 				</Size>
 				<Anchors>
 					<Anchor point="RIGHT" relativeTo="CraftForgeRecipeNotesButton" relativePoint="LEFT">
 						<Offset>
-							<AbsDimension x="0" y="0"/>
+							<AbsDimension x="-3" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -2224,12 +2208,12 @@
 			</Button>
 			<Button name="CraftForgeIgnoredMatsButton" inherits="UIPanelButtonTemplate" parent="CraftForgeFrame">
 				<Size>
-					<AbsDimension x="115" y="20"/>
+					<AbsDimension x="115" y="22"/>
 				</Size>
 				<Anchors>
 					<Anchor point="RIGHT" relativeTo="CraftForgeQueueManagementButton" relativePoint="LEFT">
 						<Offset>
-							<AbsDimension x="0" y="0"/>
+							<AbsDimension x="-3" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -2245,12 +2229,12 @@
 			-->
 			<Button name="CraftForgeAuctionatorButton" inherits="UIPanelButtonTemplate" text="Auctionator" parent="CraftForgeFrame">
 				<Size>
-					<AbsDimension x="85" y="20"/>
+					<AbsDimension x="90" y="22"/>
 				</Size>
 				<Anchors>
 					<Anchor point="RIGHT" relativeTo="CraftForgeIgnoredMatsButton" relativePoint="LEFT">
 						<Offset>
-							<AbsDimension x="0" y="0"/>
+							<AbsDimension x="-3" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -2587,12 +2571,12 @@
 			-->
 			<EditBox name="CraftForgeItemCountInputBox" letters="4" historyLines="0" numeric="true" autoFocus="false">
 				<Size>
-					<AbsDimension x="36" y="20"/>
+					<AbsDimension x="44" y="20"/>
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueAllButton" relativePoint="TOPRIGHT">
 						<Offset>
-							<AbsDimension x="39" y="0"/>
+							<AbsDimension x="22" y="-1"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -2662,12 +2646,12 @@
 			</EditBox>
 			<Button name="CraftForgeClearNumButton" parent="CraftForgeFrame">
 				<Size>
-					<AbsDimension x="32" y="32"/>
+					<AbsDimension x="22" y="22"/>
 				</Size>
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="CraftForgeItemCountInputBox" relativePoint="RIGHT">
 						<Offset>
-							<AbsDimension x="-8" y="-2"/>
+							<AbsDimension x="2" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -2807,7 +2791,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="CraftForgeClearNumButton" relativePoint="TOPRIGHT">
 						<Offset>
-							<AbsDimension x="11" y="-4"/>
+							<AbsDimension x="22" y="-4"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -3022,11 +3006,12 @@
 			</OnKeyDown>
 			<OnShow>
 				PlaySound(SOUNDKIT.IG_BACKPACK_OPEN) -- "igBackPackOpen"
-				self:EnableKeyboard(false)
+				if not InCombatLockdown() then self:EnableKeyboard(false) end
 			</OnShow>
 			<OnHide>
 				PlaySound(SOUNDKIT.IG_BACKPACK_CLOSE) -- "igBackPackClose"
-				self:EnableKeyboard(false)
+				if not InCombatLockdown() then self:EnableKeyboard(false) end
+				GameTooltip:Hide()
 			</OnHide>
 			<OnUpdate>
 				if CraftForge.dragEngaged then

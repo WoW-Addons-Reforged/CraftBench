@@ -40,7 +40,7 @@ StaticPopupDialogs["CRAFTFORGE_Version"] = {
         local textFrame = self.Text or self.text
         local editBox = self.EditBox or self.editBox
 		local version = textFrame.text_arg1
- 		editBox:SetText(version)
+		editBox:SetText(version)
         editBox:SetFocus()
         editBox:HighlightText()
 	end,
@@ -157,32 +157,6 @@ CraftForge.options =
 					width = "full",
 					order = 16
 				},
-				display_full_tooltip = {
-					type = "toggle",
-					name = L["SHOWFULLTOOLTIPNAME"],
-					desc = L["SHOWFULLTOOLTIPDESC"],
-					get = function()
-						return CraftForge.db.profile.display_full_tooltip
-					end,
-					set = function(self,value)
-						CraftForge.db.profile.display_full_tooltip = value
-					end,
-					width = "full",
-					order = 17
-				},
-				display_item_tooltip = {
-					type = "toggle",
-					name = L["SHOWITEMTOOLTIPNAME"],
-					desc = L["SHOWITEMTOOLTIPDESC"],
-					get = function()
-						return CraftForge.db.profile.display_item_tooltip
-					end,
-					set = function(self,value)
-						CraftForge.db.profile.display_item_tooltip = value
-					end,
-					width = "full",
-					order = 18
-				},
 				link_craftable_reagents = {
 					type = "toggle",
 					name = L["LINKCRAFTABLEREAGENTSNAME"],
@@ -195,19 +169,6 @@ CraftForge.options =
 					end,
 					width = "full",
 					order = 19
-				},
-				queue_craftable_reagents = {
-					type = "toggle",
-					name = L["QUEUECRAFTABLEREAGENTSNAME"],
-					desc = L["QUEUECRAFTABLEREAGENTSDESC"],
-					get = function()
-						return CraftForge.db.profile.queue_craftable_reagents
-					end,
-					set = function(self,value)
-						CraftForge.db.profile.queue_craftable_reagents = value
-					end,
-					width = 1.5,
-					order = 20
 				},
 				queue_tools = {
 					type = "toggle",
@@ -287,21 +248,6 @@ CraftForge.options =
 					width = 1.5,
 					order = 23
 				},
---[[
-				queue_to_front = {
-					type = "toggle",
-					name = L["QUEUETOFRONTNAME"],
-					desc = L["QUEUETOFRONTDESC"],
-					get = function()
-						return CraftForge.db.profile.queue_to_front
-					end,
-					set = function(self,value)
-						CraftForge.db.profile.queue_to_front = value
-					end,
-					width = "full",
-					order = 23
-				},
---]]
 				queue_glyph_reagents = {
 					hidden = not CraftForge.isRetail,
 					type = "toggle",
@@ -316,7 +262,7 @@ CraftForge.options =
 					width = "full",
 					order = 24
 				},
-				header = {
+				shoppingHeader = {
 					type = "header",
 					name = L["DISPLAYSHOPPINGLIST"],
 					order = 25
@@ -520,6 +466,106 @@ CraftForge.options =
 					end,
 					width = "full",
 					order = 8,
+				},
+				yieldHeader = {
+					type = "header",
+					name = L["PROCESSYIELDHEADER"],
+					order = 9,
+				},
+				process_tooltip_disenchant = {
+					type = "toggle",
+					name = L["PROCESSTOOLTIPDENAME"],
+					desc = L["PROCESSTOOLTIPDEDESC"],
+					get = function()
+						return CraftForge.db.profile.process_tooltip_disenchant
+					end,
+					set = function(_, value)
+						CraftForge.db.profile.process_tooltip_disenchant = value
+					end,
+					width = "full",
+					order = 10,
+				},
+				process_tooltip_prospect = {
+					type = "toggle",
+					name = L["PROCESSTOOLTIPPROSPECTNAME"],
+					desc = L["PROCESSTOOLTIPPROSPECTDESC"],
+					get = function()
+						return CraftForge.db.profile.process_tooltip_prospect
+					end,
+					set = function(_, value)
+						CraftForge.db.profile.process_tooltip_prospect = value
+					end,
+					width = "full",
+					order = 11,
+				},
+				process_tooltip_mill = {
+					type = "toggle",
+					name = L["PROCESSTOOLTIPMILLNAME"],
+					desc = L["PROCESSTOOLTIPMILLDESC"],
+					get = function()
+						return CraftForge.db.profile.process_tooltip_mill
+					end,
+					set = function(_, value)
+						CraftForge.db.profile.process_tooltip_mill = value
+					end,
+					width = "full",
+					order = 12,
+				},
+				process_tooltip_value = {
+					type = "toggle",
+					name = L["PROCESSTOOLTIPVALUENAME"],
+					desc = L["PROCESSTOOLTIPVALUEDESC"],
+					get = function()
+						return CraftForge.db.profile.process_tooltip_value
+					end,
+					set = function(_, value)
+						CraftForge.db.profile.process_tooltip_value = value
+					end,
+					width = "full",
+					order = 13,
+				},
+				open_process_panel = {
+					type = "execute",
+					name = L["PROCESS_PANEL_OPEN"],
+					desc = L["PROCESS_PANEL_OPEN_DESC"],
+					func = function()
+						if CraftForge.ShowProcessPanel then
+							CraftForge:ShowProcessPanel()
+						end
+					end,
+					order = 14,
+				},
+				autopopupHeader = {
+					type = "header",
+					name = L["PROCESS_AUTOPOPUP_HEADER"],
+					order = 15,
+				},
+				process_autopopup = {
+					type = "toggle",
+					name = L["PROCESS_AUTOPOPUP_NAME"],
+					desc = L["PROCESS_AUTOPOPUP_DESC"],
+					get = function()
+						return CraftForge.db.profile.process_autopopup
+					end,
+					set = function(_, value)
+						CraftForge.db.profile.process_autopopup = value
+						if value and CraftForge.CheckAutoProcessPrompt then
+							CraftForge:CheckAutoProcessPrompt()
+						end
+					end,
+					width = "full",
+					order = 16,
+				},
+				process_autopopup_clear_ignore = {
+					type = "execute",
+					name = L["PROCESS_AUTOPOPUP_CLEAR"],
+					desc = L["PROCESS_AUTOPOPUP_CLEAR_DESC"],
+					func = function()
+						if CraftForge.ClearAutoProcessIgnores then
+							CraftForge:ClearAutoProcessIgnores()
+						end
+					end,
+					order = 17,
 				},
 			},
 		},
@@ -1027,8 +1073,8 @@ CraftForge.options =
 		},
 		collectdetails = {
 			type = "toggle",
-			name = "Collect details",
-			desc = "Disable/Enable collecting bag, bank, guildbank details",
+			name = L["Collect details"],
+			desc = L["Disable/Enable collecting bag, bank, guildbank details"],
 			get = function()
 				return CraftForge.db.profile.collect_details
 			end,
@@ -1404,34 +1450,10 @@ CraftForge.options =
 			end,
 			order = 81
 		},
-		altskilllevels = {
-			type = "toggle",
-			name = "AltSkillLevels",
-			desc = "Use Alternate Skill Levels",
-			get = function()
-				return CraftForge.db.profile.altskilllevels
-			end,
-			set = function(self,value)
-				CraftForge.db.profile.altskilllevels = value
-			end,
-			order = 82
-		},
-		baseskilllevel = {
-			type = "toggle",
-			name = "BaseSkillLevel",
-			desc = "Use Alternate Base Skill Level",
-			get = function()
-				return CraftForge.db.profile.baseskilllevel
-			end,
-			set = function(self,value)
-				CraftForge.db.profile.baseskilllevel = value
-			end,
-			order = 83
-		},
 		news = {
 			type = 'execute',
-			name = "Display news",
-			desc = "Display the news frame",
+			name = L["Display news"],
+			desc = L["Display the news frame"],
 			func = function()
 				if not (UnitAffectingCombat("player")) then
 					CraftForge.NewsGUI:Toggle()
@@ -1941,7 +1963,7 @@ CraftForge.options =
 						local item, id, price, name, link
 						local server = CraftForge.data.server or 0
 						DA.DEBUG(0,"value= "..value)
-						item, price = string.split(",",value)
+						item, price = strsplit(",",value)
 						if string.find(item,"|H") then
 							id = CraftForge:GetItemIDFromLink(item)
 						else
@@ -2034,7 +2056,7 @@ CraftForge.options =
 						local item, id, data, name, link
 						local player = CraftForge.currentPlayer
 						DA.DEBUG(0,"value= "..value)
-						item, data = string.split(",",value)
+						item, data = strsplit(",",value)
 						if string.find(item,"|H") then
 							id = CraftForge:GetItemIDFromLink(item)
 						else
@@ -2254,6 +2276,248 @@ CraftForge.options =
 			end,
 			order = 121
 		},
+		options = {
+			type = 'execute',
+			name = L["Options"],
+			desc = L["Open standalone CraftForge options window"],
+			func = function()
+				if CraftForge.Share and CraftForge.Share.OpenOptions then
+					CraftForge.Share:OpenOptions()
+				else
+					CraftForge:ShowOptions()
+				end
+			end,
+			order = 115
+		},
+		export = {
+			type = 'execute',
+			name = L["Export Queue"],
+			desc = L["Export current crafting queue as a shareable string"],
+			func = function()
+				if CraftForge.Share then
+					CraftForge.Share:ShowExportDialog()
+				end
+			end,
+			order = 116
+		},
+		import = {
+			type = 'execute',
+			name = L["Import Queue"],
+			desc = L["Import a crafting queue from a shareable string"],
+			func = function()
+				if CraftForge.Share then
+					CraftForge.Share:ShowImportDialog()
+				end
+			end,
+			order = 117
+		},
+		sendqueue = {
+			type = 'input',
+			name = L["Send Queue"],
+			desc = L["Send current queue via AceComm (e.g. GUILD, PARTY, or WHISPER <player>)"],
+			set = function(_, val)
+				if CraftForge.Share then
+					local dist, target = strsplit(" ", val or "", 2)
+					CraftForge.Share:SendQueue(dist, target)
+				end
+			end,
+			order = 118
+		},
+		minimap = {
+			type = 'toggle',
+			name = L["Minimap Button"],
+			desc = L["Show or hide the CraftForge minimap button"],
+			get = function()
+				return not (CraftForge.db and CraftForge.db.profile and CraftForge.db.profile.minimap and CraftForge.db.profile.minimap.hide)
+			end,
+			set = function(_, val)
+				if CraftForge.Share then
+					CraftForge.Share:ToggleMinimapIcon(val)
+				end
+			end,
+			order = 119
+		},
+		find = {
+			type = 'execute',
+			name = L["ALT_FINDER_TITLE"],
+			desc = L["ALT_FINDER_DESC"],
+			func = function()
+				if CraftForge.ShowAltFinder then
+					CraftForge:ShowAltFinder()
+				end
+			end,
+			order = 120
+		},
+		process = {
+			type = 'execute',
+			name = L["PROCESS_PANEL_OPEN"],
+			desc = L["PROCESS_PANEL_OPEN_DESC"],
+			func = function()
+				if CraftForge.ShowProcessPanel then
+					CraftForge:ShowProcessPanel()
+				end
+			end,
+			order = 121
+		},
+		fishing = {
+			type = 'group',
+			name = L["Fishing"] or "Fishing",
+			order = 3.5,
+			args = {
+				header = {
+					type = 'header',
+					name = L["Fishing"] or "Fishing",
+					order = 1,
+				},
+				open_panel = {
+					type = 'execute',
+					name = L["FISH_OPEN_PANEL"] or "Open Fishing Window (/cf fish)",
+					desc = L["FISH_OPEN_PANEL_DESC"],
+					func = function()
+						if CraftForge.ShowFishing then
+							CraftForge:ShowFishing()
+						end
+					end,
+					order = 2,
+				},
+				show_bar = {
+					type = 'toggle',
+					name = L["FISH_SHOW_BAR"] or "Show Floating Fishing Bar",
+					desc = L["FISH_SHOW_BAR_DESC"],
+					get = function()
+						local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+						return not gdb or not gdb.settings or gdb.settings.showBar ~= false
+					end,
+					set = function(_, val)
+						local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+						if gdb and gdb.settings then
+							gdb.settings.showBar = val and true or false
+						end
+						if CraftForge.FishingUI and CraftForge.FishingUI.SetBarVisible then
+							CraftForge.FishingUI:SetBarVisible(val and true or false)
+						end
+					end,
+					order = 3,
+				},
+				auto_lure = {
+					type = 'toggle',
+					name = L["FISH_AUTO_LURE"] or "Auto-Apply Best Lure",
+					desc = L["FISH_AUTO_LURE_DESC"],
+					get = function()
+						local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+						return not gdb or not gdb.settings or gdb.settings.autoLure ~= false
+					end,
+					set = function(_, val)
+						local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+						if gdb and gdb.settings then
+							gdb.settings.autoLure = val and true or false
+						end
+					end,
+					order = 4,
+				},
+				easy_cast = {
+					type = 'toggle',
+					name = L["FISH_EASY_CAST"] or "Double-Right-Click to Cast (Easy-Cast)",
+					desc = L["FISH_EASY_CAST_DESC"],
+					get = function()
+						local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+						return not gdb or not gdb.settings or gdb.settings.easyCast ~= false
+					end,
+					set = function(_, val)
+						local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+						if gdb and gdb.settings then
+							gdb.settings.easyCast = val and true or false
+						end
+					end,
+					order = 5,
+				},
+				cast_key = {
+					type = 'input',
+					name = L["FISH_CAST_KEY"] or "Cast / Apply Lure Keybind",
+					desc = L["FISH_CAST_KEY_DESC"],
+					get = function()
+						local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+						return (gdb and gdb.settings and gdb.settings.castKey) or ""
+					end,
+					set = function(_, val)
+						local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+						if gdb and gdb.settings then
+							gdb.settings.castKey = val or ""
+						end
+						if CraftForge.Fishing and CraftForge.Fishing.ApplyKeyBindings then
+							CraftForge.Fishing:ApplyKeyBindings()
+						end
+					end,
+					order = 6,
+				},
+				swap_key = {
+					type = 'input',
+					name = L["FISH_SWAP_KEY"] or "Swap Pole / Weapons Keybind",
+					desc = L["FISH_SWAP_KEY_DESC"],
+					get = function()
+						local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+						return (gdb and gdb.settings and gdb.settings.swapKey) or ""
+					end,
+					set = function(_, val)
+						local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+						if gdb and gdb.settings then
+							gdb.settings.swapKey = val or ""
+						end
+						if CraftForge.Fishing and CraftForge.Fishing.ApplyKeyBindings then
+							CraftForge.Fishing:ApplyKeyBindings()
+						end
+					end,
+					order = 7,
+				},
+				verbose = {
+					type = 'toggle',
+					name = L["FISH_VERBOSE"] or "Log Catches in Chat",
+					desc = L["FISH_VERBOSE_DESC"],
+					get = function()
+						local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+						return gdb and gdb.settings and gdb.settings.verbose == true
+					end,
+					set = function(_, val)
+						local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+						if gdb and gdb.settings then
+							gdb.settings.verbose = val and true or false
+						end
+					end,
+					order = 8,
+				},
+				keybind_info = {
+					type = 'description',
+					name = L["FISH_KEYBIND_INFO"] or "Key Bindings: Esc -> Key Bindings -> AddOns -> CraftForge.",
+					order = 9,
+				},
+				clear_db = {
+					type = 'execute',
+					name = L["FISH_RESET_DB"] or "Reset Fishing Catch Database",
+					desc = L["FISH_RESET_DB_DESC"],
+					func = function()
+						local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+						if gdb then
+							gdb.zones = {}
+							if CraftForge.FishingUI and CraftForge.FishingUI.Refresh then
+								CraftForge.FishingUI:Refresh()
+							end
+						end
+					end,
+					order = 10,
+				},
+			},
+		},
+		fish = {
+			type = 'execute',
+			name = L["Fishing"] or "Fishing",
+			desc = "Open CraftForge Fishing tracker, catch log and auto-lure controls",
+			func = function()
+				if CraftForge.ShowFishing then
+					CraftForge:ShowFishing()
+				end
+			end,
+			order = 122
+		},
 		bagclear = {
 			type = 'execute',
 			name = "bagclear",
@@ -2270,24 +2534,55 @@ CraftForge.options =
 }
 
 function CraftForge:ConfigureOptions()
+	if self.options.args.appearance and self.options.args.appearance.args then
+		self.options.args.appearance.args.minimap = self.options.args.minimap
+	end
+	if self.options.args.features and self.options.args.features.args then
+		self.options.args.features.args.export = self.options.args.export
+		self.options.args.features.args.import = self.options.args.import
+	end
 	local acecfg = LibStub("AceConfig-3.0")
-	acecfg:RegisterOptionsTable("CraftForge", self.options, "craftforge")
+	acecfg:RegisterOptionsTable("CraftForge", self.options, { "craftforge", "cf" })
 	acecfg:RegisterOptionsTable("CraftForge Features", self.options.args.features)
 	acecfg:RegisterOptionsTable("CraftForge Appearance", self.options.args.appearance)
+	acecfg:RegisterOptionsTable("CraftForge Processing", self.options.args.processing)
 	acecfg:RegisterOptionsTable("CraftForge Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db))
 	acecfg:RegisterOptionsTable("CraftForge Plugins", CraftForge.pluginsOptions)
+	acecfg:RegisterOptionsTable("CraftForgeGUI", {
+		type = "group",
+		name = "CraftForge",
+		childGroups = "tab",
+		args = {
+			features = self.options.args.features,
+			appearance = self.options.args.appearance,
+			processing = self.options.args.processing,
+			fishing = self.options.args.fishing,
+			plugins = CraftForge.pluginsOptions,
+			profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db),
+		},
+	})
 	local acedia = LibStub("AceConfigDialog-3.0")
+	acedia:SetDefaultSize("CraftForgeGUI", 740, 560)
 	CraftForge.optionsFrame, CraftForge.categoryID = acedia:AddToBlizOptions("CraftForge Features", "CraftForge")
-	acedia:AddToBlizOptions("CraftForge Appearance", "Appearance", "CraftForge")
-	acedia:AddToBlizOptions("CraftForge Profiles", "Profiles", "CraftForge")
-	acedia:AddToBlizOptions("CraftForge Plugins", "Plugins", "CraftForge")
+	acedia:AddToBlizOptions("CraftForge Appearance", L["Appearance"], "CraftForge")
+	acedia:AddToBlizOptions("CraftForge Processing", L["Material Processing"], "CraftForge")
+	acedia:AddToBlizOptions("CraftForge Profiles", L["Profiles"], "CraftForge")
+	acedia:AddToBlizOptions("CraftForge Plugins", L["Plugins"], "CraftForge")
 end
 
 --
 -- Show the options window
 --
-function CraftForge:ShowOptions()
---	Settings.OpenToCategory("CraftForge")
-	Settings.OpenToCategory(CraftForge.categoryID)
+function CraftForge:ShowOptions(tabKey, subKey)
+	if CraftForge.OptionsUI and CraftForge.OptionsUI.Show then
+		CraftForge.OptionsUI:Show(tabKey, subKey)
+	elseif Settings and Settings.OpenToCategory and CraftForge.categoryID then
+		Settings.OpenToCategory(CraftForge.categoryID)
+	elseif InterfaceOptionsFrame_OpenToCategory and CraftForge.optionsFrame then
+		InterfaceOptionsFrame_OpenToCategory(CraftForge.optionsFrame)
+		InterfaceOptionsFrame_OpenToCategory(CraftForge.optionsFrame)
+	elseif CraftForge.Share and CraftForge.Share.OpenOptions then
+		CraftForge.Share:OpenOptions()
+	end
 end
 

@@ -332,7 +332,7 @@ function CraftForge:BuyRequiredReagents()
 					money = GetMoney()
 					DA.DEBUG(0,"money= "..tostring(money)..", count= "..tostring(count)..", name= "..tostring(name)..", price= "..tostring(price)..", quantity= "..tostring(quantity)..", maxStack= "..tostring(maxStack)..", extendedCost= "..tostring(extendedCost))
 					cost = count * price / quantity
-					if money > cost then
+					if money >= cost then
 						while count > 0 do
 							if count <= maxStack then
 								BuyMerchantItem(i,count)
@@ -377,7 +377,7 @@ function CraftForge:MerchantBuyButton_OnEnter(button)
 		if merchant_inventory[itemID] then
 			local cost = merchant_inventory[itemID].price * math.ceil(needList[i].count / merchant_inventory[itemID].quantity)
 			totalCost = totalCost + cost
-			GameTooltip:AddDoubleLine((C_Item.GetItemInfo(itemID)).." x "..needList[i].count, CraftForge:FormatMoneyFull(cost, true),1,1,0)
+			GameTooltip:AddDoubleLine((C_Item.GetItemInfo(itemID) or ("Item #" .. itemID)).." x "..needList[i].count, CraftForge:FormatMoneyFull(cost, true),1,1,0)
 		end
 	end
 	if #needList > 1 then

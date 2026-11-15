@@ -47,7 +47,7 @@ plugin.options =
 		useShort = {
 			type = "toggle",
 			name = "useShort",
-			desc = "Use Short money format",
+			desc = CraftForge.L["Use Short money format"] or "Use Short money format",
 			get = function()
 				return CraftForge.db.profile.plugins.AHDB.useShort
 			end,
@@ -62,7 +62,7 @@ plugin.options =
 		onlyPositive = {
 			type = "toggle",
 			name = "onlyPositive",
-			desc = "Only show positive values",
+			desc = CraftForge.L["Only show positive values"] or "Only show positive values",
 			get = function()
 				return CraftForge.db.profile.plugins.AHDB.onlyPositive
 			end,
@@ -77,7 +77,7 @@ plugin.options =
 		reagentPrices = {
 			type = "toggle",
 			name = "reagentPrices",
-			desc = "Show prices for reagents",
+			desc = CraftForge.L["Show prices for reagents"] or "Show prices for reagents",
 			get = function()
 				return CraftForge.db.profile.plugins.AHDB.reagentPrices
 			end,
@@ -92,7 +92,7 @@ plugin.options =
 		buyablePrices = {
 			type = "toggle",
 			name = "buyablePrices",
-			desc = "Show AH prices for buyable reagents",
+			desc = CraftForge.L["Show AH prices for buyable reagents"] or "Show AH prices for buyable reagents",
 			get = function()
 				return CraftForge.db.profile.plugins.AHDB.buyablePrices
 			end,
@@ -107,7 +107,7 @@ plugin.options =
 		useVendorCalc = {
 			type = "toggle",
 			name = "useVendorCalc",
-			desc = "Show calculated cost from vendor sell price for buyable reagents",
+			desc = CraftForge.L["Show calculated cost from vendor sell price for buyable reagents"] or "Show calculated cost from vendor sell price for buyable reagents",
 			get = function()
 				return CraftForge.db.profile.plugins.AHDB.useVendorCalc
 			end,
@@ -122,7 +122,7 @@ plugin.options =
 		buyFactor = {
 			type = "range",
 			name = "buyFactor",
-			desc = "Multiply vendor sell price by this to get calculated buy price",
+			desc = CraftForge.L["Multiply vendor sell price by this to get calculated buy price"] or "Multiply vendor sell price by this to get calculated buy price",
 			min = 1, max = 10, step = 1, isPercent = false,
 			get = function()
 				return CraftForge.db.profile.plugins.AHDB.buyFactor
@@ -136,7 +136,7 @@ plugin.options =
 		},
 		markup = {
 			type = "range",
-			name = "Markup %",
+			name = CraftForge.L["Markup %"] or "Markup %",
 			min = 0, max = 2, step = 0.01, isPercent = true,
 			get = function()
 				return CraftForge.db.profile.plugins.AHDB.markup

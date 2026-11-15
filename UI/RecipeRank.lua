@@ -40,6 +40,7 @@ function CraftForge.InitializeRecipeRankDropdown(menuFrame,level)
 		null.text = ""
 		null.disabled = true
 
+		entry.isNotRadio = true
 		entry.text = "Rank 1"
 		entry.value = 1
 		entry.func = CraftForge.RecipeRankChange

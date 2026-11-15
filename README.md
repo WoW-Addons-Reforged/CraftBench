@@ -18,18 +18,27 @@
 ---
 
 ## Features
-- **Complete Profession Replacement**: Enhanced crafting UI with multi-item crafting queues, persistent cross-session queues, custom recipe grouping, filtering, and sorting (name, difficulty, level, quality, profit).
-- **Smart Reagent & Inventory Tracking**: Tracks materials across bags, bank, warband/reagent bank, and alts, with recursive craftability counts and automatic vendor reagent purchasing.
-- **Shopping List & Bank/AH Integration**: Displays required materials at banks, guild banks, and auction houses with one-click item retrieval and Auctionator/TSM/OribosExchange integration.
-- **Recipe Notes & Ignored Materials**: Attach custom notes to recipes and reagents, and exclude materials you do not want tracked or purchased.
-- **One-Click Material Processing (`Molinari`-style)**: Hold a configurable modifier key (`Alt` / `Ctrl` / `Shift`) and click items directly in your bags to **Disenchant**, **Prospect**, **Mill**, or **Pick Lock**, with optional glow highlight and max disenchant quality protection.
+- **Complete Profession Replacement (Native Dark-Gold UI)**: Enhanced crafting UI with multi-item crafting queues, persistent cross-session queues, custom recipe grouping, source/profit filtering, sorting (name, difficulty, level, quality, profit), and native Dark-Gold **Options** and **News** windows.
+- **Smart Reagent & Alt Finder**: Tracks materials and learned recipes across bags, bank, warband/reagent bank, and alts (`/craftforge find`), with recursive craftability counts and automatic vendor reagent purchasing.
+- **Shopping List & Cost/Profit Calculator**: Displays required materials at banks, guild banks, and auction houses with one-click item retrieval plus live crafting cost, sell value, and profit calculation.
+- **Fishing Tracker, Catch Database & Auto-Lure**: Dedicated Dark-Gold Fishing window (`/craftforge fish`) that logs every catch per zone/subzone (count, drop %, min skill, day/night split, estimated value), tracks session stats & Stranglethorn Derby countdown, and provides secure one-key Fishing cast with automatic best-lure application and Fishing Pole / combat weapon swap keybinds.
+- **Trade Contacts (Vendor & Trainer Memory)**: Automatically records visited recipe/tradegood vendors and profession trainers (with zone, coordinates, prices, and limited stock) and displays known vendor locations on item tooltips.
+- **Recipe Notes, Sources & Ignored Materials**: Attach custom notes to recipes and reagents, inspect recipe acquisition sources in hover tooltips, and exclude materials you do not want tracked or purchased.
+- **Addon Integrations**: Supports **Auctionator**, **TradeSkillMaster (TSM)**, **OribosExchange**, **AuctionDB**, **Baganator / Syndicator**, **BetterBags**, **Bagnon / Combuctor / ArkInventory / ElvUI Bags / AdiBags / LiteBag**, **ElvUI** (toggleable skin), **AllTheThings**, **AckisRecipeList**, **CanIMogIt**, **Overachiever**, **BeanCounter**, **DataStore**, **TomTom**, and **Pawn**.
+- **One-Click Material Processing, Batch Panel & Auto-Popup**: Hold a configurable modifier key (`Alt` / `Ctrl` / `Shift`) to highlight eligible items with an animated glowing border and click directly in your bags to **Disenchant**, **Prospect**, **Mill**, or **Pick Lock**, use the compact batch processing panel (`/craftforge process`), enable the optional Auto-Process Popup for newly acquired items, and view disenchant/prospect/mill yield tooltips.
 
 ## Supported WoW Versions
 - **Retail** (`12.01.05`, `12.01.07`)
 - **Classic / Era / Anniversary / MoP** (`1.16.x` / multi-flavor support via `CraftForge.toc`)
 
 ## Slash Commands
-- `/craftforge` — Open options / manage CraftForge
+- `/craftforge` / `/cf` — Open options / manage CraftForge
+- `/craftforge find` — Open the account-wide Alt Recipe & Inventory Finder
+- `/craftforge process` — Open the Material Processing batch panel
+- `/craftforge fish` — Open the Fishing tracker, catch log & auto-lure window
+- `/craftforge options` — Open standalone options window
+- `/craftforge minimap` — Toggle the minimap button
+- `/craftforge export` / `/craftforge import` / `/craftforge sendqueue` — Share crafting queues
 
 ## Attribution & License
 **CraftForge** is based on **Skillet** (by *yossa*, *bsmorgan*, *lilsparky*, *nogudnik*, and *Slartie*) and licensed under the **GNU General Public License v3.0 (GPL-3.0)**. See [LICENSE.txt](LICENSE.txt) for details.

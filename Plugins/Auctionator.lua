@@ -49,7 +49,7 @@ plugin.options =
 		useShort = {
 			type = "toggle",
 			name = "useShort",
-			desc = "Use Short money format",
+			desc = CraftForge.L["Use Short money format"] or "Use Short money format",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.useShort
 			end,
@@ -61,7 +61,7 @@ plugin.options =
 		onlyPositive = {
 			type = "toggle",
 			name = "onlyPositive",
-			desc = "Only show positive values",
+			desc = CraftForge.L["Only show positive values"] or "Only show positive values",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.onlyPositive
 			end,
@@ -73,7 +73,7 @@ plugin.options =
 		reagentPrices = {
 			type = "toggle",
 			name = "reagentPrices",
-			desc = "Show prices for reagents",
+			desc = CraftForge.L["Show prices for reagents"] or "Show prices for reagents",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.reagentPrices
 			end,
@@ -85,7 +85,7 @@ plugin.options =
 		buyablePrices = {
 			type = "toggle",
 			name = "buyablePrices",
-			desc = "Show vendor prices for buyable reagents",
+			desc = CraftForge.L["Show vendor prices for buyable reagents"] or "Show vendor prices for buyable reagents",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.buyablePrices
 			end,
@@ -97,7 +97,7 @@ plugin.options =
 		useVendorCalc = {
 			type = "toggle",
 			name = "useVendorCalc",
-			desc = "Show calculated cost from vendor sell price for buyable reagents",
+			desc = CraftForge.L["Show calculated cost from vendor sell price for buyable reagents"] or "Show calculated cost from vendor sell price for buyable reagents",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.useVendorCalc
 			end,
@@ -109,7 +109,7 @@ plugin.options =
 		useSearchExact = {
 			type = "toggle",
 			name = "useSearchExact",
-			desc = "Use MultiSearchExact instead of MultSearch in Auction House shopping list",
+			desc = CraftForge.L["Use MultiSearchExact instead of MultSearch in Auction House shopping list"] or "Use MultiSearchExact instead of MultSearch in Auction House shopping list",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.useSearchExact
 			end,
@@ -121,7 +121,7 @@ plugin.options =
 		extraBuyout = {
 			type = "toggle",
 			name = "extraBuyout",
-			desc = "Show buyout value",
+			desc = CraftForge.L["Show buyout value"] or "Show buyout value",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.extraBuyout
 			end,
@@ -133,7 +133,7 @@ plugin.options =
 		extraProfitValue = {
 			type = "toggle",
 			name = "extraProfitValue",
-			desc = "Show profit value",
+			desc = CraftForge.L["Show profit value"] or "Show profit value",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.extraProfitValue
 			end,
@@ -145,7 +145,7 @@ plugin.options =
 		extraProfitPercentage = {
 			type = "toggle",
 			name = "extraProfitPercentage",
-			desc = "Show profit as percentage",
+			desc = CraftForge.L["Show profit as percentage"] or "Show profit as percentage",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.extraProfitPercentage
 			end,
@@ -157,7 +157,7 @@ plugin.options =
 		suffix = {
 			type = "select",
 			name = "Suffix",
-			desc = "Primary suffix text",
+			desc = CraftForge.L["Primary suffix text"] or "Primary suffix text",
 			get = function() 
 				return CraftForge.db.profile.plugins.ATR.suffix
 			end,
@@ -181,7 +181,7 @@ plugin.options =
 		colorCode = {
 			type = "toggle",
 			name = "colorCode",
-			desc = "Add color to the results",
+			desc = CraftForge.L["Add color to the results"] or "Add color to the results",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.colorCode
 			end,
@@ -194,7 +194,7 @@ plugin.options =
 		calcProfitAhTax = {
 			type = "toggle",
 			name = "calcProfitAhTax",
-			desc = "Calc profit after AH Tax(5%)",
+			desc = CraftForge.L["Calc profit after AH Tax(5%)"] or "Calc profit after AH Tax(5%)",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.calcProfitAhTax
 			end,
@@ -205,8 +205,8 @@ plugin.options =
 		},
 		journalatorE = {
 			type = "toggle",
-			name = "Journalator Extra",
-			desc = "Show Journalator statistics",
+			name = CraftForge.L["Journalator Extra"] or "Journalator Extra",
+			desc = CraftForge.L["Show Journalator statistics"] or "Show Journalator statistics",
 			hidden = function()
 				return not Journalator
 			end,
@@ -220,8 +220,8 @@ plugin.options =
 		},
 		journalatorC = {
 			type = "toggle",
-			name = "Journalator Count",
-			desc = "Show Journalator success count suffix",
+			name = CraftForge.L["Journalator Count"] or "Journalator Count",
+			desc = CraftForge.L["Show Journalator success count suffix"] or "Show Journalator success count suffix",
 			hidden = function()
 				return not Journalator
 			end,
@@ -235,8 +235,8 @@ plugin.options =
 		},
 		journalatorS = {
 			type = "toggle",
-			name = "Journalator Sales Rate",
-			desc = "Show Journalator sales rate suffix",
+			name = CraftForge.L["Journalator Sales Rate"] or "Journalator Sales Rate",
+			desc = CraftForge.L["Show Journalator sales rate suffix"] or "Show Journalator sales rate suffix",
 			hidden = function()
 				return not Journalator
 			end,
@@ -252,7 +252,7 @@ plugin.options =
 			hidden = not CraftForge.isRetail,
 			type = "toggle",
 			name = "qualityBuyout",
-			desc = "Show all quality buyout values",
+			desc = CraftForge.L["Show all quality buyout values"] or "Show all quality buyout values",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.qualityBuyout
 			end,
@@ -265,7 +265,7 @@ plugin.options =
 			hidden = not CraftForge.isRetail,
 			type = "toggle",
 			name = "minmaxBuyout",
-			desc = "Show minimum and maximum buyout values",
+			desc = CraftForge.L["Show minimum and maximum buyout values"] or "Show minimum and maximum buyout values",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.minmaxBuyout
 			end,
@@ -277,7 +277,7 @@ plugin.options =
 		customPrice = {
 			type = "toggle",
 			name = "customPrice",
-			desc = "Substitute customPrice table values for Auctionator price values",
+			desc = CraftForge.L["Substitute customPrice table values for Auctionator price values"] or "Substitute customPrice table values for Auctionator price values",
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.customPrice
 			end,
@@ -289,7 +289,7 @@ plugin.options =
 		buyFactor = {
 			type = "range",
 			name = "buyFactor",
-			desc = "Multiply vendor sell price by this to get calculated buy price",
+			desc = CraftForge.L["Multiply vendor sell price by this to get calculated buy price"] or "Multiply vendor sell price by this to get calculated buy price",
 			min = 1, max = 10, step = .1, isPercent = false,
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.buyFactor
@@ -303,7 +303,7 @@ plugin.options =
 		},
 		markup = {
 			type = "range",
-			name = "Markup %",
+			name = CraftForge.L["Markup %"] or "Markup %",
 			min = 0, max = 2, step = 0.01, isPercent = true,
 			get = function()
 				return CraftForge.db.profile.plugins.ATR.markup

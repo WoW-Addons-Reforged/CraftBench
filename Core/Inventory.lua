@@ -108,6 +108,7 @@ function CraftForge:InventorySkillIterations(tradeID, recipe)
 		local recipeID = recipe.spellID
 		local numMade = recipe.numMade
 		local numCraft = 100000
+		local numCraftBank = 100000
 		local numCraftable = 100000
 		local numCraftableVendor = 100000
 		local numCraftVendor = 100000
@@ -132,7 +133,8 @@ function CraftForge:InventorySkillIterations(tradeID, recipe)
 			local numNeeded = reagent.numNeeded
 			local reagentAvailableAlts = 0
 			local reagentBags, reagentAvailable, reagentCraftable, reagentCraftableVendor = self:GetInventory(player, reagentID)
-			if CraftForge.isForever then
+			local reagentBoth = reagentAvailable
+			if CraftForge.isForever or CraftForge.db.profile.ignore_banked_reagents then
 				reagentAvailable = reagentBags
 			end
 			if reagentCraftable == 0 then
@@ -160,12 +162,14 @@ function CraftForge:InventorySkillIterations(tradeID, recipe)
 			if type(reagentID) ~= "table" and self:VendorSellsReagent(reagentID) then	-- if it's available from a vendor, then only worry about bag inventory
 				local vendorAvailable, vendorAvailableAlts = CraftForge:VendorItemAvailable(reagentID)
 				numCraft = math.min(numCraft, math.floor(reagentAvailable/numNeeded))
+				numCraftBank = math.min(numCraftBank, math.floor(reagentBoth/numNeeded))
 				numCraftable = math.min(numCraftable, math.floor((reagentAvailable+reagentCraftable)/numNeeded))
 				numCraftVendor = math.min(numCraftVendor, math.floor(vendorAvailable/numNeeded))
 				numCraftAlts = math.min(numCraftAlts, math.floor(vendorAvailableAlts/numNeeded))
 			else
 				vendorOnly = false
 				numCraft = math.min(numCraft, math.floor(reagentAvailable/numNeeded))
+				numCraftBank = math.min(numCraftBank, math.floor(reagentBoth/numNeeded))
 				numCraftable = math.min(numCraftable, math.floor((reagentAvailable+reagentCraftable)/numNeeded))
 				numCraftableVendor = math.min(numCraftableVendor, math.floor((reagentAvailable+reagentCraftableVendor)/numNeeded))
 				numCraftVendor = math.min(numCraftVendor, numCraftableVendor)
@@ -179,8 +183,11 @@ function CraftForge:InventorySkillIterations(tradeID, recipe)
 		if numCraft == numCraftable then
 			numCraftable = 0					-- only keep craftable count if different
 		end
-		--DA.DEBUG(1,"     SkillIterations: recipeID= "..tostring(recipeID).."("..tostring(recipe.name)..") numCraft= "..tostring(numCraft)..", numCraftable= "..tostring(numCraftable)..", numCraftVendor= "..tostring(numCraftVendor)..", numCraftAlts= "..tostring(numCraftAlts))
-		return numCraft * numMade, numCraftable * numMade, numCraftVendor * numMade, numCraftAlts * numMade
+		if numCraft == numCraftBank then
+			numCraftBank = 0					-- only keep bank count if different
+		end
+		--DA.DEBUG(1,"     SkillIterations: recipeID= "..tostring(recipeID).."("..tostring(recipe.name)..") numCraft= "..tostring(numCraft)..", numCraftable= "..tostring(numCraftable)..", numCraftVendor= "..tostring(numCraftVendor)..", numCraftAlts= "..tostring(numCraftAlts)..", numCraftBank= "..tostring(numCraftBank))
+		return numCraft * numMade, numCraftable * numMade, numCraftVendor * numMade, numCraftAlts * numMade, numCraftBank * numMade
 	else
 		--DA.DEBUG(1,"     SkillIterations: recipeID= "..tostring(recipeID).."("..tostring(recipe.name)..") has no reagent data")
 	end
@@ -253,7 +260,7 @@ function CraftForge:GetInventory(player, reagentID)
 				if self.db.realm.inventoryData[player][reagentID] then
 					found = true
 					--DA.DEBUG(1,"GetInventory: reagentID= "..tostring(reagentID)..", inventoryData= "..tostring(self.db.realm.inventoryData[player][reagentID]))
-					bags, both, make, wven = string.split(" ", self.db.realm.inventoryData[player][reagentID])
+					bags, both, make, wven = strsplit(" ", self.db.realm.inventoryData[player][reagentID])
 				end
 			else
 				--DA.DEBUG(2,"GetInventory(I): #reagentID= "..tostring(#reagentID)..", reagentID= "..DA.DUMP1(reagentID))
@@ -261,7 +268,7 @@ function CraftForge:GetInventory(player, reagentID)
 					if self.db.realm.inventoryData[player][reagentID[i].itemID] then
 						found = true
 						--DA.DEBUG(2,"GetInventory: itemID= "..tostring(reagentID[i].itemID)..", inventoryData= "..tostring(self.db.realm.inventoryData[player][reagentID[i].itemID]))
-						local b, h, m, v = string.split(" ", self.db.realm.inventoryData[player][reagentID[i].itemID])
+						local b, h, m, v = strsplit(" ", self.db.realm.inventoryData[player][reagentID[i].itemID])
 						bags = bags + (tonumber(b) or 0)
 						both = both + (tonumber(h) or 0)
 						make = make + (tonumber(m) or 0)

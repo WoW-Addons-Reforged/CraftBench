@@ -128,7 +128,7 @@ end
 function CraftForge:RecipeGroupCopy(s, d, noDB)
 	--DA.DEBUG(0,"RecipeGroupCopy("..DA.DUMP1(s,1)..", "..DA.DUMP1(d,1)..", "..tostring(noDB)..")")
 	if s and d then
-		local player, tradeID, label = string.split(":", d.key)
+		local player, tradeID, label = strsplit(":", d.key)
 		d.skillIndex = s.skillIndex
 		d.expanded = s.expanded
 		d.entries = {}
@@ -306,7 +306,7 @@ function CraftForge:RecipeGroupNewName(key, name)
 	--DA.DEBUG(0,"RecipeGroupNewName("..tostring(key)..", "..tostring(name)..")")
 	local index = 1
 	if key and name then
-		local player, tradeID, label = string.split(":", key)
+		local player, tradeID, label = strsplit(":", key)
 		tradeID = tonumber(tradeID)
 		local groupList = self.data.groupList[tradeID][label]
 		for v in pairs(groupList) do
@@ -329,7 +329,7 @@ function CraftForge:RecipeGroupRenameEntry(entry, name)
 	--DA.DEBUG(0,"RecipeGroupRenameEntry("..DA.DUMP1(entry,1)..", "..tostring(name)..")")
 	if entry and name then
 		local key = entry.parent.key
-		local player, tradeID, label = string.split(":", key)
+		local player, tradeID, label = strsplit(":", key)
 		local gkey = tradeID..":"..label
 		tradeID = tonumber(tradeID)
 		if entry.subGroup then
@@ -500,7 +500,7 @@ function CraftForge:RecipeGroupConstructDBString(group)
 	--DA.DEBUG(0,"RecipeGroupConstructDBString("..DA.DUMP1(group,1)..")")
 	if group and not group.autoGroup then
 		local key = group.key
-		local player, tradeID, label = string.split(":",key)
+		local player, tradeID, label = strsplit(":",key)
 		tradeID = tonumber(tradeID)
 		if not self.data.groupList[tradeID][label].autoGroup then
 			local groupString = group.skillIndex
@@ -554,13 +554,13 @@ function CraftForge:RecipeGroupDeconstructDBStrings()
 	local groupNames = {}
 	local serial = 1
 	for key, groupList in pairs(self.db.realm.groupDB) do
-		local player, tradeID, label = string.split(":", key)
+		local player, tradeID, label = strsplit(":", key)
 		tradeID = tonumber(tradeID)
 		if player == self.currentPlayer and tradeID == self.currentTrade and self.data.skillIndexLookup then
 			self:InitGroupList(player, tradeID, label)
 			for name,list in pairs(groupList) do
 				local group = self:RecipeGroupNew(player, tradeID, label, name)
-				local groupContents = { string.split(":",list) }
+				local groupContents = { strsplit(":",list) }
 				local groupIndex = tonumber(groupContents[1]) or serial
 				serial = serial + 1
 				group.skillIndex = groupIndex
@@ -569,7 +569,7 @@ function CraftForge:RecipeGroupDeconstructDBStrings()
 		end
 	end
 	for key, groupList in pairs(self.db.realm.groupDB) do
-		local player, tradeID, label = string.split(":", key)
+		local player, tradeID, label = strsplit(":", key)
 		tradeID = tonumber(tradeID)
 		if player == self.currentPlayer and tradeID == self.currentTrade and self.data.skillIndexLookup then
 			for name,list in pairs(groupList) do
@@ -577,7 +577,7 @@ function CraftForge:RecipeGroupDeconstructDBStrings()
 				local groupIndex = group.skillIndex
 				if not group.initialized then
 					group.initialized = true
-					local groupContents = { string.split(":",list) }
+					local groupContents = { strsplit(":",list) }
 					--DA.DEBUG(0,"RecipeGroupDeconstructDBStrings: "..groupContents)
 					for j=2,#groupContents do
 						local recipeID = groupContents[j]
@@ -628,6 +628,7 @@ function CraftForge.RecipeGroupDropdown_Initialize(menuFrame,level)
 	--DA.DEBUG(0,"RecipeGroupDropdown_Initialize("..tostring(menuFrame)..", "..tostring(level)..")")
 	if level == 1 then  -- group labels
 		local entry = {}
+		entry.isNotRadio = true
 		entry.text = "Flat"
 		entry.value = "Flat"
 		entry.func = CraftForge.RecipeGroupSelect
@@ -712,6 +713,8 @@ end
 function CraftForge.RecipeGroupOpsMenu_Init(menuFrame,level)
 	if level == 1 then
 		local entry = {}
+		entry.notCheckable = true
+		entry.isNotRadio = true
 		local null = {}
 		null.text = ""
 		null.disabled = true

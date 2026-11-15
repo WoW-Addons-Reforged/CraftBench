@@ -47,7 +47,22 @@ externals:
     Libs/AceGUI-3.0:
         url: https://github.com/WoWUIDev/Ace3
         path: AceGUI-3.0
-    # Other Libraries (WowAce)
+    Libs/AceBucket-3.0:
+        url: https://github.com/WoWUIDev/Ace3
+        path: AceBucket-3.0
+    Libs/AceSerializer-3.0:
+        url: https://github.com/WoWUIDev/Ace3
+        path: AceSerializer-3.0
+    Libs/AceComm-3.0:
+        url: https://github.com/WoWUIDev/Ace3
+        path: AceComm-3.0
+    Libs/AceTab-3.0:
+        url: https://github.com/WoWUIDev/Ace3
+        path: AceTab-3.0
+    # Other Libraries (GitHub & WowAce)
+    Libs/LibDataBroker-1.1:      https://github.com/tekkub/libdatabroker-1-1
+    Libs/LibDeflate:             https://github.com/SafeteeWoW/LibDeflate
+    Libs/LibDBIcon-1.0:          https://repos.wowace.com/wow/libdbicon-1-0/trunk
     Libs/LibWindow-1.1:          https://repos.wowace.com/wow/libwindow-1-1/trunk
     Libs/LibPeriodicTable-3.1:   https://repos.wowace.com/wow/libperiodictable-3-1/trunk/LibPeriodicTable-3.1
     Libs/LibPeriodicTable-3.1/LibPeriodicTable-3.1-Tradeskill:   https://repos.wowace.com/wow/libperiodictable-3-1/trunk/LibPeriodicTable-3.1-Tradeskill

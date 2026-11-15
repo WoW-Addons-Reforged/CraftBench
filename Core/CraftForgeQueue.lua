@@ -116,7 +116,7 @@ local function queueAppendReagent(command, reagentID, need, queueCraftables, mre
 		if CraftForge.db.profile.ignore_queued_reagents then
 			numInQueue = 0
 		end
-		if CraftForge.db.profile.ignore_banked_reagents or CraftForge.isForever then
+		if CraftForge.isForever or CraftForge.db.profile.ignore_banked_reagents then
 			have = numInBags + numInQueue
 		else
 			have = numInBoth + numInQueue
@@ -706,15 +706,18 @@ function CraftForge:ProcessQueue(altMode)
 							DA.DEBUG(1,"ProcessQueue(I): recipeID= "..tostring(command.recipeID))
 							C_TradeSkillUI.CraftRecipe(command.recipeID, command.count, reagentInfoTbl, recipeLevel, nil, self.db.profile.use_concentration)
 						elseif command.recipeType == Enum.TradeskillRecipeType.Enchant then
-							if CraftForge.isRetail and command.count > 1 then
+							local targetLoc = CraftForge.enchantTargetLocation
+							if not targetLoc and C_TradeSkillUI.CraftEnchant then
 								local itemID = CraftForge:GetAutoTargetItem(command.tradeID)
-								DA.DEBUG(1,"ProcessQueue(E): itemID= "..tostring(itemID))
-								self.itemLocation = self:GetItemLocationFromItemID(itemID)
-								DA.DEBUG(1,"ProcessQueue(E): itemLocation= "..DA.DUMP(self.itemLocation))
---								C_TradeSkillUI.CraftEnchant(recipeSpellID [, numCasts [, craftingReagents [, itemTarget [, applyConcentration]]]])
+								if itemID then
+									targetLoc = self:GetItemLocationFromItemID(itemID)
+								end
+							end
+							if C_TradeSkillUI.CraftEnchant and targetLoc and (command.count > 1 or CraftForge.enchantTargetLocation) then
+								self.itemLocation = targetLoc
 								DA.DEBUG(1,"ProcessQueue(E): recipeID= "..tostring(command.recipeID))
-								C_TradeSkillUI.CraftEnchant(command.recipeID, command.count, reagentInfoTbl, self.itemLocation, self.db.profile.use_concentration)
-							elseif CraftForge.isForever and command.count > 1 then
+								C_TradeSkillUI.CraftEnchant(command.recipeID, command.count, reagentInfoTbl, targetLoc, self.db.profile.use_concentration)
+							elseif CraftForge.isForever and command.count > 1 and not targetLoc then
 								DA.MARK3(L["Insufficient Materials available"])
 							else
 --								C_TradeSkillUI.CraftRecipe(recipeSpellID [, numCasts [, craftingReagents [, recipeLevel [, orderID [, applyConcentration]]]]])

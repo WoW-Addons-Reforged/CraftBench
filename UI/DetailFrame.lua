@@ -50,7 +50,7 @@ function CraftForge:SetReagentToolTip(reagentID, numNeeded, numCraftable)
 		GameTooltip:AppendText(GRAY_FONT_COLOR_CODE .. " (" .. L["craftable"] .. ")" .. FONT_COLOR_CODE_CLOSE)
 		for recipeID in pairs(self.db.global.itemRecipeSource[reagentID]) do
 			local recipe = self:GetRecipe(recipeID)
-			GameTooltip:AddDoubleLine("Source: ",(self:GetTradeName(recipe.tradeID) or recipe.tradeID)..":"..self:GetRecipeName(recipeID),0,1,0,1,1,1)
+			GameTooltip:AddDoubleLine(L["Source: "] or "Source: ",(self:GetTradeName(recipe.tradeID) or recipe.tradeID)..":"..self:GetRecipeName(recipeID),0,1,0,1,1,1)
 			local lookupTable = self.data.skillIndexLookup
 			local player = self.currentPlayer
 			if lookupTable[recipeID] then
@@ -69,23 +69,23 @@ function CraftForge:SetReagentToolTip(reagentID, numNeeded, numCraftable)
 	if customPrice and customPrice[reagentID] then
 		local price = customPrice[reagentID].value
 		local text = self:FormatMoneyFull(price,true)
-		GameTooltip:AddDoubleLine("Custom Price: ",text,0,1,0,1,1,1)
+		GameTooltip:AddDoubleLine(L["Custom Price: "] or "Custom Price: ",text,0,1,0,1,1,1)
 	end
 	local inBags, inBoth = self:GetInventory(self.currentPlayer, reagentID)
 	local surplus = inBoth - numNeeded * numCraftable
 	if inBoth < 0 then
-		GameTooltip:AddDoubleLine("in shopping list:",(-inBoth),1,1,0)
+		GameTooltip:AddDoubleLine(L["in shopping list:"] or "in shopping list:",(-inBoth),1,1,0)
 	end
 	if surplus < 0 then
-		GameTooltip:AddDoubleLine("to craft "..numCraftable.." you need:",(-surplus),1,0,0)
+		GameTooltip:AddDoubleLine(string.format(L["to craft %s you need:"] or "to craft %s you need:", tostring(numCraftable)),(-surplus),1,0,0)
 	end
 	if self.db.realm.reagentsInQueue[self.currentPlayer] then
 		local inQueue = self.db.realm.reagentsInQueue[self.currentPlayer][reagentID]
 		if inQueue then
 			if inQueue < 0 then
-				GameTooltip:AddDoubleLine("used in queued skills:",-inQueue,1,1,1)
+				GameTooltip:AddDoubleLine(L["used in queued skills:"] or "used in queued skills:",-inQueue,1,1,1)
 			else
-				GameTooltip:AddDoubleLine("created from queued skills:",inQueue,1,1,1)
+				GameTooltip:AddDoubleLine(L["created from queued skills:"] or "created from queued skills:",inQueue,1,1,1)
 			end
 		end
 	end
@@ -1066,14 +1066,16 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 -- Output any extra text 
 --
 	if label then
+		CraftForgeExtraDetailTextLeft:ClearAllPoints()
 		CraftForgeExtraDetailTextLeft:SetPoint("TOPLEFT",lastReagentButton,"BOTTOMLEFT",0,-10)
---		CraftForgeExtraDetailTextLeft:SetText(GRAY_FONT_COLOR_CODE..label)
+		CraftForgeExtraDetailTextLeft:SetPoint("RIGHT",CraftForgeReagentParent,"RIGHT",-10,0)
+		CraftForgeExtraDetailTextLeft:SetJustifyH("LEFT")
 		CraftForgeExtraDetailTextLeft:SetText(label)
 		CraftForgeExtraDetailTextLeft:Show()
 	else
 		CraftForgeExtraDetailTextLeft:Hide()
 	end
-	if extra_text then
+	if extra_text and extra_text ~= "" then
 		CraftForgeExtraDetailTextRight:SetPoint("TOPLEFT",lastReagentButton,"BOTTOMLEFT",50,-10)
 		CraftForgeExtraDetailTextRight:SetText(extra_text)
 		CraftForgeExtraDetailTextRight:Show()

@@ -214,11 +214,11 @@ end
 --
 function CraftForge:CollectRecipeInformation()
 	for recipeID, recipeString in pairs(self.db.global.recipeDB) do
-		local tradeID, itemString, reagentString, numOptional = string.split(" ",recipeString)
+		local tradeID, itemString, reagentString, numOptional = strsplit(" ",recipeString)
 		local itemID = 0
 		local numMade = 1
 		if itemString ~= "0" then
-			local a, b = string.split(":",itemString)
+			local a, b = strsplit(":",itemString)
 			if a ~= "0" then
 				itemID, numMade = a,b
 			else
@@ -237,7 +237,7 @@ function CraftForge:CollectRecipeInformation()
 			self:ItemDataAddRecipeSource(itemID, recipeID)
 		end
 		if reagentString ~= "-" then
-			local reagentList = { string.split(":",reagentString) }
+			local reagentList = { strsplit(":",reagentString) }
 			local numReagents = #reagentList / 2
 			for i=1,numReagents do
 				local reagentID = tonumber(reagentList[1 + (i-1)*2])
@@ -250,7 +250,7 @@ function CraftForge:CollectRecipeInformation()
 			for i=1,#skillList do
 				local skillString = self.data.skillDB[trade][i]
 				if skillString then
-					local skillData = string.split(" ",skillString)
+					local skillData = strsplit(" ",skillString)
 					if skillData ~= "header" or skillData ~= "subheader" then
 						local recipeID = string.sub(skillData,2)
 						recipeID = tonumber(recipeID) or 0
@@ -380,13 +380,13 @@ function CraftForge:GetRecipe(id)
 		if CraftForge.db.global.recipeDB[id] then
 			local recipeString = CraftForge.db.global.recipeDB[id]
 			--DA.DEBUG(0,"recipeString= "..tostring(recipeString))
-			local tradeID, itemString, reagentString, numOptional = string.split(" ",recipeString)
+			local tradeID, itemString, reagentString, numOptional = strsplit(" ",recipeString)
 			--DA.DEBUG(0,"numOptional= "..tostring(numOptional))
 			local itemID, numMade = 0, 1
 			local slot = nil
 			if itemString then
 				if itemString ~= "0" then
-					local a, b = string.split(":",itemString)
+					local a, b = strsplit(":",itemString)
 					--DA.DEBUG(0,"itemString a= "..tostring(a)..", b= "..tostring(b))
 					if a ~= "0" then
 						itemID, numMade = a,b
@@ -416,7 +416,7 @@ function CraftForge:GetRecipe(id)
 			CraftForge.data.recipeList[id].reagentData = {}
 			if reagentString then
 				if reagentString ~= "-" then
-					local reagentList = { string.split(":",reagentString) }
+					local reagentList = { strsplit(":",reagentString) }
 					local numReagents = #reagentList / 2
 					for i=1,numReagents do
 						CraftForge.data.recipeList[id].reagentData[i] = {}
@@ -476,7 +476,7 @@ function CraftForge:GetSkill(player,trade,index)
 			if skillString then
 				--DA.DEBUG(1,"GetSkill: skillString= ",DA.DUMP1(skillString))
 				local skill = {}
-				local data = { string.split(" ",skillString) }
+				local data = { strsplit(" ",skillString) }
 				if data[1] == "header" or data[1] == "subheader" then
 					skill.id = 0
 				else
@@ -489,7 +489,7 @@ function CraftForge:GetSkill(player,trade,index)
 					skill.tools = nil
 					recipeID = tonumber(recipeID)
 					for i=2,#data do
-						local subData = { string.split("=",data[i]) }
+						local subData = { strsplit("=",data[i]) }
 						if subData[1] == "cd" then
 							skill.cooldown = tonumber(subData[2])
 						end
@@ -554,25 +554,59 @@ function CraftForge:ScanPlayerTradeSkills(player)
 		if not self.db.realm.tradeSkills then
 			self.db.realm.tradeSkills = {}
 		end
-		self.db.realm.tradeSkills[player] = {}
+		if not self.db.realm.tradeSkills[player] then
+			self.db.realm.tradeSkills[player] = {}
+		end
 		local skillRanksData = CraftForge.db.realm.tradeSkills[player]
+		local knownRanks = {}
+		if GetProfessions and GetProfessionInfo then
+			local profs = { GetProfessions() }
+			for _, idx in ipairs(profs) do
+				if idx then
+					local pname, _, rank, maxRank = GetProfessionInfo(idx)
+					if pname and rank then
+						knownRanks[pname] = { rank = rank, maxRank = maxRank or 0 }
+					end
+				end
+			end
+		elseif GetNumSkillLines and GetSkillLineInfo then
+			for s = 1, GetNumSkillLines() do
+				local sname, isHeader, _, rank, _, _, maxRank = GetSkillLineInfo(s)
+				if sname and not isHeader and rank then
+					knownRanks[sname] = { rank = rank, maxRank = maxRank or 0 }
+				end
+			end
+		end
+		local activeIDs = {}
 		for i=1,#TradeSkillList,1 do
 			local id = TradeSkillList[i]
-			--DA.DEBUG(3,"ScanPlayerTradeSkills: id= "..tostring(id))
 			local name = C_Spell.GetSpellName(id)
 			if name then
 				name = C_Spell.GetSpellName(name)			-- only returns data if you have this spell in your spellbook
 			end
-			--DA.DEBUG(3,"ScanPlayerTradeSkills: name= "..tostring(name))
 			if name then
 				if id == 2656 then id = 2575 end -- Ye old Smelting vs. Mining issue
+				activeIDs[id] = true
+				local kr = knownRanks[name]
 				if not skillRanksData[id] then
 					DA.DEBUG(0,"adding tradeskill data for "..tostring(name).." ("..tostring(id)..")")
-					skillRanksData[id] = {}
-					skillRanksData[id].rank = 0
-					skillRanksData[id].maxRank = 0
+					skillRanksData[id] = {
+						rank = kr and kr.rank or 0,
+						maxRank = kr and kr.maxRank or 0,
+						name = name,
+					}
+				else
 					skillRanksData[id].name = name
+					if kr and (not skillRanksData[id].maxRank or skillRanksData[id].maxRank == 0 or kr.rank > 0) then
+						skillRanksData[id].rank = kr.rank
+						skillRanksData[id].maxRank = kr.maxRank
+					end
 				end
+			end
+		end
+		for id in pairs(skillRanksData) do
+			if not activeIDs[id] then
+				skillRanksData[id] = nil
 			end
 		end
 	end
@@ -607,7 +641,7 @@ function CraftForge:CalculateCraftableCounts()
 			if skill and skill.id ~= 0 then -- skip headers
 				local recipe = self:GetRecipe(skill.id)
 				if recipe then
-					skill.numCraftable, skill.numRecursive, skill.numCraftableVendor, skill.numCraftableAlts = self:InventorySkillIterations(self.currentTrade, recipe)
+					skill.numCraftable, skill.numRecursive, skill.numCraftableVendor, skill.numCraftableAlts, skill.numCraftableBank = self:InventorySkillIterations(self.currentTrade, recipe)
 					--DA.DEBUG(2,"name= "..tostring(skill.name)..", numCraftable= "..tostring(skill.numCraftable)..", numRecursive= "..tostring(skill.numRecursive)..", numCraftableVendor= "..tostring(skill.numCraftableVendor)..", numCraftableAlts= "..tostring(skill.numCraftableAlts))
 				end
 			end

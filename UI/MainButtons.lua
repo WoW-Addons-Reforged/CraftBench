@@ -30,7 +30,7 @@ function CraftForge:TradeButton_OnEnter(this)
 	GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
 	GameTooltip:ClearLines()
 	local bName = this:GetName()
-	local _, player, tradeID = string.split("-", bName)
+	local _, player, tradeID = strsplit("-", bName)
 	local sName = C_Spell.GetSpellName(tradeID)
 	DA.DEBUG(0,"TradeButton_OnEnter: "..tostring(bName).."), player= "..tostring(player)..", tradeID= "..tostring(tradeID)..", sName= "..tostring(sName))
 	GameTooltip:AddLine(sName)
@@ -43,15 +43,15 @@ function CraftForge:TradeButton_OnEnter(this)
 		local rank, maxRank = data.rank, data.maxRank
 		GameTooltip:AddLine("["..tostring(rank).."/"..tostring(maxRank).."]",0,1,0)
 		if tradeID == self.currentTrade then
-			GameTooltip:AddLine("shift-click to link")
+			GameTooltip:AddLine(L["shift-click to link"] or "shift-click to link")
 		end
 		local thisIcon = _G[this:GetName().."Icon"]
 		local r,g,b = thisIcon:GetVertexColor()
 		if g == 0 then
-			GameTooltip:AddLine("scan incomplete...",1,0,0)
+			GameTooltip:AddLine(L["scan incomplete..."] or "scan incomplete...",1,0,0)
 		end
 		if nonLinkingTrade[tradeID] and player ~= CraftForge:unitName("player") then
-			GameTooltip:AddLine(sName.." not available for alts")
+			GameTooltip:AddLine(string.format(L["%s not available for alts"] or "%s not available for alts", sName))
 		end
 	end
 	GameTooltip:Show()
@@ -59,7 +59,7 @@ end
 
 function CraftForge:TradeButton_OnClick(this,button)
 	local bName = this:GetName()
-	local _, player, tradeID = string.split("-", bName)
+	local _, player, tradeID = strsplit("-", bName)
 	local sName = C_Spell.GetSpellName(tradeID)
 	DA.DEBUG(0,"TradeButton_OnClick: bName= "..tostring(bName)..", player= "..tostring(player)..", tradeID= "..tostring(tradeID)..", sName= "..tostring(sName))
 	tradeID = tonumber(tradeID)
@@ -142,7 +142,7 @@ function CraftForge:BlizzardUIButton_OnEnter(this)
 	--DA.DEBUG(0,"BlizzardUIButton_OnEnter("..tostring(this)..")")
 	GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
 	GameTooltip:ClearLines()
-	GameTooltip:AddLine("Toggle Blizzard UI")
+	GameTooltip:AddLine(L["Toggle Blizzard UI"] or "Toggle Blizzard UI")
 	GameTooltip:Show()
 end
 

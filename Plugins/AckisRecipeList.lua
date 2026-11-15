@@ -69,7 +69,7 @@ function plugin.GetExtraText(skill, recipe)
 			extra_text = AckisRecipeList:GetRecipeLocations(skill.id)
 			if extra_text == "" then extra_text = nil end
 		end
-		label = "|rSource:"
+		label = "|r" .. L["Source"] .. ":"
 	end
 	return label, extra_text
 end

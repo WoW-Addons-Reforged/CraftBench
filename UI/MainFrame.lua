@@ -18,8 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
 local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+local UIStyle = CraftForge.UIStyle
 
-CRAFTFORGE_TRADE_SKILL_HEIGHT = 16
+CRAFTFORGE_TRADE_SKILL_HEIGHT = 20
 
 local COLORORANGE = "|cffff8040"
 local COLORYELLOW = "|cffffff00"
@@ -55,7 +56,7 @@ local CRAFTFORGE_SKILLLIST_MIN_WIDTH = 440
 
 -- min/max width for the reagent window
 local CRAFTFORGE_REAGENT_MIN_WIDTH = 350
-local CRAFTFORGE_REAGENT_MAX_WIDTH = 400
+local CRAFTFORGE_REAGENT_MAX_WIDTH = 385
 local CRAFTFORGE_REAGENT_MIN_HEIGHT = 300
 local reagent_height
 
@@ -127,8 +128,9 @@ local function get_craftable_counts(skill, numMade)
 	local numrecursive = math.floor((skill.numRecursive or 0) / factor)
 	local numwvendor   = math.floor((skill.numCraftableVendor or 0) / factor)
 	local numwalts     = math.floor((skill.numCraftableAlts or 0) / factor)
-	--DA.DEBUG(2,"get_craftable_counts = "..tostring(num)..", "..tostring(numrecursive)..", "..tostring(numwvendor)..", "..tostring(numwalts))
-	return num, numrecursive, numwvendor, numwalts
+	local numbank      = math.floor((skill.numCraftableBank or 0) / factor)
+	--DA.DEBUG(2,"get_craftable_counts = "..tostring(num)..", "..tostring(numrecursive)..", "..tostring(numwvendor)..", "..tostring(numwalts)..", "..tostring(numbank))
+	return num, numrecursive, numwvendor, numwalts, numbank
 end
 
 function CraftForge:CreateTradeSkillWindow()
@@ -149,49 +151,69 @@ function CraftForge:CreateTradeSkillWindow()
 	if not frame.SetBackdrop then
 		Mixin(frame, BackdropTemplateMixin)
 	end
+	local UIStyle = CraftForge.UIStyle
 	if TSM_API and CraftForge.db.profile.tsm_compat then
 		frame:SetFrameStrata("HIGH")
 		frame:SetBackdrop(TSMBackdrop)
+		frame:SetBackdropColor(0.1, 0.1, 0.1)
 	else
-		frame:SetBackdrop(FrameBackdrop)
+		UIStyle.SkinFrame(frame, false)
 	end
-	frame:SetBackdropColor(0.1, 0.1, 0.1)
 
---
--- A title bar stolen from the Ace2 Waterfall window.
---
-	local r,g,b = 0, 0.7, 0; -- dark green
-	local titlebar = frame:CreateTexture(nil,"BACKGROUND")
-	local titlebar2 = frame:CreateTexture(nil,"BACKGROUND")
-	titlebar:SetPoint("TOPLEFT",frame,"TOPLEFT",3,-4)
-	titlebar:SetPoint("TOPRIGHT",frame,"TOPRIGHT",-3,-4)
-	titlebar:SetHeight(13)
-	titlebar2:SetPoint("TOPLEFT",titlebar,"BOTTOMLEFT",0,0)
-	titlebar2:SetPoint("TOPRIGHT",titlebar,"BOTTOMRIGHT",0,0)
-	titlebar2:SetHeight(13)
-	titlebar:SetGradient("VERTICAL", CreateColor(r*0.6,g*0.6,b*0.6,1), CreateColor(r,g,b,1))
-	titlebar:SetColorTexture(r,g,b,1)
-	titlebar2:SetGradient("VERTICAL", CreateColor(r*0.9,g*0.9,b*0.9,1), CreateColor(r*0.6,g*0.6,b*0.6,1))
-	titlebar2:SetColorTexture(r,g,b,1)
-
-	local title = CreateFrame("Frame",nil,frame)
-	title:SetPoint("TOPLEFT",titlebar,"TOPLEFT",0,0)
-	title:SetPoint("BOTTOMRIGHT",titlebar2,"BOTTOMRIGHT",0,0)
-
-	local titletext = title:CreateFontString("CraftForgeTitleText", "OVERLAY", "GameFontNormalLarge")
-	titletext:SetPoint("TOPLEFT",title,"TOPLEFT",0,0)
-	titletext:SetPoint("TOPRIGHT",title,"TOPRIGHT",0,0)
+	local titletext = frame:CreateFontString("CraftForgeTitleText", "OVERLAY", "GameFontNormalLarge")
+	titletext:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -1)
+	titletext:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -36, -1)
 	titletext:SetHeight(26)
-	titletext:SetShadowColor(0,0,0)
-	titletext:SetShadowOffset(1,-1)
-	titletext:SetTextColor(1,1,1)
+	titletext:SetJustifyH("CENTER")
 	titletext:SetText(L["CraftForge Trade Skills"].." "..CraftForge.version)
-	local label = _G["CraftForgeFilterLabel"]
-	label:SetText(L["Filter"])
-	local label = _G["CraftForgeFilterText"]
-	label:SetText("")
-	local label = _G["CraftForgeSearchLabel"]
-	label:SetText(L["Search"])
+	UIStyle.StyleHeaderBar(frame, titletext, 1)
+	if CraftForgeFrameCloseButton then
+		UIStyle.SkinCloseButton(CraftForgeFrameCloseButton)
+	end
+	if CraftForgeCloseButton then
+		UIStyle.SkinCloseButton(CraftForgeCloseButton)
+	end
+	if CraftForgeShowOptionsButton then
+		CraftForgeShowOptionsButton:SetSize(22, 22)
+		CraftForgeShowOptionsButton:ClearAllPoints()
+		if CraftForgeFrameCloseButton then
+			CraftForgeShowOptionsButton:SetPoint("RIGHT", CraftForgeFrameCloseButton, "LEFT", -4, 0)
+		end
+		CraftForgeShowOptionsButton:SetText("")
+		UIStyle.SkinButton(CraftForgeShowOptionsButton, "default")
+		if not CraftForgeShowOptionsButton._cfGearIcon then
+			local gear = CraftForgeShowOptionsButton:CreateTexture(nil, "OVERLAY")
+			gear:SetSize(14, 14)
+			gear:SetPoint("CENTER", CraftForgeShowOptionsButton, "CENTER", 0, 0)
+			gear:SetTexture("Interface\\Icons\\Trade_Engineering")
+			gear:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+			CraftForgeShowOptionsButton._cfGearIcon = gear
+		end
+		CraftForgeShowOptionsButton:SetScript("OnClick", function()
+			CraftForge:InventoryFilterButtons_Hide()
+			if IsShiftKeyDown() and CraftForge.Share and CraftForge.Share.OpenOptions then
+				CraftForge.Share:OpenOptions()
+			else
+				CraftForge:ShowOptions()
+			end
+		end)
+		CraftForgeShowOptionsButton:HookScript("OnEnter", function(self)
+			GameTooltip:SetOwner(self, "ANCHOR_TOP")
+			GameTooltip:ClearLines()
+			GameTooltip:AddLine(L["Config"], 1, 0.85, 0.25)
+			GameTooltip:AddLine(L["CONFIGDESC"], 0.9, 0.9, 0.9, true)
+			GameTooltip:Show()
+		end)
+		CraftForgeShowOptionsButton:HookScript("OnLeave", function()
+			GameTooltip:Hide()
+		end)
+	end
+	local filterLabel = _G["CraftForgeFilterLabel"]
+	if filterLabel then filterLabel:SetText(L["Filter"]) end
+	local filterText = _G["CraftForgeFilterText"]
+	if filterText then filterText:SetText("") end
+	local searchLabel = _G["CraftForgeSearchLabel"]
+	if searchLabel then searchLabel:SetText(L["Search"]) end
 	CraftForgePluginButton:SetText(L["Plugins"])
 	CraftForgePluginButton:Hide()
 	CraftForgeCreateAllButton:SetText(L["Create All"])
@@ -212,6 +234,53 @@ function CraftForge:CreateTradeSkillWindow()
 	CraftForgeQueueDeleteButton:SetText(L["Delete"])
 	CraftForgeQueueSaveButton:SetText(L["Save"])
 	CraftForgeQueueOnlyButton:SetText(">")
+
+	UIStyle.SkinButton(CraftForgePluginButton, "default")
+	UIStyle.SkinButton(CraftForgeCreateAllButton, "default")
+	UIStyle.SkinButton(CraftForgeQueueAllButton, "default")
+	UIStyle.SkinButton(CraftForgeCreateButton, "primary")
+	UIStyle.SkinButton(CraftForgeQueueButton, "default")
+	UIStyle.SkinButton(CraftForgeStartQueueButton, "primary")
+	UIStyle.SkinButton(CraftForgeEmptyQueueButton, "danger")
+	UIStyle.SkinButton(CraftForgeEnchantButton, "default")
+	UIStyle.SkinButton(CraftForgeRecipeNotesButton, "default")
+	UIStyle.SkinButton(CraftForgeShoppingListButton, "default")
+	UIStyle.SkinButton(CraftForgeIgnoredMatsButton, "default")
+	UIStyle.SkinButton(CraftForgeQueueManagementButton, "default")
+	UIStyle.SkinButton(CraftForgeQueueLoadButton, "default")
+	UIStyle.SkinButton(CraftForgeQueueDeleteButton, "danger")
+	UIStyle.SkinButton(CraftForgeQueueSaveButton, "default")
+	UIStyle.SkinButton(CraftForgeQueueOnlyButton, "default")
+	if CraftForgeFilterButton then UIStyle.SkinButton(CraftForgeFilterButton, "default") end
+	if CraftForgeFilterInputBox then UIStyle.SkinEditBox(CraftForgeFilterInputBox) end
+	if CraftForgeSearchBox then
+		UIStyle.SkinEditBox(CraftForgeSearchBox)
+		CraftForgeSearchBox:SetTextInsets(4, 4, 0, 0)
+	end
+	if CraftForgeItemCountInputBox then
+		UIStyle.SkinEditBox(CraftForgeItemCountInputBox)
+		CraftForgeItemCountInputBox:SetJustifyH("CENTER")
+		CraftForgeItemCountInputBox:SetTextInsets(2, 2, 0, 0)
+	end
+	if CraftForgeQueueNameInputBox then UIStyle.SkinEditBox(CraftForgeQueueNameInputBox) end
+	if CraftForgeRecipeGroupDropdown then UIStyle.SkinDropDown(CraftForgeRecipeGroupDropdown) end
+	if CraftForgeSortDropdown then UIStyle.SkinDropDown(CraftForgeSortDropdown) end
+	if CraftForgeFilterDropdown then UIStyle.SkinDropDown(CraftForgeFilterDropdown) end
+	if CraftForgeQueueLoadDropdown then UIStyle.SkinDropDown(CraftForgeQueueLoadDropdown) end
+	for _, fs in ipairs({
+		CraftForgeGroupLabel, CraftForgeSortLabel, CraftForgeFilterLabel, CraftForgeSearchLabel,
+		CraftForgeReagentLabel, CraftForgeExtraTextLabel, CraftForgeExtraText,
+		CraftForgeRequirementText, CraftForgeSkillCooldown, CraftForgeQueueLabel,
+	}) do
+		if fs then UIStyle.ApplyFont(fs, -1) end
+	end
+	if CraftForgeSkillName then UIStyle.ApplyFont(CraftForgeSkillName, 1) end
+	for i = 1, 8 do
+		local rText = _G["CraftForgeReagent" .. i .. "Text"]
+		local rCount = _G["CraftForgeReagent" .. i .. "Count"]
+		if rText then UIStyle.ApplyFont(rText, -1) end
+		if rCount then UIStyle.ApplyFont(rCount, -1) end
+	end
 --
 -- Always want these visible.
 --
@@ -219,8 +288,11 @@ function CraftForge:CreateTradeSkillWindow()
 --
 -- Progression status bar
 --
-	CraftForgeRankFrame:SetStatusBarColor(0.2, 0.2, 1.0, 1.0)
-	CraftForgeRankFrameBackground:SetVertexColor(0.0, 0.0, 0.5, 0.2)
+	CraftForgeRankFrame:SetStatusBarColor(0.22, 0.45, 0.85, 0.95)
+	CraftForgeRankFrameBackground:SetVertexColor(0.05, 0.06, 0.09, 0.95)
+	if CraftForgeRankFrameBorder then CraftForgeRankFrameBorder:Hide() end
+	UIStyle.SkinInset(CraftForgeRankFrame)
+	if CraftForgeRankFrameSkillRank then UIStyle.ApplyFont(CraftForgeRankFrameSkillRank, -1) end
 	if not CraftForgeRankFrame.subRanks then
 		CraftForgeRankFrame.subRanks = {}
 		CraftForgeRankFrame.subRanks.red = CreateFrame("StatusBar", "CraftForgeRankFrameRed", CraftForgeFrame, "CraftForgeRankFrameTemplate")
@@ -248,54 +320,31 @@ function CraftForge:CreateTradeSkillWindow()
 -- The frame enclosing the scroll list needs a border and a background .....
 --
 	local backdrop = CraftForgeSkillListParent
-	if not backdrop.SetBackdrop then
-		Mixin(backdrop, BackdropTemplateMixin)
-	end
-	backdrop:SetBackdrop(ControlBackdrop)
-	backdrop:SetBackdropBorderColor(0.6, 0.6, 0.6)
-	backdrop:SetBackdropColor(0.05, 0.05, 0.05)
+	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
+	UIStyle.StyleScrollBar(CraftForgeSkillList)
 --
 -- Frame enclosing the reagent list
 --
 	backdrop = CraftForgeReagentParent
-	if not backdrop.SetBackdrop then
-		Mixin(backdrop, BackdropTemplateMixin)
-	end
-	backdrop:SetBackdrop(ControlBackdrop)
-	backdrop:SetBackdropBorderColor(0.6, 0.6, 0.6)
-	backdrop:SetBackdropColor(0.05, 0.05, 0.05)
+	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
 --
 -- Frame enclosing the queue
 --
 	backdrop = CraftForgeQueueParent
-	if not backdrop.SetBackdrop then
-		Mixin(backdrop, BackdropTemplateMixin)
-	end
-	backdrop:SetBackdrop(ControlBackdrop)
-	backdrop:SetBackdropBorderColor(0.6, 0.6, 0.6)
-	backdrop:SetBackdropColor(0.05, 0.05, 0.05)
+	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
+	UIStyle.StyleScrollBar(CraftForgeQueueList)
 --
 -- Frame enclosing the pop out notes panel
 --
 	backdrop = CraftForgeRecipeNotesFrame
-	if not backdrop.SetBackdrop then
-		Mixin(backdrop, BackdropTemplateMixin)
-	end
-	backdrop:SetBackdrop(ControlBackdrop)
-	backdrop:SetBackdropColor(0.1, 0.1, 0.1)
-	backdrop:SetBackdropBorderColor(0.6, 0.6, 0.6)
+	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
 	backdrop:Hide() -- initially hidden
 	backdrop = CraftForgeQueueManagementParent
-	if not backdrop.SetBackdrop then
-		Mixin(backdrop, BackdropTemplateMixin)
-	end
-	backdrop:SetBackdrop(ControlBackdrop)
-	backdrop:SetBackdropBorderColor(0.6, 0.6, 0.6)
-	backdrop:SetBackdropColor(0.05, 0.05, 0.05)
+	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
 	self.gearTexture = CraftForgeReagentParent:CreateTexture(nil, "OVERLAY")
 	self.gearTexture:SetTexture("Interface\\Icons\\Trade_Engineering")
@@ -311,16 +360,12 @@ function CraftForge:CreateTradeSkillWindow()
 	local windowManager = LibStub("LibWindow-1.1")
 	windowManager.RegisterConfig(frame, self.db.profile, tradeSkillLocation)
 	windowManager.RestorePosition(frame)  -- restores scale also
+	if frame:GetNumPoints() == 0 then
+		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+	end
 	windowManager.MakeDraggable(frame)
---
--- Lets play the resize me game!
---
-	local minwidth = CRAFTFORGE_SKILLLIST_MIN_WIDTH
-	minwidth = minwidth +                  -- minwidth of scroll button
-			   20 +                        -- padding between sroll and detail
-			   CRAFTFORGE_REAGENT_MIN_WIDTH + -- reagent window (fixed width)
-			   10                          -- padding about window borders
-	self:EnableResize(frame, minwidth, CRAFTFORGE_MIN_HEIGHT, CraftForge.UpdateTradeSkillWindow)
+	frame:SetResizable(false)
+	frame:SetSize(900, 620)
 --
 -- Set up the sorting methods here
 --
@@ -430,19 +475,45 @@ local function get_recipe_button(i)
 	end
 	if not button.highlight then
 		button.index = i
+		if UIStyle and UIStyle.ApplyFont then
+			local bName = button:GetName()
+			UIStyle.ApplyFont(_G[bName.."Level"], 0)
+			UIStyle.ApplyFont(_G[bName.."Counts"], 0)
+			UIStyle.ApplyFont(_G[bName.."Name"], 0)
+			UIStyle.ApplyFont(_G[bName.."Suffix"], 0)
+		end
+		button.cfRowBg = button:CreateTexture(nil, "BACKGROUND")
+		button.cfRowBg:SetAllPoints(button)
+		button.cfRowBg:SetColorTexture(0.04, 0.038, 0.032, 0.4)
+		button.cfHeaderTop = button:CreateTexture(nil, "BORDER")
+		button.cfHeaderTop:SetPoint("TOPLEFT", button, "TOPLEFT", 0, 0)
+		button.cfHeaderTop:SetPoint("TOPRIGHT", button, "TOPRIGHT", 0, 0)
+		button.cfHeaderTop:SetHeight(1)
+		button.cfHeaderTop:SetColorTexture(0.96, 0.77, 0.43, 0.35)
+		button.cfHeaderTop:Hide()
+		button.cfHeaderBottom = button:CreateTexture(nil, "BORDER")
+		button.cfHeaderBottom:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 0, 0)
+		button.cfHeaderBottom:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0, 0)
+		button.cfHeaderBottom:SetHeight(1)
+		button.cfHeaderBottom:SetColorTexture(0, 0, 0, 0.65)
+		button.cfHeaderBottom:Hide()
+		button.cfAccent = button:CreateTexture(nil, "ARTWORK")
+		button.cfAccent:SetPoint("TOPLEFT", button, "TOPLEFT", 0, -1)
+		button.cfAccent:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 0, 1)
+		button.cfAccent:SetWidth(2)
+		button.cfAccent:Hide()
 		button.highlight = CreateFrame("Frame", "CraftForgeScrollHightlight"..i, button)
 		button.highlight:SetParent(button)
 		button.highlight:SetWidth(290)
-		button.highlight:SetHeight(16)
---		button.highlight:SetFrameStrata("HIGH")
+		button.highlight:SetHeight(20)
 		button.highlight:SetPoint("LEFT", button:GetName(), "LEFT")
 		button.highlight:SetPoint("RIGHT", button:GetName(), "RIGHT")
 		button:SetFrameLevel(CraftForgeSkillListParent:GetFrameLevel())
-		local t = button.highlight:CreateTexture(nil,"ARTWORK")
-		t:SetTexture("Interface\\Buttons\\UI-Listbox-Highlight2.blp")
+		local t = button.highlight:CreateTexture(nil, "ARTWORK")
+		t:SetColorTexture(0.96, 0.77, 0.43, 0.22)
 		t:SetAllPoints(button.highlight)
 		button.highlight.texture = t
-		button.highlight:SetAlpha(.25)
+		button.highlight:SetAlpha(1)
 		button.highlight:Hide()
 	end
 	if CraftForge.customSkillButtons then
@@ -555,6 +626,36 @@ end
 -- Updates the trade skill window whenever anything has changed,
 -- number of skills, skill type, skill level, etc
 --
+local function getTransmogPrefix(recipe)
+	if not recipe or not recipe.itemID or recipe.itemID == 0 then return nil end
+	if CanIMogIt and CanIMogIt.GetIconText then
+		local _, itemLink = C_Item.GetItemInfo(recipe.itemID)
+		if itemLink then
+			local icon = CanIMogIt:GetIconText(itemLink)
+			if icon and icon ~= "" then
+				return icon
+			end
+		end
+	end
+	if C_TransmogCollection and C_TransmogCollection.PlayerHasTransmogByItemInfo and C_Item and C_Item.GetItemInfoInstant then
+		local _, _, _, equipLoc, _, classID = C_Item.GetItemInfoInstant(recipe.itemID)
+		local isGear = (classID == Enum.ItemClass.Armor or classID == Enum.ItemClass.Weapon)
+			and equipLoc and equipLoc ~= ""
+			and equipLoc ~= "INVTYPE_BAG" and equipLoc ~= "INVTYPE_QUIVER"
+			and equipLoc ~= "INVTYPE_NECK" and equipLoc ~= "INVTYPE_FINGER" and equipLoc ~= "INVTYPE_TRINKET"
+		if isGear or (C_Item.IsCosmeticItem and C_Item.IsCosmeticItem(recipe.itemID)) then
+			local _, itemLink = C_Item.GetItemInfo(recipe.itemID)
+			local hasTransmog = C_TransmogCollection.PlayerHasTransmogByItemInfo(itemLink or recipe.itemID)
+			if hasTransmog then
+				return "|TInterface\\RaidFrame\\ReadyCheck-Ready:12:12:0:0|t "
+			else
+				return "|TInterface\\RaidFrame\\ReadyCheck-NotReady:12:12:0:0|t "
+			end
+		end
+	end
+	return nil
+end
+
 function CraftForge:UpdateTradeSkillWindow()
 	--DA.DEBUG(0,"UpdateTradeSkillWindow()")
 --[[
@@ -630,6 +731,7 @@ function CraftForge:UpdateTradeSkillWindow()
 	end
 	CraftForgeReagentParent:SetWidth(reagent_width)
 	CraftForgeReagentParent:SetHeight(reagent_height)
+	CraftForgeRankFrame:SetWidth(reagent_width)
 	CraftForgeQueueManagementParent:SetWidth(reagent_width)
 	width = CraftForgeFrame:GetWidth() - reagent_width - 20 -- padding
 	CraftForgeSkillListParent:SetWidth(width)
@@ -766,10 +868,12 @@ function CraftForge:UpdateTradeSkillWindow()
 			suffixText:SetText("")
 			suffixText:Hide()
 			subSkillRankBar:Hide()
-			if self.db.profile.display_required_level then
-				levelText:SetWidth(math.max(skill.depth*8+20,28))
+			if skill.subGroup then
+				levelText:SetWidth(math.max(skill.depth * 6, 2))
+			elseif self.db.profile.display_required_level then
+				levelText:SetWidth(20 + math.max(skill.depth - 1, 0) * 4)
 			else
-				levelText:SetWidth(skill.depth*8)
+				levelText:SetWidth(math.max(skill.depth * 6, 2))
 			end
 			buttonFavorite:Hide()
 			local textAlpha = 1
@@ -799,10 +903,28 @@ function CraftForge:UpdateTradeSkillWindow()
 			if self.currentGroupLabel ~= "Blizzard" then 
 				DA.DEBUG(0,"UpdateTradeSkillWindow: skill.subGroup = "..tostring(skill.subGroup))
 			end
+			UIStyle.ApplyFont(buttonText, -1)
+			UIStyle.ApplyFont(countText, -1)
+			UIStyle.ApplyFont(suffixText, -1)
 			if skill.subGroup then
+				UIStyle.ApplyFont(buttonText, 0)
+				if button.cfRowBg then
+					button.cfRowBg:SetColorTexture(0.17, 0.135, 0.075, 0.92)
+				end
+				if button.cfHeaderTop then
+					button.cfHeaderTop:Show()
+				end
+				if button.cfHeaderBottom then
+					button.cfHeaderBottom:Show()
+				end
+				if button.cfAccent then
+					button.cfAccent:SetWidth(3)
+					button.cfAccent:SetColorTexture(0.96, 0.77, 0.43, 0.95)
+					button.cfAccent:Show()
+				end
 				if SkillButtonNameEdit.originalButton ~= buttonText then
-					buttonText:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, textAlpha)
-					countText:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, textAlpha)
+					buttonText:SetTextColor(1.0, 0.85, 0.48, textAlpha)
+					countText:SetTextColor(0.96, 0.77, 0.43, textAlpha)
 					local expanded = skill.subGroup.expanded
 					if expanded then
 						buttonExpand:SetNormalTexture("Interface\\Addons\\CraftForge\\Icons\\expand_arrow_open.tga")
@@ -811,7 +933,7 @@ function CraftForge:UpdateTradeSkillWindow()
 						buttonExpand:SetNormalTexture("Interface\\Addons\\CraftForge\\Icons\\expand_arrow_closed.tga")
 						buttonExpand:SetHighlightTexture("Interface\\Addons\\CraftForge\\Icons\\expand_arrow_closed.tga")
 					end
-					local name = string.split(":", skill.name).." ("..#skill.subGroup.entries..")"
+					local name = strsplit(":", skill.name).." ("..#skill.subGroup.entries..")"
 					buttonText:SetText(name)
 					button:SetID(skillIndex or 0)
 					buttonExpand.group = skill.subGroup
@@ -835,6 +957,28 @@ function CraftForge:UpdateTradeSkillWindow()
 					show_button(button, self.currentTrade, skillIndex, i)
 				end
 			else
+				if button.cfRowBg then
+					if i % 2 == 0 then
+						button.cfRowBg:SetColorTexture(0.055, 0.050, 0.042, 0.45)
+					else
+						button.cfRowBg:SetColorTexture(0.030, 0.028, 0.024, 0.25)
+					end
+				end
+				if button.cfHeaderTop then
+					button.cfHeaderTop:Hide()
+				end
+				if button.cfHeaderBottom then
+					button.cfHeaderBottom:Hide()
+				end
+				if button.cfAccent then
+					button.cfAccent:SetWidth(2)
+					if skill.selected then
+						button.cfAccent:SetColorTexture(0.96, 0.77, 0.43, 1)
+						button.cfAccent:Show()
+					else
+						button.cfAccent:Hide()
+					end
+				end
 				--DA.DEBUG(0,"UpdateTradeSkillWindow: currentTrade= "..tostring(self.currentTrade)..", Process '"..tostring(skill.name).."'("..tostring(skill.recipeID).."), skillIndex= "..tostring(skillIndex))
 				local recipe = self:GetRecipe(skill.recipeID)
 				buttonExpand.group = nil
@@ -872,6 +1016,9 @@ function CraftForge:UpdateTradeSkillWindow()
 -- Some may return additional information so store that in the button for later use.
 --
 				pretext, preid, prelink = self:RecipeNamePrefix(skill, recipe)
+				if not pretext or pretext == "" then
+					pretext = getTransmogPrefix(recipe)
+				end
 				if pretext then
 					button.pretext = pretext
 				end
@@ -884,19 +1031,27 @@ function CraftForge:UpdateTradeSkillWindow()
 --
 -- Set the prefix and name of the recipe
 --
-				text = (pretext or "") .. (skill.name or "")
+				text = (pretext and pretext ~= "" and (pretext .. " ") or "") .. (skill.name or "")
 --
 -- Prepare the counts (displayed on the right)
 --
-				local num, numrecursive, numwvendor, numwalts = get_craftable_counts(skill.skillData, recipe.numMade)
-				if (num > 0 and showBag) or (numrecursive > 0 and showCraft) or (numwvendor > 0 and showVendor) or (numwalts > 0 and showAlts) then
+				local num, numrecursive, numwvendor, numwalts, numbank = get_craftable_counts(skill.skillData, recipe.numMade)
+				if (num > 0 and showBag) or (numrecursive > 0 and showCraft) or (numwvendor > 0 and showVendor) or (numwalts > 0 and showAlts) or (numbank > 0 and showBag) then
 					local c = 1
 					if showBag then
+						local numColor = (num > 0) and CBAG or CGREY
 						if num >= 1000 then
 							num = "##"
 						end
-						catstring[c] = CBAG..num
+						catstring[c] = numColor..num
 						c = c + 1
+						if numbank > 0 then
+							if numbank >= 1000 then
+								numbank = "##"
+							end
+							catstring[c] = CBANK..numbank
+							c = c + 1
+						end
 					end
 					if showCraft then
 						if numrecursive >= 1000 then
@@ -1102,24 +1257,32 @@ function CraftForge:SkillButton_OnEnter(button)
 		return
 	end
 	local tip = GameTooltip -- CraftForgeTradeskillTooltip
-	tip:SetOwner(button, "ANCHOR_BOTTOMRIGHT",-300);
+	tip:SetOwner(button, "ANCHOR_RIGHT", 8, 0)
 	if not tip.SetBackdrop then
 		Mixin(tip, BackdropTemplateMixin)
 	end
-	tip:SetBackdropColor(0,0,0,1);
-	tip:ClearLines();
+	tip:SetBackdropColor(0.06, 0.06, 0.08, 0.96)
+	if tip.SetBackdropBorderColor then
+		tip:SetBackdropBorderColor(0.75, 0.62, 0.30, 0.9)
+	end
+	tip:ClearLines()
 	tip:SetClampedToScreen(true)
 --
 -- Set the tooltip's scale to match that of the default UI
 --
 	local uiScale = 1.0;
-	if ( GetCVar("useUiScale") == "1" ) then
-		uiScale = tonumber(GetCVar("uiscale"))
+	if CraftForge.db.profile.scale_tooltip then
+		if tip == GameTooltip and not CraftForge.gttScale then
+			CraftForge.gttScale = GameTooltip:GetScale()
+		end
+		if ( GetCVar("useUiScale") == "1" ) then
+			uiScale = tonumber(GetCVar("uiscale"))
+		end
+		if CraftForge.db.profile.ttscale then
+			uiScale = uiScale * CraftForge.db.profile.ttscale
+		end
+		tip:SetScale(uiScale)
 	end
-	if CraftForge.db.profile.ttscale then
-		uiScale = uiScale * CraftForge.db.profile.ttscale
-	end
-	tip:SetScale(uiScale)
 --
 -- Name of the recipe
 --
@@ -1132,56 +1295,49 @@ function CraftForge:SkillButton_OnEnter(button)
 --
 --	Add CraftForge specific information to the tooltip
 --
-	local num, numrecursive, numwvendor, numwalts = 0, 0, 0, 0
+	local num, numrecursive, numwvendor, numwalts, numbank = 0, 0, 0, 0, 0
 	if skill.skillData then
-		num, numrecursive, numwvendor, numwalts = get_craftable_counts(skill.skillData, recipe.numMade)
+		num, numrecursive, numwvendor, numwalts, numbank = get_craftable_counts(skill.skillData, recipe.numMade)
 	end
 	local numowned = C_Item.GetItemCount(recipe.itemID,true,false,true,true)
---
--- How many are there already
---
+	local hasCounts = (numowned > 0) or (num > 0) or (numrecursive > 0)
+		or (numbank and numbank > 0 and numbank ~= num)
+		or (numwvendor and numwvendor > 0 and numwvendor ~= num)
+		or (numwalts and numwalts > 0 and numwalts ~= num)
+	if hasCounts then
+		tip:AddLine(" ")
+	end
 	if numowned > 0 then
-		local text = "\n" .. COWNED..numowned .. "|r " .. L["in your inventory"]
-		tip:AddLine(text, 1, 1, 1, false) -- (text, r, g, b, wrap)
+		tip:AddDoubleLine(L["in your inventory"], COWNED..numowned.."|r", 0.82, 0.82, 0.82, 1, 1, 1)
 	end
---
--- How many can be created with the reagents in the inventory
---
 	if num > 0 then
-		local text = "\n" .. CBAG..num .. "|r " .. L["can be created from reagents in your inventory"]
-		tip:AddLine(text, 1, 1, 1, false) -- (text, r, g, b, wrap)
+		tip:AddDoubleLine(L["can be created from reagents in your inventory"], CBAG..num.."|r", 0.82, 0.82, 0.82, 1, 1, 1)
 	end
---
--- How many can be created by crafting the reagents
---
+	if numbank and numbank > 0 and numbank ~= num then
+		if numbank >= 1000 then
+			numbank = "##"
+		end
+		tip:AddDoubleLine(L["can be created with reagents in your bank"], CBANK..numbank.."|r", 0.82, 0.82, 0.82, 1, 1, 1)
+	end
 	if numrecursive > 0 then
-		local text = "\n" .. CCRAFT..numrecursive .. "|r " .. L["can be created by crafting reagents"]
-		tip:AddLine(text, 1, 1, 1, false) -- (text, r, g, b, wrap)
+		tip:AddDoubleLine(L["can be created by crafting reagents"], CCRAFT..numrecursive.."|r", 0.82, 0.82, 0.82, 1, 1, 1)
 	end
---
--- How many can be created with reagents bought at vendor
---
 	if numwvendor and numwvendor > 0 and numwvendor ~= num then
 		if numwvendor >= 1000 then
 			numwvendor = "##"
 		end
-		local text =  "\n" .. CVENDOR..numwvendor .. "|r " .. L["can be created with reagents bought at vendor"]
-		tip:AddLine(text, 1, 1, 1, false) -- (text, r, g, b, wrap)
+		tip:AddDoubleLine(L["can be created with reagents bought at vendor"], CVENDOR..numwvendor.."|r", 0.82, 0.82, 0.82, 1, 1, 1)
 	end
---
--- How many can be crafted with reagents on *all* alts, including this one.
---
 	if numwalts and numwalts > 0 and numwalts ~= num then
 		if numwalts >= 1000 then
 			numwalts = "##"
 		end
-		local text = "\n" .. CALTS..numwalts .. "|r " .. L["can be created from reagents on all characters"]
-		tip:AddLine(text, 1, 1, 1, false)	-- (text, r, g, b, wrap)
+		tip:AddDoubleLine(L["can be created from reagents on all characters"], CALTS..numwalts.."|r", 0.82, 0.82, 0.82, 1, 1, 1)
 	end
 --
 -- Now the list of regents for this recipe and some info about them
 --
-	tip:AddLine("\n")
+	tip:AddLine(" ")
 	local text
 	if self.isRetail then
 		text = string.format("|cff808080[%s/%s]|r", L["Inventory"], L["Craftable"])
@@ -1222,7 +1378,50 @@ function CraftForge:SkillButton_OnEnter(button)
 	end
 --	local text = string.format("[%s/%s]", L["Inventory"], L["Craftable"])
 --	tip:AddDoubleLine("\n", text)
-	tip:AddLine("\n")
+	local showSource = CraftForge.db.profile.show_recipe_source_for_learned
+	if not showSource then
+		local rInfo = C_TradeSkillUI and C_TradeSkillUI.GetRecipeInfo and skill.id and C_TradeSkillUI.GetRecipeInfo(skill.id)
+		if rInfo and not rInfo.learned then
+			showSource = true
+		elseif skill.learned == false or (recipe and recipe.learned == false) then
+			showSource = true
+		end
+	end
+	local sourceText = showSource and C_TradeSkillUI and C_TradeSkillUI.GetRecipeSourceText and skill.id and C_TradeSkillUI.GetRecipeSourceText(skill.id) or nil
+	if showSource and (not sourceText or sourceText == "") and CraftForge.ATTPlugin and CraftForge.ATTPlugin.GetRecipeSource then
+		sourceText = CraftForge.ATTPlugin.GetRecipeSource(skill, recipe)
+	end
+	if sourceText and sourceText ~= "" then
+		tip:AddLine(" ")
+		tip:AddLine(L["Source"] .. ":", 1.0, 0.82, 0.0, false)
+		for line in sourceText:gsub("|n", "\n"):gmatch("[^\r\n]+") do
+			tip:AddLine("  " .. line, 0.96, 0.77, 0.43, false)
+		end
+	end
+	if self.GetRecipeCostAndProfit then
+		local cost, value, profit = self:GetRecipeCostAndProfit(recipe)
+		if cost and value then
+			local fmt = function(c)
+				local absC = math.floor(math.abs(c))
+				if self.FormatMoneyFull then
+					return self:FormatMoneyFull(absC, true)
+				elseif GetCoinTextureString then
+					return GetCoinTextureString(absC)
+				end
+				return tostring(absC)
+			end
+			tip:AddLine(" ")
+			tip:AddDoubleLine(L["Craft Cost"] .. ":", fmt(cost), 0.82, 0.82, 0.82, 1, 1, 1)
+			tip:AddDoubleLine(L["Sell Value"] .. ":", fmt(value), 0.82, 0.82, 0.82, 1, 1, 1)
+			local sign = profit >= 0 and "+" or "-"
+			local pr, pg, pb = 0.2, 1.0, 0.2
+			if profit < 0 then
+				pr, pg, pb = 1.0, 0.3, 0.3
+			end
+			tip:AddDoubleLine(L["Profit"] .. ":", sign .. fmt(profit), 1.0, 0.82, 0.0, pr, pg, pb)
+		end
+	end
+	tip:AddLine(" ")
 	local text1 = string.format("recipeID= %d",skill.recipeID)
 	local item = string.format("itemID= %d",recipe.itemID)
 	local scroll = string.format("scrollID= %d", CraftForge.scrollData[skill.recipeID])
@@ -2161,7 +2360,7 @@ end
 
 function CraftForge:ReAnchorButtons(newFrame)
 	--DA.DEBUG(0,"ReAnchorButtons("..tostring(newFrame)..")")
-	CraftForgeRecipeNotesButton:SetPoint("BOTTOMRIGHT",newFrame,"TOPRIGHT",0,0)
+	CraftForgeRecipeNotesButton:SetPoint("BOTTOMRIGHT",newFrame,"TOPRIGHT",0,2)
 	CraftForgeQueueAllButton:SetPoint("TOPLEFT",newFrame,"BOTTOMLEFT",0,-2)
 	CraftForgeEnchantButton:SetPoint("TOPLEFT",newFrame,"BOTTOMLEFT",0,-2)
 --	CraftForgeQueueButton:SetPoint("TOPRIGHT",newFrame,"BOTTOMRIGHT",0,-2)
@@ -2439,39 +2638,21 @@ function CraftForge:CreateStandaloneQueueFrame()
 	if not frame then
 		return nil
 	end
-	if not frame.SetBackdrop then
-		Mixin(frame, BackdropTemplateMixin)
-	end
+	local UIStyle = CraftForge.UIStyle
 	if TSM_API and CraftForge.db.profile.tsm_compat then
 		frame:SetFrameStrata("HIGH")
 	end
-	frame:SetBackdrop(FrameBackdrop);
-	frame:SetBackdropColor(0.1, 0.1, 0.1)
-	-- A title bar stolen from the Ace2 Waterfall window.
-	local r,g,b = 0, 0.7, 0; -- dark green
-	local titlebar = frame:CreateTexture(nil,"BACKGROUND")
-	local titlebar2 = frame:CreateTexture(nil,"BACKGROUND")
-	titlebar:SetPoint("TOPLEFT",frame,"TOPLEFT",3,-4)
-	titlebar:SetPoint("TOPRIGHT",frame,"TOPRIGHT",-3,-4)
-	titlebar:SetHeight(13)
-	titlebar2:SetPoint("TOPLEFT",titlebar,"BOTTOMLEFT",0,0)
-	titlebar2:SetPoint("TOPRIGHT",titlebar,"BOTTOMRIGHT",0,0)
-	titlebar2:SetHeight(13)
-	titlebar:SetGradient("VERTICAL", CreateColor(r*0.6,g*0.6,b*0.6,1), CreateColor(r,g,b,1))
-	titlebar:SetColorTexture(r,g,b,1)
-	titlebar2:SetGradient("VERTICAL", CreateColor(r*0.9,g*0.9,b*0.9,1), CreateColor(r*0.6,g*0.6,b*0.6,1))
-	titlebar2:SetColorTexture(r,g,b,1)
-	local title = CreateFrame("Frame",nil,frame)
-	title:SetPoint("TOPLEFT",titlebar,"TOPLEFT",0,0)
-	title:SetPoint("BOTTOMRIGHT",titlebar2,"BOTTOMRIGHT",0,0)
-	local titletext = title:CreateFontString("CraftForgeStandaloneQueueTitleText", "OVERLAY", "GameFontNormalLarge")
-	titletext:SetPoint("TOPLEFT",title,"TOPLEFT",0,0)
-	titletext:SetPoint("TOPRIGHT",title,"TOPRIGHT",0,0)
+	UIStyle.SkinFrame(frame, false)
+	local titletext = frame:CreateFontString("CraftForgeStandaloneQueueTitleText", "OVERLAY", "GameFontNormalLarge")
+	titletext:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -1)
+	titletext:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -36, -1)
 	titletext:SetHeight(26)
-	titletext:SetShadowColor(0,0,0)
-	titletext:SetShadowOffset(1,-1)
-	titletext:SetTextColor(1,1,1)
+	titletext:SetJustifyH("CENTER")
 	titletext:SetText("CraftForge: " .. L["Queue"])
+	UIStyle.StyleHeaderBar(frame, titletext, 1)
+	if CraftForgeStandaloneQueueCloseButton then
+		UIStyle.SkinCloseButton(CraftForgeStandaloneQueueCloseButton)
+	end
 
 --
 -- Ace Window manager library, allows the window position (and size)
@@ -2483,6 +2664,9 @@ function CraftForge:CreateStandaloneQueueFrame()
 	local windowManager = LibStub("LibWindow-1.1")
 	windowManager.RegisterConfig(frame, self.db.profile, standaloneQueueLocation)
 	windowManager.RestorePosition(frame)  -- restores scale also
+	if frame:GetNumPoints() == 0 then
+		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+	end
 	windowManager.MakeDraggable(frame)
 --
 -- lets play the resize me game!

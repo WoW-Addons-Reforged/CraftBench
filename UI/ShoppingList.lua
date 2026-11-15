@@ -74,41 +74,19 @@ local function createShoppingListFrame(self)
 	if not frame then
 		return nil
 	end
-	if not frame.SetBackdrop then
-		Mixin(frame, BackdropTemplateMixin)
-	end
+	local UIStyle = CraftForge.UIStyle
 	if TSM_API and CraftForge.db.profile.tsm_compat then
 		frame:SetFrameStrata("HIGH")
 	end
-	frame:SetBackdrop(FrameBackdrop)
-	frame:SetBackdropColor(0.1, 0.1, 0.1)
---
--- A title bar stolen from the Ace2 Waterfall window.
---
-	local r,g,b = 0, 0.7, 0; -- dark green
-	local titlebar = frame:CreateTexture(nil,"BACKGROUND")
-	local titlebar2 = frame:CreateTexture(nil,"BACKGROUND")
-	titlebar:SetPoint("TOPLEFT",frame,"TOPLEFT",3,-4)
-	titlebar:SetPoint("TOPRIGHT",frame,"TOPRIGHT",-3,-4)
-	titlebar:SetHeight(13)
-	titlebar2:SetPoint("TOPLEFT",titlebar,"BOTTOMLEFT",0,0)
-	titlebar2:SetPoint("TOPRIGHT",titlebar,"BOTTOMRIGHT",0,0)
-	titlebar2:SetHeight(13)
-	titlebar:SetGradient("VERTICAL", CreateColor(r*0.6,g*0.6,b*0.6,1), CreateColor(r,g,b,1))
-	titlebar:SetColorTexture(r,g,b,1)
-	titlebar2:SetGradient("VERTICAL", CreateColor(r*0.9,g*0.9,b*0.9,1), CreateColor(r*0.6,g*0.6,b*0.6,1))
-	titlebar2:SetColorTexture(r,g,b,1)
-	local title = CreateFrame("Frame",nil,frame)
-	title:SetPoint("TOPLEFT",titlebar,"TOPLEFT",0,0)
-	title:SetPoint("BOTTOMRIGHT",titlebar2,"BOTTOMRIGHT",0,0)
-	local titletext = title:CreateFontString("CraftForgeShoppingListTitleText", "OVERLAY", "GameFontNormalLarge")
-	titletext:SetPoint("TOPLEFT",title,"TOPLEFT",0,0)
-	titletext:SetPoint("TOPRIGHT",title,"TOPRIGHT",0,0)
+	UIStyle.SkinFrame(frame, false)
+	local titletext = frame:CreateFontString("CraftForgeShoppingListTitleText", "OVERLAY", "GameFontNormalLarge")
+	titletext:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -1)
+	titletext:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -36, -1)
 	titletext:SetHeight(26)
-	titletext:SetShadowColor(0,0,0)
-	titletext:SetShadowOffset(1,-1)
-	titletext:SetTextColor(1,1,1)
+	titletext:SetJustifyH("CENTER")
 	titletext:SetText("CraftForge: " .. L["Shopping List"])
+	UIStyle.StyleHeaderBar(frame, titletext, 1)
+	if CraftForgeShoppingListCloseButton then UIStyle.SkinCloseButton(CraftForgeShoppingListCloseButton) end
 
 	CraftForgeShowQueuesFromAllAltsText:SetText(L["Include alts"])
 	CraftForgeShowQueuesFromAllAlts:SetChecked(CraftForge.db.profile.include_alts)
@@ -130,6 +108,7 @@ local function createShoppingListFrame(self)
 --
 	CraftForgeShoppingListRetrieveButton:SetText(L["Retrieve"])
 	CraftForgeShoppingListRetrieveButton:Hide()
+	UIStyle.SkinButton(CraftForgeShoppingListRetrieveButton, "primary")
 --
 -- Button to create an Auctionator search list for Shopping List contents
 --   should only show if the Auction House is open, Auctionator is
@@ -138,20 +117,17 @@ local function createShoppingListFrame(self)
 --   Start with it (unconditionally) hidden
 --
 	CraftForgeSLAuctionatorButton:Hide()
+	UIStyle.SkinButton(CraftForgeSLAuctionatorButton, "default")
 --
 -- The frame enclosing the scroll list needs a border and a background
 --
 	local backdrop = CraftForgeShoppingListParent
-	if not backdrop.SetBackdrop then
-		Mixin(backdrop, BackdropTemplateMixin)
-	end
 	if TSM_API and CraftForge.db.profile.tsm_compat then
 		backdrop:SetFrameStrata("HIGH")
 	end
-	backdrop:SetBackdrop(ControlBackdrop)
-	backdrop:SetBackdropBorderColor(0.6, 0.6, 0.6)
-	backdrop:SetBackdropColor(0.05, 0.05, 0.05)
+	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
+	if CraftForgeShoppingListList then UIStyle.StyleScrollBar(CraftForgeShoppingListList) end
 
 --
 -- Ace Window manager library, allows the window position (and size)
@@ -1329,7 +1305,12 @@ local function get_button(i)
 	if not button then
 		button = CreateFrame("Button", "CraftForgeShoppingListButton"..i, CraftForgeShoppingListParent, "CraftForgeShoppingListItemButtonTemplate")
 		button:SetParent(CraftForgeShoppingList)
-		button:SetPoint("TOPLEFT", "CraftForgeShoppingListButton"..(i-1), "BOTTOMLEFT")
+		local prevButton = (i > 1) and _G["CraftForgeShoppingListButton"..(i-1)]
+		if prevButton then
+			button:SetPoint("TOPLEFT", prevButton, "BOTTOMLEFT")
+		else
+			button:SetPoint("TOPLEFT", CraftForgeShoppingListParent, "TOPLEFT", 5, -5)
+		end
 	end
 	if not button.valueText then
 		button.valueText = button:CreateFontString(nil, nil, "GameFontNormal")
@@ -1408,7 +1389,7 @@ function CraftForge:UpdateShoppingListWindow(use_cached_recipes)
 	--DA.DEBUG(1,"UpdateShoppingListWindow: height= "..tostring(height)..", CRAFTFORGE_SHOPPING_LIST_HEIGHT= "..tostring(CRAFTFORGE_SHOPPING_LIST_HEIGHT))
 	--DA.DEBUG(1,"UpdateShoppingListWindow: CraftForgeShoppingListParent width= "..tostring(width))
 	local button_count = height / CRAFTFORGE_SHOPPING_LIST_HEIGHT
-	button_count = math.floor(button_count) - 1
+	button_count = math.max(0, math.floor(button_count) - 1)
 	--DA.DEBUG(1,"UpdateShoppingListWindow: numItems= "..tostring(numItems)..", button_count= "..tostring(button_count)..", num_buttons= "..tostring(num_buttons))
 --
 -- Update the scroll frame
@@ -1468,7 +1449,7 @@ function CraftForge:UpdateShoppingListWindow(use_cached_recipes)
 --
 -- Hide any of the buttons that we created, but don't need right now
 --
-	for i = button_count+1, num_buttons, 1 do
+	for i = math.max(1, button_count + 1), num_buttons, 1 do
 		local button = get_button(i)
 		button:Hide()
 	end

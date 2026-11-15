@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ]]--
 
-CraftForge = LibStub("AceAddon-3.0"):NewAddon("CraftForge", "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0", "AceTimer-3.0")
+CraftForge = LibStub("AceAddon-3.0"):NewAddon("CraftForge", "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0", "AceTimer-3.0", "AceBucket-3.0")
 local AceDB = LibStub("AceDB-3.0")
 
 -- Pull it into the local namespace, it's faster to access that way
@@ -78,14 +78,13 @@ local defaults = {
 --
 		vendor_buy_button = true,
 		vendor_auto_buy   = false,
+		minimap = { hide = false },
 		show_item_notes_tooltip = false,
 		show_crafters_tooltip = false,
 		show_detailed_recipe_tooltip = true,	-- show any tooltips?
-		display_full_tooltip = true,			-- show full blizzards tooltip
 		link_craftable_reagents = true,
 		queue_craftable_reagents = true,
 		queue_tools = false,
-		queue_to_front = false,
 		ignore_banked_reagents = false,
 		ignore_queued_reagents = false,
 		ignore_on_hand = false,
@@ -132,6 +131,12 @@ local defaults = {
 		process_lockpick = true,
 		process_max_quality = 4,
 		process_glow = true,
+		process_tooltip_disenchant = true,
+		process_tooltip_prospect = true,
+		process_tooltip_mill = true,
+		process_tooltip_value = true,
+		process_autopopup = true,
+		process_autopopup_ignore = {},
 		plugins = {},
 		SavedQueues = {},
 	},
@@ -174,6 +179,7 @@ CraftForge.unknownRecipe = {
 	numCraftable = 0,
 	numCraftableVendor = 0,
 	numCraftableAlts = 0,
+	numCraftableBank = 0,
 }
 
 function CraftForge:DisableBlizzardFrame()
@@ -814,7 +820,7 @@ function CraftForge:OnEnable()
 	self:RegisterEvent("TRADE_SKILL_LIST_UPDATE")
 --	self:RegisterEvent("GUILD_RECIPE_KNOWN_BY_MEMBERS", "CraftForgeShowGuildCrafters")
 	self:RegisterEvent("GARRISON_TRADESKILL_NPC_CLOSED")
-	self:RegisterEvent("BAG_UPDATE") 				-- Fires for both bag and bank updates.
+	self:RegisterBucketEvent("BAG_UPDATE", 0.25, "OnBagUpdateBucket")	-- Throttled bag/bank updates via AceBucket-3.0
 	self:RegisterEvent("BAG_UPDATE_DELAYED")		-- Fires after all applicable BAG_UPDATE events for a specific action have been fired.
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED")	-- BAG_UPDATE_DELAYED seems to have disappeared. Using this instead.
 
@@ -825,6 +831,12 @@ function CraftForge:OnEnable()
 	self:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
 	if self.InitializeProcessing then
 		self:InitializeProcessing()
+	end
+	if self.Fishing and self.Fishing.Initialize then
+		self.Fishing:Initialize()
+	end
+	if self.Contacts and self.Contacts.Initialize then
+		self.Contacts:Initialize()
 	end
 --
 -- MERCHANT_SHOW, MERCHANT_HIDE, MERCHANT_UPDATE events needed for auto buying.
@@ -1065,9 +1077,17 @@ end
 function CraftForge:SKILL_LINES_CHANGED()
 	DA.TRACE("SKILL_LINES_CHANGED")
 	if CraftForge.tradeSkillOpen then
---		CraftForge:RescanTrade()
---		CraftForge:UpdateTradeSkillWindow()
 		CraftForge.dataSourceChanged = true	-- Process the change on the next TRADE_SKILL_LIST_UPDATE
+		if not self._skillLineRescanTimer then
+			self._skillLineRescanTimer = self:ScheduleTimer(function()
+				self._skillLineRescanTimer = nil
+				if self.tradeSkillOpen and self.dataSourceChanged then
+					self.dataSourceChanged = false
+					self:RescanTrade()
+					self:UpdateTradeSkillWindow()
+				end
+			end, 0.25)
+		end
 	end
 end
 
@@ -1196,6 +1216,16 @@ function CraftForge:GET_ITEM_INFO_RECEIVED(event, itemID, result)
 	if itemID then
 		local name = C_Item.GetItemInfo(itemID)
 		DA.TRACE3("GET_ITEM_INFO_RECEIVED(", itemID, result, "), "..tostring(name))
+		if result and self.tradeSkillOpen and CraftForgeFrame and CraftForgeFrame:IsVisible() then
+			if not self._itemInfoRefreshTimer then
+				self._itemInfoRefreshTimer = self:ScheduleTimer(function()
+					self._itemInfoRefreshTimer = nil
+					if self.tradeSkillOpen and CraftForgeFrame and CraftForgeFrame:IsVisible() then
+						self:UpdateTradeSkillWindow()
+					end
+				end, 0.2)
+			end
+		end
 	else
 		DA.TRACE3("GET_ITEM_INFO_RECEIVED")
 	end
@@ -1476,6 +1506,13 @@ function CraftForge:CraftForgeShow()
 		self.dataScanned = false
 		self:SetTradeSkillLearned()
 		DA.DEBUG(3,"CraftForgeShow: waiting for TRADE_SKILL_DATA_SOURCE_CHANGED")
+		if C_Timer and C_Timer.After then
+			C_Timer.After(0.05, function()
+				if CraftForge.tradeSkillOpen and not CraftForge.dataSourceChanged and (not CraftForge.tradeSkillFrame or not CraftForge.tradeSkillFrame:IsVisible()) then
+					CraftForge:CraftForgeShowWindow("TIMER")
+				end
+			end)
+		end
 --		self:CraftForgeShowWindow() -- Need to wait until TRADE_SKILL_DATA_SOURCE_CHANGED
 	else
 		DA.DEBUG(3,"CraftForgeShow: "..tostring(self.currentTrade).." not IsSupportedTradeskill")
@@ -1566,6 +1603,19 @@ end
 -- This could be because an enchant has used up mats or the player
 -- may have received more mats.
 --
+function CraftForge:OnBagUpdateBucket(bags)
+	if not self.BAG_UPDATE then return end
+	if type(bags) == "table" then
+		for bagID in pairs(bags) do
+			if type(bagID) == "number" then
+				self:BAG_UPDATE("BUCKET_BAG_UPDATE", bagID)
+			end
+		end
+	elseif type(bags) == "number" then
+		self:BAG_UPDATE("BUCKET_BAG_UPDATE", bags)
+	end
+end
+
 function CraftForge:TRADE_CLOSED()
 	self:BAG_UPDATE("FAKE_BAG_UPDATE", 0)
 end
@@ -1838,7 +1888,7 @@ function CraftForge:GetItemNote(key)
 	if not self.db.realm.notes[self.currentPlayer] then
 		return
 	end
-	local kind, id = string.split(":", key)
+	local kind, id = strsplit(":", key)
 	id = tonumber(id) or 0
 	if kind == "enchant" then 					-- get the note by the itemID, not the recipeID
 		if self.data.recipeList[id] then
@@ -1864,7 +1914,7 @@ end
 --
 function CraftForge:SetItemNote(key, note)
 	--DA.DEBUG(0,"SetItemNote("..tostring(key)..", "..tostring(note)..")")
-	local kind, id = string.split(":", key)
+	local kind, id = strsplit(":", key)
 	id = tonumber(id) or 0
 	if kind == "enchant" then 					-- store the note by the itemID, not the recipeID
 		if self.data.recipeList[id] then

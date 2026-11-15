@@ -14,7 +14,7 @@
 ## Notes-esES: Suite todo en uno para profesiones y fabricación
 ## Notes-ruRU: Универсальный интерфейс профессий и крафта
 ## Author: gOOvER
-## Version: @project-version@
+## Version: 1.0.0
 ## Category-enUS: Professions
 ## Category-deDE: Berufe
 ## Category-esES: Profesiones
@@ -31,7 +31,7 @@
 ## X-Website: https://github.com/gOOvER/CraftForge
 ## SavedVariables: CraftForgeDB
 ## SavedVariablesPerCharacter: CraftForgeWho, CraftForgeDBPC, CraftForgeMemory, CraftForgeProfile
-## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, AckisRecipeList, AuctionDB, Auctionator, BeanCounter, CanIMogIt, CraftInfoAnywhere, DataStore, DataStore_Auctions, Journalator, OribosExchange, Overachiever, TradeSkillMaster, tekDebug
+## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, AckisRecipeList, AuctionDB, Auctionator, Baganator, BeanCounter, CanIMogIt, CraftInfoAnywhere, DataStore, DataStore_Auctions, Journalator, OribosExchange, Overachiever, Syndicator, TradeSkillMaster, tekDebug
 ## X-Embeds: Ace3, LibStub, CallbackHandler-1.0, LibWindow-1.1, LibPeriodicTable-3.1
 
 #### List of embedded libraries
@@ -47,6 +47,13 @@ Libs\AceLocale-3.0\AceLocale-3.0.xml
 Libs\AceConsole-3.0\AceConsole-3.0.xml
 Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\AceBucket-3.0\AceBucket-3.0.xml
+Libs\AceSerializer-3.0\AceSerializer-3.0.xml
+Libs\AceComm-3.0\AceComm-3.0.xml
+Libs\AceTab-3.0\AceTab-3.0.xml
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\lib.xml
+Libs\LibDeflate\lib.xml
 Libs\LibWindow-1.1\LibWindow-1.1\LibWindow-1.1.lua
 Libs\LibPeriodicTable-3.1\LibPeriodicTable-3.1.lua
 Libs\LibPeriodicTable-3.1\LibPeriodicTable-3.1-Tradeskill\LibPeriodicTable-3.1-Tradeskill.lua
@@ -72,6 +79,8 @@ Core\CraftForgeTables.lua
 Core\CraftForgeData.lua
 Core\CraftForgeNewsGUI.lua
 Core\CraftForgeNewsData.lua
+Core\CraftForgeFishing.lua
+Core\CraftForgeContacts.lua
 Core\TradeskillInfo.lua
 Core\CraftForgeQueue.lua
 Core\ThirdPartyHooks.lua
@@ -80,6 +89,7 @@ Core\RecipeGroups.lua
 Core\Inventory.lua
 Core\CraftForgePlugin.lua
 Core\CraftForgeProcess.lua
+Core\CraftForgeShare.lua
 
 #### Data files
 Data\SkillLevelData.lua
@@ -94,15 +104,25 @@ Utils\DebugAids.lua
 
 #### Plugins
 Plugins\AckisRecipeList.lua
+Plugins\AllTheThings.lua
 Plugins\BeanCounter.lua
 Plugins\Auctionator.lua
+Plugins\Baganator.lua
 Plugins\CanIMogIt.lua
 Plugins\Overachiever.lua
 Plugins\DataStoreAuctions.lua
 Plugins\OribosExchange.lua
 Plugins\AuctionDB.lua
+Plugins\TSM.lua
+Plugins\ElvUI.lua
+Plugins\BetterBags.lua
+Plugins\TomTom.lua
 
 #### UI files
+UI\UIStyle.lua
+UI\OptionsFrame.lua
+UI\FishingFrame.lua
+UI\AltFinder.lua
 UI\Utils.lua
 UI\Sorting.lua
 UI\Filtering.lua

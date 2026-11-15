@@ -40,11 +40,14 @@ end
 --
 function CraftForge:FilterDropDown_Initialize()
 	--DA.DEBUG(0,"FilterDropDown_Initialize()")
+	local selectedID = UIDropDownMenu_GetSelectedID(CraftForgeFilterDropdown)
 	local info
 	local i = 1
 
 	info = UIDropDownMenu_CreateInfo()
 	info.text = L["Learned"]
+	info.isNotRadio = true
+	info.checked = (selectedID == i)
 	info.func = CraftForge.FilterDropDown_OnClick
 	info.value = i
 	if self then
@@ -55,6 +58,8 @@ function CraftForge:FilterDropDown_Initialize()
 
 	info = UIDropDownMenu_CreateInfo()
 	info.text = L["Unlearned"]
+	info.isNotRadio = true
+	info.checked = (selectedID == i)
 	info.func = CraftForge.FilterDropDown_OnClick
 	info.value = i
 	if self then
@@ -65,6 +70,8 @@ function CraftForge:FilterDropDown_Initialize()
 
 	info = UIDropDownMenu_CreateInfo()
 	info.text = L["Both"]
+	info.isNotRadio = true
+	info.checked = (selectedID == i)
 	info.func = CraftForge.FilterDropDown_OnClick
 	info.value = i
 	if self then
@@ -100,6 +107,8 @@ function CraftForge.InitializeFilterDropdown(self, level)
 		info.notCheckable = true
 		info.func = function()
 			CraftForge:SetDefaultFilters()
+			CraftForge:SetTradeSkillOption("onlyProfitable", false)
+			CraftForge:SetTradeSkillOption("hasSourceOnly", false)
 			CraftForge:ResetTradeSkillFilter() -- verify the search filter is blank (so we get all skills)
 			UIDropDownMenu_RefreshAll(CraftForgeFilterDropMenu, 3)
 			CraftForgeFilterText:SetText("")
@@ -151,8 +160,30 @@ function CraftForge.InitializeFilterDropdown(self, level)
 			UIDropDownMenu_AddButton(info, level)
 		end
 
+		info.text = L["Only Profitable"]
+		info.func = function()
+			CraftForge:SetTradeSkillOption("onlyProfitable", not CraftForge:GetTradeSkillOption("onlyProfitable"))
+			CraftForge.dataScanned = false
+			CraftForge:UpdateTradeSkillWindow()
+		end
+		info.keepShownOnClick = true
+		info.checked = CraftForge:GetTradeSkillOption("onlyProfitable") and true or false
+		info.isNotRadio = true
+		UIDropDownMenu_AddButton(info, level)
+
+		info.text = L["Has Source Info"]
+		info.func = function()
+			CraftForge:SetTradeSkillOption("hasSourceOnly", not CraftForge:GetTradeSkillOption("hasSourceOnly"))
+			CraftForge.dataScanned = false
+			CraftForge:UpdateTradeSkillWindow()
+		end
+		info.keepShownOnClick = true
+		info.checked = CraftForge:GetTradeSkillOption("hasSourceOnly") and true or false
+		info.isNotRadio = true
+		UIDropDownMenu_AddButton(info, level)
+
 		info.checked = 	nil
-		info.isNotRadio = nil
+		info.isNotRadio = true
 		info.func =  nil
 		info.notCheckable = true
 		info.keepShownOnClick = false

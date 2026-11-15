@@ -77,7 +77,7 @@ plugin.options =
 		useShort = {
 			type = "toggle",
 			name = "useShort",
-			desc = "Use Short money format",
+			desc = CraftForge.L["Use Short money format"] or "Use Short money format",
 			get = function()
 				return CraftForge.db.profile.plugins.OE.useShort
 			end,
@@ -92,7 +92,7 @@ plugin.options =
 		onlyPositive = {
 			type = "toggle",
 			name = "onlyPositive",
-			desc = "Only show positive values",
+			desc = CraftForge.L["Only show positive values"] or "Only show positive values",
 			get = function()
 				return CraftForge.db.profile.plugins.OE.onlyPositive
 			end,
@@ -107,7 +107,7 @@ plugin.options =
 		colorCode = {
 			type = "toggle",
 			name = "colorCode",
-			desc = "Add color to the results",
+			desc = CraftForge.L["Add color to the results"] or "Add color to the results",
 			get = function()
 				return CraftForge.db.profile.plugins.OE.colorCode
 			end,
