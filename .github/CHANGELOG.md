@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Code Quality & Packaging Infrastructure (`.luacheckrc`, `.gitignore`, `.gitattributes`, `.github/workflows/quality.yml`)**: Added `luacheck` configuration, `Code Quality` GitHub Actions workflow (`luacheck` + `.toc` validation), and export/packaging ignores for dev scripts (`*.js`, `*.py`).
 
 ### Changed
+- **Multi-Flavor TOC & Project Flags (`CraftForge.toc`, `Core/CraftForge.lua`)**: Added full multi-flavor `## Interface` and per-flavor `## Interface-*` headers (`Retail`, `Classic`, `Forever`, `BCC`, `Wrath`, `Titan`, `Cata`, `Mists`), extended `Data\SkillLevelData1.lua` `AllowLoadGameType` to all non-standard flavors, and populated `isClassic`/`isBCC`/`isWrath`/`isCata`/`isMists` project flags in `Core/CraftForge.lua`.
 - **Directory Structure & External Libraries (`Core/`, `Data/`, `Utils/`, `Scripts/`, `Skillet.toc`, `.pkgmeta`, `UI/DetailFrame.lua`)**:
   - Reorganized root Lua files into `Core/`, `Data/`, and `Utils/`, and moved developer scripts into `Scripts/` (excluded from packaging via `.pkgmeta` and `.gitattributes`).
   - Removed embedded `Libs/EasySkillet/` and replaced `EasySkillet(...)` in `UI/DetailFrame.lua` with `MenuUtil.CreateContextMenu` (with `EasyMenu` fallback).

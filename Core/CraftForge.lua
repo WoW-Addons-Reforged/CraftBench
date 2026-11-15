@@ -51,8 +51,17 @@ CraftForge.build = (CraftForge.interface < 16000 and "Classic") or
 CraftForge.project = WOW_PROJECT_ID
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 	CraftForge.isRetail = true
-end
-if WOW_PROJECT_ID == WOW_PROJECT_CAMELOT then
+elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+	CraftForge.isClassic = true
+elseif WOW_PROJECT_BURNING_CRUSADE_CLASSIC and WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then
+	CraftForge.isBCC = true
+elseif WOW_PROJECT_WRATH_CLASSIC and WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+	CraftForge.isWrath = true
+elseif WOW_PROJECT_CATACLYSM_CLASSIC and WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC then
+	CraftForge.isCata = true
+elseif WOW_PROJECT_MISTS_CLASSIC and WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC then
+	CraftForge.isMists = true
+elseif WOW_PROJECT_CAMELOT and WOW_PROJECT_ID == WOW_PROJECT_CAMELOT then
 	CraftForge.isForever = true
 end
 if GetGameType then

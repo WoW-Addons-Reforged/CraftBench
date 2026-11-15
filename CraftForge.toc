@@ -1,4 +1,12 @@
-## Interface: 16001, 120105, 120107
+## Interface: 11508, 11509, 16001, 20505, 20506, 30405, 38002, 40402, 50503, 50504, 120007, 120100, 120105, 120107
+## Interface-Retail: 120007, 120100, 120105, 120107
+## Interface-Classic: 11508, 11509
+## Interface-Forever: 16001
+## Interface-BCC: 20505, 20506
+## Interface-Wrath: 30405
+## Interface-Titan: 38002
+## Interface-Cata: 40402
+## Interface-Mists: 50503, 50504
 ## Title: CraftForge |cff7fff7f -Ace3-|r
 ## IconTexture: Interface\AddOns\CraftForge\Icons\CraftForge.tga
 ## Notes: All-in-One Profession, Crafting & Material-Processing Suite
@@ -76,7 +84,7 @@ Core\CraftForgeProcess.lua
 #### Data files
 Data\SkillLevelData.lua
 Data\SkillLevelData12.lua [AllowLoadGameType standard]
-Data\SkillLevelData1.lua [AllowLoadGameType camelot]
+Data\SkillLevelData1.lua [AllowLoadGameType camelot, classic, bcc, wrath, cata, mists]
 
 #### Utility files
 Utils\FormatMoney.lua
