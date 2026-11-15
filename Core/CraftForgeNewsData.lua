@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = Skillet.L
+local L = CraftForge.L
 local isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local isBCC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 local isWrath = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 local isCata = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
 
-Skillet.NewsName = "Skillet News"
-Skillet.NewsData = {
+CraftForge.NewsName = "CraftForge News"
+CraftForge.NewsData = {
 	{	version = "5.67",
 		data = {
 			{	name = "Changes",
@@ -39,7 +39,7 @@ Skillet.NewsData = {
 		data = {
 			{	name = "Changes",
 				data = {
-					{ header = "Plugins", body = "Skillet/Skillet-Classic compatibility" },
+					{ header = "Plugins", body = "CraftForge/CraftForge-Classic compatibility" },
 					{ header = "Global", body = "Talebound compatibility" },
 					{ header = "Merchants", body = "Check for insuffient funds" },
 					{ header = "Bindings", body = "Add keybindings" },
@@ -98,7 +98,7 @@ Skillet.NewsData = {
 			},
 			{	name = "Forever",
 				data = {
-					{ header = "UI", body = "'/skillet scaleframe' changed to '/skillet scalesmall'\n'/skillet scalelarge' added" },
+					{ header = "UI", body = "'/craftforge scaleframe' changed to '/craftforge scalesmall'\n'/craftforge scalelarge' added" },
 				},
 			},
 			{	name = "Both",
@@ -127,7 +127,7 @@ Skillet.NewsData = {
 			},
 			{	name = "Forever",
 				data = {
-					{ header = "UI", body = "Blizzard Professions UI remains on screen\nSkillet option 'Hide Blizzard Frame' will scale it down\n'/skillet scaleframe <n>` to change scale from 0.1 to 1.0" },
+					{ header = "UI", body = "Blizzard Professions UI remains on screen\nCraftForge option 'Hide Blizzard Frame' will scale it down\n'/craftforge scaleframe <n>` to change scale from 0.1 to 1.0" },
 				},
 			},
 		},
@@ -213,7 +213,7 @@ Skillet.NewsData = {
 			{	name = "Changes",
 				data = {
 					{ header = "Crafting", body = "Remove broken option" },
-					{ header = "Options", body = "Add /skillet version" },
+					{ header = "Options", body = "Add /craftforge version" },
 				},
 			},
 		},
@@ -363,7 +363,7 @@ Skillet.NewsData = {
 		data = {
 			{	name = "Changes",
 				data = {
-					{ header = "Mod Keys", body = "Add '/skillet swapshiftkey' to change default shift behavior" },
+					{ header = "Mod Keys", body = "Add '/craftforge swapshiftkey' to change default shift behavior" },
 				},
 			},
 		},
@@ -396,7 +396,7 @@ Skillet.NewsData = {
 					{ header = "EasyMenu", body = "Replace EasyMenu calls" },
 					{ header = "Sorting", body = "Add more error checks" },
 					{ header = "Plugins", body = "Auctionator error checks" },
-					{ header = "Tooltips", body = "Use GameTooltip instead of SkilletTradeskillTooltip" },
+					{ header = "Tooltips", body = "Use GameTooltip instead of CraftForgeTradeskillTooltip" },
 					{ header = "Localization", body = "Add localization to some error strings" },
 				},
 			},
@@ -460,7 +460,7 @@ Skillet.NewsData = {
 			{	name = "Changes",
 				data = {
 					{ header = "TOC", body = "Update TOC to 100207" },
-					{ header = "TOC", body = "Sync SkillLevelData with Skillet-Classic" },
+					{ header = "TOC", body = "Sync SkillLevelData with CraftForge-Classic" },
 				},
 			},
 		},
@@ -587,7 +587,7 @@ Skillet.NewsData = {
 			{	name = "New Features",
 				data = {
 					{ header = "Table", body = "Add customPrice table" },
-					{ header = "Commands", body = "Add \"/skillet customadd\", \"/skillet customdel\", \"/skillet customshow\", \"/skillet customclear\"," },
+					{ header = "Commands", body = "Add \"/craftforge customadd\", \"/craftforge customdel\", \"/craftforge customshow\", \"/craftforge customclear\"," },
 					{ header = "Plugins", body = "Auctionator refactor code and use customPrice table for costs" },
 				},
 			},
@@ -617,7 +617,7 @@ Skillet.NewsData = {
 			{	name = "New Features",
 				data = {
 					{ header = "News", body = "Add News with options to display Always, Once (each version change) per Account, Once (each version change) per Player, and Never" },
-					{ header = "Commands", body = "Add \"/skillet news\" to open (or close) the news frame" },
+					{ header = "Commands", body = "Add \"/craftforge news\" to open (or close) the news frame" },
 				},
 			},
 			{	name = "Changes",

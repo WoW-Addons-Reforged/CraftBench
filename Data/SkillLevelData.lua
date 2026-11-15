@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,10 +30,10 @@ local skillColors = {
 }
 
 --
--- function InitializeSkillLevels (which loads Skillet.db.global.SkillLevels) is 
+-- function InitializeSkillLevels (which loads CraftForge.db.global.SkillLevels) is 
 -- at the end of this file.
 --
--- Skillet-Classic table was scraped from https://wotlk.wowhead.com/, Skillet from https://www.wowhead.com/
+-- CraftForge-Classic table was scraped from https://wotlk.wowhead.com/, CraftForge from https://www.wowhead.com/
 -- using ScrapeWowhead.js (follow instructions in file)
 -- provided and maintained by Matthew Hively, https://github.com/matthewhively, matthewhively@viz.com
 --
@@ -59,7 +59,7 @@ local racialList = {
 }
 
 local function getSpellName(spell)
-	if Skillet.isRetail then
+	if CraftForge.isRetail then
 		return C_Spell.GetSpellName(spell)
 	else
 		return GetSpellInfo(spell)
@@ -70,9 +70,9 @@ end
 -- local function returns any racial bonus that may apply
 --
 local function getRacialBonus()
-	local player = Skillet.currentPlayer
-	local trade = Skillet.currentTrade
-	local race = Skillet.db.realm.race[player]
+	local player = CraftForge.currentPlayer
+	local trade = CraftForge.currentTrade
+	local race = CraftForge.db.realm.race[player]
 	--DA.DEBUG(0,"getRacialBonus: trade = "..tostring(trade).." ("..tostring(getSpellName(trade)).."), race= "..tostring(race))
 	if racialList[trade] then
 		for r, bonus in pairs(racialList[trade]) do
@@ -101,7 +101,7 @@ local function compareLevels(levelsWowhead, levelsByRecipe)
 		b = (tonumber(b) or 0) + rb
 		c = (tonumber(c) or 0) + rb
 		d = (tonumber(d) or 0) + rb
-		Skillet.sourceTradeSkillLevel = 1
+		CraftForge.sourceTradeSkillLevel = 1
 	end
 	if levelsByRecipe and type(levelsByRecipe) == 'string' then
 		e,f,g,h = string.split("/", levelsByRecipe)
@@ -136,22 +136,22 @@ local function compareLevels(levelsWowhead, levelsByRecipe)
 -- if both values are available, Wowhead orange value is more accurate than the Wago Tools data
 --
 	if levelsWowhead and levelsByRecipe then
-		if Skillet.db.profile.baseskilllevel then
+		if CraftForge.db.profile.baseskilllevel then
 			a = e
 		end
 		b = f
 		c = g
 		d = h
 		--DA.DEBUG(1,"compareLevels: levelsReturned= "..tostring(a).."/"..tostring(b).."/"..tostring(c).."/"..tostring(d))
-		Skillet.sourceTradeSkillLevel = 2
+		CraftForge.sourceTradeSkillLevel = 2
 		return 1
 	elseif levelsWowhead then
 		--DA.DEBUG(1,"compareLevels: levelsReturned= "..tostring(a).."/"..tostring(b).."/"..tostring(c).."/"..tostring(d))
-		Skillet.sourceTradeSkillLevel = 2
+		CraftForge.sourceTradeSkillLevel = 2
 		return 1
 	elseif levelsByRecipe then
 		--DA.DEBUG(1,"compareLevels: levelsReturned= "..tostring(e).."/"..tostring(f).."/"..tostring(g).."/"..tostring(h))
-		Skillet.sourceTradeSkillLevel = 2
+		CraftForge.sourceTradeSkillLevel = 2
 		return 2
 	end
 	return 0
@@ -162,12 +162,12 @@ end
 --
 -- Note: MainFrame.lua uses both inputs, other calls just use itemID.
 --
-function Skillet:GetTradeSkillLevels(itemID, spellID)
+function CraftForge:GetTradeSkillLevels(itemID, spellID)
 	--DA.DEBUG(0,"GetTradeSkillLevels("..tostring(itemID)..", "..tostring(spellID)..")")
 	local rb = getRacialBonus()
-	local skillLevels = Skillet.db.global.SkillLevels
+	local skillLevels = CraftForge.db.global.SkillLevels
 	local levels
-	local SkillLineAbility = Skillet.db.global.SkillLineAbility
+	local SkillLineAbility = CraftForge.db.global.SkillLineAbility
 	local possibleRecipes, recipeID, levelsByRecipe
 	if itemID and type(itemID) == 'number' and itemID ~= 0 then 
 --
@@ -227,10 +227,10 @@ function Skillet:GetTradeSkillLevels(itemID, spellID)
 -- The TradeskillInfo addon seems to be more accurate than LibPeriodicTable-3.1
 --
 		if isRetail and TradeskillInfo then
-			local recipeSource = Skillet.db.global.itemRecipeSource[itemID]
+			local recipeSource = CraftForge.db.global.itemRecipeSource[itemID]
 			if not recipeSource then
 				--DA.DEBUG(1,"GetTradeSkillLevels: itemID= "..tostring(itemID)..", recipeSource= "..tostring(recipeSource))
-				recipeSource = Skillet.db.global.itemRecipeSource[-itemID]
+				recipeSource = CraftForge.db.global.itemRecipeSource[-itemID]
 			end
 			if type(recipeSource) == 'table' then
 				--DA.DEBUG(1,"GetTradeSkillLevels: itemID= "..tostring(itemID)..", recipeSource= "..DA.DUMP1(recipeSource))
@@ -294,7 +294,7 @@ function Skillet:GetTradeSkillLevels(itemID, spellID)
 			end
 		elseif type(spellID) == 'string' then
 			local spellName = spellID
-			spellID = Skillet.db.global.NameToSpellID[spellName] or 0
+			spellID = CraftForge.db.global.NameToSpellID[spellName] or 0
 			levelsByRecipe = SkillLineAbility[spellID]
 			DA.DEBUG(1,"GetTradeSkillLevels: spellName= "..tostring(spellName)..", spellID= "..tostring(spellID)..", levelsByRecipe= "..tostring(levelsByRecipe))
 			if skillLevels and skillLevels[spellID] then
@@ -353,7 +353,7 @@ function Skillet:GetTradeSkillLevels(itemID, spellID)
 	return a, b, c, d
 end
 
-function Skillet:GetTradeSkillLevelColor(itemID, rank)
+function CraftForge:GetTradeSkillLevelColor(itemID, rank)
 	--DA.DEBUG(0,"GetTradeSkillLevelColor("..tostring(itemID)..", "..tostring(rank)")")
 	if itemID then
 		local orange, yellow, green, gray = self:GetTradeSkillLevels(itemID)
@@ -365,9 +365,9 @@ function Skillet:GetTradeSkillLevelColor(itemID, rank)
 	return skillColors["unknown"]
 end
 
-function Skillet:AddTradeSkillLevels(itemID, orange, yellow, green, gray, spellID)
+function CraftForge:AddTradeSkillLevels(itemID, orange, yellow, green, gray, spellID)
 	DA.DEBUG(0,"AddTradeSkillLevels("..tostring(itemID)..", "..tostring(orange)..", "..tostring(yellow)..", "..tostring(green)..", "..tostring(gray)..", "..tostring(spellID)..")")
-	local skillLevels = Skillet.db.global.SkillLevels
+	local skillLevels = CraftForge.db.global.SkillLevels
 --
 -- We should add some sanity checking
 --
@@ -381,9 +381,9 @@ function Skillet:AddTradeSkillLevels(itemID, orange, yellow, green, gray, spellI
 	end
 end
 
-function Skillet:DelTradeSkillLevels(itemID)
+function CraftForge:DelTradeSkillLevels(itemID)
 	DA.DEBUG(0,"DelTradeSkillLevels("..tostring(itemID)..")")
-	local skillLevels = Skillet.db.global.SkillLevels
+	local skillLevels = CraftForge.db.global.SkillLevels
 	if itemID then
 --
 -- We could add some additional checking
@@ -404,17 +404,17 @@ end
 -- index will be itemID or if the current profession is Enchanting, -itemID
 --
 -- source will be:
---    1 if from Skillet.db.global.SkillLevels
+--    1 if from CraftForge.db.global.SkillLevels
 --    2 if from SkillLineAbility
 --    3 if from TradeskillInfo
 --    4 if from LibPeriodicTable
 --    5 if itemID is not a number (obsolete)
 --    6 if itemID was missing (obsolete)
---    7 if it wasn't found (and was added to Skillet.db.global.MissingSkillLevels)
+--    7 if it wasn't found (and was added to CraftForge.db.global.MissingSkillLevels)
 --
-function Skillet:PrintTradeSkillLevels(itemID, spellID)
+function CraftForge:PrintTradeSkillLevels(itemID, spellID)
 	--DA.DEBUG(0,"PrintTradeSkillLevels("..tostring(itemID)..", "..tostring(spellID)..")")
-	DA.MARK3(Skillet.version..", "..Skillet.wowVersion..", "..Skillet.SkillLevelVersion..", "..GetLocale())
+	DA.MARK3(CraftForge.version..", "..CraftForge.wowVersion..", "..CraftForge.SkillLevelVersion..", "..GetLocale())
 	DA.MARK3("PrintTradeSkillLevels: altskilllevels= "..tostring(self.db.profile.altskilllevels))
 	DA.MARK3("PrintTradeSkillLevels: baseskilllevel= "..tostring(self.db.profile.baseskilllevel))
 	DA.MARK3("PrintTradeSkillLevels: #SkillLevels= "..tostring(tablelength(self.db.global.SkillLevels)))

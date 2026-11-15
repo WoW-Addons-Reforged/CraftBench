@@ -1,4 +1,4 @@
-package-as: Skillet
+package-as: CraftForge
 
 ignore:
     - "Scripts"

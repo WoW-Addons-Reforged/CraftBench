@@ -1,10 +1,11 @@
 ## Interface: 16001, 120105, 120107
-## Title: Skillet |cff7fff7f -Ace3-|r
-## IconTexture: Interface\AddOns\Skillet\Icons\Skillet.tga
-## Notes: A replacement tradeskill window
-## Notes-esES: Una sustitucion de la ventana de Habilidades de Comercio
-## Notes-ruRU: Заменяет окно профессий на более функциональное.
-## Author: yossa, bsmorgan
+## Title: CraftForge |cff7fff7f -Ace3-|r
+## IconTexture: Interface\AddOns\CraftForge\Icons\CraftForge.tga
+## Notes: All-in-One Profession, Crafting & Material-Processing Suite
+## Notes-deDE: All-in-One Suite für Berufe, Crafting-Warteschlange und Materialverarbeitung
+## Notes-esES: Suite todo en uno para profesiones y fabricación
+## Notes-ruRU: Универсальный интерфейс профессий и крафта
+## Author: gOOvER
 ## Version: @project-version@
 ## Category-enUS: Professions
 ## Category-deDE: Berufe
@@ -18,18 +19,12 @@
 ## Category-zhCN: 专业
 ## Category-zhTW: 專業技能
 ## X-License: GPL-3.0
-## X-Credits lilsparky, nogudnik (creator of Skillet), Slartie (for ASTW)
-## X-Curse-Project-ID: 445339
-## X-WoWI-ID: 7571
-## X-Wago-ID: ME6geXG1
-## X-Website: https://www.curseforge.com/wow/addons/skillet
-## SavedVariables: SkilletDB
-## SavedVariablesPerCharacter: SkilletWho, SkilletDBPC, SkilletMemory, SkilletProfile
+## X-Credits: Based on Skillet (yossa, bsmorgan, lilsparky, nogudnik, Slartie)
+## X-Website: https://github.com/gOOvER/CraftForge
+## SavedVariables: CraftForgeDB
+## SavedVariablesPerCharacter: CraftForgeWho, CraftForgeDBPC, CraftForgeMemory, CraftForgeProfile
 ## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, TradeSkillMaster, OribosExchange, BeanCounter, Auctionator, Journalator, CraftInfoAnywhere, DataStore, tekDebug
 ## X-Embeds: Ace3, LibStub, CallbackHandler-1.0, LibWindow-1.1, LibPeriodicTable-3.1
-
-## LoadManagers: AddonLoader
-## X-LoadOn-Always: delayed
 
 #### List of embedded libraries
 Libs\LibStub\LibStub.lua
@@ -63,19 +58,19 @@ Locale\Locale-zhCN.lua
 Locale\Locale-zhTW.lua
 
 #### Core files
-Core\Skillet.lua
-Core\SkilletOptions.lua
-Core\SkilletTables.lua
-Core\SkilletData.lua
-Core\SkilletNewsGUI.lua
-Core\SkilletNewsData.lua
+Core\CraftForge.lua
+Core\CraftForgeOptions.lua
+Core\CraftForgeTables.lua
+Core\CraftForgeData.lua
+Core\CraftForgeNewsGUI.lua
+Core\CraftForgeNewsData.lua
 Core\TradeskillInfo.lua
-Core\SkilletQueue.lua
+Core\CraftForgeQueue.lua
 Core\ThirdPartyHooks.lua
 Core\Upgrades.lua
 Core\RecipeGroups.lua
 Core\Inventory.lua
-Core\SkilletPlugin.lua
+Core\CraftForgePlugin.lua
 
 #### Data files
 Data\SkillLevelData.lua

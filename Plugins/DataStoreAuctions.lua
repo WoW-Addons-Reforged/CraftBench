@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 local GetItemInfo = C_Item and C_Item.GetItemInfo or GetItemInfo
 
-Skillet.DSAPlugin = {}
+CraftForge.DSAPlugin = {}
 
-local plugin = Skillet.DSAPlugin
-local L = Skillet.L
+local plugin = CraftForge.DSAPlugin
+local L = CraftForge.L
 
 plugin.options =
 {
@@ -34,11 +34,11 @@ plugin.options =
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return Skillet.db.profile.plugins.DSA.enabled
+				return CraftForge.db.profile.plugins.DSA.enabled
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.DSA.enabled = value
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge.db.profile.plugins.DSA.enabled = value
+				CraftForge:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1
@@ -48,22 +48,22 @@ plugin.options =
 
 function plugin.OnInitialize()
 	--DA.DEBUG(0,"DSA:OnInitialize()")
-	if not Skillet.db.profile.plugins.DSA then
-		Skillet.db.profile.plugins.DSA = {}
-		Skillet.db.profile.plugins.DSA.enabled = true
+	if not CraftForge.db.profile.plugins.DSA then
+		CraftForge.db.profile.plugins.DSA = {}
+		CraftForge.db.profile.plugins.DSA.enabled = true
 	end
-	Skillet:AddPluginOptions(plugin.options)
+	CraftForge:AddPluginOptions(plugin.options)
 	if DataStore then
 		local player
-		if Skillet.unitName then
-			player = Skillet:unitName("player")
+		if CraftForge.unitName then
+			player = CraftForge:unitName("player")
 		else
 			player = UnitName("player")
 		end
 		for characterName, character in pairs(DataStore:GetCharacters()) do
 			--DA.DEBUG(0,"DSA:OnInitialize: characterName= "..tostring(characterName)..", character= "..tostring(character))
 			if characterName == player then
-				Skillet.DSAPlayer = character
+				CraftForge.DSAPlayer = character
 			end
 		end
 	end
@@ -72,7 +72,7 @@ end
 function plugin.RecipeNamePrefix(skill, recipe)
 	local prefix, itemID, itemName, itemCount
 	if not recipe then return end
-	if Skillet.db.profile.plugins.DSA.enabled and DataStore then
+	if CraftForge.db.profile.plugins.DSA.enabled and DataStore then
 		itemID = recipe.itemID
 		if itemID and itemID ~= 0 then
 			itemName = GetItemInfo(itemID)
@@ -81,15 +81,15 @@ function plugin.RecipeNamePrefix(skill, recipe)
 --
 -- Check for Enchanting. 
 --
-		if not Skillet.isCraft and recipe.tradeID == 7411 and itemID == 0 then
+		if not CraftForge.isCraft and recipe.tradeID == 7411 and itemID == 0 then
 			itemID = recipe.scrollID
 			if itemID and itemID ~= 0 then
 				itemName = GetItemInfo(itemID)
 			end
 			--DA.DEBUG(0,"RecipeNamePrefix: scrollID = "..tostring(itemID).." ("..tostring(itemName)..")")
 		end
-		if itemID and Skillet.DSAPlayer then
-			itemCount = DataStore:GetAuctionHouseItemCount(Skillet.DSAPlayer, itemID)
+		if itemID and CraftForge.DSAPlayer then
+			itemCount = DataStore:GetAuctionHouseItemCount(CraftForge.DSAPlayer, itemID)
 			--DA.DEBUG(0,"RecipeNamePrefix: itemCount = "..tostring(itemCount))
 			prefix = "   "
 			if itemCount and itemCount > 0 then
@@ -107,4 +107,4 @@ function plugin.RecipeNamePrefix(skill, recipe)
 	return prefix
 end
 
-Skillet:RegisterRecipeNamePlugin("DSAPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
+CraftForge:RegisterRecipeNamePlugin("DSAPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function

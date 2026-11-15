@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-Skillet.ARLPlugin = {}
+CraftForge.ARLPlugin = {}
 
-local plugin = Skillet.ARLPlugin
-local L = Skillet.L
+local plugin = CraftForge.ARLPlugin
+local L = CraftForge.L
 
 plugin.options =
 {
@@ -32,11 +32,11 @@ plugin.options =
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return Skillet.db.profile.plugins.ARL.enabled
+				return CraftForge.db.profile.plugins.ARL.enabled
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ARL.enabled = value
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge.db.profile.plugins.ARL.enabled = value
+				CraftForge:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1
@@ -45,17 +45,17 @@ plugin.options =
 }
 
 function plugin.OnInitialize()
-	if not Skillet.db.profile.plugins.ARL then
-		Skillet.db.profile.plugins.ARL = {}
-		Skillet.db.profile.plugins.ARL.enabled = true
+	if not CraftForge.db.profile.plugins.ARL then
+		CraftForge.db.profile.plugins.ARL = {}
+		CraftForge.db.profile.plugins.ARL.enabled = true
 	end
-	Skillet:AddPluginOptions(plugin.options)
+	CraftForge:AddPluginOptions(plugin.options)
 end
 
 function plugin.GetExtraText(skill, recipe)
 	local label, extra_text
 	local bop
-	if AckisRecipeList and AckisRecipeList.InitRecipeData and Skillet.db.profile.plugins.ARL.enabled then
+	if AckisRecipeList and AckisRecipeList.InitRecipeData and CraftForge.db.profile.plugins.ARL.enabled then
 		local _, recipeList, mobList, trainerList = AckisRecipeList:InitRecipeData()
 		local recipeData = AckisRecipeList:GetRecipeData(skill.id)
 		if recipeData == nil and not ARLProfessionInitialized[recipe.tradeID] then
@@ -73,4 +73,4 @@ function plugin.GetExtraText(skill, recipe)
 	return label, extra_text
 end
 
-Skillet:RegisterDisplayDetailPlugin("ARLPlugin")
+CraftForge:RegisterDisplayDetailPlugin("ARLPlugin")

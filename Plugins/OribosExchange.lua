@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -50,10 +50,10 @@ Prices are returned in copper, but accurate to the last *silver* (with coppers a
 	https://undermine.exchange/
 ]]--
 
-Skillet.OEPlugin = {}
+CraftForge.OEPlugin = {}
 
-local plugin = Skillet.OEPlugin
-local L = Skillet.L
+local plugin = CraftForge.OEPlugin
+local L = CraftForge.L
 
 plugin.options =
 {
@@ -65,11 +65,11 @@ plugin.options =
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return Skillet.db.profile.plugins.OE.enabled
+				return CraftForge.db.profile.plugins.OE.enabled
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.OE.enabled = value
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge.db.profile.plugins.OE.enabled = value
+				CraftForge:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1
@@ -79,12 +79,12 @@ plugin.options =
 			name = "useShort",
 			desc = "Use Short money format",
 			get = function()
-				return Skillet.db.profile.plugins.OE.useShort
+				return CraftForge.db.profile.plugins.OE.useShort
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.OE.useShort = value
+				CraftForge.db.profile.plugins.OE.useShort = value
 				if value then
-					Skillet.db.profile.plugins.OE.useShort = value
+					CraftForge.db.profile.plugins.OE.useShort = value
 				end
 			end,
 			order = 2
@@ -94,12 +94,12 @@ plugin.options =
 			name = "onlyPositive",
 			desc = "Only show positive values",
 			get = function()
-				return Skillet.db.profile.plugins.OE.onlyPositive
+				return CraftForge.db.profile.plugins.OE.onlyPositive
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.OE.onlyPositive = value
+				CraftForge.db.profile.plugins.OE.onlyPositive = value
 				if value then
-					Skillet.db.profile.plugins.OE.onlyPositive = value
+					CraftForge.db.profile.plugins.OE.onlyPositive = value
 				end
 			end,
 			order = 3
@@ -109,12 +109,12 @@ plugin.options =
 			name = "colorCode",
 			desc = "Add color to the results",
 			get = function()
-				return Skillet.db.profile.plugins.OE.colorCode
+				return CraftForge.db.profile.plugins.OE.colorCode
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.OE.colorCode = value
+				CraftForge.db.profile.plugins.OE.colorCode = value
 				if value then
-					Skillet.db.profile.plugins.OE.colorCode = value
+					CraftForge.db.profile.plugins.OE.colorCode = value
 				end
 			end,
 			order = 4
@@ -123,11 +123,11 @@ plugin.options =
 }
 
 function plugin.OnInitialize()
-	if not Skillet.db.profile.plugins.OE then
-		Skillet.db.profile.plugins.OE = {}
-		Skillet.db.profile.plugins.OE.enabled = true
+	if not CraftForge.db.profile.plugins.OE then
+		CraftForge.db.profile.plugins.OE = {}
+		CraftForge.db.profile.plugins.OE.enabled = true
 	end
-	Skillet:AddPluginOptions(plugin.options)
+	CraftForge:AddPluginOptions(plugin.options)
 end
 
 local function OEMarketValue(itemID)
@@ -142,10 +142,10 @@ function plugin.GetExtraText(skill, recipe)
 	local bop
 	if not skill or not recipe then return end
 	local itemID = recipe.itemID
-	if OEMarketInfo and Skillet.db.profile.plugins.OE.enabled and itemID then
+	if OEMarketInfo and CraftForge.db.profile.plugins.OE.enabled and itemID then
 		local value = OEMarketValue(itemID)
 		if value then
-			extra_text = Skillet:FormatMoneyFull(value, true);
+			extra_text = CraftForge:FormatMoneyFull(value, true);
 			label = "|r"..L["OEMarket"]..":"
 		end
 	end
@@ -159,7 +159,7 @@ function plugin.RecipeNameSuffix(skill, recipe)
 	local text
 	if recipe then
 		local itemID = recipe.itemID
-		if OEMarketInfo and Skillet.db.profile.plugins.OE.enabled and itemID then
+		if OEMarketInfo and CraftForge.db.profile.plugins.OE.enabled and itemID then
 			local value = OEMarketValue(itemID)
 			if value then
 				value = value * recipe.numMade
@@ -171,12 +171,12 @@ function plugin.RecipeNameSuffix(skill, recipe)
 					end
 				end
 				value = value - matsum
-				if Skillet.db.profile.plugins.OE.useShort then
-					text = Skillet:FormatMoneyShort(value, true, Skillet.db.profile.plugins.OE.colorCode)
+				if CraftForge.db.profile.plugins.OE.useShort then
+					text = CraftForge:FormatMoneyShort(value, true, CraftForge.db.profile.plugins.OE.colorCode)
 				else
-					text = Skillet:FormatMoneyFull(value, true, Skillet.db.profile.plugins.OE.colorCode)
+					text = CraftForge:FormatMoneyFull(value, true, CraftForge.db.profile.plugins.OE.colorCode)
 				end
-				if Skillet.db.profile.plugins.OE.onlyPositive and value <= 0 then
+				if CraftForge.db.profile.plugins.OE.onlyPositive and value <= 0 then
 					text = nil
 				end
 			end
@@ -186,6 +186,6 @@ function plugin.RecipeNameSuffix(skill, recipe)
 	return text, value
 end
 
-Skillet:RegisterRecipeNamePlugin("OEPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
+CraftForge:RegisterRecipeNamePlugin("OEPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
 
-Skillet:RegisterDisplayDetailPlugin("OEPlugin")	-- we have a GetExtraText function
+CraftForge:RegisterDisplayDetailPlugin("OEPlugin")	-- we have a GetExtraText function

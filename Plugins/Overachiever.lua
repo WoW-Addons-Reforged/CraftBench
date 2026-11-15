@@ -2,7 +2,7 @@ local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
 
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ]]--
 
-Skillet.OAPlugin = {}
+CraftForge.OAPlugin = {}
 
-local plugin = Skillet.OAPlugin
-local L = Skillet.L
+local plugin = CraftForge.OAPlugin
+local L = CraftForge.L
 
 plugin.options =
 {
@@ -34,11 +34,11 @@ plugin.options =
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return Skillet.db.profile.plugins.OA.enabled
+				return CraftForge.db.profile.plugins.OA.enabled
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.OA.enabled = value
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge.db.profile.plugins.OA.enabled = value
+				CraftForge:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1
@@ -47,16 +47,16 @@ plugin.options =
 }
 
 function plugin.OnInitialize()
-	if not Skillet.db.profile.plugins.OA then
-		Skillet.db.profile.plugins.OA = {}
-		Skillet.db.profile.plugins.OA.enabled = true
+	if not CraftForge.db.profile.plugins.OA then
+		CraftForge.db.profile.plugins.OA = {}
+		CraftForge.db.profile.plugins.OA.enabled = true
 	end
-	Skillet:AddPluginOptions(plugin.options)
+	CraftForge:AddPluginOptions(plugin.options)
 end
 
 function plugin.RecipeNamePrefix(skill, recipe)
 	if not skill or not recipe then return end
-	if Overachiever and Overachiever.GetIconForRecipe and Skillet.db.profile.plugins.OA.enabled then
+	if Overachiever and Overachiever.GetIconForRecipe and CraftForge.db.profile.plugins.OA.enabled then
 		local id, link
 		local icon, list = Overachiever.GetIconForRecipe(recipe.spellID)
 		--DA.DEBUG(0,"Overachiever.GetIconForRecipe("..tostring(recipe.spellID)..")= "..tostring(icon)..DA.DUMP1(list))
@@ -71,7 +71,7 @@ function plugin.RecipeNamePrefix(skill, recipe)
 end
 
 function plugin.GetExtraText(skill, recipe)
-	if Overachiever and Overachiever.GetIconForRecipe and Skillet.db.profile.plugins.OA.enabled then
+	if Overachiever and Overachiever.GetIconForRecipe and CraftForge.db.profile.plugins.OA.enabled then
 		local label = "|rOverachiever:"
 		local extra = "None"
 		local icon, list = Overachiever.GetIconForRecipe(recipe.spellID)
@@ -90,6 +90,6 @@ function plugin.GetExtraText(skill, recipe)
 	end
 end
 
-Skillet:RegisterRecipeNamePlugin("OAPlugin") -- we have a RecipeNamePrefix or a RecipeNameSuffix function
+CraftForge:RegisterRecipeNamePlugin("OAPlugin") -- we have a RecipeNamePrefix or a RecipeNameSuffix function
 
-Skillet:RegisterDisplayDetailPlugin("OAPlugin") -- necessary for options
+CraftForge:RegisterDisplayDetailPlugin("OAPlugin") -- necessary for options

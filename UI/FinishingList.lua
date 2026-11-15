@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("Skillet")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
 
-function Skillet:FinishingListToggleHaveItems()
+function CraftForge:FinishingListToggleHaveItems()
 	self.db.profile.hide_unowned = not self.db.profile.hide_unowned
 	self:HideFinishingList()
 end
@@ -29,12 +29,12 @@ end
 -- ===========================================================================================
 local num_buttons = 0
 local function get_button(i)
-	local button = _G["SkilletFinishingListButton"..i]
+	local button = _G["CraftForgeFinishingListButton"..i]
 	if not button then
-		button = CreateFrame("Button", "SkilletFinishingListButton"..i, SkilletFinishingListParent, "SkilletFinishingListItemTemplate")
-		button:SetParent(SkilletFinishingListParent)
-		button:SetPoint("TOPLEFT", "SkilletFinishingListButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(SkilletFinishingListParent:GetFrameLevel() + 1)
+		button = CreateFrame("Button", "CraftForgeFinishingListButton"..i, CraftForgeFinishingListParent, "CraftForgeFinishingListItemTemplate")
+		button:SetParent(CraftForgeFinishingListParent)
+		button:SetPoint("TOPLEFT", "CraftForgeFinishingListButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftForgeFinishingListParent:GetFrameLevel() + 1)
 	end
 	return button
 end
@@ -55,14 +55,14 @@ local FrameBackdrop = {
 	insets = { left = 3, right = 3, top = 30, bottom = 3 }
 }
 
-SKILLET_FINISHING_LIST_HEIGHT = 16
+CRAFTFORGE_FINISHING_LIST_HEIGHT = 16
 local function createFinishingListFrame(self)
 	--DA.DEBUG(0,"createFinishingListFrame")
-	local frame = SkilletFinishingList
+	local frame = CraftForgeFinishingList
 	if not frame then
 		return nil
 	end
-	if TSM_API and Skillet.db.profile.tsm_compat then
+	if TSM_API and CraftForge.db.profile.tsm_compat then
 		frame:SetFrameStrata("TOOLTIP")
 	else
 		frame:SetFrameStrata("HIGH")
@@ -89,25 +89,25 @@ local function createFinishingListFrame(self)
 	local title = CreateFrame("Frame",nil,frame)
 	title:SetPoint("TOPLEFT",titlebar,"TOPLEFT",0,0)
 	title:SetPoint("BOTTOMRIGHT",titlebar2,"BOTTOMRIGHT",0,0)
-	local titletext = title:CreateFontString("SkilletFinishingListTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = title:CreateFontString("CraftForgeFinishingListTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT",title,"TOPLEFT",0,0)
 	titletext:SetPoint("TOPRIGHT",title,"TOPRIGHT",0,0)
 	titletext:SetHeight(26)
 	titletext:SetShadowColor(0,0,0)
 	titletext:SetShadowOffset(1,-1)
 	titletext:SetTextColor(1,1,1)
-	titletext:SetText("Skillet: Finishing Reagents")
+	titletext:SetText("CraftForge: Finishing Reagents")
 	frame.titletext = titletext
-	SkilletFinishingHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
-	SkilletFinishingHaveItems:SetChecked(Skillet.db.profile.hide_unowned)
+	CraftForgeFinishingHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
+	CraftForgeFinishingHaveItems:SetChecked(CraftForge.db.profile.hide_unowned)
 --
 -- The frame enclosing the scroll list needs a border and a background .....
 --
-	local backdrop = SkilletFinishingListParent
+	local backdrop = CraftForgeFinishingListParent
 	if not backdrop.SetBackdrop then
 		Mixin(backdrop, BackdropTemplateMixin)
 	end
-	if TSM_API and Skillet.db.profile.tsm_compat then
+	if TSM_API and CraftForge.db.profile.tsm_compat then
 		backdrop:SetFrameStrata("HIGH")
 	end
 	backdrop:SetBackdrop(ControlBackdrop)
@@ -128,7 +128,7 @@ local function createFinishingListFrame(self)
 --
 -- lets play the resize me game!
 --
-	Skillet:EnableResize(frame, 420, 240, Skillet.UpdateFinishingListWindow)
+	CraftForge:EnableResize(frame, 420, 240, CraftForge.UpdateFinishingListWindow)
 --
 -- so hitting [ESC] will close the window
 --
@@ -136,14 +136,14 @@ local function createFinishingListFrame(self)
 --
 -- Adjust the button height
 --
-	SKILLET_FINISHING_LIST_HEIGHT = math.max(SkilletFinishingListButton1:GetHeight(), SKILLET_FINISHING_LIST_HEIGHT)
+	CRAFTFORGE_FINISHING_LIST_HEIGHT = math.max(CraftForgeFinishingListButton1:GetHeight(), CRAFTFORGE_FINISHING_LIST_HEIGHT)
 	return frame
 end
 
 --
 -- Called to update the finishing list window
 --
-function Skillet:UpdateFinishingListWindow()
+function CraftForge:UpdateFinishingListWindow()
 	--DA.DEBUG(0,"UpdateFinishingListWindow()")
 	self.InProgress.finishing = true
 	local numItems
@@ -154,24 +154,24 @@ function Skillet:UpdateFinishingListWindow()
 	else
 		return
 	end
-	local height = SkilletFinishingListParent:GetHeight()
-	local width = SkilletFinishingListParent:GetWidth() - 30 -- Allow for scrollbars
-	--DA.DEBUG(1,"UpdateFinishingListWindow: height= "..tostring(height)..", SKILLET_FINISHING_LIST_HEIGHT= "..tostring(SKILLET_FINISHING_LIST_HEIGHT))
-	--DA.DEBUG(1,"UpdateFinishingListWindow: SkilletFinishingListParent width= "..tostring(width))
-	local button_count = height / SKILLET_FINISHING_LIST_HEIGHT
+	local height = CraftForgeFinishingListParent:GetHeight()
+	local width = CraftForgeFinishingListParent:GetWidth() - 30 -- Allow for scrollbars
+	--DA.DEBUG(1,"UpdateFinishingListWindow: height= "..tostring(height)..", CRAFTFORGE_FINISHING_LIST_HEIGHT= "..tostring(CRAFTFORGE_FINISHING_LIST_HEIGHT))
+	--DA.DEBUG(1,"UpdateFinishingListWindow: CraftForgeFinishingListParent width= "..tostring(width))
+	local button_count = height / CRAFTFORGE_FINISHING_LIST_HEIGHT
 	button_count = math.floor(button_count) - 1
 	--DA.DEBUG(1,"UpdateFinishingListWindow: numItems= "..tostring(numItems)..", button_count= "..tostring(button_count))
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(SkilletFinishingListList,		-- frame
+	FauxScrollFrame_Update(CraftForgeFinishingListList,		-- frame
 							numItems,						-- num items
 							button_count,					-- num to display
-							SKILLET_FINISHING_LIST_HEIGHT)	-- value step (item height)
+							CRAFTFORGE_FINISHING_LIST_HEIGHT)	-- value step (item height)
 --
 -- Where in the list of items to start counting.
 --
-	local itemOffset = FauxScrollFrame_GetOffset(SkilletFinishingListList)
+	local itemOffset = FauxScrollFrame_GetOffset(CraftForgeFinishingListList)
 	--DA.DEBUG(1,"UpdateFinishingListWindow: itemOffset= "..tostring(itemOffset))
 	for i=1, button_count, 1 do
 		num_buttons = math.max(num_buttons, i)
@@ -188,7 +188,7 @@ function Skillet:UpdateFinishingListWindow()
 			local freagentName, freagentLink = C_Item.GetItemInfo(freagentID)
 			local freagentQuality
 			if not freagentName then
-				Skillet.finishingDataNeeded = true
+				CraftForge.finishingDataNeeded = true
 				C_Item.RequestLoadItemDataByID(freagentID)
 				freagentName = "item:"..tostring(freagentID)
 			end
@@ -245,25 +245,25 @@ end
 --
 -- Updates the scrollbar when a scroll event happens
 --
-function Skillet:FinishingList_OnScroll()
-	Skillet:UpdateFinishingListWindow()
+function CraftForge:FinishingList_OnScroll()
+	CraftForge:UpdateFinishingListWindow()
 end
 
 --
 -- Functions to show and hide the FinishingList
 --
-function Skillet:DisplayFinishingList()
+function CraftForge:DisplayFinishingList()
 	--DA.DEBUG(0,"DisplayFinishingList()")
 	if not self.FinishingList then
 		self.FinishingList = createFinishingListFrame(self)
 	end
 	if not self.FinishingList:IsVisible() then
-		self.FinishingList.titletext:SetText("Skillet: Finishing Reagents")
+		self.FinishingList.titletext:SetText("CraftForge: Finishing Reagents")
 		self.FinishingList:Show()
 	end
 end
 
-function Skillet:HideFinishingList(clear)
+function CraftForge:HideFinishingList(clear)
 	--DA.DEBUG(0,"HideFinishingList()")
 	if self.FinishingList then
 		self.FinishingList:Hide()
@@ -274,15 +274,15 @@ function Skillet:HideFinishingList(clear)
 end
 
 --
--- Called when an finishing reagent button in the Skillet detail frame is clicked.
+-- Called when an finishing reagent button in the CraftForge detail frame is clicked.
 -- This finishing list is used for selecting Finishing reagents.
 -- This has the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function Skillet:FinishingReagentOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftForge:FinishingReagentOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"FinishingReagentOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
-	SkilletFinishingHaveItems:Hide()
+	CraftForgeFinishingHaveItems:Hide()
 	local thisFinishing
 --
 -- Optional reagents are identified with a negative index.
@@ -311,7 +311,7 @@ end
 -- Returns a link for the finishing reagent required to create the specified
 -- item, the index'th reagent required for the item is returned
 --
-function Skillet:GetFinishingItemLink(skillIndex, index)
+function CraftForge:GetFinishingItemLink(skillIndex, index)
 	--DA.DEBUG(0,"GetFinishingItemLink("..tostring(skillIndex)..", "..tostring(index)..")")
 	if skillIndex and index then
 		local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
@@ -326,17 +326,17 @@ end
 --
 -- Called when then mouse enters a finishing button
 --
-function Skillet:FinishingButtonOnEnter(button, skillIndex, finishingIndex)
+function CraftForge:FinishingButtonOnEnter(button, skillIndex, finishingIndex)
 	--DA.DEBUG(0,"FinishingButtonOnEnter("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(finishingIndex)..")")
-	local tip = GameTooltip -- SkilletTradeskillTooltip
+	local tip = GameTooltip -- CraftForgeTradeskillTooltip
 	tip:SetOwner(button, "ANCHOR_BOTTOMRIGHT")
-	if Skillet.db.profile.scale_tooltip then
+	if CraftForge.db.profile.scale_tooltip then
 		local uiScale = 1.0;
 		if ( GetCVar("useUiScale") == "1" ) then
 			uiScale = tonumber(GetCVar("uiscale"))
 		end
-		if Skillet.db.profile.ttscale then
-			uiScale = uiScale * Skillet.db.profile.ttscale
+		if CraftForge.db.profile.ttscale then
+			uiScale = uiScale * CraftForge.db.profile.ttscale
 		end
 		tip:SetScale(uiScale)
 	end
@@ -349,11 +349,11 @@ end
 --
 -- called then the mouse leaves an finishing button
 --
-function Skillet:FinishingButtonOnLeave(button, skillIndex, finishingIndex)
+function CraftForge:FinishingButtonOnLeave(button, skillIndex, finishingIndex)
 	--DA.DEBUG(0,"FinishingButtonOnLeave("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(finishingIndex)..")")
-	local tip = GameTooltip -- SkilletTradeskillTooltip
-	if Skillet.db.profile.scale_tooltip then
-		tip:SetScale(Skillet.gttScale)
+	local tip = GameTooltip -- CraftForgeTradeskillTooltip
+	if CraftForge.db.profile.scale_tooltip then
+		tip:SetScale(CraftForge.gttScale)
 	end
 	tip:Hide()
 	ResetCursor()
@@ -365,7 +365,7 @@ end
 -- These all have the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function Skillet:FinishingButtonOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftForge:FinishingButtonOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"FinishingButtonOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	--DA.DEBUG(1,"FinishingButtonOnClick: cachedFinishingIndex= "..tostring(self.cachedFinishingIndex)..", cachedFinishingList= "..DA.DUMP(self.cachedFinishingList))
 	local freagentID = self.cachedFinishingList.reagents[reagentIndex].itemID

@@ -1,23 +1,23 @@
 <Bindings>
-	<Binding name="SKILLETPROFESSION1" category="Skillet">
-		Skillet:ShowProfession(1);
+	<Binding name="CRAFTFORGEPROFESSION1" category="CraftForge">
+		CraftForge:ShowProfession(1);
 	</Binding>
-	<Binding name="SKILLETPROFESSION2" category="Skillet">
-		Skillet:ShowProfession(2);
+	<Binding name="CRAFTFORGEPROFESSION2" category="CraftForge">
+		CraftForge:ShowProfession(2);
 	</Binding>
-	<Binding name="SKILLETPROFESSION3" category="Skillet">
-		Skillet:ShowProfession(3);
+	<Binding name="CRAFTFORGEPROFESSION3" category="CraftForge">
+		CraftForge:ShowProfession(3);
 	</Binding>
-	<Binding name="SKILLETPROFESSION4" category="Skillet">
-		Skillet:ShowProfession(4);
+	<Binding name="CRAFTFORGEPROFESSION4" category="CraftForge">
+		CraftForge:ShowProfession(4);
 	</Binding>
-	<Binding name="SKILLETPROFESSION5" category="Skillet">
-		Skillet:ShowProfession(5);
+	<Binding name="CRAFTFORGEPROFESSION5" category="CraftForge">
+		CraftForge:ShowProfession(5);
 	</Binding>
-	<Binding name="SKILLETPROFESSION6" category="Skillet">
-		Skillet:ShowProfession(6);
+	<Binding name="CRAFTFORGEPROFESSION6" category="CraftForge">
+		CraftForge:ShowProfession(6);
 	</Binding>
-	<Binding name="SKILLETPROFESSION7" category="Skillet">
-		Skillet:ShowProfession(7);
+	<Binding name="CRAFTFORGEPROFESSION7" category="CraftForge">
+		CraftForge:ShowProfession(7);
 	</Binding>
 </Bindings>

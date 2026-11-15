@@ -1,6 +1,6 @@
 local addonName,addonTable = ...
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,27 +17,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ]]--
 
-Skillet = LibStub("AceAddon-3.0"):NewAddon("Skillet", "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0", "AceTimer-3.0")
+CraftForge = LibStub("AceAddon-3.0"):NewAddon("CraftForge", "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0", "AceTimer-3.0")
 local AceDB = LibStub("AceDB-3.0")
 
 -- Pull it into the local namespace, it's faster to access that way
-local Skillet = Skillet
-local DA = Skillet -- needed because LibStub changed the definition of Skillet
+local CraftForge = CraftForge
+local DA = CraftForge -- needed because LibStub changed the definition of CraftForge
 
 -- Localization
-local L = LibStub("AceLocale-3.0"):GetLocale("Skillet")
-Skillet.L = L
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+CraftForge.L = L
 
 -- Get version info from the .toc file
-Skillet.version = C_AddOns.GetAddOnMetadata("Skillet", "Version")
-Skillet.isTest = string.find(Skillet.version,"-") or string.find(Skillet.version,"+")
-Skillet.interface = select(4, GetBuildInfo())
-Skillet.build = (Skillet.interface < 16000 and "Classic") or
-  (Skillet.interface < 20000 and "Forever") or 
-  (Skillet.interface < 30000 and "BCC") or
-  (Skillet.interface < 40000 and "Wrath") or 
-  (Skillet.interface < 50000 and "Cata") or
-  (Skillet.interface < 60000 and "Mists") or
+CraftForge.version = C_AddOns.GetAddOnMetadata("CraftForge", "Version")
+CraftForge.isTest = string.find(CraftForge.version,"-") or string.find(CraftForge.version,"+")
+CraftForge.interface = select(4, GetBuildInfo())
+CraftForge.build = (CraftForge.interface < 16000 and "Classic") or
+  (CraftForge.interface < 20000 and "Forever") or 
+  (CraftForge.interface < 30000 and "BCC") or
+  (CraftForge.interface < 40000 and "Wrath") or 
+  (CraftForge.interface < 50000 and "Cata") or
+  (CraftForge.interface < 60000 and "Mists") or
   "Retail"
 --
 --	isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE -- 1
@@ -48,19 +48,19 @@ Skillet.build = (Skillet.interface < 16000 and "Classic") or
 --	isForever = WOW_PROJECT_ID == WOW_PROJECT_CAMELOT -- 18
 --	isMists = WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC -- 19
 --
-Skillet.project = WOW_PROJECT_ID
+CraftForge.project = WOW_PROJECT_ID
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-	Skillet.isRetail = true
+	CraftForge.isRetail = true
 end
 if WOW_PROJECT_ID == WOW_PROJECT_CAMELOT then
-	Skillet.isForever = true
+	CraftForge.isForever = true
 end
 if GetGameType then
-	Skillet.gametype = GetGameType()
-	Skillet.isTalebound = Skillet.gametype == "wowhack"
+	CraftForge.gametype = GetGameType()
+	CraftForge.isTalebound = CraftForge.gametype == "wowhack"
 end
 
-Skillet.gttScale = GameTooltip:GetScale()
+CraftForge.gttScale = GameTooltip:GetScale()
 
 local defaults = {
 	profile = {
@@ -129,7 +129,7 @@ local defaults = {
 --
 -- default options for each player/tradeskill
 --
-Skillet.defaultOptions = {
+CraftForge.defaultOptions = {
 	["sortmethod"] = "None",
 	["grouping"] = "Blizzard",
 	["searchtext"] = "",
@@ -144,7 +144,7 @@ Skillet.defaultOptions = {
 	["isfirstcraft"] = false,
 }
 
-Skillet.unknownRecipe = {
+CraftForge.unknownRecipe = {
 	tradeID = 0,
 	name = "unknown",
 	tools = {},
@@ -159,11 +159,11 @@ Skillet.unknownRecipe = {
 	numCraftableAlts = 0,
 }
 
-function Skillet:DisableBlizzardFrame()
+function CraftForge:DisableBlizzardFrame()
 	DA.DEBUG(0,"DisableBlizzardFrame()")
 	if not ProfessionsFrame then
 		DA.WARN("DisableBlizzardFrame: ProfessionsFrame is nil")
-	elseif Skillet.isRetail or self.db.profile.hide_blizzard_frame then
+	elseif CraftForge.isRetail or self.db.profile.hide_blizzard_frame then
 		if self.BlizzardTradeSkillFrame == nil then
 			self.BlizzardTradeSkillFrame = ProfessionsFrame
 			self.tradeSkillHide = ProfessionsFrame:GetScript("OnHide")
@@ -177,14 +177,14 @@ function Skillet:DisableBlizzardFrame()
 	end
 end
 
-function Skillet:EnableBlizzardFrame()
+function CraftForge:EnableBlizzardFrame()
 	DA.DEBUG(0,"EnableBlizzardFrame()")
 	if self.BlizzardTradeSkillFrame ~= nil then
 		self.BlizzardTradeSkillFrame = nil
 		ProfessionsFrame:SetScript("OnHide", self.tradeSkillHide)
 		self.tradeSkillHide = nil
 	end
-	if Skillet.isRetail or self.db.profile.hide_blizzard_frame then
+	if CraftForge.isRetail or self.db.profile.hide_blizzard_frame then
 		ShowUIPanel(ProfessionsFrame)
 	elseif self.db.profile.scale_blizzard_frame then
 		ProfessionsFrame:SetScale(self.db.profile.scale_blizzard_up or 1.0)
@@ -195,12 +195,12 @@ end
 --
 -- Called when the addon is loaded
 --
-function Skillet:OnInitialize()
+function CraftForge:OnInitialize()
 	DA.DEBUG(0,"OnInitialize()");
 --
 --	Create the database
 --
-	self.db = AceDB:New("SkilletDB", defaults)
+	self.db = AceDB:New("CraftForgeDB", defaults)
 --
 -- Information useful for debugging
 --
@@ -211,24 +211,24 @@ function Skillet:OnInitialize()
 	self.db.global.build = self.build          -- text derived from interface
 	self.db.global.gametype = self.gametype    -- from GetGameType
 	
-	if not SkilletWho then
-		SkilletWho = {}
+	if not CraftForgeWho then
+		CraftForgeWho = {}
 	end
-	if not SkilletDBPC then
-		SkilletDBPC = {}
+	if not CraftForgeDBPC then
+		CraftForgeDBPC = {}
 	end
-	if not SkilletProfile then
-		SkilletProfile = {}
+	if not CraftForgeProfile then
+		CraftForgeProfile = {}
 	end
-	if not SkilletMemory then
-		SkilletMemory = {}
+	if not CraftForgeMemory then
+		CraftForgeMemory = {}
 	end
 	if DA.deepcopy then			-- For serious debugging, start with a clean slate
-		SkilletMemory = {}
-		SkilletDBPC = {}
+		CraftForgeMemory = {}
+		CraftForgeDBPC = {}
 	end
-	DA.DebugLog = SkilletDBPC
-	DA.DebugProfile = SkilletProfile
+	DA.DebugLog = CraftForgeDBPC
+	DA.DebugProfile = CraftForgeProfile
 	if not self.InProgress then
 		self.InProgress = {}
 	end
@@ -273,7 +273,7 @@ function Skillet:OnInitialize()
 -- we clear the saved variables recipe data just to be safe.
 --
 	local dataVersion = 11
-	if Skillet.isForever then
+	if CraftForge.isForever then
 		dataVersion = 12
 	end
 	local queueVersion = 1
@@ -375,9 +375,9 @@ function Skillet:OnInitialize()
 
 --
 -- configure the addon options and the slash command handler
--- (Skillet.options is defined in SkilletOptions.lua)
+-- (CraftForge.options is defined in CraftForgeOptions.lua)
 --
-	Skillet:ConfigureOptions()
+	CraftForge:ConfigureOptions()
 --
 -- Copy the profile debugging variables to the global table 
 -- where DebugAids.lua is looking for them.
@@ -389,40 +389,40 @@ function Skillet:OnInitialize()
 --
 -- Note:	Undefined is the same as false so we only need to predefine true variables
 --
-	if Skillet.db.profile.WarnLog == nil then
-		Skillet.db.profile.WarnLog = true
+	if CraftForge.db.profile.WarnLog == nil then
+		CraftForge.db.profile.WarnLog = true
 	end
 
-	Skillet.WarnLog = Skillet.db.profile.WarnLog
-	Skillet.WarnShow = Skillet.db.profile.WarnShow
-	Skillet.DebugShow = Skillet.db.profile.DebugShow
-	Skillet.DebugLogging = Skillet.db.profile.DebugLogging
-	Skillet.DebugLevel = Skillet.db.profile.DebugLevel
-	Skillet.LogLevel = Skillet.db.profile.LogLevel
-	Skillet.MAXDEBUG = Skillet.db.profile.MAXDEBUG or 4000
-	Skillet.MAXPROFILE = Skillet.db.profile.MAXPROFILE or 2000
-	Skillet.TableDump = Skillet.db.profile.TableDump
-	Skillet.TraceShow = Skillet.db.profile.TraceShow
-	Skillet.TraceLog = Skillet.db.profile.TraceLog
-	Skillet.TraceLog2 = Skillet.db.profile.TraceLog2
-	Skillet.ProfileShow = Skillet.db.profile.ProfileShow
+	CraftForge.WarnLog = CraftForge.db.profile.WarnLog
+	CraftForge.WarnShow = CraftForge.db.profile.WarnShow
+	CraftForge.DebugShow = CraftForge.db.profile.DebugShow
+	CraftForge.DebugLogging = CraftForge.db.profile.DebugLogging
+	CraftForge.DebugLevel = CraftForge.db.profile.DebugLevel
+	CraftForge.LogLevel = CraftForge.db.profile.LogLevel
+	CraftForge.MAXDEBUG = CraftForge.db.profile.MAXDEBUG or 4000
+	CraftForge.MAXPROFILE = CraftForge.db.profile.MAXPROFILE or 2000
+	CraftForge.TableDump = CraftForge.db.profile.TableDump
+	CraftForge.TraceShow = CraftForge.db.profile.TraceShow
+	CraftForge.TraceLog = CraftForge.db.profile.TraceLog
+	CraftForge.TraceLog2 = CraftForge.db.profile.TraceLog2
+	CraftForge.ProfileShow = CraftForge.db.profile.ProfileShow
 --
--- Profile variable to control Skillet fixes for Blizzard bugs.
--- Can be toggled [or turned off] with "/skillet fixbugs [off]"
+-- Profile variable to control CraftForge fixes for Blizzard bugs.
+-- Can be toggled [or turned off] with "/craftforge fixbugs [off]"
 --
-	if Skillet.db.profile.FixBugs == nil then
-		Skillet.db.profile.FixBugs = true
+	if CraftForge.db.profile.FixBugs == nil then
+		CraftForge.db.profile.FixBugs = true
 	end
-	Skillet.FixBugs = Skillet.db.profile.FixBugs
+	CraftForge.FixBugs = CraftForge.db.profile.FixBugs
 
 --
 -- Create static popups for changing professions
 --
-StaticPopupDialogs["SKILLET_CONTINUE_CHANGE"] = {
-	text = "Skillet-Classic\n"..L["Press Okay to continue changing professions"],
+StaticPopupDialogs["CRAFTFORGE_CONTINUE_CHANGE"] = {
+	text = "CraftForge-Classic\n"..L["Press Okay to continue changing professions"],
 	button1 = OKAY,
 	OnAccept = function( self )
-		Skillet:ContinueChange()
+		CraftForge:ContinueChange()
 		return
 	end,
 	timeout = 0,
@@ -431,19 +431,19 @@ StaticPopupDialogs["SKILLET_CONTINUE_CHANGE"] = {
 	hideOnEscape = 1
 };
 
-StaticPopupDialogs["SKILLET_MANUAL_CHANGE"] = {
-	text = "Skillet\n"..L["Press your button which opens %s"],
+StaticPopupDialogs["CRAFTFORGE_MANUAL_CHANGE"] = {
+	text = "CraftForge\n"..L["Press your button which opens %s"],
 --	button1 = OKAY,
 --	OnAccept = function( self )
---		Skillet:ContinueChange(true)
+--		CraftForge:ContinueChange(true)
 --		return
 --	end,
 	OnCancel = function( self )
-		Skillet:FinishChange()
+		CraftForge:FinishChange()
 		return
 	end,
 	OnHide = function( self )
-		Skillet:FinishChange()
+		CraftForge:FinishChange()
 		return
 	end,
 	timeout = 30,
@@ -455,27 +455,27 @@ StaticPopupDialogs["SKILLET_MANUAL_CHANGE"] = {
 --
 -- Create our frame
 --
-	if not Skillet.tradeSkillFrame then
-		Skillet.tradeSkillFrame = Skillet:CreateTradeSkillWindow()
-		tinsert(UISpecialFrames, Skillet.tradeSkillFrame:GetName())
+	if not CraftForge.tradeSkillFrame then
+		CraftForge.tradeSkillFrame = CraftForge:CreateTradeSkillWindow()
+		tinsert(UISpecialFrames, CraftForge.tradeSkillFrame:GetName())
 	end
 
 --
 -- Now do the character initialization
 --
-	self:InitializeDatabase(Skillet:unitName("player"))
+	self:InitializeDatabase(CraftForge:unitName("player"))
 	self:InitializePlugins()
 	self.NewsGUI:Initialize()
 
 --
 --	Some counters for high frequency events
 --
-	if not Skillet.bagUpdateCounts then
-		Skillet.bagUpdateCounts = {}
+	if not CraftForge.bagUpdateCounts then
+		CraftForge.bagUpdateCounts = {}
 	end
-	Skillet.bagUpdateDelayedCount = 0
-	Skillet.unitInventoryChangedCount = 0
-	Skillet.bankUpdateCount = 0
+	CraftForge.bagUpdateDelayedCount = 0
+	CraftForge.unitInventoryChangedCount = 0
+	CraftForge.bankUpdateCount = 0
 end
 
 --
@@ -486,52 +486,52 @@ end
 -- rarely used. There is a dataVersion number to
 -- increment to trigger a call.
 --
-function Skillet:FlushAllData()
+function CraftForge:FlushAllData()
 	DA.DEBUG(0,"FlushAllData()");
-	Skillet.data = {}
-	Skillet.db.realm.tradeSkills = {}
-	Skillet.db.realm.auctionData = {}
-	Skillet.db.realm.inventoryData = {}
-	Skillet.db.realm.userIgnoredMats = {}
-	Skillet.db.realm.options = {}
-	Skillet.db.realm.toolData = {}
-	Skillet.db.realm.faction = {}
-	Skillet.db.realm.race = {}
-	Skillet.db.realm.class = {}
-	Skillet.db.realm.guid = {}
-	Skillet.db.global.server = {}
-	Skillet:FlushCustomData()
-	Skillet:FlushQueueData()
-	Skillet:FlushRecipeData()
-	Skillet:FlushDetailData()
-	Skillet:FlushPlayerData()
-	Skillet:InitializeMissingVendorItems()
+	CraftForge.data = {}
+	CraftForge.db.realm.tradeSkills = {}
+	CraftForge.db.realm.auctionData = {}
+	CraftForge.db.realm.inventoryData = {}
+	CraftForge.db.realm.userIgnoredMats = {}
+	CraftForge.db.realm.options = {}
+	CraftForge.db.realm.toolData = {}
+	CraftForge.db.realm.faction = {}
+	CraftForge.db.realm.race = {}
+	CraftForge.db.realm.class = {}
+	CraftForge.db.realm.guid = {}
+	CraftForge.db.global.server = {}
+	CraftForge:FlushCustomData()
+	CraftForge:FlushQueueData()
+	CraftForge:FlushRecipeData()
+	CraftForge:FlushDetailData()
+	CraftForge:FlushPlayerData()
+	CraftForge:InitializeMissingVendorItems()
 end
 
 --
 -- Flush all data for the current player
 --
-function Skillet:FlushPlayerData()
+function CraftForge:FlushPlayerData()
 	DA.DEBUG(0,"FlushPlayerData()");
-	local player = Skillet:unitName("player")
-	Skillet.db.realm.tradeSkills[player] = {}
-	Skillet.db.realm.auctionData[player] = {}
-	Skillet.db.realm.inventoryData[player] = {}
-	Skillet.db.realm.userIgnoredMats[player] = {}
-	Skillet.db.realm.bagData[player] = {}
-	Skillet.db.realm.bagDetails[player] = {}
-	Skillet.db.realm.bankData[player] = {}
-	Skillet.db.realm.bankDetails[player] = {}
-	Skillet.db.realm.queueData[player] = {}
-	Skillet.db.realm.reagentsInQueue[player] = {}
-	Skillet.db.realm.modifiedInQueue[player] = {}
-	Skillet.db.realm.groupDB[player] = {}
-	Skillet.db.realm.options[player] = {}
-	Skillet.db.realm.toolData[player] = {}
-	Skillet.db.realm.faction[player] = {}
-	Skillet.db.realm.race[player] = {}
-	Skillet.db.realm.class[player] = {}
-	Skillet.db.realm.guid[player]= {}
+	local player = CraftForge:unitName("player")
+	CraftForge.db.realm.tradeSkills[player] = {}
+	CraftForge.db.realm.auctionData[player] = {}
+	CraftForge.db.realm.inventoryData[player] = {}
+	CraftForge.db.realm.userIgnoredMats[player] = {}
+	CraftForge.db.realm.bagData[player] = {}
+	CraftForge.db.realm.bagDetails[player] = {}
+	CraftForge.db.realm.bankData[player] = {}
+	CraftForge.db.realm.bankDetails[player] = {}
+	CraftForge.db.realm.queueData[player] = {}
+	CraftForge.db.realm.reagentsInQueue[player] = {}
+	CraftForge.db.realm.modifiedInQueue[player] = {}
+	CraftForge.db.realm.groupDB[player] = {}
+	CraftForge.db.realm.options[player] = {}
+	CraftForge.db.realm.toolData[player] = {}
+	CraftForge.db.realm.faction[player] = {}
+	CraftForge.db.realm.race[player] = {}
+	CraftForge.db.realm.class[player] = {}
+	CraftForge.db.realm.guid[player]= {}
 end
 
 --
@@ -539,10 +539,10 @@ end
 -- effort by the player so don't clear it without
 -- good cause.
 --
-function Skillet:FlushCustomData()
+function CraftForge:FlushCustomData()
 	DA.DEBUG(0,"FlushCustomData()");
-	Skillet.db.realm.groupDB = {}
-	Skillet.db.profile.groupSN = {}
+	CraftForge.db.realm.groupDB = {}
+	CraftForge.db.profile.groupSN = {}
 end
 
 --
@@ -550,11 +550,11 @@ end
 -- clearing these tables is just the current
 -- queue and should have minimal impact.
 --
-function Skillet:FlushQueueData()
+function CraftForge:FlushQueueData()
 	DA.DEBUG(0,"FlushQueueData()");
-	Skillet.db.realm.queueData = {}
-	Skillet.db.realm.reagentsInQueue = {}
-	Skillet.db.realm.modifiedInQueue = {}
+	CraftForge.db.realm.queueData = {}
+	CraftForge.db.realm.reagentsInQueue = {}
+	CraftForge.db.realm.modifiedInQueue = {}
 end
 
 --
@@ -563,16 +563,16 @@ end
 -- Blizzard's "stealth" changes to recipes are the
 -- primary reason this function exists.
 --
-function Skillet:FlushRecipeData()
+function CraftForge:FlushRecipeData()
 	DA.DEBUG(0,"FlushRecipeData()");
-	Skillet.db.global.recipeDB = {}
-	Skillet.db.global.recipeNameDB = {}
-	Skillet.db.global.itemRecipeUsedIn = {}
-	Skillet.db.global.itemRecipeSource = {}
-	Skillet.db.global.Categories = {}
-	if Skillet.data and Skillet.data.recipeInfo then
-		Skillet.data.recipeInfo = {}
-	Skillet:InitializeSkillLevels()
+	CraftForge.db.global.recipeDB = {}
+	CraftForge.db.global.recipeNameDB = {}
+	CraftForge.db.global.itemRecipeUsedIn = {}
+	CraftForge.db.global.itemRecipeSource = {}
+	CraftForge.db.global.Categories = {}
+	if CraftForge.data and CraftForge.data.recipeInfo then
+		CraftForge.data.recipeInfo = {}
+	CraftForge:InitializeSkillLevels()
 	end
 end
 
@@ -581,15 +581,15 @@ end
 -- can take a lot of space so clearing these tables
 -- can free that up.
 --
-function Skillet:FlushDetailData()
+function CraftForge:FlushDetailData()
 	DA.DEBUG(0,"FlushDetailData()");
-	Skillet.db.realm.bagData = {}
-	Skillet.db.realm.bagDetails = {}
-	Skillet.db.realm.bankData = {}
-	Skillet.db.realm.bankDetails = {}
-	Skillet.db.global.warbandData = {}
-	Skillet.db.global.warbandDetails = {}
-	Skillet.db.global.detailedGuildbank = {}
+	CraftForge.db.realm.bagData = {}
+	CraftForge.db.realm.bagDetails = {}
+	CraftForge.db.realm.bankData = {}
+	CraftForge.db.realm.bankDetails = {}
+	CraftForge.db.global.warbandData = {}
+	CraftForge.db.global.warbandDetails = {}
+	CraftForge.db.global.detailedGuildbank = {}
 end
 
 --
@@ -597,7 +597,7 @@ end
 -- or a table when bought with an alternate currency
 -- table entries are {name, quantity, currencyName, currencyID, currencyCount}
 --
-function Skillet:InitializeMissingVendorItems()
+function CraftForge:InitializeMissingVendorItems()
 	self.db.global.MissingVendorItems = {
 		[30817] = "Simple Flour",
 		[4539]  = "Goldenbark Apple",
@@ -610,11 +610,11 @@ function Skillet:InitializeMissingVendorItems()
 	}
 end
 
-function Skillet:InitializeDatabase(player)
+function CraftForge:InitializeDatabase(player)
 	if self.linkedSkill or self.isGuild then  -- Avoid adding unnecessary data to savedvariables
 		return
 	end
-	local clean = Skillet.CleanDatabase
+	local clean = CraftForge.CleanDatabase
 	local action = clean and "Clean" or "Initialize"
 	DA.DEBUG(0,action.." database for "..tostring(player))
 --
@@ -763,11 +763,11 @@ function Skillet:InitializeDatabase(player)
 			end
 			self.db.profile.plugins.recipeNamePlugin = nil
 		end
-		Skillet:InitializePlugins()
+		CraftForge:InitializePlugins()
 	end
 end
 
-function Skillet:RegisterRecipeFilter(name, namespace, initMethod, filterMethod)
+function CraftForge:RegisterRecipeFilter(name, namespace, initMethod, filterMethod)
 	if not self.recipeFilters then
 		self.recipeFilters = {}
 	end
@@ -778,7 +778,7 @@ end
 --
 -- Called when the addon is enabled
 --
-function Skillet:OnEnable()
+function CraftForge:OnEnable()
 	DA.DEBUG(0,"OnEnable()");
 --
 -- Hook into the events that we care about
@@ -793,7 +793,7 @@ function Skillet:OnEnable()
 	self:RegisterEvent("TRADE_SKILL_DETAILS_UPDATE")
 --	self:RegisterEvent("TRADE_SKILL_FILTER_UPDATE")
 	self:RegisterEvent("TRADE_SKILL_LIST_UPDATE")
---	self:RegisterEvent("GUILD_RECIPE_KNOWN_BY_MEMBERS", "SkilletShowGuildCrafters")
+--	self:RegisterEvent("GUILD_RECIPE_KNOWN_BY_MEMBERS", "CraftForgeShowGuildCrafters")
 	self:RegisterEvent("GARRISON_TRADESKILL_NPC_CLOSED")
 	self:RegisterEvent("BAG_UPDATE") 				-- Fires for both bag and bank updates.
 	self:RegisterEvent("BAG_UPDATE_DELAYED")		-- Fires after all applicable BAG_UPDATE events for a specific action have been fired.
@@ -855,7 +855,7 @@ function Skillet:OnEnable()
 	self:RegisterEvent("SKILL_LINES_CHANGED") -- replacement for CHAT_MSG_SKILL
 	self:RegisterEvent("NEW_RECIPE_LEARNED") -- arg1 = recipeID
 
-	if Skillet.db.profile.BlizzOR then
+	if CraftForge.db.profile.BlizzOR then
 --
 -- Dump the data passed to C_TradeSkillUI functions so we can learn how Blizzard handles the new stuff
 --
@@ -902,7 +902,7 @@ function Skillet:OnEnable()
 	self.hideTrivialRecipes = false
 	self.currentTrade = nil
 	self.selectedSkill = nil
-	self.currentPlayer = Skillet:unitName("player")
+	self.currentPlayer = CraftForge:unitName("player")
 	self.currentGroupLabel = "Blizzard"
 	self.currentGroup = nil
 	self.dataScanned = false
@@ -920,27 +920,27 @@ end
 --
 -- Called when the addon is disabled
 --
-function Skillet:OnDisable()
-	DA.DEBUG(0,"Skillet:OnDisable()");
+function CraftForge:OnDisable()
+	DA.DEBUG(0,"CraftForge:OnDisable()");
 	self:UnregisterAllEvents()
 	self:EnableBlizzardFrame()
 end
 
-function Skillet:PLAYER_LOGIN()
+function CraftForge:PLAYER_LOGIN()
 	DA.TRACE("PLAYER_LOGIN")
 end
 
-function Skillet:PLAYER_MONEY()
+function CraftForge:PLAYER_MONEY()
 	DA.TRACE("PLAYER_MONEY")
 end
 
-function Skillet:UI_ERROR_MESSAGE(event,errtype,text)
+function CraftForge:UI_ERROR_MESSAGE(event,errtype,text)
 	DA.TRACE("UI_ERROR_MESSAGE( "..tostring(errtype)..", "..tostring(text).." )")
 end
 
-function Skillet:PLAYER_ENTERING_WORLD()
+function CraftForge:PLAYER_ENTERING_WORLD()
 	DA.TRACE("PLAYER_ENTERING_WORLD")
-	local player = Skillet:unitName("player")
+	local player = CraftForge:unitName("player")
 	local realm = GetRealmName()
 	local faction = UnitFactionGroup("player")
 	local raceName, raceFile, raceID = UnitRace("player")
@@ -952,32 +952,32 @@ function Skillet:PLAYER_ENTERING_WORLD()
 -- PLAYER_ENTERING_WORLD happens on login and when changing zones so
 -- only save the time of the first one.
 --
-	if not Skillet.loginTime then
-		Skillet.loginTime = GetTime()
+	if not CraftForge.loginTime then
+		CraftForge.loginTime = GetTime()
 	end
 --
 -- Store some identifying data in the per character saved variables file
 --
-	SkilletWho.player = player
-	SkilletWho.realm = realm
-	SkilletWho.faction = faction
-	SkilletWho.raceFile = raceFile
-	SkilletWho.classFile = classFile
+	CraftForgeWho.player = player
+	CraftForgeWho.realm = realm
+	CraftForgeWho.faction = faction
+	CraftForgeWho.raceFile = raceFile
+	CraftForgeWho.classFile = classFile
 	self.db.realm.faction[player] = faction
 	self.db.realm.race[player] = raceFile
 	self.db.realm.class[player] = classFile
-	SkilletWho.locale = locale
-	SkilletWho.wowBuild = wowBuild
-	SkilletWho.wowVersion = wowVersion
-	SkilletWho.guid = guid
-	SkilletWho.version = Skillet.version
+	CraftForgeWho.locale = locale
+	CraftForgeWho.wowBuild = wowBuild
+	CraftForgeWho.wowVersion = wowVersion
+	CraftForgeWho.guid = guid
+	CraftForgeWho.version = CraftForge.version
 	if guid then
 		local kind, server, ID = strsplit("-", guid)
 		DA.DEBUG(1,"player="..tostring(player)..", faction="..tostring(faction)..", guid="..tostring(guid)..", server="..tostring(server))
 --
 -- If we support data sharing across connected realms, then
--- Skillet.db.realm.* data needs to move to 
--- Skillet.db.global.* data indexed by server.
+-- CraftForge.db.realm.* data needs to move to 
+-- CraftForge.db.global.* data indexed by server.
 --
 		self.db.realm.guid[player]= guid
 		if (server) then
@@ -1002,21 +1002,21 @@ function Skillet:PLAYER_ENTERING_WORLD()
 	end
 end
 
-function Skillet:ADDON_ACTION_BLOCKED()
+function CraftForge:ADDON_ACTION_BLOCKED()
 	DA.TRACE("ADDON_ACTION_BLOCKED")
---	print("|cf0f00000Skillet-Classic|r: Combat lockdown restriction." ..
+--	print("|cf0f00000CraftForge-Classic|r: Combat lockdown restriction." ..
 --								  " Leave combat and try again.")
 --	self:HideAllWindows()
 end
 
-function Skillet:PLAYER_LOGOUT()
+function CraftForge:PLAYER_LOGOUT()
 	DA.TRACE("PLAYER_LOGOUT")
 --
 -- Make a copy of the in memory data for debugging. Note: DeepCopy.lua needs to be added to the .toc
 --
 	if DA.deepcopy then
 		self.data.sortedSkillList = {"Removed"} -- This table is huge so don't save it unless needed.
---		SkilletMemory = DA.deepcopy(self.data)	-- Everything else
+--		CraftForgeMemory = DA.deepcopy(self.data)	-- Everything else
 --
 -- For RecipeGroups debugging:
 --
@@ -1027,150 +1027,150 @@ function Skillet:PLAYER_LOGOUT()
 				self.data.groupList[self.currentPlayer][tradeID]["Blizzard"] = {"Removed"}
 			end
 		end
-		SkilletMemory = DA.deepcopy(self.data.groupList) -- minus all the group "Blizzard" stuff
+		CraftForgeMemory = DA.deepcopy(self.data.groupList) -- minus all the group "Blizzard" stuff
 	end
 end
 
-function Skillet:CHAT_MSG_SKILL(event,text)	-- Replaced by SKILL_LINES_CHANGED
+function CraftForge:CHAT_MSG_SKILL(event,text)	-- Replaced by SKILL_LINES_CHANGED
 	DA.TRACE("CHAT_MSG_SKILL")
-	if Skillet.tradeSkillOpen then
---		Skillet:RescanTrade()
---		Skillet:UpdateTradeSkillWindow()
---		Skillet.dataSourceChanged = true	-- Process the change on the next TRADE_SKILL_LIST_UPDATE
+	if CraftForge.tradeSkillOpen then
+--		CraftForge:RescanTrade()
+--		CraftForge:UpdateTradeSkillWindow()
+--		CraftForge.dataSourceChanged = true	-- Process the change on the next TRADE_SKILL_LIST_UPDATE
 	end
 end
 
-function Skillet:SKILL_LINES_CHANGED()
+function CraftForge:SKILL_LINES_CHANGED()
 	DA.TRACE("SKILL_LINES_CHANGED")
-	if Skillet.tradeSkillOpen then
---		Skillet:RescanTrade()
---		Skillet:UpdateTradeSkillWindow()
-		Skillet.dataSourceChanged = true	-- Process the change on the next TRADE_SKILL_LIST_UPDATE
+	if CraftForge.tradeSkillOpen then
+--		CraftForge:RescanTrade()
+--		CraftForge:UpdateTradeSkillWindow()
+		CraftForge.dataSourceChanged = true	-- Process the change on the next TRADE_SKILL_LIST_UPDATE
 	end
 end
 
-function Skillet:NEW_RECIPE_LEARNED(event, recipeID)
+function CraftForge:NEW_RECIPE_LEARNED(event, recipeID)
 	DA.TRACE("NEW_RECIPE_LEARNED")
 	DA.TRACE("recipeID= ", recipeID)
-	if Skillet.tradeSkillOpen then
-		Skillet.dataSourceChanged = true	-- Process the change on the next TRADE_SKILL_LIST_UPDATE
+	if CraftForge.tradeSkillOpen then
+		CraftForge.dataSourceChanged = true	-- Process the change on the next TRADE_SKILL_LIST_UPDATE
 	end
 end
 
-function Skillet:TRADE_SKILL_SHOW()
+function CraftForge:TRADE_SKILL_SHOW()
 	DA.TRACE("TRADE_SKILL_SHOW")
-	Skillet.dataSourceChanged = false
-	Skillet.detailsUpdate = false
-	Skillet.skillListUpdate = false
-	Skillet.adjustInventory = false
-	Skillet:SkilletShow()
+	CraftForge.dataSourceChanged = false
+	CraftForge.detailsUpdate = false
+	CraftForge.skillListUpdate = false
+	CraftForge.adjustInventory = false
+	CraftForge:CraftForgeShow()
 end
 
-function Skillet:TRADE_SKILL_CLOSE()
+function CraftForge:TRADE_SKILL_CLOSE()
 	DA.TRACE("TRADE_SKILL_CLOSE")
-	Skillet:SkilletClose()
-	Skillet.dataSourceChanged = false
-	Skillet.detailsUpdate = false
-	Skillet.skillListUpdate = false
-	Skillet.adjustInventory = false
+	CraftForge:CraftForgeClose()
+	CraftForge.dataSourceChanged = false
+	CraftForge.detailsUpdate = false
+	CraftForge.skillListUpdate = false
+	CraftForge.adjustInventory = false
 end
 
-function Skillet:TRADE_SKILL_DATA_SOURCE_CHANGED()
+function CraftForge:TRADE_SKILL_DATA_SOURCE_CHANGED()
 	DA.TRACE("TRADE_SKILL_DATA_SOURCE_CHANGED")
-	DA.TRACE("tradeSkillOpen= "..tostring(Skillet.tradeSkillOpen))
-	if Skillet.tradeSkillOpen then
-		Skillet.dataSourceChanged = true
-		Skillet:SkilletShowWindow("CHANGED")
-		if Skillet.delaySelectedSkill then
-			self:SetSelectedSkill(Skillet.delaySkillIndex)
-			Skillet.delaySelectedSkill = false
+	DA.TRACE("tradeSkillOpen= "..tostring(CraftForge.tradeSkillOpen))
+	if CraftForge.tradeSkillOpen then
+		CraftForge.dataSourceChanged = true
+		CraftForge:CraftForgeShowWindow("CHANGED")
+		if CraftForge.delaySelectedSkill then
+			self:SetSelectedSkill(CraftForge.delaySkillIndex)
+			CraftForge.delaySelectedSkill = false
 		end
 	end
 end
 
-function Skillet:TRADE_SKILL_DATA_SOURCE_CHANGING()
+function CraftForge:TRADE_SKILL_DATA_SOURCE_CHANGING()
 	DA.TRACE("TRADE_SKILL_DATA_SOURCE_CHANGING")
-	DA.TRACE("tradeSkillOpen= "..tostring(Skillet.tradeSkillOpen))
-	if Skillet.tradeSkillOpen then
-		Skillet:SkilletShow()
+	DA.TRACE("tradeSkillOpen= "..tostring(CraftForge.tradeSkillOpen))
+	if CraftForge.tradeSkillOpen then
+		CraftForge:CraftForgeShow()
 	end
 end
 
-function Skillet:TRADE_SKILL_DETAILS_UPDATE()
+function CraftForge:TRADE_SKILL_DETAILS_UPDATE()
 	DA.TRACE("TRADE_SKILL_DETAILS_UPDATE")
-	DA.TRACE("tradeSkillOpen= "..tostring(Skillet.tradeSkillOpen))
-	if Skillet.tradeSkillOpen then
-		Skillet.detailsUpdate = true
-		Skillet:RescanTrade()
-		Skillet:UpdateTradeSkillWindow()
+	DA.TRACE("tradeSkillOpen= "..tostring(CraftForge.tradeSkillOpen))
+	if CraftForge.tradeSkillOpen then
+		CraftForge.detailsUpdate = true
+		CraftForge:RescanTrade()
+		CraftForge:UpdateTradeSkillWindow()
 	end
 end
 
-function Skillet:TRADE_SKILL_FILTER_UPDATE()
+function CraftForge:TRADE_SKILL_FILTER_UPDATE()
 	DA.TRACE("TRADE_SKILL_FILTER_UPDATE")
 end
 
-function Skillet:TRADE_SKILL_LIST_UPDATE()
+function CraftForge:TRADE_SKILL_LIST_UPDATE()
 	DA.TRACE("TRADE_SKILL_LIST_UPDATE")
-	--DA.TRACE("tradeSkillOpen= "..tostring(Skillet.tradeSkillOpen))
-	--DA.TRACE("dataSourceChanged= "..tostring(Skillet.dataSourceChanged))
-	--DA.TRACE("adjustInventory= "..tostring(Skillet.adjustInventory))
-	if Skillet.tradeSkillOpen and Skillet.dataSourceChanged then
-		Skillet.dataSourceChanged = false
-		Skillet.adjustInventory = false
-		Skillet.skillListUpdate = true
-		Skillet:SkilletShowWindow("UPDATE")
+	--DA.TRACE("tradeSkillOpen= "..tostring(CraftForge.tradeSkillOpen))
+	--DA.TRACE("dataSourceChanged= "..tostring(CraftForge.dataSourceChanged))
+	--DA.TRACE("adjustInventory= "..tostring(CraftForge.adjustInventory))
+	if CraftForge.tradeSkillOpen and CraftForge.dataSourceChanged then
+		CraftForge.dataSourceChanged = false
+		CraftForge.adjustInventory = false
+		CraftForge.skillListUpdate = true
+		CraftForge:CraftForgeShowWindow("UPDATE")
 	end
-	if Skillet.tradeSkillOpen and Skillet.adjustInventory then
-		Skillet.skillListUpdate = true
-		Skillet:AdjustInventory()
+	if CraftForge.tradeSkillOpen and CraftForge.adjustInventory then
+		CraftForge.skillListUpdate = true
+		CraftForge:AdjustInventory()
 	end
 end
 
-function Skillet:TRADE_SKILL_NAME_UPDATE()
+function CraftForge:TRADE_SKILL_NAME_UPDATE()
 	DA.TRACE("TRADE_SKILL_NAME_UPDATE")
-	DA.TRACE("linkedSkill= "..tostring(Skillet.linkedSkill))
-	if Skillet.linkedSkill then
-		Skillet:SkilletShow()
+	DA.TRACE("linkedSkill= "..tostring(CraftForge.linkedSkill))
+	if CraftForge.linkedSkill then
+		CraftForge:CraftForgeShow()
 	end
 end
 
-function Skillet:GARRISON_TRADESKILL_NPC_CLOSED()
+function CraftForge:GARRISON_TRADESKILL_NPC_CLOSED()
 	DA.TRACE("GARRISON_TRADESKILL_NPC_CLOSED")
 end
 
-function Skillet:ITEM_DATA_LOAD_RESULT(event, itemID, result)
+function CraftForge:ITEM_DATA_LOAD_RESULT(event, itemID, result)
 	if itemID then
 		local name = C_Item.GetItemInfo(itemID)
 		DA.TRACE3("ITEM_DATA_LOAD_RESULT(", itemID, result, "), "..tostring(name))
 	else
 		DA.TRACE3("ITEM_DATA_LOAD_RESULT")
 	end
-	if Skillet.salvageDataNeeded then
-		Skillet:UpdateSalvageListWindow()
-		Skillet.salvageDataNeeded = nil
+	if CraftForge.salvageDataNeeded then
+		CraftForge:UpdateSalvageListWindow()
+		CraftForge.salvageDataNeeded = nil
 	end
-	if Skillet.finishingDataNeeded then
-		Skillet:UpdateFinishingListWindow()
-		Skillet.finishingDataNeeded = nil
+	if CraftForge.finishingDataNeeded then
+		CraftForge:UpdateFinishingListWindow()
+		CraftForge.finishingDataNeeded = nil
 	end
-	if Skillet.optionalDataNeeded then
-		Skillet:UpdateOptionalListWindow()
-		Skillet.optionalDataNeeded = nil
+	if CraftForge.optionalDataNeeded then
+		CraftForge:UpdateOptionalListWindow()
+		CraftForge.optionalDataNeeded = nil
 	end
-	if Skillet.modifiedDataNeeded then
-		Skillet:UpdateModifiedListWindow()
-		Skillet.modifiedDataNeeded = nil
+	if CraftForge.modifiedDataNeeded then
+		CraftForge:UpdateModifiedListWindow()
+		CraftForge.modifiedDataNeeded = nil
 	end
-	if Skillet.detailDataNeeded then
-		if not Skillet.InProgress.detail then
-			Skillet:UpdateDetailWindow(self.selectedSkill)
+	if CraftForge.detailDataNeeded then
+		if not CraftForge.InProgress.detail then
+			CraftForge:UpdateDetailWindow(self.selectedSkill)
 		end
-		Skillet.detailDataNeeded = nil
+		CraftForge.detailDataNeeded = nil
 	end
 end
 
-function Skillet:GET_ITEM_INFO_RECEIVED(event, itemID, result)
+function CraftForge:GET_ITEM_INFO_RECEIVED(event, itemID, result)
 	if itemID then
 		local name = C_Item.GetItemInfo(itemID)
 		DA.TRACE3("GET_ITEM_INFO_RECEIVED(", itemID, result, "), "..tostring(name))
@@ -1182,43 +1182,43 @@ end
 --
 -- Dragonflight replacement for *_SHOW events
 --
-function Skillet:PLAYER_INTERACTION_MANAGER_FRAME_SHOW(event,interactionType)
+function CraftForge:PLAYER_INTERACTION_MANAGER_FRAME_SHOW(event,interactionType)
 	DA.TRACE("PLAYER_INTERACTION_MANAGER_FRAME_SHOW(", interactionType, ")")
 	if interactionType == Enum.PlayerInteractionType.Merchant then -- 5
---		Skillet:Skillet:MERCHANT_SHOW()
-		Skillet:MerchantShow()
+--		CraftForge:CraftForge:MERCHANT_SHOW()
+		CraftForge:MerchantShow()
 	end
 	if interactionType == Enum.PlayerInteractionType.Banker then -- 8
-		Skillet:BANKFRAME_OPENED()
+		CraftForge:BANKFRAME_OPENED()
 	end
 	if interactionType == Enum.PlayerInteractionType.GuildBanker then -- 10
-		Skillet:GUILDBANKFRAME_OPENED()
+		CraftForge:GUILDBANKFRAME_OPENED()
 	end
 	if interactionType == Enum.PlayerInteractionType.Auctioneer then -- 21
-		Skillet:AUCTION_HOUSE_SHOW()
+		CraftForge:AUCTION_HOUSE_SHOW()
 	end
 end
 
 --
 -- Dragonflight replacement for *_CLOSED events
 --
-function Skillet:PLAYER_INTERACTION_MANAGER_FRAME_HIDE(event,interactionType)
+function CraftForge:PLAYER_INTERACTION_MANAGER_FRAME_HIDE(event,interactionType)
 	DA.TRACE("PLAYER_INTERACTION_MANAGER_FRAME_HIDE(", interactionType, ")")
 	if interactionType == Enum.PlayerInteractionType.Merchant then -- 5
---		Skillet:MERCHANT_CLOSED()
+--		CraftForge:MERCHANT_CLOSED()
 	end
 	if interactionType == Enum.PlayerInteractionType.Banker then -- 8
-		Skillet:BANKFRAME_CLOSED()
+		CraftForge:BANKFRAME_CLOSED()
 	end
 	if interactionType == Enum.PlayerInteractionType.GuildBanker then -- 10
-		Skillet:GUILDBANKFRAME_CLOSED()
+		CraftForge:GUILDBANKFRAME_CLOSED()
 	end
 	if interactionType == Enum.PlayerInteractionType.Auctioneer then -- 21
-		Skillet:AUCTION_HOUSE_CLOSED()
+		CraftForge:AUCTION_HOUSE_CLOSED()
 	end
 end
 
-function Skillet:IsTradeSkillLinked()
+function CraftForge:IsTradeSkillLinked()
 	local isGuild = C_TradeSkillUI.IsTradeSkillGuild()
 	local isLinked, linkedPlayer = C_TradeSkillUI.IsTradeSkillLinked()
 	DA.DEBUG(0,"IsTradeSkillLinked: isGuild="..tostring(isGuild)..", isLinked="..tostring(isLinked)..", linkedPlayer="..tostring(linkedPlayer))
@@ -1235,13 +1235,13 @@ end
 
 --
 -- Allow modifier keys that change initial frame behavior to be disabled.
--- Modifier keys within the Skillet frame are not effected.
--- Type "/skillet nomodkeys" to toggle.
+-- Modifier keys within the CraftForge frame are not effected.
+-- Type "/craftforge nomodkeys" to toggle.
 --
 -- Make modifier key to open Blizzard frame optional.
 --
-function Skillet:IsModKey1Down()
-	if not Skillet.db.profile.nomodkeys and IsShiftKeyDown() then
+function CraftForge:IsModKey1Down()
+	if not CraftForge.db.profile.nomodkeys and IsShiftKeyDown() then
 		return true
 	end
 	return false
@@ -1250,8 +1250,8 @@ end
 --
 -- Make modifier key to alter some behaviors optional.
 --
-function Skillet:IsModKey2Down()
-	if not Skillet.db.profile.nomodkeys and IsControlKeyDown() then
+function CraftForge:IsModKey2Down()
+	if not CraftForge.db.profile.nomodkeys and IsControlKeyDown() then
 		return true
 	end
 	return false
@@ -1260,8 +1260,8 @@ end
 --
 -- Make modifier key to alter some behaviors optional.
 --
-function Skillet:IsModKey3Down()
-	if not Skillet.db.profile.nomodkeys and IsAltKeyDown() then
+function CraftForge:IsModKey3Down()
+	if not CraftForge.db.profile.nomodkeys and IsAltKeyDown() then
 		return true
 	end
 	return false
@@ -1271,17 +1271,17 @@ end
 -- Checks to see if the current trade is one that we support.
 -- Control key says we do (even if we don't, debugging)
 -- Shift key says we don't support it (even if we do)
--- Shift key behavior can be swapped with "/skillet swapshiftkey"
+-- Shift key behavior can be swapped with "/craftforge swapshiftkey"
 --
-function Skillet:IsSupportedTradeskill(tradeID)
+function CraftForge:IsSupportedTradeskill(tradeID)
 	DA.DEBUG(0,"IsSupportedTradeskill("..tostring(tradeID)..")")
 	if self:IsModKey2Down() then
 		return true
 	end
 	if self:IsModKey1Down() then
-		return Skillet.db.profile.swapshiftkey
+		return CraftForge.db.profile.swapshiftkey
 	end
-	if not tradeID or self.BlizzardSkillList[tradeID] or self.currentPlayer ~= Skillet:unitName("player") then
+	if not tradeID or self.BlizzardSkillList[tradeID] or self.currentPlayer ~= CraftForge:unitName("player") then
 		DA.DEBUG(3,"IsSupportedTradeskill: BlizzardSkillList="..tostring(self.BlizzardSkillList[tradeID]))
 		return false
 	end
@@ -1290,17 +1290,17 @@ function Skillet:IsSupportedTradeskill(tradeID)
 		DA.DEBUG(3,"IsSupportedTradeskill: not ranks")
 		return false
 	end
-	return not Skillet.db.profile.swapshiftkey
+	return not CraftForge.db.profile.swapshiftkey
 end
 
 --
--- Checks to see if this trade follower can not use Skillet frame.
+-- Checks to see if this trade follower can not use CraftForge frame.
 --
-function Skillet:IsNotSupportedFollower(tradeID)
+function CraftForge:IsNotSupportedFollower(tradeID)
 	--DA.DEBUG(0,"IsNotSupportedFollower("..tostring(tradeID)..")")
-	Skillet.wasNPCCrafting = false
+	CraftForge.wasNPCCrafting = false
 	if self:IsModKey1Down() and self:IsModKey3Down() then
-		Skillet.wasNPCCrafting = true
+		CraftForge.wasNPCCrafting = true
 		DA.DEBUG(3,"IsNotSupportedFollower: ShiftKey and AltKey down")
 		return true -- Use Blizzard frame
 	end
@@ -1308,9 +1308,9 @@ function Skillet:IsNotSupportedFollower(tradeID)
 		DA.DEBUG(3,"IsNotSupportedFollower: not tradeID")
 		return true -- Unknown tradeskill, play it safe and use Blizzard frame
 	end
-	if C_TradeSkillUI.IsNPCCrafting() and Skillet.FollowerSkillList[tradeID] then
+	if C_TradeSkillUI.IsNPCCrafting() and CraftForge.FollowerSkillList[tradeID] then
 		DA.DEBUG(3,"IsNotSupportedFollower: IsNPCCrafting and FollowerSkillList")
-		Skillet.wasNPCCrafting = true
+		CraftForge.wasNPCCrafting = true
 		return true -- Any NPC for this tradeskill uses Blizzard Frame
 	end
 	local guid = UnitGUID("target")
@@ -1319,19 +1319,19 @@ function Skillet:IsNotSupportedFollower(tradeID)
 		DA.DEBUG(3,"IsNotSupportedFollower: IsNPCCrafting="..tostring(C_TradeSkillUI.IsNPCCrafting())..", gtype="..tostring(gtype)..", npc_id="..tostring(npc_id))
 		if self:IsModKey2Down() and self:IsModKey3Down() then
 			DA.DEBUG(3,"IsNotSupportedFollower: CtrlKey and AltKey down")
-			Skillet.wasNPCCrafting = true
-			return false -- Use Skillet frame (mostly for debugging)
+			CraftForge.wasNPCCrafting = true
+			return false -- Use CraftForge frame (mostly for debugging)
 		end
-		if gtype and gtype == "Creature" and Skillet.FollowerNPC[npc_id] then
-			Skillet.wasNPCCrafting = true
-			return true -- This specific NPC crafts things Skillet can't process, use Blizzard frame
+		if gtype and gtype == "Creature" and CraftForge.FollowerNPC[npc_id] then
+			CraftForge.wasNPCCrafting = true
+			return true -- This specific NPC crafts things CraftForge can't process, use Blizzard frame
 		end
-		if C_TradeSkillUI.IsNPCCrafting() and Skillet.db.profile.use_blizzard_for_followers then
-			Skillet.wasNPCCrafting = true
+		if C_TradeSkillUI.IsNPCCrafting() and CraftForge.db.profile.use_blizzard_for_followers then
+			CraftForge.wasNPCCrafting = true
 			return true -- Option makes this easy, use Blizzard frame
 		end
 	end
-	return false -- Use Skillet frame
+	return false -- Use CraftForge frame
 end
 
 --
@@ -1340,43 +1340,43 @@ end
 --
 -- Forever returns something "dynamically" different
 --
-BINDING_NAME_SKILLETPROFESSION1 = L["Profession"].." 1"
-BINDING_NAME_SKILLETPROFESSION2 = L["Profession"].." 2"
-BINDING_NAME_SKILLETPROFESSION3 = L["Profession"].." 3"
-BINDING_NAME_SKILLETPROFESSION4 = L["Profession"].." 4"
-BINDING_NAME_SKILLETPROFESSION5 = L["Profession"].." 5"
-BINDING_NAME_SKILLETPROFESSION6 = L["Profession"].." 6"
-BINDING_NAME_SKILLETPROFESSION7 = L["Profession"].." 7"
+BINDING_NAME_CRAFTFORGEPROFESSION1 = L["Profession"].." 1"
+BINDING_NAME_CRAFTFORGEPROFESSION2 = L["Profession"].." 2"
+BINDING_NAME_CRAFTFORGEPROFESSION3 = L["Profession"].." 3"
+BINDING_NAME_CRAFTFORGEPROFESSION4 = L["Profession"].." 4"
+BINDING_NAME_CRAFTFORGEPROFESSION5 = L["Profession"].." 5"
+BINDING_NAME_CRAFTFORGEPROFESSION6 = L["Profession"].." 6"
+BINDING_NAME_CRAFTFORGEPROFESSION7 = L["Profession"].." 7"
 
 local function ChangeBindings(i, name)
 	DA.DEBUG(0,"ChangeBindings("..tostring(i)..", "..tostring(name)..")")
 	if i == 1 then
-		BINDING_NAME_SKILLETPROFESSION1 = name
+		BINDING_NAME_CRAFTFORGEPROFESSION1 = name
 	end
 	if i == 2 then
-		BINDING_NAME_SKILLETPROFESSION2 = name
+		BINDING_NAME_CRAFTFORGEPROFESSION2 = name
 	end
 	if i == 3 then
-		BINDING_NAME_SKILLETPROFESSION3 = name
+		BINDING_NAME_CRAFTFORGEPROFESSION3 = name
 	end
 	if i == 4 then
-		BINDING_NAME_SKILLETPROFESSION4 = name
+		BINDING_NAME_CRAFTFORGEPROFESSION4 = name
 	end
 	if i == 5 then
-		BINDING_NAME_SKILLETPROFESSION5 = name
+		BINDING_NAME_CRAFTFORGEPROFESSION5 = name
 	end
 	if i == 6 then
-		BINDING_NAME_SKILLETPROFESSION6 = name
+		BINDING_NAME_CRAFTFORGEPROFESSION6 = name
 	end
 	if i == 7 then
-		BINDING_NAME_SKILLETPROFESSION7 = name
+		BINDING_NAME_CRAFTFORGEPROFESSION7 = name
 	end
 end
 
 --
 -- called from keybindings in Bindings.xml
 --
-function Skillet:ShowProfession(whichone)
+function CraftForge:ShowProfession(whichone)
 	local tradeName, tradeID
 	DA.DEBUG(0,"ShowProfession("..tostring(whichone)..")")
 	--DA.MARK3("ShowProfession("..tostring(whichone)..")")
@@ -1402,15 +1402,15 @@ end
 --
 -- Show the tradeskill window, called from TRADE_SKILL_SHOW event, clicking on links, or clicking on guild professions
 --
-function Skillet:SkilletShow()
-	DA.DEBUG(0,"SkilletShow: (was showing "..tostring(self.currentTrade)..")");
+function CraftForge:CraftForgeShow()
+	DA.DEBUG(0,"CraftForgeShow: (was showing "..tostring(self.currentTrade)..")");
 	local linkedPlayer
 	self.linkedSkill, linkedPlayer, self.isGuild = self:IsTradeSkillLinked()
-	StaticPopup_Hide("SKILLET_MANUAL_CHANGE")
+	StaticPopup_Hide("CRAFTFORGE_MANUAL_CHANGE")
 	if self.linkedSkill or self.isGuild then
 		return
 	end
-	self.currentPlayer = Skillet:unitName("player")
+	self.currentPlayer = CraftForge:unitName("player")
 	local frame = self.tradeSkillFrame
 	if not frame then
 		frame = self:CreateTradeSkillWindow()
@@ -1419,44 +1419,44 @@ function Skillet:SkilletShow()
 	end
 	self:ScanPlayerTradeSkills(self.currentPlayer)
 	local baseinfo = C_TradeSkillUI.GetBaseProfessionInfo()
-	--DA.DEBUG(3,"SkilletShow: GetBaseProfessionInfo info= "..DA.DUMP1(baseinfo))
+	--DA.DEBUG(3,"CraftForgeShow: GetBaseProfessionInfo info= "..DA.DUMP1(baseinfo))
 	local childinfo = C_TradeSkillUI.GetChildProfessionInfos()
-	--DA.DEBUG(3,"SkilletShow: GetChildProfessionInfos info= "..DA.DUMP(childinfo))
+	--DA.DEBUG(3,"CraftForgeShow: GetChildProfessionInfos info= "..DA.DUMP(childinfo))
 
 	self.currentTrade = self.tradeSkillIDsByName[baseinfo.professionName]	-- names are localized so use a table to translate
 
-	DA.DEBUG(0,"SkilletShow: trade= "..tostring(self.currentTrade))
+	DA.DEBUG(0,"CraftForgeShow: trade= "..tostring(self.currentTrade))
 	local link = C_TradeSkillUI.GetTradeSkillListLink()
 	if not link then
-		DA.DEBUG(0,"SkilletShow: "..tostring(skillLineName).." not linkable")
+		DA.DEBUG(0,"CraftForgeShow: "..tostring(skillLineName).." not linkable")
 	end
-	if TSM_API and TSM_API.IsUIVisible("CRAFTING") and Skillet.db.profile.tsm_prefer then
+	if TSM_API and TSM_API.IsUIVisible("CRAFTING") and CraftForge.db.profile.tsm_prefer then
 --
 -- Use the TradeSkillMaster UI 
 --
-		DA.DEBUG(3,"SkilletShow: "..tostring(self.currentTrade).." TSM Preferred")
+		DA.DEBUG(3,"CraftForgeShow: "..tostring(self.currentTrade).." TSM Preferred")
 		self:HideAllWindows()
 --		self:EnableBlizzardFrame()
 --		ShowUIPanel(ProfessionsFrame)
-		Skillet.BlizzardUIshowing = true
-	elseif self:IsNotSupportedFollower(self.currentTrade) or Skillet.db.profile.tsm_prefer then
+		CraftForge.BlizzardUIshowing = true
+	elseif self:IsNotSupportedFollower(self.currentTrade) or CraftForge.db.profile.tsm_prefer then
 --
 -- Use the Blizzard UI for any garrison follower that can't use ours
 --
-		DA.DEBUG(3,"SkilletShow: "..tostring(self.currentTrade).." IsNotSupportedFollower")
+		DA.DEBUG(3,"CraftForgeShow: "..tostring(self.currentTrade).." IsNotSupportedFollower")
 		self:HideAllWindows()
 		self:EnableBlizzardFrame()
 	elseif self:IsSupportedTradeskill(self.currentTrade) then
-		DA.DEBUG(3,"SkilletShow: "..tostring(self.currentTrade).." IsSupportedTradeskill")
+		DA.DEBUG(3,"CraftForgeShow: "..tostring(self.currentTrade).." IsSupportedTradeskill")
 		self:DisableBlizzardFrame()
 		self.tradeSkillOpen = true
 		self.selectedSkill = nil
 		self.dataScanned = false
 		self:SetTradeSkillLearned()
-		DA.DEBUG(3,"SkilletShow: waiting for TRADE_SKILL_DATA_SOURCE_CHANGED")
---		self:SkilletShowWindow() -- Need to wait until TRADE_SKILL_DATA_SOURCE_CHANGED
+		DA.DEBUG(3,"CraftForgeShow: waiting for TRADE_SKILL_DATA_SOURCE_CHANGED")
+--		self:CraftForgeShowWindow() -- Need to wait until TRADE_SKILL_DATA_SOURCE_CHANGED
 	else
-		DA.DEBUG(3,"SkilletShow: "..tostring(self.currentTrade).." not IsSupportedTradeskill")
+		DA.DEBUG(3,"CraftForgeShow: "..tostring(self.currentTrade).." not IsSupportedTradeskill")
 		self:HideAllWindows()
 		self:EnableBlizzardFrame()
 	end
@@ -1465,13 +1465,13 @@ end
 --
 -- Called from events TRADE_SKILL_DATA_SOURCE_CHANGED and TRADE_SKILL_LIST_UPDATE
 --
-function Skillet:SkilletShowWindow(where)
-	DA.DEBUG(0,"SkilletShowWindow("..tostring(where).."), "..tostring(self.currentTrade))
-	if not Skillet.db.profile.tsm_compat then
+function CraftForge:CraftForgeShowWindow(where)
+	DA.DEBUG(0,"CraftForgeShowWindow("..tostring(where).."), "..tostring(self.currentTrade))
+	if not CraftForge.db.profile.tsm_compat then
 		if TSM_API and where == "CHANGED" then
 			if TSM_API.IsUIVisible("CRAFTING") then
-				if not Skillet.db.profile.tsm_prefer then
-					DA.MARK3(L["TradeSkillMaster must be in 'WOW UI' mode to use Skillet"])
+				if not CraftForge.db.profile.tsm_prefer then
+					DA.MARK3(L["TradeSkillMaster must be in 'WOW UI' mode to use CraftForge"])
 				end
 				return
 			end
@@ -1501,7 +1501,7 @@ function Skillet:SkilletShowWindow(where)
 	self.currentGroupLabel = self:GetTradeSkillOption("grouping")
 	self:RecipeGroupDropdown_OnShow()
 	self:ShowTradeSkillWindow()
-	local searchbox = _G["SkilletSearchBox"]
+	local searchbox = _G["CraftForgeSearchBox"]
 	local oldtext = searchbox:GetText()
 	local searchText = self:GetTradeSkillOption("searchtext")
 --
@@ -1512,30 +1512,30 @@ function Skillet:SkilletShowWindow(where)
 	end
 end
 
-function Skillet:SkilletClose()
-	DA.DEBUG(0,"SkilletClose()")
+function CraftForge:CraftForgeClose()
+	DA.DEBUG(0,"CraftForgeClose()")
 	self.tradeSkillOpen = false
 	self:HideAllWindows()
 	if self.isForever and self.db.profile.scale_blizzard_frame and ProfessionsFrame then
 		ProfessionsFrame:SetScale(1.0)	-- Just to make sure
 	end
-	if Skillet.wasNPCCrafting then
+	if CraftForge.wasNPCCrafting then
 		DA.DEBUG(0,"wasNPCCrafting")
-		Skillet.wasNPCCrafting = false
+		CraftForge.wasNPCCrafting = false
 		C_Garrison.CloseGarrisonTradeskillNPC()
 		C_Garrison.CloseTradeskillCrafter()
 	end
 end
 
 -- Rescans the trades (and thus bags). Can only be called if the tradeskill window is open and a trade selected.
-function Skillet:RescanBags()
+function CraftForge:RescanBags()
 	DA.DEBUG(0,"RescanBags()")
 	local start = GetTime()
-	Skillet:InventoryScan()
-	Skillet:UpdateTradeSkillWindow()
+	CraftForge:InventoryScan()
+	CraftForge:UpdateTradeSkillWindow()
 	local elapsed = GetTime() - start
 	if elapsed > 0.5 then
-		DA.DEBUG(0,"WARNING: skillet inventory scan took " .. math.floor(elapsed*100+.5)/100 .. " seconds to complete.")
+		DA.DEBUG(0,"WARNING: craftforge inventory scan took " .. math.floor(elapsed*100+.5)/100 .. " seconds to complete.")
 	end
 end
 
@@ -1544,7 +1544,7 @@ end
 -- This could be because an enchant has used up mats or the player
 -- may have received more mats.
 --
-function Skillet:TRADE_CLOSED()
+function CraftForge:TRADE_CLOSED()
 	self:BAG_UPDATE("FAKE_BAG_UPDATE", 0)
 end
 
@@ -1553,12 +1553,12 @@ end
 --   delayChange is set when ChangeTradeSkill is called
 --     and cleared here when the timer expires.
 --
-function Skillet:DelayChange()
+function CraftForge:DelayChange()
 	DA.DEBUG(0,"DelayChange()")
-	Skillet.delayChange = false
-	if Skillet.delayNeeded then
-		Skillet.delayNeeded = false
-		Skillet:ChangeTradeSkill(Skillet.delayTrade, Skillet.changingName)
+	CraftForge.delayChange = false
+	if CraftForge.delayNeeded then
+		CraftForge.delayNeeded = false
+		CraftForge:ChangeTradeSkill(CraftForge.delayTrade, CraftForge.changingName)
 	end
 end
 
@@ -1570,7 +1570,7 @@ end
 --
 -- This triggers the whole rescan process via a TRADE_SKILL_SHOW event
 --
-function Skillet:ChangeTradeSkill(tradeID, tradeName)
+function CraftForge:ChangeTradeSkill(tradeID, tradeName)
 	DA.DEBUG(0,"ChangeTradeSkill("..tostring(tradeID)..", "..tostring(tradeName)..")")
 	local byName = true
 	if not self.delayChange then
@@ -1582,10 +1582,10 @@ function Skillet:ChangeTradeSkill(tradeID, tradeName)
 			self.dialogSwitch = true
 			if self.isRetail and tradeName == "Mining" then tradeName = "Mining Journal" end
 			DA.DEBUG(0,"ChangeTradeSkill: changingTrade= "..tostring(self.changingTrade)..", changingName= "..tostring(self.changingName))
-			StaticPopup_Show("SKILLET_MANUAL_CHANGE", self.changingName)
+			StaticPopup_Show("CRAFTFORGE_MANUAL_CHANGE", self.changingName)
 		else
 			if self.isRetail and tradeName == "Mining" then tradeName = "Mining Journal" end
-			if Skillet.isForever then
+			if CraftForge.isForever then
 				if tradeID == 2366 then
 					tradeID = 1278062		-- herbalism skills (Gardening)
 					byName = false
@@ -1608,11 +1608,11 @@ function Skillet:ChangeTradeSkill(tradeID, tradeName)
 			self.delayName = tradeName
 			self.delayChange = true
 			self.dialogSwitch = false
-			Skillet:ScheduleTimer("DelayChange", 0.5)
+			CraftForge:ScheduleTimer("DelayChange", 0.5)
 		end
 	else
 		DA.DEBUG(1,"ChangeTradeSkill: waiting for callback")
-		Skillet.delayNeeded = true
+		CraftForge.delayNeeded = true
 	end
 end
 
@@ -1621,19 +1621,19 @@ end
 --   changingTrade and changingName should be set to
 --   the target profession.
 --
-function Skillet:ContinueChange(manual)
+function CraftForge:ContinueChange(manual)
 	DA.DEBUG(0,"ContinueChange("..tostring(manual)..")")
 	DA.DEBUG(1,"ContinueChange: changingTrade= "..tostring(self.changingTrade)..", changingName= "..tostring(self.changingName))
 	if not manual then
-		self.currentTrade = Skillet.changingTrade
-		Skillet:ChangeTradeSkill(Skillet.changingTrade, Skillet.changingName)
+		self.currentTrade = CraftForge.changingTrade
+		CraftForge:ChangeTradeSkill(CraftForge.changingTrade, CraftForge.changingName)
 	end
 end
 
 --
 -- Called from the static popup when hidden or canceled
 --
-function Skillet:FinishChange()
+function CraftForge:FinishChange()
 	DA.DEBUG(0,"FinishChange()")
 	self.changingTrade = nil
 	self.changingName = nil
@@ -1643,7 +1643,7 @@ end
 --
 -- Either change to a different profession or change the currently selected recipe
 --
-function Skillet:SetTradeSkill(player, tradeID, skillIndex)
+function CraftForge:SetTradeSkill(player, tradeID, skillIndex)
 	DA.DEBUG(0,"SetTradeSkill("..tostring(player)..", "..tostring(tradeID)..", "..tostring(skillIndex)..")")
 	if not self.db.realm.queueData[player] then
 		self.db.realm.queueData[player] = {}
@@ -1668,16 +1668,16 @@ end
 --
 -- Shows the trade skill frame.
 --
-function Skillet:ShowTradeSkillWindow()
+function CraftForge:ShowTradeSkillWindow()
 	DA.DEBUG(0,"ShowTradeSkillWindow()")
 	if UnitAffectingCombat("player") then
-		print("|cff8888ffSkillet|r: Combat lockdown restriction." ..
+		print("|cff8888ffCraftForge|r: Combat lockdown restriction." ..
 		  " Leave combat and try again.")
 		self.dataSourceChanged = false
 		self.detailsUpdate = false
 		self.skillListUpdate = false
 		self.adjustInventory = false
-		self:SkilletClose()
+		self:CraftForgeClose()
 		return
 	end
 	local frame = self.tradeSkillFrame
@@ -1696,12 +1696,12 @@ function Skillet:ShowTradeSkillWindow()
 	end
 --[[
 	if self.db.profile.select_top_recipe then
-		if SkilletScrollButton1.skill.skillIndex then
+		if CraftForgeScrollButton1.skill.skillIndex then
 			DA.DEBUG(1,"ShowTradeSkillWindow: Selecting First Recipe")
-			self:SetSelectedSkill(SkilletScrollButton1.skill.skillIndex)
+			self:SetSelectedSkill(CraftForgeScrollButton1.skill.skillIndex)
 		else
 			DA.DEBUG(1,"ShowTradeSkillWindow: Selecting Second Recipe")
-			self:SetSelectedSkill(SkilletScrollButton2.skill.skillIndex)
+			self:SetSelectedSkill(CraftForgeScrollButton2.skill.skillIndex)
 		end
 	end
 --]]
@@ -1709,9 +1709,9 @@ function Skillet:ShowTradeSkillWindow()
 end
 
 --
--- Hides the Skillet trade skill window. Does nothing if the window is not visible
+-- Hides the CraftForge trade skill window. Does nothing if the window is not visible
 --
-function Skillet:HideTradeSkillWindow()
+function CraftForge:HideTradeSkillWindow()
 	--DA.DEBUG(0,"HideTradeSkillWindow()")
 	local closed -- was anything closed by us?
 	local frame = self.tradeSkillFrame
@@ -1723,9 +1723,9 @@ function Skillet:HideTradeSkillWindow()
 end
 
 --
--- Hides any and all Skillet windows that are open
+-- Hides any and all CraftForge windows that are open
 --
-function Skillet:HideAllWindows()
+function CraftForge:HideAllWindows()
 	DA.DEBUG(0,"HideAllWindows()")
 	local closed -- was anything closed?
 	if self:HideTradeSkillWindow() then
@@ -1764,7 +1764,7 @@ end
 --
 -- Notes when a new trade has been selected
 --
-function Skillet:SetSelectedTrade(newTrade)
+function CraftForge:SetSelectedTrade(newTrade)
 	DA.DEBUG(0,"SetSelectedTrade("..tostring(newTrade)..")")
 	self.currentTrade = newTrade;
 	self:SetSelectedSkill(nil)
@@ -1773,12 +1773,12 @@ end
 --
 -- Sets the specific trade skill that the user wants to see details on.
 --
-function Skillet:SetSelectedSkill(skillIndex)
+function CraftForge:SetSelectedSkill(skillIndex)
 	--DA.DEBUG(0,"SetSelectedSkill("..tostring(skillIndex)..")")
 	if skillIndex then
 		self:HideNotesWindow()
 		self:ConfigureRecipeControls(false)
-		if Skillet.BlizzardUIshowing or Skillet.isForever then
+		if CraftForge.BlizzardUIshowing or CraftForge.isForever then
 			local skill = self:GetSkill(self.currentPlayer, self.currentTrade, skillIndex)
 			local recipeInfo = C_TradeSkillUI.GetRecipeInfo(skill.id)
 			if recipeInfo then
@@ -1796,7 +1796,7 @@ end
 --
 -- Updates the text we filter the list of recipes against.
 --
-function Skillet:UpdateSearch(text)
+function CraftForge:UpdateSearch(text)
 	DA.DEBUG(0,"UpdateSearch("..tostring(text)..")")
 	self:SetTradeSkillOption("searchtext", text)
 	self:SortAndFilterRecipes()
@@ -1808,7 +1808,7 @@ end
 -- If there is no user supplied note, then return nil
 -- The item can be either a recipe or reagent name
 --
-function Skillet:GetItemNote(key)
+function CraftForge:GetItemNote(key)
 	--DA.DEBUG(0,"GetItemNote("..tostring(key)..")")
 	local result
 	if not self.db.realm.notes[self.currentPlayer] then
@@ -1825,7 +1825,7 @@ function Skillet:GetItemNote(key)
 	if id then
 		result = self.db.realm.notes[self.currentPlayer][id]
 	else
-		DA.MARK2("Error: Skillet:GetItemNote() could not determine item ID for " .. key);
+		DA.MARK2("Error: CraftForge:GetItemNote() could not determine item ID for " .. key);
 	end
 	if result and result == "" then
 		result = nil
@@ -1838,7 +1838,7 @@ end
 -- Sets the note for the specified object, if there is already a note
 -- then it is overwritten
 --
-function Skillet:SetItemNote(key, note)
+function CraftForge:SetItemNote(key, note)
 	--DA.DEBUG(0,"SetItemNote("..tostring(key)..", "..tostring(note)..")")
 	local kind, id = string.split(":", key)
 	id = tonumber(id) or 0
@@ -1854,16 +1854,16 @@ function Skillet:SetItemNote(key, note)
 	if id then
 		self.db.realm.notes[self.currentPlayer][id] = note
 	else
-		DA.MARK2("Error: Skillet:SetItemNote() could not determine item ID for " .. key);
+		DA.MARK2("Error: CraftForge:SetItemNote() could not determine item ID for " .. key);
 	end
 end
 
 --
--- Adds the skillet notes text to the tooltip for a specified
+-- Adds the craftforge notes text to the tooltip for a specified
 -- item.
 -- Returns true if tooltip modified.
 --
-function Skillet:AddItemNotesToTooltip(tooltip)
+function CraftForge:AddItemNotesToTooltip(tooltip)
 	--DA.DEBUG(0,"AddItemNotesToTooltip()")
 	if IsControlKeyDown() then
 		return
@@ -1894,10 +1894,10 @@ function Skillet:AddItemNotesToTooltip(tooltip)
 			--DA.DEBUG(1,"player= "..tostring(player)..", table= "..DA.DUMP1(notes_table)..", note= '"..tostring(note).."'")
 			if note then
 				if not header_added then
-					tooltip:AddLine("Skillet " .. L["Notes"] .. ":")
+					tooltip:AddLine("CraftForge " .. L["Notes"] .. ":")
 					header_added = true
 				end
-				if player ~= Skillet:unitName("player") then
+				if player ~= CraftForge:unitName("player") then
 					note = GRAY_FONT_COLOR_CODE .. player .. ": " .. FONT_COLOR_CODE_CLOSE .. note
 				end
 				tooltip:AddLine(" " .. note, 1, 1, 1, true) -- r,g,b, wrap
@@ -1905,7 +1905,7 @@ function Skillet:AddItemNotesToTooltip(tooltip)
 		end
 		if self:VendorSellsReagent(id) then
 			if not header_added then
-				tooltip:AddLine("Skillet " .. L["Notes"] .. ":")
+				tooltip:AddLine("CraftForge " .. L["Notes"] .. ":")
 				header_added = true
 			end
 			tooltip:AddLine(" Buyable")
@@ -1914,7 +1914,7 @@ function Skillet:AddItemNotesToTooltip(tooltip)
 	if crafters_enabled then
 		if self.db.global.itemRecipeSource[id] then
 			if not header_added then
-				tooltip:AddLine("Skillet " .. L["Notes"] .. ":")
+				tooltip:AddLine("CraftForge " .. L["Notes"] .. ":")
 				header_added = true
 			end
 			tooltip:AddLine(" Craftable")
@@ -1938,7 +1938,7 @@ function Skillet:AddItemNotesToTooltip(tooltip)
 			local inQueue = self.db.realm.reagentsInQueue[self.currentPlayer][id]
 			if inQueue then
 				if not header_added then
-					tooltip:AddLine("Skillet " .. L["Notes"] .. ":")
+					tooltip:AddLine("CraftForge " .. L["Notes"] .. ":")
 					header_added = true
 				end
 				if inQueue < 0 then
@@ -1952,7 +1952,7 @@ function Skillet:AddItemNotesToTooltip(tooltip)
 	return header_added
 end
 
-function Skillet:ToggleTradeSkillOption(option)
+function CraftForge:ToggleTradeSkillOption(option)
 	--DA.DEBUG(0,"ToggleTradeSkillOption("..tostring(option)..")")
 	local v = self:GetTradeSkillOption(option)
 	self:SetTradeSkillOption(option, not v)
@@ -1961,15 +1961,15 @@ end
 --
 -- Returns the state of a craft specific option
 --
-function Skillet:GetTradeSkillOption(option)
+function CraftForge:GetTradeSkillOption(option)
 	local r
 	local player = self.currentPlayer
 	local trade = self.currentTrade
 	local options = self.db.realm.options
 	if not options or not player or not options[player] or not trade or not options[player][trade] then
-		r = Skillet.defaultOptions[option]
+		r = CraftForge.defaultOptions[option]
 	elseif options[player][trade][option] == nil then
-		r =  Skillet.defaultOptions[option]
+		r =  CraftForge.defaultOptions[option]
 	else
 		r = options[player][trade][option]
 	end
@@ -1980,7 +1980,7 @@ end
 --
 -- sets the state of a craft specific option
 --
-function Skillet:SetTradeSkillOption(option, value)
+function CraftForge:SetTradeSkillOption(option, value)
 	--DA.DEBUG(0,"SetTradeSkillOption("..tostring(option)..", "..tostring(value)..")")
 	if not self.linkedSkill and not self.isGuild then
 		local player = self.currentPlayer
@@ -2000,15 +2000,15 @@ function Skillet:SetTradeSkillOption(option, value)
 	end
 end
 
-function Skillet:IsActive()
-	return Skillet:IsEnabled()
+function CraftForge:IsActive()
+	return CraftForge:IsEnabled()
 end
 
-function Skillet:XMLDebug(text)
+function CraftForge:XMLDebug(text)
 	DA.DEBUG(0,text)
 end
 
-function Skillet:XMLDebugLink(text, link)
+function CraftForge:XMLDebugLink(text, link)
 	DA.DEBUG(0,text..DA.PLINK(link))
 end
 
@@ -2047,9 +2047,9 @@ end
 --
 -- Note function name is intentionally different than the Blizzard function
 --
-function Skillet:unitName(target)
-	if Skillet.isForever then
-		if Skillet.db.global.useFirstNameOnly then
+function CraftForge:unitName(target)
+	if CraftForge.isForever then
+		if CraftForge.db.global.useFirstNameOnly then
 			return UnitName(target)
 		else
 			return GetUnitName(target)

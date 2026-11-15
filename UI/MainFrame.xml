@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	Skillet: A tradeskill window replacement.
+	CraftForge: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,10 +25,10 @@
 	-->
 	<!--
 	#
-	#   Template for trade buttons in skillet frame for Main
+	#   Template for trade buttons in craftforge frame for Main
 	#
 	-->
-	<CheckButton name="SkilletTradeButtonTemplate" virtual="true" hidden="true">
+	<CheckButton name="CraftForgeTradeButtonTemplate" virtual="true" hidden="true">
 		<Size>
 			<AbsDimension x="25" y="25"/>
 		</Size>
@@ -39,21 +39,21 @@
 		</Layers>
 		<Scripts>
 			<OnEnter>
-				Skillet:TradeButton_OnEnter(self)
+				CraftForge:TradeButton_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide()
 			</OnLeave>
 			<OnClick>
-				Skillet:InventoryFilterButtons_Hide()
-				Skillet:TradeButton_OnClick(self,button)
+				CraftForge:InventoryFilterButtons_Hide()
+				CraftForge:TradeButton_OnClick(self,button)
 			</OnClick>
 		</Scripts>
 		<PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
 		<HighlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square"/>
 		<CheckedTexture alphaMode="ADD" file="Interface\Buttons\CheckButtonHilight"/>
 	</CheckButton>
-	<Button name="SkilletTradeButtonAdditionalTemplate" inherits="SecureActionButtonTemplate" virtual="true" hidden="true">
+	<Button name="CraftForgeTradeButtonAdditionalTemplate" inherits="SecureActionButtonTemplate" virtual="true" hidden="true">
 		<Size>
 			<AbsDimension x="25" y="25"/>
 		</Size>
@@ -67,7 +67,7 @@
 				self:RegisterForClicks("AnyUp", "AnyDown")
 			</OnLoad>
 			<OnEnter>
-				Skillet:TradeButtonAdditional_OnEnter(self)
+				CraftForge:TradeButtonAdditional_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide()
@@ -75,7 +75,7 @@
 		</Scripts>
 		<HighlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square"/>
 	</Button>
-	<CheckButton name="SkilletBlizzardUITemplate" virtual="true" hidden="true">
+	<CheckButton name="CraftForgeBlizzardUITemplate" virtual="true" hidden="true">
 		<Size>
 			<AbsDimension x="25" y="25"/>
 		</Size>
@@ -86,20 +86,20 @@
 		</Layers>
 		<Scripts>
 			<OnEnter>
-				Skillet:BlizzardUIButton_OnEnter(self)
+				CraftForge:BlizzardUIButton_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide()
 			</OnLeave>
 			<OnClick>
-				Skillet:BlizzardUIButton_OnClick(self,button)
+				CraftForge:BlizzardUIButton_OnClick(self,button)
 			</OnClick>
 		</Scripts>
 		<PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
 		<HighlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square"/>
 		<CheckedTexture alphaMode="ADD" file="Interface\Buttons\CheckButtonHilight"/>
 	</CheckButton>
-	<StatusBar name="SkilletRankFrameTemplate" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="0" virtual="true">
+	<StatusBar name="CraftForgeRankFrameTemplate" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="0" virtual="true">
 		<Size>
 			<AbsDimension x="297" y="5"/>
 		</Size>
@@ -115,40 +115,40 @@
 		</BarTexture>
 		<Scripts>
 			<OnEnter>
-				Skillet:RankFrame_OnEnter(self)
+				CraftForge:RankFrame_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
-				Skillet:RankFrame_OnLeave(self)
+				CraftForge:RankFrame_OnLeave(self)
 			</OnLeave>
 			<OnMouseUp>
-				Skillet:RankFrame_OnMouseUp(self)
+				CraftForge:RankFrame_OnMouseUp(self)
 			</OnMouseUp>
 			<OnMouseDown>
-				Skillet:RankFrame_OnMouseDown(self)
+				CraftForge:RankFrame_OnMouseDown(self)
 			</OnMouseDown>
 		</Scripts>
 	</StatusBar>
-	<CheckButton name="SkilletInvFilterButtonTemplate" virtual="true">
+	<CheckButton name="CraftForgeInvFilterButtonTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="20" y="20"/>
 		</Size>
-		<CheckedTexture name="$parentChecked" alphaMode="ADD" file="Interface\Addons\Skillet\Icons\highlight.tga"/>
+		<CheckedTexture name="$parentChecked" alphaMode="ADD" file="Interface\Addons\CraftForge\Icons\highlight.tga"/>
 		<HighlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square"/>
 		<Scripts>
 			<OnLoad>
 				self:SetFrameLevel(self:GetFrameLevel()+5)
 			</OnLoad>
 			<OnLeave>
-				Skillet:InventoryFilterButton_OnLeave(self)
+				CraftForge:InventoryFilterButton_OnLeave(self)
 			</OnLeave>
 			<OnEnter>
-				Skillet:InventoryFilterButton_OnEnter(self)
+				CraftForge:InventoryFilterButton_OnEnter(self)
 			</OnEnter>
 			<OnClick>
-				Skillet:InventoryFilterButton_OnClick(self)
+				CraftForge:InventoryFilterButton_OnClick(self)
 			</OnClick>
 			<OnShow>
-				Skillet:InventoryFilterButton_OnShow(self)
+				CraftForge:InventoryFilterButton_OnShow(self)
 			</OnShow>
 		</Scripts>
 	</CheckButton>
@@ -157,7 +157,7 @@
 	#   Template for all the buttons used in the list of known skills
 	#
 	-->
-	<Button name="SkilletHeaderExpandButtonTemplate" hidden="true" virtual="true">
+	<Button name="CraftForgeHeaderExpandButtonTemplate" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="16" y="16" />
 		</Size>
@@ -199,12 +199,12 @@
 		</DisabledTexture>
 		<Scripts>
 			<OnClick>
-				Skillet:InventoryFilterButtons_Hide()
-				Skillet:SkillExpandButton_OnClick(self,button)
+				CraftForge:InventoryFilterButtons_Hide()
+				CraftForge:SkillExpandButton_OnClick(self,button)
 			</OnClick>
 		</Scripts>
 	</Button>
-	<Button name="SkilletFavoriteButtonTemplate" hidden="true" virtual="true">
+	<Button name="CraftForgeFavoriteButtonTemplate" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="16" y="16" />
 		</Size>
@@ -234,11 +234,11 @@
 		</HighlightTexture>
 		<Scripts>
 			<OnClick>
-				Skillet:FavoriteButton_OnClick(self,button)
+				CraftForge:FavoriteButton_OnClick(self,button)
 			</OnClick>
 			<OnEnter>
 				GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-				GameTooltip:SetText(Skillet.L["Click to toggle favorite"], nil, nil, nil, nil, true)
+				GameTooltip:SetText(CraftForge.L["Click to toggle favorite"], nil, nil, nil, nil, true)
 				GameTooltip:Show()
 			</OnEnter>
 			<OnLeave>
@@ -246,7 +246,7 @@
 			</OnLeave>
 		</Scripts>
 	</Button>
-	<Button name="SkilletEmptySpaceTemplate" virtual="true">
+	<Button name="CraftForgeEmptySpaceTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
@@ -254,49 +254,49 @@
 				self:EnableKeyboard(false)
 			</OnLoad>
 			<OnClick>
-				Skillet:InventoryFilterButtons_Hide()
-				Skillet:SkillButton_OnClick(self,button)
+				CraftForge:InventoryFilterButtons_Hide()
+				CraftForge:SkillButton_OnClick(self,button)
 			</OnClick>
 			<OnDragStart>
-				Skillet.mouseOver = self
-				Skillet:SkillButton_OnDragStart(self, button)
+				CraftForge.mouseOver = self
+				CraftForge:SkillButton_OnDragStart(self, button)
 			</OnDragStart>
 			<OnReceiveDrag>
-				Skillet.mouseOver = self
-				Skillet:SkillButton_OnReceiveDrag(self, button)
+				CraftForge.mouseOver = self
+				CraftForge:SkillButton_OnReceiveDrag(self, button)
 			</OnReceiveDrag>
 			<OnDragStop>
-				Skillet:SkillButton_OnDragStop(self, button)
+				CraftForge:SkillButton_OnDragStop(self, button)
 			</OnDragStop>
 			<OnEnter>
 				self:RegisterEvent("MODIFIER_STATE_CHANGED")
-				Skillet.mouseOver = self
+				CraftForge.mouseOver = self
 			</OnEnter>
 			<OnHide>
-				if self == Skillet.mouseOver then
-					SkilletFrame:EnableKeyboard(false)
-					Skillet.mouseOver = nil
+				if self == CraftForge.mouseOver then
+					CraftForgeFrame:EnableKeyboard(false)
+					CraftForge.mouseOver = nil
 				end
 			</OnHide>
 			<OnLeave>
 				self:UnregisterEvent("MODIFIER_STATE_CHANGED")
-				Skillet.mouseOver = nil
+				CraftForge.mouseOver = nil
 			</OnLeave>
 			<OnEvent>
 				if event == "MODIFIER_STATE_CHANGED" then
-					if self == Skillet.mouseOver then
---						Skillet:SkillButton_OnEnter(Skillet.mouseOver)
+					if self == CraftForge.mouseOver then
+--						CraftForge:SkillButton_OnEnter(CraftForge.mouseOver)
 					end
 					if IsControlKeyDown() then
-						SkilletFrame:EnableKeyboard(true)
+						CraftForgeFrame:EnableKeyboard(true)
 					else
-						SkilletFrame:EnableKeyboard(false)
+						CraftForgeFrame:EnableKeyboard(false)
 					end
 				end
 			</OnEvent>
 		</Scripts>
 	</Button>
-	<Button name="SkilletSkillButtonTemplate" hidden="true" virtual="true">
+	<Button name="CraftForgeSkillButtonTemplate" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="293" y="16" />
 		</Size>
@@ -345,7 +345,7 @@
 			Textures for the +/- buttons on headers
 		-->
 		<Frames>
-			<Button name="$parentExpand" inherits="SkilletHeaderExpandButtonTemplate">
+			<Button name="$parentExpand" inherits="CraftForgeHeaderExpandButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
 						<Offset>
@@ -354,7 +354,7 @@
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="$parentFavorite" inherits="SkilletFavoriteButtonTemplate">
+			<Button name="$parentFavorite" inherits="CraftForgeFavoriteButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
 						<Offset>
@@ -404,10 +404,10 @@
 		</Frames>
 		<Scripts>
 			<OnMouseUp>
-				Skillet:SkillButton_OnMouseUp(self)
+				CraftForge:SkillButton_OnMouseUp(self)
 			</OnMouseUp>
 			<OnMouseDown>
-				Skillet:SkillButton_OnMouseDown(self)
+				CraftForge:SkillButton_OnMouseDown(self)
 			</OnMouseDown>
 			<OnLoad>
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
@@ -415,29 +415,29 @@
 				self:EnableKeyboard(false)
 			</OnLoad>
 			<OnClick>
-				Skillet:InventoryFilterButtons_Hide()
-				Skillet:SkillButton_OnClick(self,button)
+				CraftForge:InventoryFilterButtons_Hide()
+				CraftForge:SkillButton_OnClick(self,button)
 			</OnClick>
 			<OnDragStart>
-				Skillet.mouseOver = self
-				Skillet:SkillButton_OnDragStart(self, button)
+				CraftForge.mouseOver = self
+				CraftForge:SkillButton_OnDragStart(self, button)
 			</OnDragStart>
 			<OnReceiveDrag>
-				Skillet.mouseOver = self
-				Skillet:SkillButton_OnReceiveDrag(self, button)
+				CraftForge.mouseOver = self
+				CraftForge:SkillButton_OnReceiveDrag(self, button)
 			</OnReceiveDrag>
 			<OnDragStop>
-				Skillet:SkillButton_OnDragStop(self, button)
+				CraftForge:SkillButton_OnDragStop(self, button)
 			</OnDragStop>
 			<OnEnter>
 				self:RegisterEvent("MODIFIER_STATE_CHANGED")
-				Skillet.mouseOver = self
-				Skillet:SkillButton_OnEnter(self)
+				CraftForge.mouseOver = self
+				CraftForge:SkillButton_OnEnter(self)
 			</OnEnter>
 			<OnHide>
-				if self == Skillet.mouseOver then
-					SkilletFrame:EnableKeyboard(false)
-					Skillet.mouseOver = nil
+				if self == CraftForge.mouseOver then
+					CraftForgeFrame:EnableKeyboard(false)
+					CraftForge.mouseOver = nil
 				end
 			</OnHide>
 			<OnLeave>
@@ -445,17 +445,17 @@
 				local ct = _G[self:GetName().."Counts"]
 				local r,g,b = ct:GetTextColor()
 				_G[self:GetName().."Name"]:SetTextColor(r, g, b)
-				Skillet.mouseOver = nil
+				CraftForge.mouseOver = nil
 			</OnLeave>
 			<OnEvent>
 				if event == "MODIFIER_STATE_CHANGED" then
-					if self == Skillet.mouseOver then
-						Skillet:SkillButton_OnEnter(Skillet.mouseOver)
+					if self == CraftForge.mouseOver then
+						CraftForge:SkillButton_OnEnter(CraftForge.mouseOver)
 					end
 					if IsControlKeyDown() then
-						SkilletFrame:EnableKeyboard(true)
+						CraftForgeFrame:EnableKeyboard(true)
 					else
-						SkilletFrame:EnableKeyboard(false)
+						CraftForgeFrame:EnableKeyboard(false)
 					end
 				end
 			</OnEvent>
@@ -464,7 +464,7 @@
 	<!--
 		simplified skill button template for dragging
 	-->
-	<Frame name="SkilletSkillButtonDragTemplate" hidden="true" virtual="true">
+	<Frame name="CraftForgeSkillButtonDragTemplate" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="293" y="1" />
 		</Size>
@@ -503,7 +503,7 @@
 			Textures for the +/- buttons on headers
 		-->
 		<Frames>
-			<Button name="$parentExpand" inherits="SkilletHeaderExpandButtonTemplate">
+			<Button name="$parentExpand" inherits="CraftForgeHeaderExpandButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
 						<Offset>
@@ -533,10 +533,10 @@
 		</FontString>
 		<Scripts>
 			<OnTabPressed>
-				Skillet:NameEditSave()
+				CraftForge:NameEditSave()
 			</OnTabPressed>
 			<OnEnterPressed>
-				Skillet:NameEditSave()
+				CraftForge:NameEditSave()
 			</OnEnterPressed>
 			<OnEscapePressed>
 				self:ClearFocus()
@@ -548,7 +548,7 @@
 				if (self.originalButton) then
 					self.originalButton:Show()
 					self.originalButton = nil
-					Skillet:UpdateTradeSkillWindow()
+					CraftForge:UpdateTradeSkillWindow()
 				end
 			</OnEditFocusLost>
 			<OnEditFocusGained>
@@ -575,10 +575,10 @@
 		</FontString>
 		<Scripts>
 			<OnTabPressed>
-				Skillet:GroupNameEditSave()
+				CraftForge:GroupNameEditSave()
 			</OnTabPressed>
 			<OnEnterPressed>
-				Skillet:GroupNameEditSave()
+				CraftForge:GroupNameEditSave()
 			</OnEnterPressed>
 			<OnEscapePressed>
 				self:ClearFocus()
@@ -587,8 +587,8 @@
 			</OnTextChanged>
 			<OnEditFocusLost>
 				self:Hide()
-				SkilletRecipeGroupDropdownButton:Show()
-				Skillet:UpdateTradeSkillWindow()
+				CraftForgeRecipeGroupDropdownButton:Show()
+				CraftForge:UpdateTradeSkillWindow()
 			</OnEditFocusLost>
 			<OnEditFocusGained>
 				self:HighlightText()
@@ -600,7 +600,7 @@
 	#  Template for all the buttons used in the list of queued items
 	#
 	-->
-	<Frame name="SkilletQueueItemButtonTemplate_Count" hidden="false" virtual="true">
+	<Frame name="CraftForgeQueueItemButtonTemplate_Count" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="36" y="16"/>
 		</Size>
@@ -619,7 +619,7 @@
 			</Layer>
 		</Layers>
 	</Frame>
-	<Frame name="SkilletQueueItemButtonTemplate_Name" hidden="false" virtual="true">
+	<Frame name="CraftForgeQueueItemButtonTemplate_Name" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="274" y="16"/>
 		</Size>
@@ -638,12 +638,12 @@
 			</Layer>
 		</Layers>
 	</Frame>
-	<Frame name="SkilletQueueItemButtonTemplate" hidden="true" virtual="true">
+	<Frame name="CraftForgeQueueItemButtonTemplate" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="290" y="16"/>
 		</Size>
 		<Frames>
-			<Frame name="$parentCount" inherits="SkilletQueueItemButtonTemplate_Count">
+			<Frame name="$parentCount" inherits="CraftForgeQueueItemButtonTemplate_Count">
 				<Anchors>
 					<Anchor point="LEFT">
 						<Offset>
@@ -652,7 +652,7 @@
 					</Anchor>
 				</Anchors>
 			</Frame>
-			<Button name="$parentName" inherits="SkilletQueueItemButtonTemplate_Name">
+			<Button name="$parentName" inherits="CraftForgeQueueItemButtonTemplate_Name">
 				<Anchors>
 					<Anchor point="LEFT">
 						<Offset>
@@ -671,8 +671,8 @@
 						_G[self:GetName().."Text"]:SetTextColor(1,1,0)
 					</OnLeave>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:QueueItemButton_OnClick(self, button)
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:QueueItemButton_OnClick(self, button)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -689,8 +689,8 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:RemoveQueuedCommand(self:GetID())
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:RemoveQueuedCommand(self:GetID())
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -701,7 +701,7 @@
 	# Template for all buttons used to display the reagents needed
 	#
 	-->
-	<Frame name="SkilletReagentTemplate" hidden="false" virtual="true">
+	<Frame name="CraftForgeReagentTemplate" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="210" y="20"/>
 		</Size>
@@ -772,29 +772,29 @@
 				self:Disable()
 			</OnLoad>
 			<OnEnter>
-				Skillet:ReagentButtonOnEnter(self, SkilletFrame.selectedSkill, self:GetID())
+				CraftForge:ReagentButtonOnEnter(self, CraftForgeFrame.selectedSkill, self:GetID())
 			</OnEnter>
 			<OnLeave>
-				Skillet:ReagentButtonOnLeave(self, SkilletFrame.selectedSkill, self:GetID())
+				CraftForge:ReagentButtonOnLeave(self, CraftForgeFrame.selectedSkill, self:GetID())
 			</OnLeave>
 			<OnUpdate>
 				CursorOnUpdate(self)
 			</OnUpdate>
 			<OnClick>
-				Skillet:InventoryFilterButtons_Hide()
+				CraftForge:InventoryFilterButtons_Hide()
 				if ( button == "LeftButton" and IsControlKeyDown() ) then
 				<!-- This opens up the dressing room window and display the character
 					 wearing the item (if that is possible) -->
-					Skillet:ReagentButtonControlClick(self, button, Skillet.selectedSkill, self:GetID())
+					CraftForge:ReagentButtonControlClick(self, button, CraftForge.selectedSkill, self:GetID())
 				elseif ( button == "LeftButton" and IsShiftKeyDown() ) then
 				<!-- This put a link to the *item* that can be created with this trade skill
 					 into the current chat edit box -->
-					Skillet:ReagentButtonShiftClick(self, button, Skillet.selectedSkill, self:GetID())
+					CraftForge:ReagentButtonShiftClick(self, button, CraftForge.selectedSkill, self:GetID())
 				elseif ( button == "RightButton" ) then
-					Skillet:ReagentButtonRightClick(self, button, Skillet.selectedSkill, self:GetID())
+					CraftForge:ReagentButtonRightClick(self, button, CraftForge.selectedSkill, self:GetID())
 				else
 				<!-- generic click action -->
-					Skillet:ReagentButtonOnClick(self, button, Skillet.selectedSkill, self:GetID())
+					CraftForge:ReagentButtonOnClick(self, button, CraftForge.selectedSkill, self:GetID())
 				end
 			</OnClick>
 		</Scripts>
@@ -804,7 +804,7 @@
 	# Template used when creating checkboxes
 	#
 	-->
-	<CheckButton name="SkilletCheckButtonTemplate" virtual="true">
+	<CheckButton name="CraftForgeCheckButtonTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="20" y="20"/>
 		</Size>
@@ -827,7 +827,7 @@
 		<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
 		<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 	</CheckButton>
-	<Frame name="SkilletDetailsStarTemplate" parentArray="Stars" virtual="true">
+	<Frame name="CraftForgeDetailsStarTemplate" parentArray="Stars" virtual="true">
 		<Size x="16" y="15"/>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -844,7 +844,7 @@
 	#
 	-->
 	<!--
-	<GameTooltip name="SkilletTradeskillTooltip" frameStrata="TOOLTIP" hidden="true" inherits="GameTooltipTemplate">
+	<GameTooltip name="CraftForgeTradeskillTooltip" frameStrata="TOOLTIP" hidden="true" inherits="GameTooltipTemplate">
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString name="$parentTextLeft1" inherits="GameTooltipTextSmall" hidden="true">
@@ -873,9 +873,9 @@
 	#
 	#   Frames
 	#
-	# Don't change the name 'SkilletFrame' as other addons may depend on it
+	# Don't change the name 'CraftForgeFrame' as other addons may depend on it
 	-->
-	<Frame name="SkilletFrame" toplevel="true" movable="true" clampedToScreen="true" resizable="true" parent="UIParent" enableMouse="true" hidden="true" inherits="BackdropTemplate">
+	<Frame name="CraftForgeFrame" toplevel="true" movable="true" clampedToScreen="true" resizable="true" parent="UIParent" enableMouse="true" hidden="true" inherits="BackdropTemplate">
 		<Size>
 			<AbsDimension x="750" y="580"/>
 		</Size>
@@ -885,12 +885,12 @@
 			# A button that shows plugin buttons
 			#
 			-->
-			<Button name="SkilletPluginButton" inherits="UIPanelButtonTemplate" text="Plugins" parent="SkilletFrame">
+			<Button name="CraftForgePluginButton" inherits="UIPanelButtonTemplate" text="Plugins" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="80" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletFrame" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeFrame" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="5" y="-5"/>
 						</Offset>
@@ -898,8 +898,8 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:PluginButton_OnClick(self)
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:PluginButton_OnClick(self)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -908,9 +908,9 @@
 			# A button on the top right to close the window
 			#
 			-->
-			<Button name="SkilletFrameCloseButton" inherits="UIPanelCloseButton">
+			<Button name="CraftForgeFrameCloseButton" inherits="UIPanelCloseButton">
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="SkilletFrame" relativePoint="TOPRIGHT">
+					<Anchor point="TOPRIGHT" relativeTo="CraftForgeFrame" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="-3" y="-3"/>
 						</Offset>
@@ -918,9 +918,9 @@
 				</Anchors>
 				<Scripts>
 					<OnHide>
-						if Skillet.fullView then
-							Skillet:InventoryFilterButtons_Hide()
-							Skillet:SkilletFrameForceClose()
+						if CraftForge.fullView then
+							CraftForge:InventoryFilterButtons_Hide()
+							CraftForge:CraftForgeFrameForceClose()
 						end
 					</OnHide>
 				</Scripts>
@@ -930,12 +930,12 @@
 			# A button that displays the options dialog
 			#
 			-->
-			<Button name="SkilletShowOptionsButton">
+			<Button name="CraftForgeShowOptionsButton">
 				<Size>
 					<AbsDimension x="16" y="32"/>
 				</Size>
 				<Anchors>
-					<Anchor point="RIGHT" relativeTo="SkilletFrameCloseButton" relativePoint="LEFT">
+					<Anchor point="RIGHT" relativeTo="CraftForgeFrameCloseButton" relativePoint="LEFT">
 						<Offset>
 							<AbsDimension x="0" y="6"/>
 						</Offset>
@@ -943,8 +943,8 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:ShowOptions()
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:ShowOptions()
 					</OnClick>
 				</Scripts>
 				<NormalTexture file="Interface\Buttons\UI-MicroButton-Help-Up"/>
@@ -956,9 +956,9 @@
 			# Drop down where users can select the grouping method they want to use
 			#
 			-->
-			<Frame name="SkilletRecipeGroupDropdown" inherits="UIDropDownMenuTemplate">
+			<Frame name="CraftForgeRecipeGroupDropdown" inherits="UIDropDownMenuTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletFrame" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeFrame" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="70" y="-32"/>
 						</Offset>
@@ -966,7 +966,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="SkilletGroupLabel" inherits="GameFontNormal" text="Grouping">
+						<FontString name="CraftForgeGroupLabel" inherits="GameFontNormal" text="Grouping">
 							<Anchors>
 								<Anchor point="RIGHT" relativeTo="$parent" relativePoint="LEFT">
 									<Offset>
@@ -979,12 +979,12 @@
 					</Layer>
 				</Layers>
 			</Frame>
-			<Button name="SkilletRecipeGroupOperations">
+			<Button name="CraftForgeRecipeGroupOperations">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="SkilletRecipeGroupDropdownButton" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftForgeRecipeGroupDropdownButton" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="-2" y="0"/>
 						</Offset>
@@ -995,8 +995,8 @@
 				<HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
 				<Scripts>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:RecipeGroupOperations_OnClick(self)
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:RecipeGroupOperations_OnClick(self)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -1005,9 +1005,9 @@
 			# Drop down where users can select the sorting method they want to use
 			#
 			-->
-			<Frame name="SkilletSortDropdown" inherits="UIDropDownMenuTemplate">
+			<Frame name="CraftForgeSortDropdown" inherits="UIDropDownMenuTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletRecipeGroupDropdown" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeRecipeGroupDropdown" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="6"/>
 						</Offset>
@@ -1015,7 +1015,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="SkilletSortLabel" inherits="GameFontNormal" text="Sorting">
+						<FontString name="CraftForgeSortLabel" inherits="GameFontNormal" text="Sorting">
 							<Anchors>
 								<Anchor point="RIGHT" relativeTo="$parent" relativePoint="LEFT">
 									<Offset>
@@ -1033,9 +1033,9 @@
 			# Button to display an arrow for sorting in ascending mode
 			#
 			-->
-			<Button name="SkilletSortAscButton" inherits="UIPanelScrollUpButtonTemplate" hidden="false">
+			<Button name="CraftForgeSortAscButton" inherits="UIPanelScrollUpButtonTemplate" hidden="false">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="SkilletSortDropdownButton" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftForgeSortDropdownButton" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -1047,9 +1047,9 @@
 			# Button to display an arrow for sorting in descending mode
 			#
 			-->
-			<Button name="SkilletSortDescButton" inherits="UIPanelScrollDownButtonTemplate" hidden="true">
+			<Button name="CraftForgeSortDescButton" inherits="UIPanelScrollDownButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="SkilletSortDropdownButton" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftForgeSortDropdownButton" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -1062,9 +1062,9 @@
 			# Drop down where users can select the new filter they want to use
 			#
 			-->
-			<Frame name="SkilletFilterDropdown" inherits="UIDropDownMenuTemplate">
+			<Frame name="CraftForgeFilterDropdown" inherits="UIDropDownMenuTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletSortDropdown" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeSortDropdown" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="6"/>
 						</Offset>
@@ -1072,7 +1072,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="SkilletFilterLabel" inherits="GameFontNormal" text="Filter">
+						<FontString name="CraftForgeFilterLabel" inherits="GameFontNormal" text="Filter">
 							<Anchors>
 								<Anchor point="RIGHT" relativeTo="$parent" relativePoint="LEFT">
 									<Offset>
@@ -1085,12 +1085,12 @@
 					</Layer>
 				</Layers>
 			</Frame>
-			<Button name="SkilletFilterOperations">
+			<Button name="CraftForgeFilterOperations">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="SkilletFilterDropdownButton" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftForgeFilterDropdownButton" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="-2" y="0"/>
 						</Offset>
@@ -1098,7 +1098,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="SkilletFilterText" inherits="GameFontNormalSmall" wordwrap="false" justifyH="LEFT">
+						<FontString name="CraftForgeFilterText" inherits="GameFontNormalSmall" wordwrap="false" justifyH="LEFT">
 							<Anchors>
 								<Anchor point="LEFT" relativeTo="$parent" relativePoint="RIGHT">
 									<Offset>
@@ -1115,25 +1115,25 @@
 				<HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
 				<Scripts>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						UIDropDownMenu_Initialize(SkilletFilterDropMenu, Skillet.InitializeFilterDropdown, "MENU")
-						ToggleDropDownMenu(1, nil, SkilletFilterDropMenu, self, self:GetWidth(), 0)
+						CraftForge:InventoryFilterButtons_Hide()
+						UIDropDownMenu_Initialize(CraftForgeFilterDropMenu, CraftForge.InitializeFilterDropdown, "MENU")
+						ToggleDropDownMenu(1, nil, CraftForgeFilterDropMenu, self, self:GetWidth(), 0)
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Frame name="SkilletFilterDropMenu" inherits="UIDropDownMenuTemplate">
+			<Frame name="CraftForgeFilterDropMenu" inherits="UIDropDownMenuTemplate">
 			</Frame>
 			<!--
 			#
 			# An edit box where users can type in search text
 			#
 			-->
-			<EditBox name="SkilletSearchBox" letters="50" historyLines="0" autoFocus="false">
+			<EditBox name="CraftForgeSearchBox" letters="50" historyLines="0" autoFocus="false">
 				<Size>
 					<AbsDimension x="126" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletFilterDropdown" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeFilterDropdown" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="22" y="4"/>
 						</Offset>
@@ -1179,7 +1179,7 @@
 						</Texture>
 					</Layer>
 					<Layer level="ARTWORK">
-						<FontString name="SkilletSearchLabel" inherits="GameFontNormal" text="Search">
+						<FontString name="CraftForgeSearchLabel" inherits="GameFontNormal" text="Search">
 							<Anchors>
 								<Anchor point="RIGHT" relativeTo="$parent" relativePoint="LEFT">
 									<Offset>
@@ -1199,7 +1199,7 @@
 						self:ClearFocus()
 					</OnEscapePressed>
 					<OnTextChanged>
-						Skillet:UpdateSearch(self:GetText())
+						CraftForge:UpdateSearch(self:GetText())
 					</OnTextChanged>
 					<OnEditFocusLost>
 						self:HighlightText(0, 0)
@@ -1214,12 +1214,12 @@
 				</Scripts>
 				<FontString inherits="ChatFontNormal"/>
 			</EditBox>
-			<Button name="SkilletSearchClear">
+			<Button name="CraftForgeSearchClear">
 				<Size>
 					<AbsDimension x="32" y="32"/>
 				</Size>
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="SkilletSearchBox" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftForgeSearchBox" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="-8" y="-2"/>
 						</Offset>
@@ -1230,9 +1230,9 @@
 				<HighlightTexture file="Interface\Buttons\CancelButton-Highlight" alphaMode="ADD"/>
 				<Scripts>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						SkilletSearchBox:SetText("")
-						SkilletSearchBox:ClearFocus()
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForgeSearchBox:SetText("")
+						CraftForgeSearchBox:ClearFocus()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -1241,7 +1241,7 @@
 			# A status bar to show how much skill you have in this trade
 			#
 			-->
-			<StatusBar name="SkilletRankFrame" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="0">
+			<StatusBar name="CraftForgeRankFrame" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="0">
 				<Size>
 					<AbsDimension x="297" y="14"/>
 				</Size>
@@ -1256,7 +1256,7 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentSkillRank" inherits="GameFontHighlightSmall" justifyH="CENTER">
 							<Anchors>
-								<Anchor point="TOP" relativeTo="SkilletRankFrame">
+								<Anchor point="TOP" relativeTo="CraftForgeRankFrame">
 									<Offset>
 										<AbsDimension x="0" y="-1"/>
 									</Offset>
@@ -1265,7 +1265,7 @@
 						</FontString>
 						<FontString name="$parentSkillChance" inherits="GameFontHighlightSmall" justifyH="CENTER">
 							<Anchors>
-								<Anchor point="TOP" relativeTo="SkilletRankFrame">
+								<Anchor point="TOP" relativeTo="CraftForgeRankFrame">
 									<Offset>
 										<AbsDimension x="0" y="-24"/>
 									</Offset>
@@ -1305,17 +1305,17 @@
 			# The list of known recipes on the left hand side
 			#
 			-->
-			<Frame name="SkilletSkillListParent" parent="SkilletFrame" inherits="BackdropTemplate">
+			<Frame name="CraftForgeSkillListParent" parent="CraftForgeFrame" inherits="BackdropTemplate">
 				<Size>
 					<AbsDimension x="360" y="430"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletFrame" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeFrame" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="10" y="-130"/>
 						</Offset>
 					</Anchor>
-					<Anchor point="BOTTOM" relativeTo="SkilletFrame" relativePoint="BOTTOM">
+					<Anchor point="BOTTOM" relativeTo="CraftForgeFrame" relativePoint="BOTTOM">
 						<Offset>
 							<AbsDimension x="0" y="5"/>
 						</Offset>
@@ -1324,14 +1324,14 @@
 				<Scripts>
 				</Scripts>
 			</Frame>
-			<ScrollFrame name="SkilletSkillList" inherits="FauxScrollFrameTemplate" parent="SkilletSkillListParent">
+			<ScrollFrame name="CraftForgeSkillList" inherits="FauxScrollFrameTemplate" parent="CraftForgeSkillListParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletSkillListParent" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeSkillListParent" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="5" y="-5"/>
 						</Offset>
 					</Anchor>
-					<Anchor point="BOTTOMRIGHT" relativeTo="SkilletSkillListParent" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeSkillListParent" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="-27" y="5"/>
 						</Offset>
@@ -1339,11 +1339,11 @@
 				</Anchors>
 				<Scripts>
 					<OnVerticalScroll>
-						Skillet:InventoryFilterButtons_Hide()
-						FauxScrollFrame_OnVerticalScroll(self, offset, SKILLET_TRADE_SKILL_HEIGHT, Skillet.SkillList_OnScroll)
+						CraftForge:InventoryFilterButtons_Hide()
+						FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_TRADE_SKILL_HEIGHT, CraftForge.SkillList_OnScroll)
 						-- re-apply the text highlight and tooltip (if any) when the button changes under the mouse on scroll event
-						if Skillet.mouseOver then
-							Skillet:SkillButton_OnEnter(Skillet.mouseOver)
+						if CraftForge.mouseOver then
+							CraftForge:SkillButton_OnEnter(CraftForge.mouseOver)
 						end
 					</OnVerticalScroll>
 					<OnLoad>
@@ -1357,9 +1357,9 @@
 			# Check boxes for various recipe filtering options.
 			#
 			-->
-			<CheckButton name="SkilletHideUncraftableRecipes" hidden="false">
+			<CheckButton name="CraftForgeHideUncraftableRecipes" hidden="false">
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="SkilletSkillListParent" relativePoint="TOPRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeSkillListParent" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="-5" y="0"/>
 						</Offset>
@@ -1368,14 +1368,14 @@
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
-				<NormalTexture file="Interface\Addons\Skillet\Icons\bag.tga"/>
-				<PushedTexture file="Interface\Addons\Skillet\Icons\bag.tga"/>
+				<NormalTexture file="Interface\Addons\CraftForge\Icons\bag.tga"/>
+				<PushedTexture file="Interface\Addons\CraftForge\Icons\bag.tga"/>
 				<CheckedTexture alphaMode="ADD" file="Interface\Buttons\CheckButtonHilight"/>
 				<HighlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square"/>
-				<DisabledCheckedTexture file="Interface\Addons\Skillet\Icons\bag.tga"/>
+				<DisabledCheckedTexture file="Interface\Addons\CraftForge\Icons\bag.tga"/>
 				<Scripts>
 					<OnShow>
-						local hideUncraftable = Skillet:GetTradeSkillOption("hideuncraftable")
+						local hideUncraftable = CraftForge:GetTradeSkillOption("hideuncraftable")
 						C_TradeSkillUI.SetOnlyShowMakeableRecipes(hideUncraftable)
 						if hideUncraftable then
 							self:SetChecked(true)
@@ -1388,24 +1388,24 @@
 					</OnLoad>
 					<OnClick>
 						if button=="LeftButton" then
-							Skillet:InventoryFilterButtons_Hide()
+							CraftForge:InventoryFilterButtons_Hide()
 							if self:GetChecked() then
 								PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON) -- "igMainMenuOptionCheckBoxOn"
 							end
-							local before = Skillet:GetTradeSkillOption("hideuncraftable")
-							Skillet:SetTradeSkillOption("hideuncraftable", not before)
+							local before = CraftForge:GetTradeSkillOption("hideuncraftable")
+							CraftForge:SetTradeSkillOption("hideuncraftable", not before)
 							C_TradeSkillUI.SetOnlyShowMakeableRecipes(not before)
-							Skillet:PrintTradeSkillFilter()
-							Skillet.dataScanned = false
-							Skillet:SortAndFilterRecipes()
-							Skillet:UpdateTradeSkillWindow()
+							CraftForge:PrintTradeSkillFilter()
+							CraftForge.dataScanned = false
+							CraftForge:SortAndFilterRecipes()
+							CraftForge:UpdateTradeSkillWindow()
 						else
-							if SkilletInventoryFilterBag:IsVisible() then
-								Skillet:InventoryFilterButtons_Hide()
+							if CraftForgeInventoryFilterBag:IsVisible() then
+								CraftForge:InventoryFilterButtons_Hide()
 							else
-								Skillet:InventoryFilterButtons_Show()
+								CraftForge:InventoryFilterButtons_Show()
 							end
-							if Skillet:GetTradeSkillOption("hideuncraftable") then
+							if CraftForge:GetTradeSkillOption("hideuncraftable") then
 								self:SetChecked(true)
 							else
 								self:SetChecked(false)
@@ -1415,8 +1415,8 @@
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
 						GameTooltip:SetText(CRAFT_IS_MAKEABLE_TOOLTIP, nil, nil, nil, nil, true)
-						GameTooltip:AddLine(Skillet.L["Left-Click to toggle"], .7, .7, .7)
-						GameTooltip:AddLine(Skillet.L["Right-Click for filtering options"], .7, .7, .7)
+						GameTooltip:AddLine(CraftForge.L["Left-Click to toggle"], .7, .7, .7)
+						GameTooltip:AddLine(CraftForge.L["Right-Click for filtering options"], .7, .7, .7)
 						GameTooltip:Show()
 					</OnEnter>
 					<OnLeave>
@@ -1429,9 +1429,9 @@
 			# inventory filter selector
 			#
 			-->
-			<CheckButton name="SkilletUseHighestQuality" inherits="SkilletInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftForgeUseHighestQuality" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="SkilletHideUncraftableRecipes" relativePoint="TOPLEFT">
+					<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeHideUncraftableRecipes" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -1444,8 +1444,8 @@
 						self:SetFrameLevel(self:GetFrameLevel()+5)
 					</OnLoad>
 					<OnClick>
-						Skillet:ModifiedListToggleBestQuality()
-						Skillet:UpdateDetailWindow(Skillet.selectedSkill)
+						CraftForge:ModifiedListToggleBestQuality()
+						CraftForge:UpdateDetailWindow(CraftForge.selectedSkill)
 					</OnClick>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
@@ -1462,9 +1462,9 @@
 			# See: ProfessionsConcentrateToggleButtonMixin:OnEnter() in Blizzard_ProfessionsTemplates.lua
 			#
 			-->
-			<CheckButton name="SkilletUseConcentration" inherits="SkilletInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftForgeUseConcentration" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="SkilletUseHighestQuality" relativePoint="TOPRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeUseHighestQuality" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -1477,8 +1477,8 @@
 						self:SetFrameLevel(self:GetFrameLevel()+5)
 					</OnLoad>
 					<OnClick>
-						Skillet:ToggleUseConcentration()
-						Skillet:UpdateDetailWindow(Skillet.selectedSkill)
+						CraftForge:ToggleUseConcentration()
+						CraftForge:UpdateDetailWindow(CraftForge.selectedSkill)
 					</OnClick>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
@@ -1490,9 +1490,9 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SkilletInventoryFilterOwned" inherits="SkilletInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftForgeInventoryFilterOwned" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletHideUncraftableRecipes" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeHideUncraftableRecipes" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="-30" y="0"/>
 						</Offset>
@@ -1506,15 +1506,15 @@
 					</OnLoad>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SkilletInventoryFilterBag" inherits="SkilletInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftForgeInventoryFilterBag" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="SkilletInventoryFilterOwned" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftForgeInventoryFilterOwned" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<NormalTexture name="$parentIcon" file="Interface\Addons\Skillet\Icons\backpack_icon.tga"/>
+				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftForge\Icons\backpack_icon.tga"/>
 				<Scripts>
 					<OnLoad>
 						self:SetFrameLevel(self:GetFrameLevel()+5)
@@ -1522,15 +1522,15 @@
 					</OnLoad>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SkilletInventoryFilterCraft" inherits="SkilletInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftForgeInventoryFilterCraft" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="SkilletInventoryFilterBag" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftForgeInventoryFilterBag" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<NormalTexture name="$parentIcon" file="Interface\Addons\Skillet\Icons\crafted.tga"/>
+				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftForge\Icons\crafted.tga"/>
 				<Scripts>
 					<OnLoad>
 						self:SetFrameLevel(self:GetFrameLevel()+5)
@@ -1538,15 +1538,15 @@
 					</OnLoad>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SkilletInventoryFilterVendor" inherits="SkilletInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftForgeInventoryFilterVendor" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="SkilletInventoryFilterCraft" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftForgeInventoryFilterCraft" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<NormalTexture name="$parentIcon" file="Interface\Addons\Skillet\Icons\vendor_icon.tga"/>
+				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftForge\Icons\vendor_icon.tga"/>
 				<Scripts>
 					<OnLoad>
 						self:SetFrameLevel(self:GetFrameLevel()+5)
@@ -1554,15 +1554,15 @@
 					</OnLoad>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SkilletInventoryFilterAlts" inherits="SkilletInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftForgeInventoryFilterAlts" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="SkilletInventoryFilterVendor" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftForgeInventoryFilterVendor" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<NormalTexture name="$parentIcon" file="Interface\Addons\Skillet\Icons\alts_icon.tga"/>
+				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftForge\Icons\alts_icon.tga"/>
 				<Scripts>
 					<OnLoad>
 						self:SetFrameLevel(self:GetFrameLevel()+5)
@@ -1570,14 +1570,14 @@
 					</OnLoad>
 				</Scripts>
 			</CheckButton>
-			<Button name="SkilletRecipeDifficultyButton">
+			<Button name="CraftForgeRecipeDifficultyButton">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
-				<NormalTexture name="SkilletRecipeDifficultyButtonTexture" file="Interface\Addons\Skillet\Icons\skill_colors.tga"/>
+				<NormalTexture name="CraftForgeRecipeDifficultyButtonTexture" file="Interface\Addons\CraftForge\Icons\skill_colors.tga"/>
 				<HighlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square"/>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="SkilletHideUncraftableRecipes" relativePoint="BOTTOMLEFT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeHideUncraftableRecipes" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="-5" y="0"/>
 						</Offset>
@@ -1585,17 +1585,17 @@
 				</Anchors>
 				<Scripts>
 					<OnShow>
-						Skillet:RecipeDifficultyButton_OnShow()
+						CraftForge:RecipeDifficultyButton_OnShow()
 					</OnShow>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
+						CraftForge:InventoryFilterButtons_Hide()
 						PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON) -- "igMainMenuOptionCheckBoxOn"
-						SkilletRecipeDifficultySelector:Show()
+						CraftForgeRecipeDifficultySelector:Show()
 						self:Hide()
 					</OnClick>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-						GameTooltip:SetText(Skillet.L["Select skill difficulty threshold"], nil, nil, nil, nil, true)
+						GameTooltip:SetText(CraftForge.L["Select skill difficulty threshold"], nil, nil, nil, nil, true)
 						GameTooltip:Show()
 					</OnEnter>
 					<OnLeave>
@@ -1603,56 +1603,56 @@
 					</OnLeave>
 				</Scripts>
 			</Button>
-			<Button name="SkilletRecipeDifficultySelector" hidden="true">
+			<Button name="CraftForgeRecipeDifficultySelector" hidden="true">
 				<Size>
 					<AbsDimension x="20" y="80"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="SkilletRecipeDifficultyButton" relativePoint="BOTTOMLEFT">
+					<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeRecipeDifficultyButton" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<NormalTexture file="Interface\Addons\Skillet\Icons\skill_colors.tga"/>
+				<NormalTexture file="Interface\Addons\CraftForge\Icons\skill_colors.tga"/>
 				<Scripts>
 					<OnLoad>
 						self:SetFrameLevel(self:GetFrameLevel()+2)
 					</OnLoad>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
+						CraftForge:InventoryFilterButtons_Hide()
 						PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON) -- "igMainMenuOptionCheckBoxOn"
 						local bottom = self:GetBottom()
 						local top = self:GetTop()
 						local x,y = GetCursorPosition()
-						local scale = SkilletFrame:GetEffectiveScale()
+						local scale = CraftForgeFrame:GetEffectiveScale()
 						local newLevel = math.floor(4*(y/scale-bottom)/(top-bottom+1)+1)
-						Skillet:SetTradeSkillOption("filterLevel", newLevel)
+						CraftForge:SetTradeSkillOption("filterLevel", newLevel)
 						if newLevel > 1 then
 							C_TradeSkillUI.SetOnlyShowSkillUpRecipes(true)
 						else
 							C_TradeSkillUI.SetOnlyShowSkillUpRecipes(false)
 						end
-						Skillet:PrintTradeSkillFilter()
+						CraftForge:PrintTradeSkillFilter()
 						self:Hide()
-						SkilletRecipeDifficultyButton:Show()
-						Skillet.dataScanned = false
-						Skillet:SortAndFilterRecipes()
-						Skillet:UpdateTradeSkillWindow()
+						CraftForgeRecipeDifficultyButton:Show()
+						CraftForge.dataScanned = false
+						CraftForge:SortAndFilterRecipes()
+						CraftForge:UpdateTradeSkillWindow()
 					</OnClick>
 					<OnLeave>
 						self:Hide()
-						SkilletRecipeDifficultyButton:Show()
+						CraftForgeRecipeDifficultyButton:Show()
 					</OnLeave>
 				</Scripts>
 			</Button>
-			<Button name="SkilletCollapseAllButton">
+			<Button name="CraftForgeCollapseAllButton">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
-				<NormalTexture name="$parentIcon" file="Interface\Addons\Skillet\Icons\collapse_icon.tga"/>
+				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftForge\Icons\collapse_icon.tga"/>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="SkilletRecipeDifficultyButton" relativePoint="BOTTOMLEFT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeRecipeDifficultyButton" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="-5" y="0"/>
 						</Offset>
@@ -1660,11 +1660,11 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Skillet:CollapseAll()
+						CraftForge:CollapseAll()
 					</OnClick>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-						GameTooltip:SetText(Skillet.L["Collapse all groups"], nil, nil, nil, nil, true)
+						GameTooltip:SetText(CraftForge.L["Collapse all groups"], nil, nil, nil, nil, true)
 						GameTooltip:Show()
 					</OnEnter>
 					<OnLeave>
@@ -1672,13 +1672,13 @@
 					</OnLeave>
 				</Scripts>
 			</Button>
-			<Button name="SkilletExpandAllButton">
+			<Button name="CraftForgeExpandAllButton">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
-				<NormalTexture name="$parentIcon" file="Interface\Addons\Skillet\Icons\expand_icon.tga"/>
+				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftForge\Icons\expand_icon.tga"/>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="SkilletCollapseAllButton" relativePoint="BOTTOMLEFT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeCollapseAllButton" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="-5" y="0"/>
 						</Offset>
@@ -1686,11 +1686,11 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Skillet:ExpandAll()
+						CraftForge:ExpandAll()
 					</OnClick>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-						GameTooltip:SetText(Skillet.L["Expand all groups"], nil, nil, nil, nil, true)
+						GameTooltip:SetText(CraftForge.L["Expand all groups"], nil, nil, nil, nil, true)
 						GameTooltip:Show()
 					</OnEnter>
 					<OnLeave>
@@ -1698,14 +1698,14 @@
 					</OnLeave>
 				</Scripts>
 			</Button>
-			<Button name="SkilletFavoritesOnlyButton">
+			<Button name="CraftForgeFavoritesOnlyButton">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<NormalTexture name="$parentIcon" atlas="tradeskills-star-off" alpha="0.5"/>
 				<HighlightTexture name="$parentIcon" atlas="tradeskills-star"/>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="SkilletExpandAllButton" relativePoint="BOTTOMLEFT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeExpandAllButton" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="-5" y="0"/>
 						</Offset>
@@ -1713,17 +1713,17 @@
 				</Anchors>
 				<Scripts>
 					<OnShow>
-						Skillet:FavoritesOnlyRefresh()
+						CraftForge:FavoritesOnlyRefresh()
 					</OnShow>
 					<OnClick>
-						Skillet:SetTradeSkillOption("favoritesOnly", not Skillet:GetTradeSkillOption("favoritesOnly"))
-						Skillet:FavoritesOnlyRefresh()
-						Skillet:SortAndFilterRecipes()
-  						Skillet:UpdateTradeSkillWindow()
+						CraftForge:SetTradeSkillOption("favoritesOnly", not CraftForge:GetTradeSkillOption("favoritesOnly"))
+						CraftForge:FavoritesOnlyRefresh()
+						CraftForge:SortAndFilterRecipes()
+  						CraftForge:UpdateTradeSkillWindow()
 					</OnClick>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-						GameTooltip:SetText(Skillet.L["Show favorite recipes only. Click on a star on the left side of a recipe to set favorite."], nil, nil, nil, nil, true)
+						GameTooltip:SetText(CraftForge.L["Show favorite recipes only. Click on a star on the left side of a recipe to set favorite."], nil, nil, nil, nil, true)
 						GameTooltip:Show()
 					</OnEnter>
 					<OnLeave>
@@ -1736,7 +1736,7 @@
 			# A highlight frame for the currently selected recipe
 			#
 			-->
-			<Frame name="SkilletHighlightFrame" hidden="true">
+			<Frame name="CraftForgeHighlightFrame" hidden="true">
 				<Size>
 					<AbsDimension x="290" y="16"/>
 				</Size>
@@ -1745,7 +1745,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<Texture name="SkilletHighlight" file="Interface\Buttons\UI-Listbox-Highlight2"/>
+						<Texture name="CraftForgeHighlight" file="Interface\Buttons\UI-Listbox-Highlight2"/>
 					</Layer>
 				</Layers>
 			</Frame>
@@ -1754,9 +1754,9 @@
 			# And the list of buttons that are in the scrollable area
 			#
 			-->
-			<Button name="SkilletScrollButton1" inherits="SkilletSkillButtonTemplate">
+			<Button name="CraftForgeScrollButton1" inherits="CraftForgeSkillButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletSkillList" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeSkillList" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -1770,12 +1770,12 @@
 			# A frame to hold the reagent list and associated details on the right hand side
 			#
 			-->
-			<Frame name="SkilletReagentParent" parent="SkilletFrame" inherits="BackdropTemplate">
+			<Frame name="CraftForgeReagentParent" parent="CraftForgeFrame" inherits="BackdropTemplate">
 				<Size>
 					<AbsDimension x="360" y="300"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="SkilletFrame" relativePoint="TOPRIGHT">
+					<Anchor point="TOPRIGHT" relativeTo="CraftForgeFrame" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="-10" y="-130"/>
 						</Offset>
@@ -1783,24 +1783,24 @@
 				</Anchors>
 				<Layers>
 					<Layer level="OVERLAY">
-						<FontString name="SkilletSkillName" inherits="GameFontNormal" text="Skill Name" justifyH="LEFT">
+						<FontString name="CraftForgeSkillName" inherits="GameFontNormal" text="Skill Name" justifyH="LEFT">
 							<Size>
 								<AbsDimension x="244" y="0"/>
 							</Size>
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="SkilletReagentParent" relativePoint="TOPLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentParent" relativePoint="TOPLEFT">
 									<Offset>
 										<AbsDimension x="47" y="-10"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<FontString name="SkilletDescriptionText" inherits="GameFontHighlightSmall" wordwrap="true" justifyH="LEFT">
+						<FontString name="CraftForgeDescriptionText" inherits="GameFontHighlightSmall" wordwrap="true" justifyH="LEFT">
 							<Size>
 								<AbsDimension x="244" y="0"/>
 							</Size>
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="SkilletSkillName" relativePoint="BOTTOMLEFT" >
+								<Anchor point="TOPLEFT" relativeTo="CraftForgeSkillName" relativePoint="BOTTOMLEFT" >
 									<Offset>
 										<AbsDimension x="4" y="-3"/>
 									</Offset>
@@ -1808,18 +1808,18 @@
 							</Anchors>
 						</FontString>
 						<!-- If the skill is a first craft, this is the display for it -->
-						<FontString name="SkilletFirstCraft" inherits="GameFontHighlightSmall" text="PROFESSIONS_FIRST_CRAFT">
+						<FontString name="CraftForgeFirstCraft" inherits="GameFontHighlightSmall" text="PROFESSIONS_FIRST_CRAFT">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="SkilletDescriptionText" relativePoint="BOTTOMLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftForgeDescriptionText" relativePoint="BOTTOMLEFT">
 									<Offset>
 										<AbsDimension x="0" y="0"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<FontString name="SkilletSkillCooldown" inherits="GameFontRedSmall" wordwrap="true" justifyH="LEFT" justifyV="TOP">
+						<FontString name="CraftForgeSkillCooldown" inherits="GameFontRedSmall" wordwrap="true" justifyH="LEFT" justifyV="TOP">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="SkilletFirstCraft" relativePoint="BOTTOMLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftForgeFirstCraft" relativePoint="BOTTOMLEFT">
 									<Offset>
 										<AbsDimension x="0" y="0"/>
 									</Offset>
@@ -1827,9 +1827,9 @@
 							</Anchors>
 						</FontString>
 						<!-- If the skill requires a special tool, this is the "Requires: " label for it -->
-						<FontString name="SkilletRequirementLabel" inherits="GameFontHighlightSmall" text="REQUIRES_LABEL">
+						<FontString name="CraftForgeRequirementLabel" inherits="GameFontHighlightSmall" text="REQUIRES_LABEL">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="SkilletSkillCooldown" relativePoint="BOTTOMLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftForgeSkillCooldown" relativePoint="BOTTOMLEFT">
 									<Offset>
 										<AbsDimension x="0" y="0"/>
 									</Offset>
@@ -1837,39 +1837,39 @@
 							</Anchors>
 						</FontString>
 						<!-- If the skill requires a special tool, this is the place where that tools name is printed -->
-						<FontString name="SkilletRequirementText" inherits="GameFontHighlightSmall" justifyV="TOP" justifyH="LEFT">
+						<FontString name="CraftForgeRequirementText" inherits="GameFontHighlightSmall" justifyV="TOP" justifyH="LEFT">
 							<Size>
 								<AbsDimension x="244" y="0"/>
 							</Size>
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="SkilletRequirementLabel" relativePoint="TOPRIGHT" >
+								<Anchor point="TOPLEFT" relativeTo="CraftForgeRequirementLabel" relativePoint="TOPRIGHT" >
 									<Offset>
 										<AbsDimension x="4" y="0"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<FontString name="SkilletReagentLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="SPELL_REAGENTS">
+						<FontString name="CraftForgeReagentLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="SPELL_REAGENTS">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="SkilletRequirementLabel" relativePoint="BOTTOMLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftForgeRequirementLabel" relativePoint="BOTTOMLEFT">
 									<Offset>
 										<AbsDimension x="-47" y="-20"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<FontString name="SkilletOptionalLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="SPELL_REAGENTS_OPTIONAL">
+						<FontString name="CraftForgeOptionalLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="SPELL_REAGENTS_OPTIONAL">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="SkilletRequirementLabel" relativePoint="BOTTOMLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftForgeRequirementLabel" relativePoint="BOTTOMLEFT">
 									<Offset>
 										<AbsDimension x="-47" y="-20"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<FontString name="SkilletFinishingLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="PROFESSIONS_CRAFTING_FINISHING_HEADER">
+						<FontString name="CraftForgeFinishingLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="PROFESSIONS_CRAFTING_FINISHING_HEADER">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="SkilletOptionalLabel" relativePoint="BOTTOMLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftForgeOptionalLabel" relativePoint="BOTTOMLEFT">
 									<Offset>
 										<AbsDimension x="-47" y="-20"/>
 									</Offset>
@@ -1878,28 +1878,28 @@
 						</FontString>
 						<!-- If there is extra info about a recipe that a mod wants to print, this is where they would
 							 put the text -->
-						<FontString name="SkilletExtraDetailTextLeft" inherits="GameFontHighlightSmall" justifyV="TOP" justifyH="LEFT">
+						<FontString name="CraftForgeExtraDetailTextLeft" inherits="GameFontHighlightSmall" justifyV="TOP" justifyH="LEFT">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="SkilletReagentParent" relativePoint="BOTTOMLEFT" >
+								<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentParent" relativePoint="BOTTOMLEFT" >
 									<Offset>
 										<AbsDimension x="5" y="30"/>
 									</Offset>
 								</Anchor>
-								<Anchor point="BOTTOMRIGHT" relativeTo="SkilletReagentParent" relativePoint="BOTTOMRIGHT" >
+								<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeReagentParent" relativePoint="BOTTOMRIGHT" >
 									<Offset>
 										<AbsDimension x="-5" y="5"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<FontString name="SkilletExtraDetailTextRight" inherits="GameFontHighlightSmall" justifyV="TOP" justifyH="RIGHT">
+						<FontString name="CraftForgeExtraDetailTextRight" inherits="GameFontHighlightSmall" justifyV="TOP" justifyH="RIGHT">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="SkilletReagentParent" relativePoint="BOTTOMLEFT" >
+								<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentParent" relativePoint="BOTTOMLEFT" >
 									<Offset>
 										<AbsDimension x="5" y="30"/>
 									</Offset>
 								</Anchor>
-								<Anchor point="BOTTOMRIGHT" relativeTo="SkilletReagentParent" relativePoint="BOTTOMRIGHT" >
+								<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeReagentParent" relativePoint="BOTTOMRIGHT" >
 									<Offset>
 										<AbsDimension x="-5" y="5"/>
 									</Offset>
@@ -1909,23 +1909,23 @@
 					</Layer> <!-- OVERLAY -->
 				</Layers>
 			</Frame>
-			<Frame parentKey="StarsFrame" parent="SkilletReagentParent" enableMouse="true">
+			<Frame parentKey="StarsFrame" parent="CraftForgeReagentParent" enableMouse="true">
 				<Size x="45" y="16"/>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="SkilletReagentParent" relativePoint="TOPRIGHT" x="-15" y="-7"/>
+					<Anchor point="TOPRIGHT" relativeTo="CraftForgeReagentParent" relativePoint="TOPRIGHT" x="-15" y="-7"/>
 				</Anchors>
 				<Frames>
-					<Frame parentKey="Star1" inherits="SkilletDetailsStarTemplate">
+					<Frame parentKey="Star1" inherits="CraftForgeDetailsStarTemplate">
 						<Anchors>
 							<Anchor point="LEFT" />
 						</Anchors>
 					</Frame>
-					<Frame parentKey="Star2" inherits="SkilletDetailsStarTemplate">
+					<Frame parentKey="Star2" inherits="CraftForgeDetailsStarTemplate">
 						<Anchors>
 							<Anchor point="LEFT" relativeKey="$parent.Star1" relativePoint="RIGHT" x="2" y="0"/>
 						</Anchors>
 					</Frame>
-					<Frame parentKey="Star3" inherits="SkilletDetailsStarTemplate">
+					<Frame parentKey="Star3" inherits="CraftForgeDetailsStarTemplate">
 						<Anchors>
 							<Anchor point="LEFT" relativeKey="$parent.Star2" relativePoint="RIGHT" x="2" y="0"/>
 						</Anchors>
@@ -1933,27 +1933,27 @@
 				</Frames>
 				<Scripts>
 					<OnEnter>
-						Skillet:ReagentStarsFrame_OnMouseEnter(self)
+						CraftForge:ReagentStarsFrame_OnMouseEnter(self)
 					</OnEnter>
 					<OnLeave function="GameTooltip_Hide" />
 				</Scripts>
 			</Frame>
-			<Frame name="SkilletRecipeRankFrame" parent="SkilletReagentParent" enableMouse="true">
+			<Frame name="CraftForgeRecipeRankFrame" parent="CraftForgeReagentParent" enableMouse="true">
 				<Size x="80" y="20"/>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="SkilletReagentParent" relativePoint="TOPRIGHT" x="-5" y="-6"/>
+					<Anchor point="TOPRIGHT" relativeTo="CraftForgeReagentParent" relativePoint="TOPRIGHT" x="-5" y="-6"/>
 				</Anchors>
 				<Frames>
-					<Button name="SkilletRecipeRankSelector">
+					<Button name="CraftForgeRecipeRankSelector">
 						<Size>
 							<AbsDimension x="20" y="20"/>
 						</Size>
 						<Anchors>
-							<Anchor point="TOPRIGHT" relativeTo="SkilletRecipeRankFrame" relativePoint="TOPRIGHT" x="0" y="0"/>
+							<Anchor point="TOPRIGHT" relativeTo="CraftForgeRecipeRankFrame" relativePoint="TOPRIGHT" x="0" y="0"/>
 						</Anchors>
 						<Layers>
 							<Layer level="ARTWORK">
-								<FontString name="SkilletRecipeRankLabel" inherits="GameFontNormal" text="Rank 1">
+								<FontString name="CraftForgeRecipeRankLabel" inherits="GameFontNormal" text="Rank 1">
 									<Anchors>
 										<Anchor point="RIGHT" relativeTo="$parent" relativePoint="LEFT">
 											<Offset>
@@ -1970,14 +1970,14 @@
 						<HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
 						<Scripts>
 							<OnClick>
-								Skillet:RecipeRankSelector_OnClick(self)
+								CraftForge:RecipeRankSelector_OnClick(self)
 							</OnClick>
 						</Scripts>
 					</Button>
-					<StatusBar name="SkilletRecipeRankSkill" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="1">
+					<StatusBar name="CraftForgeRecipeRankSkill" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="1">
 					<Size x="60" y="16"/>
 					<Anchors>
-						<Anchor point="TOPRIGHT" relativeTo="SkilletRecipeRankSelector" relativePoint="TOPLEFT" x="-50" y="-2"/>
+						<Anchor point="TOPRIGHT" relativeTo="CraftForgeRecipeRankSelector" relativePoint="TOPLEFT" x="-50" y="-2"/>
 					</Anchors>
 					<Layers>
 						<Layer level="ARTWORK">
@@ -2015,14 +2015,14 @@
 				</Frames>
 				<Scripts>
 					<OnEnter>
-						Skillet:RecipeRankOnEnter(self)
+						CraftForge:RecipeRankOnEnter(self)
 					</OnEnter>
 					<OnLeave>
-						Skillet:RecipeRankOnLeave(self)
+						CraftForge:RecipeRankOnLeave(self)
 					</OnLeave>
 				</Scripts>
 			</Frame>
-			<Frame name="SkilletRecipeRankDropMenu" inherits="UIDropDownMenuTemplate">
+			<Frame name="CraftForgeRecipeRankDropMenu" inherits="UIDropDownMenuTemplate">
 			</Frame>
 
 			<!--
@@ -2030,28 +2030,28 @@
 			# A frame to hold the Queue
 			#
 			-->
-			<Frame name="SkilletQueueManagementParent" parent="SkilletFrame" hidden="true" inherits="BackdropTemplate">
+			<Frame name="CraftForgeQueueManagementParent" parent="CraftForgeFrame" hidden="true" inherits="BackdropTemplate">
 				<Size>
 					<AbsDimension x="360" y="260"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="SkilletFrame" relativePoint="TOPRIGHT">
+					<Anchor point="TOPRIGHT" relativeTo="CraftForgeFrame" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="-10" y="-130"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 				<Frames>
-					<Frame name="SkilletQueueLoadDropdown" inherits="UIDropDownMenuTemplate">
+					<Frame name="CraftForgeQueueLoadDropdown" inherits="UIDropDownMenuTemplate">
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="SkilletQueueManagementParent" relativePoint="TOPLEFT">
+							<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueManagementParent" relativePoint="TOPLEFT">
 								<Offset>
 									<AbsDimension x="5" y="-20"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
 						<Frames>
-							<Button name="SkilletQueueLoadButton" inherits="UIPanelButtonTemplate" text="Load">
+							<Button name="CraftForgeQueueLoadButton" inherits="UIPanelButtonTemplate" text="Load">
 								<Size>
 									<AbsDimension x="60" y="20"/>
 								</Size>
@@ -2064,16 +2064,16 @@
 								</Anchors>
 								<Scripts>
 									<OnClick>
-										Skillet:LoadQueue(Skillet.selectedQueueName)
+										CraftForge:LoadQueue(CraftForge.selectedQueueName)
 									</OnClick>
 								</Scripts>
 							</Button>
-							<Button name="SkilletQueueDeleteButton" inherits="UIPanelButtonTemplate" text="Delete">
+							<Button name="CraftForgeQueueDeleteButton" inherits="UIPanelButtonTemplate" text="Delete">
 								<Size>
 									<AbsDimension x="60" y="20"/>
 								</Size>
 								<Anchors>
-									<Anchor point="LEFT" relativeTo="SkilletQueueLoadButton" relativePoint="RIGHT">
+									<Anchor point="LEFT" relativeTo="CraftForgeQueueLoadButton" relativePoint="RIGHT">
 										<Offset>
 											<AbsDimension x="0" y="0"/>
 										</Offset>
@@ -2081,23 +2081,23 @@
 								</Anchors>
 								<Scripts>
 									<OnClick>
-										Skillet:DeleteQueue(Skillet.selectedQueueName)
+										CraftForge:DeleteQueue(CraftForge.selectedQueueName)
 									</OnClick>
 								</Scripts>
 							</Button>
 						</Frames>
 						<Scripts>
 							<OnShow>
-								Skillet:QueueLoadDropdown_OnShow()
+								CraftForge:QueueLoadDropdown_OnShow()
 							</OnShow>
 						</Scripts>
 					</Frame>
-					<EditBox name="SkilletQueueSaveEditBox" letters="50" historyLines="0" autoFocus="false">
+					<EditBox name="CraftForgeQueueSaveEditBox" letters="50" historyLines="0" autoFocus="false">
 						<Size>
 							<AbsDimension x="126" y="20"/>
 						</Size>
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="SkilletQueueLoadDropdown" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueLoadDropdown" relativePoint="BOTTOMLEFT">
 								<Offset>
 									<AbsDimension x="22" y="-2"/>
 								</Offset>
@@ -2144,7 +2144,7 @@
 							</Layer>
 						</Layers>
 						<Frames>
-							<Button name="SkilletQueueSaveButton" inherits="UIPanelButtonTemplate" text="Save">
+							<Button name="CraftForgeQueueSaveButton" inherits="UIPanelButtonTemplate" text="Save">
 								<Size>
 									<AbsDimension x="60" y="20"/>
 								</Size>
@@ -2157,8 +2157,8 @@
 								</Anchors>
 								<Scripts>
 									<OnClick>
-										SkilletQueueSaveEditBox:ClearFocus()
-										Skillet:SaveQueue(SkilletQueueSaveEditBox:GetText())
+										CraftForgeQueueSaveEditBox:ClearFocus()
+										CraftForge:SaveQueue(CraftForgeQueueSaveEditBox:GetText())
 									</OnClick>
 								</Scripts>
 							</Button>
@@ -2166,7 +2166,7 @@
 						<Scripts>
 							<OnEnterPressed>
 								self:ClearFocus()
-								Skillet:SaveQueue(SkilletQueueSaveEditBox:GetText())
+								CraftForge:SaveQueue(CraftForgeQueueSaveEditBox:GetText())
 							</OnEnterPressed>
 							<OnEscapePressed>
 								self:ClearFocus()
@@ -2187,12 +2187,12 @@
 			# A button that pops up the notes for this recipe/list of reagents
 			#
 			-->
-			<Button name="SkilletRecipeNotesButton" inherits="UIPanelButtonTemplate" parent="SkilletFrame">
+			<Button name="CraftForgeRecipeNotesButton" inherits="UIPanelButtonTemplate" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="75" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="SkilletReagentParent" relativePoint="TOPRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeReagentParent" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2200,17 +2200,17 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:ShowRecipeNotes()
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:ShowRecipeNotes()
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="SkilletQueueManagementButton" inherits="UIPanelButtonTemplate" parent="SkilletFrame">
+			<Button name="CraftForgeQueueManagementButton" inherits="UIPanelButtonTemplate" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="95" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="RIGHT" relativeTo="SkilletRecipeNotesButton" relativePoint="LEFT">
+					<Anchor point="RIGHT" relativeTo="CraftForgeRecipeNotesButton" relativePoint="LEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2218,16 +2218,16 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Skillet:QueueManagementToggle()
+						CraftForge:QueueManagementToggle()
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="SkilletIgnoredMatsButton" inherits="UIPanelButtonTemplate" parent="SkilletFrame">
+			<Button name="CraftForgeIgnoredMatsButton" inherits="UIPanelButtonTemplate" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="115" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="RIGHT" relativeTo="SkilletQueueManagementButton" relativePoint="LEFT">
+					<Anchor point="RIGHT" relativeTo="CraftForgeQueueManagementButton" relativePoint="LEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2235,20 +2235,20 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:DisplayIgnoreList()
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:DisplayIgnoreList()
 					</OnClick>
 				</Scripts>
 			</Button>
 			<!--
 			# Auctionator button
 			-->
-			<Button name="SkilletAuctionatorButton" inherits="UIPanelButtonTemplate" text="Auctionator" parent="SkilletFrame">
+			<Button name="CraftForgeAuctionatorButton" inherits="UIPanelButtonTemplate" text="Auctionator" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="85" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="RIGHT" relativeTo="SkilletIgnoredMatsButton" relativePoint="LEFT">
+					<Anchor point="RIGHT" relativeTo="CraftForgeIgnoredMatsButton" relativePoint="LEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2256,7 +2256,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Skillet:AuctionatorSearch()
+						CraftForge:AuctionatorSearch()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2265,12 +2265,12 @@
 			# A button that takes you back to the previous recipe
 			#
 			-->
-			<Button name="SkilletPreviousItemButton" parent="SkilletReagentParent">
+			<Button name="CraftForgePreviousItemButton" parent="CraftForgeReagentParent">
 				<Size>
 					<AbsDimension x="28" y="28"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="SkilletReagentParent" relativePoint="TOPLEFT">
+					<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeReagentParent" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="5" y="-4"/>
 						</Offset>
@@ -2281,8 +2281,8 @@
 				<HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
 				<Scripts>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:GoToPreviousSkill()
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:GoToPreviousSkill()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2292,12 +2292,12 @@
 			# selected skill.
 			#
 			-->
-			<Button name="SkilletSkillIcon" parent="SkilletReagentParent">
+			<Button name="CraftForgeSkillIcon" parent="CraftForgeReagentParent">
 				<Size>
 					<AbsDimension x="37" y="37"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagentParent" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentParent" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="10" y="-10"/>
 						</Offset>
@@ -2305,7 +2305,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="SkilletSkillIconCount" inherits="NumberFontNormal" justifyH="RIGHT" hidden="false">
+						<FontString name="CraftForgeSkillIconCount" inherits="NumberFontNormal" justifyH="RIGHT" hidden="false">
 							<Anchors>
 								<Anchor point="BOTTOMRIGHT">
 									<Offset>
@@ -2322,8 +2322,8 @@
 						self:RegisterForClicks("LeftButtonUp","RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						local link = Skillet:GetRecipeItemLink(Skillet.selectedSkill)
+						CraftForge:InventoryFilterButtons_Hide()
+						local link = CraftForge:GetRecipeItemLink(CraftForge.selectedSkill)
 						if ( button == "LeftButton" and IsControlKeyDown() ) then
 							<!-- This opens up the dressing room window and display the character
 								 wearing the item (if that is possible) -->
@@ -2332,38 +2332,38 @@
 							<!-- This put a link to the *item* that can be created with this trade skill
 								 into the current chat  box -->
 							if not ChatEdit_InsertLink(link) then
-								Skillet:XMLDebugLink("SkilletSkillIcon: link= ", link)
+								CraftForge:XMLDebugLink("CraftForgeSkillIcon: link= ", link)
 							end
 						elseif ( button == "LeftButton" and IsAltKeyDown() ) then
 						<!-- This will put a link to the *reagents* required by this *item*
 							 into the current chat edit box -->
-							Skillet:ReagentsLinkOnClick(self, Skillet.selectedSkill, self:GetID(), IsControlKeyDown())
+							CraftForge:ReagentsLinkOnClick(self, CraftForge.selectedSkill, self:GetID(), IsControlKeyDown())
 						elseif ( button == "RightButton" ) then
 							<!-- right clicking allow adjusting numCreated -->
 							if ( IsShiftKeyDown() ) then
-								Skillet:AdjustNumberMade(Skillet.selectedSkill,-1)
+								CraftForge:AdjustNumberMade(CraftForge.selectedSkill,-1)
 							else
-								Skillet:AdjustNumberMade(Skillet.selectedSkill,1)
+								CraftForge:AdjustNumberMade(CraftForge.selectedSkill,1)
 							end
 						end
 					</OnClick>
 					<OnEnter>
-						if ( Skillet.selectedSkill ~= -1 ) then
+						if ( CraftForge.selectedSkill ~= -1 ) then
 							GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-							Skillet:SetTradeSkillToolTip(SkilletFrame.selectedSkill)
+							CraftForge:SetTradeSkillToolTip(CraftForgeFrame.selectedSkill)
 						end
 					</OnEnter>
 					<OnLeave>
-						Skillet:ClearTradeSkillToolTip(SkilletFrame.selectedSkill)
+						CraftForge:ClearTradeSkillToolTip(CraftForgeFrame.selectedSkill)
 					</OnLeave>
 					<OnUpdate>
 						CursorOnUpdate(self)
 					</OnUpdate>
 					<OnEvent>
 						if GameTooltip:IsVisible() and GameTooltip:IsOwned(self) then
-							if ( Skillet.selectedSkill ~= -1 ) then
+							if ( CraftForge.selectedSkill ~= -1 ) then
 								GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-								Skillet:SetTradeSkillToolTip(SkilletFrame.selectedSkill)
+								CraftForge:SetTradeSkillToolTip(CraftForgeFrame.selectedSkill)
 							end
 						end
 					</OnEvent>
@@ -2374,126 +2374,126 @@
 			# And of course, buttons for the reagents ...
 			#
 			-->
-			<Button name="SkilletReagent1" inherits="SkilletReagentTemplate" id="1" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent1" inherits="CraftForgeReagentTemplate" id="1" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagentLabel" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentLabel" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="-2"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="SkilletReagent2" inherits="SkilletReagentTemplate" id="2" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent2" inherits="CraftForgeReagentTemplate" id="2" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent1" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent1" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="SkilletReagent3" inherits="SkilletReagentTemplate" id="3" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent3" inherits="CraftForgeReagentTemplate" id="3" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent2" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent2" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="SkilletReagent4" inherits="SkilletReagentTemplate" id="4" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent4" inherits="CraftForgeReagentTemplate" id="4" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent3" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent3" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="SkilletReagent5" inherits="SkilletReagentTemplate" id="5" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent5" inherits="CraftForgeReagentTemplate" id="5" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent4" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent4" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="SkilletReagent6" inherits="SkilletReagentTemplate" id="6" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent6" inherits="CraftForgeReagentTemplate" id="6" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent5" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent5" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="SkilletReagent7" inherits="SkilletReagentTemplate" id="7" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent7" inherits="CraftForgeReagentTemplate" id="7" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent6" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent6" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="SkilletReagent8" inherits="SkilletReagentTemplate" id="8" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent8" inherits="CraftForgeReagentTemplate" id="8" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent7" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent7" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="SkilletReagent9" inherits="SkilletReagentTemplate" id="9" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent9" inherits="CraftForgeReagentTemplate" id="9" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent8" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent8" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="SkilletReagent10" inherits="SkilletReagentTemplate" id="10" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent10" inherits="CraftForgeReagentTemplate" id="10" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent9" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent9" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="SkilletReagent11" inherits="SkilletReagentTemplate" id="11" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent11" inherits="CraftForgeReagentTemplate" id="11" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent10" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent10" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="SkilletReagent12" inherits="SkilletReagentTemplate" id="12" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent12" inherits="CraftForgeReagentTemplate" id="12" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent11" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent11" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="SkilletReagent13" inherits="SkilletReagentTemplate" id="13" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent13" inherits="CraftForgeReagentTemplate" id="13" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent12" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent12" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="SkilletReagent14" inherits="SkilletReagentTemplate" id="14" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent14" inherits="CraftForgeReagentTemplate" id="14" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent13" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent13" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2501,9 +2501,9 @@
 				</Anchors>
 			</Button>
 			<!-- Define one more just in case the recipe has 14 reagents -->
-			<Button name="SkilletReagent15" inherits="SkilletReagentTemplate" id="0" parent="SkilletReagentParent">
+			<Button name="CraftForgeReagent15" inherits="CraftForgeReagentTemplate" id="0" parent="CraftForgeReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagent14" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent14" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2515,12 +2515,12 @@
 			# Buttons to queue or create items
 			#
 			-->
-			<Button name="SkilletQueueAllButton" inherits="UIPanelButtonTemplate" text="Queue All" parent="SkilletFrame">
+			<Button name="CraftForgeQueueAllButton" inherits="UIPanelButtonTemplate" text="Queue All" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="105" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagentParent" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentParent" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="-2"/>
 						</Offset>
@@ -2532,17 +2532,17 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:QueueAllItems(button)
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:QueueAllItems(button)
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="SkilletEnchantButton" inherits="UIPanelButtonTemplate" text="Enchant" parent="SkilletFrame">
+			<Button name="CraftForgeEnchantButton" inherits="UIPanelButtonTemplate" text="Enchant" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="105" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletReagentParent" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentParent" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="-2"/>
 						</Offset>
@@ -2553,17 +2553,17 @@
 						self:SetFrameLevel(self:GetFrameLevel()+2)
 					</OnLoad>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:EnchantItem(button)
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:EnchantItem(button)
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="SkilletCreateAllButton" inherits="UIPanelButtonTemplate" text="Create All" parent="SkilletFrame">
+			<Button name="CraftForgeCreateAllButton" inherits="UIPanelButtonTemplate" text="Create All" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="105" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletQueueAllButton" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueAllButton" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="-1"/>
 						</Offset>
@@ -2575,8 +2575,8 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:CreateAllItems(button)
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:CreateAllItems(button)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2585,12 +2585,12 @@
 			# The text box where they can enter the number of items to craft.
 			#
 			-->
-			<EditBox name="SkilletItemCountInputBox" letters="4" historyLines="0" numeric="true" autoFocus="false">
+			<EditBox name="CraftForgeItemCountInputBox" letters="4" historyLines="0" numeric="true" autoFocus="false">
 				<Size>
 					<AbsDimension x="36" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletQueueAllButton" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueAllButton" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="39" y="0"/>
 						</Offset>
@@ -2660,12 +2660,12 @@
 				</Scripts>
 				<FontString inherits="ChatFontNormal"/>
 			</EditBox>
-			<Button name="SkilletClearNumButton" parent="SkilletFrame">
+			<Button name="CraftForgeClearNumButton" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="32" y="32"/>
 				</Size>
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="SkilletItemCountInputBox" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftForgeItemCountInputBox" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="-8" y="-2"/>
 						</Offset>
@@ -2676,19 +2676,19 @@
 						self:SetFrameLevel(self:GetFrameLevel()+2)
 					</OnLoad>
 					<OnClick>
-						SkilletItemCountInputBox:SetText(1)
+						CraftForgeItemCountInputBox:SetText(1)
 					</OnClick>
 				</Scripts>
 				<NormalTexture file="Interface\Buttons\CancelButton-Up"/>
 				<PushedTexture file="Interface\Buttons\CancelButton-Down"/>
 				<HighlightTexture file="Interface\Buttons\CancelButton-Highlight" alphaMode="ADD"/>
 			</Button>
-			<Button name="SkilletSub10Button" parent="SkilletFrame">
+			<Button name="CraftForgeSub10Button" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="31" y="23"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletCreateAllButton" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeCreateAllButton" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="2" y="0"/>
 						</Offset>
@@ -2700,26 +2700,26 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						Skillet:ChangeItemCount(self, button, -10)
+						CraftForge:ChangeItemCount(self, button, -10)
 					</OnClick>
 				</Scripts>
-				<NormalTexture file="Interface\Addons\Skillet\Icons\Buttons\PrevPrevPage-Up">
+				<NormalTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPrevPage-Up">
 					<TexCoords left="0" right="0.640625" top="0" bottom="0.5"/>
 				</NormalTexture>
-				<PushedTexture file="Interface\Addons\Skillet\Icons\Buttons\PrevPrevPage-Down">
+				<PushedTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPrevPage-Down">
 					<TexCoords left="0" right="0.640625" top="0" bottom="0.5"/>
 				</PushedTexture>
-				<DisabledTexture file="Interface\Addons\Skillet\Icons\Buttons\PrevPrevPage-Disabled">
+				<DisabledTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPrevPage-Disabled">
 					<TexCoords left="0" right="0.640625" top="0" bottom="0.5"/>
 				</DisabledTexture>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 			</Button>
-			<Button name="SkilletSub1Button" parent="SkilletFrame">
+			<Button name="CraftForgeSub1Button" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="22" y="23"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletSub10Button" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeSub10Button" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2731,20 +2731,20 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						Skillet:ChangeItemCount(self, button, -1)
+						CraftForge:ChangeItemCount(self, button, -1)
 					</OnClick>
 				</Scripts>
-				<NormalTexture file="Interface\Addons\Skillet\Icons\Buttons\PrevPage-Up"/>
-				<PushedTexture file="Interface\Addons\Skillet\Icons\Buttons\PrevPage-Down"/>
-				<DisabledTexture file="Interface\Addons\Skillet\Icons\Buttons\PrevPage-Disabled"/>
+				<NormalTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPage-Up"/>
+				<PushedTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPage-Down"/>
+				<DisabledTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPage-Disabled"/>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 			</Button>
-			<Button name="SkilletAdd1Button" parent="SkilletFrame">
+			<Button name="CraftForgeAdd1Button" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="22" y="23"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletSub1Button" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeSub1Button" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2756,20 +2756,20 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						Skillet:ChangeItemCount(self, button, 1)
+						CraftForge:ChangeItemCount(self, button, 1)
 					</OnClick>
 				</Scripts>
-				<NormalTexture file="Interface\Addons\Skillet\Icons\Buttons\NextPage-Up"/>
-				<PushedTexture file="Interface\Addons\Skillet\Icons\Buttons\NextPage-Down"/>
-				<DisabledTexture file="Interface\Addons\Skillet\Icons\Buttons\NextPage-Disabled"/>
+				<NormalTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextPage-Up"/>
+				<PushedTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextPage-Down"/>
+				<DisabledTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextPage-Disabled"/>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 			</Button>
-			<Button name="SkilletAdd10Button" parent="SkilletFrame">
+			<Button name="CraftForgeAdd10Button" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="31" y="23"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletAdd1Button" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeAdd1Button" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2781,16 +2781,16 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						Skillet:ChangeItemCount(self, button, 10)
+						CraftForge:ChangeItemCount(self, button, 10)
 					</OnClick>
 				</Scripts>
-				<NormalTexture file="Interface\Addons\Skillet\Icons\Buttons\NextNextPage-Up">
+				<NormalTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextNextPage-Up">
 					<TexCoords left="0" right="0.640625" top="0" bottom="0.5"/>
 				</NormalTexture>
-				<PushedTexture file="Interface\Addons\Skillet\Icons\Buttons\NextNextPage-Down">
+				<PushedTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextNextPage-Down">
 					<TexCoords left="0" right="0.640625" top="0" bottom="0.5"/>
 				</PushedTexture>
-				<DisabledTexture file="Interface\Addons\Skillet\Icons\Buttons\NextNextPage-Disabled">
+				<DisabledTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextNextPage-Disabled">
 					<TexCoords left="0" right="0.640625" top="0" bottom="0.5"/>
 				</DisabledTexture>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
@@ -2800,12 +2800,12 @@
 			# A button to queue a specific number of items
 			#
 			-->
-			<Button name="SkilletQueueButton" inherits="UIPanelButtonTemplate" text="Queue" parent="SkilletFrame">
+			<Button name="CraftForgeQueueButton" inherits="UIPanelButtonTemplate" text="Queue" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="105" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletClearNumButton" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeClearNumButton" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="11" y="-4"/>
 						</Offset>
@@ -2817,8 +2817,8 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:QueueItems(button, SkilletItemCountInputBox:GetNumber())
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:QueueItems(button, CraftForgeItemCountInputBox:GetNumber())
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2827,12 +2827,12 @@
 			# A button to create a specific number of items
 			#
 			-->
-			<Button name="SkilletCreateButton" inherits="UIPanelButtonTemplate" text="Create" parent="SkilletFrame">
+			<Button name="CraftForgeCreateButton" inherits="UIPanelButtonTemplate" text="Create" parent="CraftForgeFrame">
 				<Size>
 					<AbsDimension x="105" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="SkilletQueueButton" relativePoint="BOTTOMRIGHT">
+					<Anchor point="TOPRIGHT" relativeTo="CraftForgeQueueButton" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="-1"/>
 						</Offset>
@@ -2844,8 +2844,8 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:CreateItems(button, SkilletItemCountInputBox:GetNumber())
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:CreateItems(button, CraftForgeItemCountInputBox:GetNumber())
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2854,14 +2854,14 @@
 			# A frame to hold the queue and buttons
 			#
 			-->
-			<Frame name="SkilletQueueParentBase" parent="SkilletFrame" inherits="BackdropTemplate">
+			<Frame name="CraftForgeQueueParentBase" parent="CraftForgeFrame" inherits="BackdropTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletCreateAllButton" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeCreateAllButton" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="-3"/>
 						</Offset>
 					</Anchor>
-					<Anchor point="BOTTOMRIGHT" relativeTo="SkilletFrame" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeFrame" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="-10" y="32"/>
 						</Offset>
@@ -2873,28 +2873,28 @@
 			# A frame to hold the queue of recipes in line to be crafted
 			#
 			-->
-			<Frame name="SkilletQueueParent" parent="SkilletQueueParentBase">
+			<Frame name="CraftForgeQueueParent" parent="CraftForgeQueueParentBase">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletQueueParentBase" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueParentBase" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
-					<Anchor point="BOTTOMRIGHT" relativeTo="SkilletQueueParentBase" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeQueueParentBase" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Frame>
-			<ScrollFrame name="SkilletQueueList" inherits="FauxScrollFrameTemplate" parent="SkilletQueueParent">
+			<ScrollFrame name="CraftForgeQueueList" inherits="FauxScrollFrameTemplate" parent="CraftForgeQueueParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletQueueParent" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueParent" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="5" y="-5"/>
 						</Offset>
 					</Anchor>
-					<Anchor point="BOTTOMRIGHT" relativeTo="SkilletQueueParent" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeQueueParent" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="-27" y="5"/>
 						</Offset>
@@ -2902,13 +2902,13 @@
 				</Anchors>
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(self, offset, SKILLET_TRADE_SKILL_HEIGHT, Skillet.QueueList_OnScroll)
+						FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_TRADE_SKILL_HEIGHT, CraftForge.QueueList_OnScroll)
 					</OnVerticalScroll>
 				</Scripts>
 			</ScrollFrame>
-			<Button name="SkilletQueueButton1" inherits="SkilletQueueItemButtonTemplate" parent="SkilletQueueParent">
+			<Button name="CraftForgeQueueButton1" inherits="CraftForgeQueueItemButtonTemplate" parent="CraftForgeQueueParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletQueueList" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueList" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="1" y="-1"/>
 						</Offset>
@@ -2921,12 +2921,12 @@
 			# A button that starts or continues the queue
 			#
 			-->
-			<Button name="SkilletStartQueueButton" inherits="UIPanelButtonTemplate" text="Start" parent="SkilletQueueParentBase">
+			<Button name="CraftForgeStartQueueButton" inherits="UIPanelButtonTemplate" text="Start" parent="CraftForgeQueueParentBase">
 				<Size>
 					<AbsDimension x="90" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletQueueParent" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueParent" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="-1"/>
 						</Offset>
@@ -2937,8 +2937,8 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:StartQueue_OnClick(self, button)
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:StartQueue_OnClick(self, button)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2947,12 +2947,12 @@
 			# A button that clears the current queue
 			#
 			-->
-			<Button name="SkilletEmptyQueueButton" inherits="UIPanelButtonTemplate" text="Clear" parent="SkilletQueueParentBase">
+			<Button name="CraftForgeEmptyQueueButton" inherits="UIPanelButtonTemplate" text="Clear" parent="CraftForgeQueueParentBase">
 				<Size>
 					<AbsDimension x="90" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletStartQueueButton" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeStartQueueButton" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="5" y=""/>
 						</Offset>
@@ -2960,9 +2960,9 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						Skillet:ClearQueue()
-						Skillet:UpdateTradeSkillWindow()
+						CraftForge:InventoryFilterButtons_Hide()
+						CraftForge:ClearQueue()
+						CraftForge:UpdateTradeSkillWindow()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2971,12 +2971,12 @@
 			# A button to switch queue only view
 			#
 			-->
-			<Button name="SkilletQueueOnlyButton" inherits="UIPanelButtonTemplate" text="-" parent="SkilletQueueParentBase">
+			<Button name="CraftForgeQueueOnlyButton" inherits="UIPanelButtonTemplate" text="-" parent="CraftForgeQueueParentBase">
 				<Size>
 					<AbsDimension x="15" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletEmptyQueueButton" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeEmptyQueueButton" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="5" y=""/>
 						</Offset>
@@ -2984,7 +2984,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Skillet:QueueOnlyViewToggle()
+						CraftForge:QueueOnlyViewToggle()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2993,12 +2993,12 @@
 			# Button to display the shopping list window
 			#
 			-->
-			<Button name="SkilletShoppingListButton" inherits="UIPanelButtonTemplate" text="Shopping List" parent="SkilletQueueParentBase">
+			<Button name="CraftForgeShoppingListButton" inherits="UIPanelButtonTemplate" text="Shopping List" parent="CraftForgeQueueParentBase">
 				<Size>
 					<AbsDimension x="110" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletQueueOnlyButton" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueOnlyButton" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="5" y=""/>
 						</Offset>
@@ -3006,11 +3006,11 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Skillet:InventoryFilterButtons_Hide()
-						if Skillet:IsShoppingListVisible() then
-							Skillet:HideShoppingList()
+						CraftForge:InventoryFilterButtons_Hide()
+						if CraftForge:IsShoppingListVisible() then
+							CraftForge:HideShoppingList()
 						else
-							Skillet:DisplayShoppingList(false)
+							CraftForge:DisplayShoppingList(false)
 						end
 					</OnClick>
 				</Scripts>
@@ -3018,7 +3018,7 @@
 		</Frames>
 		<Scripts>
 			<OnKeyDown>
-				Skillet:SkillButton_OnKeyDown(self, key)
+				CraftForge:SkillButton_OnKeyDown(self, key)
 			</OnKeyDown>
 			<OnShow>
 				PlaySound(SOUNDKIT.IG_BACKPACK_OPEN) -- "igBackPackOpen"
@@ -3029,13 +3029,13 @@
 				self:EnableKeyboard(false)
 			</OnHide>
 			<OnUpdate>
-				if Skillet.dragEngaged then
-					Skillet:SkillButton_DragUpdate()
+				if CraftForge.dragEngaged then
+					CraftForge:SkillButton_DragUpdate()
 				end
 			</OnUpdate>
 		</Scripts>
 	</Frame> <!-- main trade skill frame -->
-	<Frame name="SkilletStandaloneQueue" toplevel="true" movable="true" clampedToScreen="true" resizable="true" parent="UIParent" enableMouse="true" hidden="true" inherits="BackdropTemplate">
+	<Frame name="CraftForgeStandaloneQueue" toplevel="true" movable="true" clampedToScreen="true" resizable="true" parent="UIParent" enableMouse="true" hidden="true" inherits="BackdropTemplate">
 		<Size>
 			<AbsDimension x="385" y="170"/>
 		</Size>
@@ -3045,9 +3045,9 @@
 			# A button on the top right to close the window
 			#
 			-->
-			<Button name="SkilletStandaloneQueueCloseButton" inherits="UIPanelCloseButton" parent="SkilletStandaloneQueue">
+			<Button name="CraftForgeStandaloneQueueCloseButton" inherits="UIPanelCloseButton" parent="CraftForgeStandaloneQueue">
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="SkilletStandaloneQueue" relativePoint="TOPRIGHT">
+					<Anchor point="TOPRIGHT" relativeTo="CraftForgeStandaloneQueue" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="-2" y="-2"/>
 						</Offset>
@@ -3055,7 +3055,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Skillet:StandaloneQueueClose()
+						CraftForge:StandaloneQueueClose()
 					</OnClick>
 				</Scripts>
 			</Button>

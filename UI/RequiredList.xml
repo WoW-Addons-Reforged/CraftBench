@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	Skillet: A tradeskill window replacement.
+	CraftForge: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #  Template for all the buttons we use to display items in the required list
 #
 -->
-	<Frame name="SkilletRequiredListItemTemplate" hidden="false" virtual="true">
+	<Frame name="CraftForgeRequiredListItemTemplate" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="190" y="20"/>
 		</Size>
@@ -89,10 +89,10 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 			</OnLoad>
 			<OnEnter>
-				Skillet:RequiredButtonOnEnter(self, SkilletFrame.selectedSkill, self:GetID())
+				CraftForge:RequiredButtonOnEnter(self, CraftForgeFrame.selectedSkill, self:GetID())
 			</OnEnter>
 			<OnLeave>
-				Skillet:RequiredButtonOnLeave(self, SkilletFrame.selectedSkill, self:GetID())
+				CraftForge:RequiredButtonOnLeave(self, CraftForgeFrame.selectedSkill, self:GetID())
 			</OnLeave>
 			<OnUpdate>
 				CursorOnUpdate(self)
@@ -100,19 +100,19 @@
 			<OnClick>
 				if ( button == "LeftButton" and IsShiftKeyDown() ) then
 				<!-- Put a link to the *item* in chat into the current chat edit box -->
-					local link = Skillet:GetRequiredItemLink(Skillet.selectedSkill, self:GetID())
+					local link = CraftForge:GetRequiredItemLink(CraftForge.selectedSkill, self:GetID())
 					if not ChatEdit_InsertLink(link) then
-						Skillet:XMLDebugLink("RequiredItemLink: link= ", link)
+						CraftForge:XMLDebugLink("RequiredItemLink: link= ", link)
 					end
 				else
 				<!-- generic click action -->
-					Skillet:RequiredButtonOnClick(self, button, Skillet.selectedSkill, self:GetID())
+					CraftForge:RequiredButtonOnClick(self, button, CraftForge.selectedSkill, self:GetID())
 				end
 			</OnClick>
 		</Scripts>
 	</Frame>
 
-<CheckButton name="SkilletRequiredListCheckButtonTemplate" virtual="true">
+<CheckButton name="CraftForgeRequiredListCheckButtonTemplate" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -136,7 +136,7 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<CheckButton name="SkilletRequiredListCheckButtonTemplate2" virtual="true">
+<CheckButton name="CraftForgeRequiredListCheckButtonTemplate2" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -160,15 +160,15 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<Frame name="SkilletRequiredList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
+<Frame name="CraftForgeRequiredList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
 	<Size><AbsDimension x="420" y="240"/></Size>
 	<Anchors>
 		<Anchor point="CENTER"/>
 	</Anchors>
 	<Frames>
-		<Button name="SkilletRequiredListCloseButton" inherits="UIPanelCloseButton" parent="SkilletRequiredList">
+		<Button name="CraftForgeRequiredListCloseButton" inherits="UIPanelCloseButton" parent="CraftForgeRequiredList">
 			<Anchors>
-				<Anchor point="TOPRIGHT" relativeTo="SkilletRequiredList" relativePoint="TOPRIGHT">
+				<Anchor point="TOPRIGHT" relativeTo="CraftForgeRequiredList" relativePoint="TOPRIGHT">
 					<Offset>
 						<AbsDimension x="-2" y="-2"/>
 					</Offset>
@@ -176,13 +176,13 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					HideUIPanel(SkilletRequiredList)
+					HideUIPanel(CraftForgeRequiredList)
 				</OnClick>
 			</Scripts>
 		</Button>
-		<CheckButton name="SkilletRequiredHaveItems" inherits="SkilletRequiredListCheckButtonTemplate2">
+		<CheckButton name="CraftForgeRequiredHaveItems" inherits="CraftForgeRequiredListCheckButtonTemplate2">
 			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="SkilletRequiredList" relativePoint="BOTTOMLEFT">
+				<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeRequiredList" relativePoint="BOTTOMLEFT">
 					<Offset>
 						<AbsDimension x="10" y="10"/>
 					</Offset>
@@ -190,33 +190,33 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					Skillet:RequiredListToggleHaveItems()
-					Skillet:UpdateRequiredListWindow()
+					CraftForge:RequiredListToggleHaveItems()
+					CraftForge:UpdateRequiredListWindow()
 				</OnClick>
 			</Scripts>
 		</CheckButton>
-		<Frame name="SkilletRequiredListParent" parent="SkilletRequiredList">
+		<Frame name="CraftForgeRequiredListParent" parent="CraftForgeRequiredList">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletRequiredList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeRequiredList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-35"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="SkilletRequiredList" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeRequiredList" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-5" y="35"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
 		</Frame>
-		<ScrollFrame name="SkilletRequiredListList" inherits="FauxScrollFrameTemplate" parent="SkilletRequiredListParent">
+		<ScrollFrame name="CraftForgeRequiredListList" inherits="FauxScrollFrameTemplate" parent="CraftForgeRequiredListParent">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletRequiredListParent" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeRequiredListParent" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-5"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="SkilletRequiredListParent" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeRequiredListParent" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-27" y="5"/>
 					</Offset>
@@ -224,13 +224,13 @@
 			</Anchors>
 			<Scripts>
 				<OnVerticalScroll>
-					FauxScrollFrame_OnVerticalScroll(self, offset, SKILLET_REQUIRED_LIST_HEIGHT, Skillet.RequiredList_OnScroll)
+					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_REQUIRED_LIST_HEIGHT, CraftForge.RequiredList_OnScroll)
 				</OnVerticalScroll>
 			</Scripts>
 		</ScrollFrame>
-		<Button name="SkilletRequiredListButton1" inherits="SkilletRequiredListItemTemplate">
+		<Button name="CraftForgeRequiredListButton1" inherits="CraftForgeRequiredListItemTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletRequiredListList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeRequiredListList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
 					</Offset>

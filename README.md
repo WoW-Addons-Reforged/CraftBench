@@ -1,52 +1,35 @@
-# Skillet
-World of Warcraft addon which replaces the default tradeskill and craft UI.
-<p>To report bugs and request new features check:&nbsp;<a href="https://www.curseforge.com/wow/addons/skillet/issues">https://www.curseforge.com/wow/addons/skillet/issues</a><br/>
-To help with Localization see:&nbsp;<a href="https://www.curseforge.com/wow/addons/skillet/localization">https://www.curseforge.com/wow/addons/skillet/localization</a></p>
-<p><strong>Other than "Please open an issue" I won't be responding to bug reports in comments.</strong></p>
-<h3><strong>Features:</strong></h3>
-<ul>
-<li>Built-in queue for creating multiple, different items</li>
-<li>Queued items are saved when you log out and are restored on log in</li>
-<li>Automatically buy reagents for queued recipes when visiting a vendor</li>
-<li>If you can craft a reagent needed by a recipe, then clicking on that reagent will take you to its recipe (same features as <em>Reverse Engineering</em>)</li>
-<li>If the item to be crafted requires a minimum level to use, that level can be displayed along with the recipe (disabled by default)</li>
-<li>The shopping list of items needed for all queued recipes for all alts can be displayed at banks, auction houses, or from the command line</li>
-<li>Items needed for crafting queued items can be automatically retrieved from your bank or guild bank (by using the shopping list)</li>
-<li>User editable list of notes attached to reagents and crafted items</li>
-<li>Queued counts added to (optional) notes display</li>
-<li>Crafted counts can be adjusted with Right-click and Shift-right-click on the item icon in the detail frame</li>
-<li>Recipes can be filtered by name, whether or not you could level when creating the item, and whether or not you have the mats available</li>
-<li>Sorting of recipes (name, difficulty, level, and quality of crafted item)</li>
-<li>Tracking inventory on alternate characters</li>
-<li>Plugin support for (limited) modification of the Skillet frame by other addons</li>
-<li>Custom grouping</li>
-<li>User managed Ignored Materials List</li>
-<li>Complete or mostly complete localizations for deDE, esES, frFR, ruRU, koKR, zhCN, zhTW</li>
-</ul>
-<h3><strong>Compatibility:</strong></h3>
-<ul>
-<li><strong>TradeSkillMaster</strong></li>
-<ul>
-<li>Skillet can be used with TSM</li>
-<li>If the TSM Crafting UI is set to 'WOW UI' mode (use the 'WOW UI' button and then close the TSM UI) or</li>
-<li>If the Skillet Appearance option 'TradeSkillMaster Compatibility' is checked (requires a /reload). Note: Skillet frames have strata and background changes in this mode</li>
-</ul>
-</ul>
-<h3><strong>FAQ:</strong></h3>
-<ul>
-<li><strong>What are the numbers in the middle and how to hide them? -&nbsp;</strong>Right-click on the bag icon above the numbers.</li>
-<ul>
-<li>Blue = How many you have</li>
-<li>Green = How many you can make from materials you have.</li>
-<li>Yellow = How many you can make by crafting the reagents.</li>
-<li>Orange = How many you can make if you purchase materials from a vendor.</li>
-<li>Purple = How many you can make using materials on your alts.</li>
-</ul>
-<li><strong>How to search in the item name only?</strong> - Start your search phrase with exclamation mark: !ink</li>
-<li><strong>How to search in Auction House?</strong> - Alt+Click on shopping list</li>
-<li><strong>How to retrieve items from bank?</strong> - Turn on "Display shopping list at banks"</li>
-<li><strong>How to turn off Skillet temporarily?</strong> - Shift+Click your profession button/link. It also works for View All in your Guild Tab.</li>
-<li><strong>How to use Enchanting Vellum?</strong> - Right Click on Process/Create/Create All button. <em>You create only 1 enchanted vellum, repeat to create more</em></li>
-<li><strong>How to paste a recipe in the chat?</strong> - double click on the recipe list</li>
-</ul>
-</ul>
+<div align="center">
+  <img src=".github/assets/social-banner.jpg" alt="CraftForge Banner" width="100%" />
+
+  # CraftForge
+
+  **All-in-One World of Warcraft Profession, Crafting Queue, Shopping List & Material-Processing Suite.**
+
+  [![Code Quality](https://github.com/gOOvER/CraftForge/actions/workflows/quality.yml/badge.svg)](https://github.com/gOOvER/CraftForge/actions/workflows/quality.yml)
+  [![Release](https://github.com/gOOvER/CraftForge/actions/workflows/release.yml/badge.svg)](https://github.com/gOOvER/CraftForge/actions/workflows/release.yml)
+  [![GitHub Release](https://img.shields.io/github/v/release/gOOvER/CraftForge?include_prereleases&label=Version&color=brightgreen&logo=github)](https://github.com/gOOvER/CraftForge/releases/latest)
+  [![CurseForge](https://img.shields.io/badge/CurseForge-CraftForge-f16436?logo=curseforge&logoColor=white)](https://www.curseforge.com/wow/addons/craftforge)
+  [![Wago.io](https://img.shields.io/badge/Wago.io-CraftForge-c1272d?logo=wagtail&logoColor=white)](https://addons.wago.io/addons/craftforge)
+  [![WoW Versions](https://img.shields.io/badge/WoW-Retail%20%7C%20Classic%20%7C%20BCC%20%7C%20Wrath%20%7C%20Cata%20%7C%20MoP%20%7C%20Forever-f8b700?logo=battle.net&logoColor=white)](#-supported-wow-versions)
+  [![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE.txt)
+  [![Support](https://img.shields.io/badge/Support-donate.goover.dev-ff69b4?logo=ko-fi&logoColor=white)](https://donate.goover.dev)
+</div>
+
+---
+
+## Features
+- **Complete Profession Replacement**: Enhanced crafting UI with multi-item crafting queues, persistent cross-session queues, custom recipe grouping, filtering, and sorting (name, difficulty, level, quality, profit).
+- **Smart Reagent & Inventory Tracking**: Tracks materials across bags, bank, warband/reagent bank, and alts, with recursive craftability counts and automatic vendor reagent purchasing.
+- **Shopping List & Bank/AH Integration**: Displays required materials at banks, guild banks, and auction houses with one-click item retrieval and Auctionator/TSM/OribosExchange integration.
+- **Recipe Notes & Ignored Materials**: Attach custom notes to recipes and reagents, and exclude materials you do not want tracked or purchased.
+- **Planned Expansion**: Built-in one-click material processing (Prospecting, Milling, Disenchanting, Lockpicking, Salvaging) — *Molinari-style integration coming next*.
+
+## Supported WoW Versions
+- **Retail** (`12.01.05`, `12.01.07`)
+- **Classic / Era / Anniversary / MoP** (`1.16.x` / multi-flavor support via `CraftForge.toc`)
+
+## Slash Commands
+- `/craftforge` — Open options / manage CraftForge
+
+## Attribution & License
+**CraftForge** is based on **Skillet** (by *yossa*, *bsmorgan*, *lilsparky*, *nogudnik*, and *Slartie*) and licensed under the **GNU General Public License v3.0 (GPL-3.0)**. See [LICENSE.txt](LICENSE.txt) for details.

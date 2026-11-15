@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = Skillet.L
+local L = CraftForge.L
 
 local AceGUI = LibStub("AceGUI-3.0")
 local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
@@ -33,10 +33,10 @@ local function ColorCodeText(text, color)
 end
 
 local function InitializeDB(self)
-	if not Skillet.db.global.NewsDB then
-		Skillet.db.global.NewsDB = {}
+	if not CraftForge.db.global.NewsDB then
+		CraftForge.db.global.NewsDB = {}
 	end
-	self.db = Skillet.db.global.NewsDB
+	self.db = CraftForge.db.global.NewsDB
 	if not self.db.show_news then
 		self.db.show_news = 1
 	end
@@ -47,7 +47,7 @@ end
 
 local function Create(self)
 	local frame = AceGUI:Create("Window")
-	Skillet.NewsFrame = frame
+	CraftForge.NewsFrame = frame
 	frame:SetLayout("Flow")
 	frame:SetWidth(600)
 	local options = {
@@ -69,7 +69,7 @@ local function Create(self)
 		order = 1
 	}
 	local counter = options.args.show_news.order + 1
-	for _,versionData in ipairs(Skillet.NewsData) do
+	for _,versionData in ipairs(CraftForge.NewsData) do
 		local args = {}
 		for _, group in ipairs(versionData.data) do
 			local name = group.name or ""
@@ -104,8 +104,8 @@ local function Create(self)
 		}
 		counter = counter + 1
 	end
-	AceConfigRegistry:RegisterOptionsTable(Skillet.NewsName, options)
-	AceConfigDialog:Open(Skillet.NewsName, frame)
+	AceConfigRegistry:RegisterOptionsTable(CraftForge.NewsName, options)
+	AceConfigDialog:Open(CraftForge.NewsName, frame)
 	return frame
 end
 
@@ -130,8 +130,8 @@ function NewsGUI:Create()
 --	[3] = "Once per Player",
 --	[4] = "Never",
 --
-	local player = Skillet:unitName("player")
-	local version = Skillet.version
+	local player = CraftForge:unitName("player")
+	local version = CraftForge.version
 	--DA.DEBUG(1,"NewsGUI:Create: show_news= "..tostring(self.db.show_news)..", player= "..tostring(player)..", version= "..tostring(version))
 	--DA.DEBUG(1,"NewsGUI:Create: lastVersionA= "..tostring(self.db.lastVersionA)..", lastVersion[player]= "..tostring(self.db.lastVersion[player]))
 	if self.db.show_news == 4 or
@@ -159,4 +159,4 @@ function NewsGUI:Reset()
 	self.top:SetPoint("CENTER", 0, 0)
 end
 
-Skillet.NewsGUI = NewsGUI
+CraftForge.NewsGUI = NewsGUI

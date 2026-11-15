@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("Skillet")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
 
-function Skillet:RequiredListToggleHaveItems()
+function CraftForge:RequiredListToggleHaveItems()
 	self.db.profile.hide_unowned = not self.db.profile.hide_unowned
 	self:HideRequiredList()
 end
@@ -29,12 +29,12 @@ end
 -- ===========================================================================================
 local num_buttons = 0
 local function get_button(i)
-	local button = _G["SkilletRequiredListButton"..i]
+	local button = _G["CraftForgeRequiredListButton"..i]
 	if not button then
-		button = CreateFrame("Button", "SkilletRequiredListButton"..i, SkilletRequiredListParent, "SkilletRequiredListItemTemplate")
-		button:SetParent(SkilletRequiredListParent)
-		button:SetPoint("TOPLEFT", "SkilletRequiredListButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(SkilletRequiredListParent:GetFrameLevel() + 1)
+		button = CreateFrame("Button", "CraftForgeRequiredListButton"..i, CraftForgeRequiredListParent, "CraftForgeRequiredListItemTemplate")
+		button:SetParent(CraftForgeRequiredListParent)
+		button:SetPoint("TOPLEFT", "CraftForgeRequiredListButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftForgeRequiredListParent:GetFrameLevel() + 1)
 	end
 	return button
 end
@@ -55,14 +55,14 @@ local FrameBackdrop = {
 	insets = { left = 3, right = 3, top = 30, bottom = 3 }
 }
 
-SKILLET_REQUIRED_LIST_HEIGHT = 16
+CRAFTFORGE_REQUIRED_LIST_HEIGHT = 16
 local function createRequiredListFrame(self)
 	--DA.DEBUG(0,"createRequiredListFrame")
-	local frame = SkilletRequiredList
+	local frame = CraftForgeRequiredList
 	if not frame then
 		return nil
 	end
-	if TSM_API and Skillet.db.profile.tsm_compat then
+	if TSM_API and CraftForge.db.profile.tsm_compat then
 		frame:SetFrameStrata("TOOLTIP")
 	else
 		frame:SetFrameStrata("HIGH")
@@ -89,25 +89,25 @@ local function createRequiredListFrame(self)
 	local title = CreateFrame("Frame",nil,frame)
 	title:SetPoint("TOPLEFT",titlebar,"TOPLEFT",0,0)
 	title:SetPoint("BOTTOMRIGHT",titlebar2,"BOTTOMRIGHT",0,0)
-	local titletext = title:CreateFontString("SkilletRequiredListTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = title:CreateFontString("CraftForgeRequiredListTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT",title,"TOPLEFT",0,0)
 	titletext:SetPoint("TOPRIGHT",title,"TOPRIGHT",0,0)
 	titletext:SetHeight(26)
 	titletext:SetShadowColor(0,0,0)
 	titletext:SetShadowOffset(1,-1)
 	titletext:SetTextColor(1,1,1)
-	titletext:SetText("Skillet: Required Reagents")
+	titletext:SetText("CraftForge: Required Reagents")
 	frame.titletext = titletext
-	SkilletRequiredHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
-	SkilletRequiredHaveItems:SetChecked(Skillet.db.profile.hide_unowned)
+	CraftForgeRequiredHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
+	CraftForgeRequiredHaveItems:SetChecked(CraftForge.db.profile.hide_unowned)
 --
 -- The frame enclosing the scroll list needs a border and a background .....
 --
-	local backdrop = SkilletRequiredListParent
+	local backdrop = CraftForgeRequiredListParent
 	if not backdrop.SetBackdrop then
 		Mixin(backdrop, BackdropTemplateMixin)
 	end
-	if TSM_API and Skillet.db.profile.tsm_compat then
+	if TSM_API and CraftForge.db.profile.tsm_compat then
 		backdrop:SetFrameStrata("HIGH")
 	end
 	backdrop:SetBackdrop(ControlBackdrop)
@@ -128,7 +128,7 @@ local function createRequiredListFrame(self)
 --
 -- lets play the resize me game!
 --
-	Skillet:EnableResize(frame, 420, 240, Skillet.UpdateRequiredListWindow)
+	CraftForge:EnableResize(frame, 420, 240, CraftForge.UpdateRequiredListWindow)
 --
 -- so hitting [ESC] will close the window
 --
@@ -136,14 +136,14 @@ local function createRequiredListFrame(self)
 --
 -- Adjust the button height
 --
-	SKILLET_REQUIRED_LIST_HEIGHT = math.max(SkilletRequiredListButton1:GetHeight(), SKILLET_REQUIRED_LIST_HEIGHT)
+	CRAFTFORGE_REQUIRED_LIST_HEIGHT = math.max(CraftForgeRequiredListButton1:GetHeight(), CRAFTFORGE_REQUIRED_LIST_HEIGHT)
 	return frame
 end
 
 --
 -- Called to update the optional list window
 --
-function Skillet:UpdateRequiredListWindow()
+function CraftForge:UpdateRequiredListWindow()
 	--DA.DEBUG(0,"UpdateRequiredListWindow()")
 	self.InProgress.optional = true
 	local numItems
@@ -154,24 +154,24 @@ function Skillet:UpdateRequiredListWindow()
 	else
 		return
 	end
-	local height = SkilletRequiredListParent:GetHeight() - 30 -- Allow for frame border
-	local width = SkilletRequiredListParent:GetWidth() - 30 -- Allow for scrollbars
-	--DA.DEBUG(1,"UpdateRequiredListWindow: SkilletRequiredListParent height= "..tostring(height)..", SKILLET_REQUIRED_LIST_HEIGHT= "..tostring(SKILLET_REQUIRED_LIST_HEIGHT))
-	--DA.DEBUG(1,"UpdateRequiredListWindow: SkilletRequiredListParent width= "..tostring(width))
-	local button_count = height / SKILLET_REQUIRED_LIST_HEIGHT
+	local height = CraftForgeRequiredListParent:GetHeight() - 30 -- Allow for frame border
+	local width = CraftForgeRequiredListParent:GetWidth() - 30 -- Allow for scrollbars
+	--DA.DEBUG(1,"UpdateRequiredListWindow: CraftForgeRequiredListParent height= "..tostring(height)..", CRAFTFORGE_REQUIRED_LIST_HEIGHT= "..tostring(CRAFTFORGE_REQUIRED_LIST_HEIGHT))
+	--DA.DEBUG(1,"UpdateRequiredListWindow: CraftForgeRequiredListParent width= "..tostring(width))
+	local button_count = height / CRAFTFORGE_REQUIRED_LIST_HEIGHT
 	button_count = math.floor(button_count) - 1
 	--DA.DEBUG(1,"UpdateRequiredListWindow: numItems= "..tostring(numItems)..", button_count= "..tostring(button_count))
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(SkilletRequiredListList,			-- frame
+	FauxScrollFrame_Update(CraftForgeRequiredListList,			-- frame
 							numItems,						-- num items
 							button_count,					-- num to display
-							SKILLET_REQUIRED_LIST_HEIGHT)	-- value step (item height)
+							CRAFTFORGE_REQUIRED_LIST_HEIGHT)	-- value step (item height)
 --
 -- Where in the list of items to start counting.
 --
-	local itemOffset = FauxScrollFrame_GetOffset(SkilletRequiredListList)
+	local itemOffset = FauxScrollFrame_GetOffset(CraftForgeRequiredListList)
 	--DA.DEBUG(1,"UpdateRequiredListWindow: itemOffset= "..tostring(itemOffset))
 	for i=1, button_count, 1 do
 		num_buttons = math.max(num_buttons, i)
@@ -188,7 +188,7 @@ function Skillet:UpdateRequiredListWindow()
 			local oreagentName, oreagentLink = C_Item.GetItemInfo(oreagentID)
 			local oreagentQuality
 			if not oreagentName then
-				Skillet.optionalDataNeeded = true
+				CraftForge.optionalDataNeeded = true
 				C_Item.RequestLoadItemDataByID(oreagentID)
 				oreagentName = "item:"..tostring(oreagentID)
 			end
@@ -245,25 +245,25 @@ end
 --
 -- Updates the scrollbar when a scroll event happens
 --
-function Skillet:RequiredList_OnScroll()
-	Skillet:UpdateRequiredListWindow()
+function CraftForge:RequiredList_OnScroll()
+	CraftForge:UpdateRequiredListWindow()
 end
 
 --
 -- Functions to show and hide the RequiredList
 --
-function Skillet:DisplayRequiredList()
+function CraftForge:DisplayRequiredList()
 	--DA.DEBUG(0,"DisplayRequiredList()")
 	if not self.RequiredList then
 		self.RequiredList = createRequiredListFrame(self)
 	end
 	if not self.RequiredList:IsVisible() then
-		self.RequiredList.titletext:SetText("Skillet: Required Reagents")
+		self.RequiredList.titletext:SetText("CraftForge: Required Reagents")
 		self.RequiredList:Show()
 	end
 end
 
-function Skillet:HideRequiredList(clear)
+function CraftForge:HideRequiredList(clear)
 	--DA.DEBUG(0,"HideRequiredList()")
 	if self.RequiredList then
 		self.RequiredList:Hide()
@@ -274,15 +274,15 @@ function Skillet:HideRequiredList(clear)
 end
 
 --
--- Called when an required reagent button in the Skillet detail frame is clicked.
+-- Called when an required reagent button in the CraftForge detail frame is clicked.
 -- This required list is used for selecting Required reagents.
 -- This has the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function Skillet:RequiredReagentOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftForge:RequiredReagentOnClick(button, mouse, skillIndex, reagentIndex)
 	DA.DEBUG(0,"RequiredReagentOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
-	SkilletRequiredHaveItems:Hide()
+	CraftForgeRequiredHaveItems:Hide()
 	local thisRequired, index
 --
 -- Required reagents are identified with a negative index < -100.
@@ -312,7 +312,7 @@ end
 -- Returns a link for the required reagent required to create the specified
 -- item, the index'th reagent required for the item is returned
 --
-function Skillet:GetRequiredItemLink(skillIndex, index)
+function CraftForge:GetRequiredItemLink(skillIndex, index)
 	--DA.DEBUG(0,"GetRequiredItemLink("..tostring(skillIndex)..", "..tostring(index)..")")
 	if skillIndex and index then
 		local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
@@ -327,17 +327,17 @@ end
 --
 -- Called when then mouse enters a required button
 --
-function Skillet:RequiredButtonOnEnter(button, skillIndex, optionalIndex)
+function CraftForge:RequiredButtonOnEnter(button, skillIndex, optionalIndex)
 	--DA.DEBUG(0,"RequiredButtonOnEnter("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(optionalIndex)..")")
-	local tip = GameTooltip -- SkilletTradeskillTooltip
+	local tip = GameTooltip -- CraftForgeTradeskillTooltip
 	tip:SetOwner(button, "ANCHOR_BOTTOMRIGHT")
-	if Skillet.db.profile.scale_tooltip then
+	if CraftForge.db.profile.scale_tooltip then
 		local uiScale = 1.0;
 		if ( GetCVar("useUiScale") == "1" ) then
 			uiScale = tonumber(GetCVar("uiscale"))
 		end
-		if Skillet.db.profile.ttscale then
-			uiScale = uiScale * Skillet.db.profile.ttscale
+		if CraftForge.db.profile.ttscale then
+			uiScale = uiScale * CraftForge.db.profile.ttscale
 		end
 		tip:SetScale(uiScale)
 	end
@@ -350,11 +350,11 @@ end
 --
 -- called then the mouse leaves an optional button
 --
-function Skillet:RequiredButtonOnLeave(button, skillIndex, optionalIndex)
+function CraftForge:RequiredButtonOnLeave(button, skillIndex, optionalIndex)
 	--DA.DEBUG(0,"RequiredButtonOnLeave("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(optionalIndex)..")")
-	local tip = GameTooltip -- SkilletTradeskillTooltip
-	if Skillet.db.profile.scale_tooltip then
-		tip:SetScale(Skillet.gttScale)
+	local tip = GameTooltip -- CraftForgeTradeskillTooltip
+	if CraftForge.db.profile.scale_tooltip then
+		tip:SetScale(CraftForge.gttScale)
 	end
 	tip:Hide()
 	ResetCursor()
@@ -366,7 +366,7 @@ end
 -- These all have the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function Skillet:RequiredButtonOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftForge:RequiredButtonOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"RequiredButtonOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	--DA.DEBUG(1,"RequiredButtonOnClick: cachedRequiredIndex= "..tostring(self.cachedRequiredIndex)..", cachedRequiredList= "..DA.DUMP(self.cachedRequiredList))
 	local oreagentID = self.cachedRequiredList.reagents[reagentIndex].itemID

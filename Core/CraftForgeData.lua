@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,16 +18,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
 local PT = LibStub("LibPeriodicTable-3.1")
-local L = Skillet.L
+local L = CraftForge.L
 
 --[[ == Global Tables == ]]--
--- (moved to SkilletTables.lua) --
+-- (moved to CraftForgeTables.lua) --
 
 --[[ == Local Tables == ]]--
 
 --
 -- A table of tradeskills by id. This local table will be converted by
--- Skillet:CollectTradeSkillData() into localized tables tradeSkillIDsByName and tradeSkillNamesByID
+-- CraftForge:CollectTradeSkillData() into localized tables tradeSkillIDsByName and tradeSkillNamesByID
 --
 local TradeSkillList = {
 	2259,		-- alchemy
@@ -42,7 +42,7 @@ local TradeSkillList = {
 	3908,		-- tailoring
 	2550,		-- cooking
 }
-if Skillet.isForever then
+if CraftForge.isForever then
 	table.insert(TradeSkillList,3273)		-- first aid
 	table.insert(TradeSkillList,2842)		-- poisons
 	table.insert(TradeSkillList,2366)		-- herbalism (Forever Camping)
@@ -56,7 +56,7 @@ local DifficultyNum = {
 	[2] = "easy",
 	[3] = "trivial",
 }
-Skillet.DifficultyNum = DifficultyNum
+CraftForge.DifficultyNum = DifficultyNum
 
 local DifficultyText = {
 	x = "unknown",
@@ -66,7 +66,7 @@ local DifficultyText = {
 	t = "trivial",
 	u = "unavailable",
 }
-Skillet.DifficultyText = DifficultyText
+CraftForge.DifficultyText = DifficultyText
 
 local DifficultyChar = {
 	unknown = "x",
@@ -76,7 +76,7 @@ local DifficultyChar = {
 	trivial = "t",
 	unavailable = "u",
 }
-Skillet.DifficultyChar = DifficultyChar
+CraftForge.DifficultyChar = DifficultyChar
 
 local skill_style_type = {
 	["unknown"]			= { r = 1.00, g = 0.00, b = 0.00, level = 5, alttext="???", cstring = "|cffff0000"},
@@ -87,22 +87,22 @@ local skill_style_type = {
 	["header"]			= { r = 1.00, g = 0.82, b = 0,	  level = 0, alttext="",	cstring = "|cffffc800"},
 	["unavailable"]		= { r = 0.3, g = 0.3, b = 0.3,	  level = 6, alttext="",	cstring = "|cff606060"},
 }
-Skillet.skill_style_type = skill_style_type
+CraftForge.skill_style_type = skill_style_type
 
 local lastAutoTarget = {}
-function Skillet:GetAutoTargetItem(addSpellID)
+function CraftForge:GetAutoTargetItem(addSpellID)
 	--DA.DEBUG(0,"GetAutoTargetItem("..tostring(addSpellID)..")")
-	if Skillet.TradeSkillAutoTarget[addSpellID] then
+	if CraftForge.TradeSkillAutoTarget[addSpellID] then
 		local itemID = lastAutoTarget[addSpellID]
 		--DA.DEBUG(0,"itemID= "..tostring(itemID))
 		if itemID then
-			local limit = Skillet.TradeSkillAutoTarget[addSpellID][itemID]
+			local limit = CraftForge.TradeSkillAutoTarget[addSpellID][itemID]
 			local count = C_Item.GetItemCount(itemID)
 			if count >= limit then
 				return itemID
 			end
 		end
-		for itemID,limit in pairs(Skillet.TradeSkillAutoTarget[addSpellID]) do
+		for itemID,limit in pairs(CraftForge.TradeSkillAutoTarget[addSpellID]) do
 			local count = C_Item.GetItemCount(itemID)
 			--DA.DEBUG(0,"itemID= "..tostring(itemID)..", limit= "..tostring(limit)..", count= "..tostring(count))
 			if count >= limit then
@@ -114,7 +114,7 @@ function Skillet:GetAutoTargetItem(addSpellID)
 	end
 end
 
-function Skillet:GetAutoTargetMacro(addSpellID, toy, pet, petGUID)
+function CraftForge:GetAutoTargetMacro(addSpellID, toy, pet, petGUID)
 	--DA.DEBUG(0,"GetAutoTargetMacro("..tostring(addSpellID)..", "..tostring(toy)..", "..tostring(pet)..", "..tostring(petGUID)..")")
 	if toy then
 		local _, name = C_ToyBox.GetToyInfo(addSpellID)
@@ -122,7 +122,7 @@ function Skillet:GetAutoTargetMacro(addSpellID, toy, pet, petGUID)
 	elseif pet then
 		return "/run C_PetJournal.SummonPetByGUID('"..tostring(petGUID).."')"
 	else
-		local itemID = Skillet:GetAutoTargetItem(addSpellID)
+		local itemID = CraftForge:GetAutoTargetItem(addSpellID)
 		if itemID then
 			return "/cast "..(C_Spell.GetSpellName(addSpellID) or "").."\n/use "..(C_Item.GetItemInfo(itemID) or "")
 		else
@@ -135,7 +135,7 @@ end
 -- @param itemID number
 -- @param includeBank boolean?
 -- @return ItemLocationMixin | nil itemLocation
-function Skillet:GetItemLocationFromItemID(itemID, includeBank)
+function CraftForge:GetItemLocationFromItemID(itemID, includeBank)
 	DA.DEBUG(0,"GetItemLocationFromItemID("..tostring(itemID)..", "..tostring(includeBank)..")")
     local function FindBagAndSlot(itemID)
 		local Bags = {
@@ -181,7 +181,7 @@ end
 --
 -- Adds an recipe source for an itemID (recipeID produces itemID)
 --
-function Skillet:ItemDataAddRecipeSource(itemID,recipeID)
+function CraftForge:ItemDataAddRecipeSource(itemID,recipeID)
 	if not itemID or not recipeID then return end
 --	if not self.db.global.itemRecipeSource then
 --		self.db.global.itemRecipeSource = {}
@@ -198,7 +198,7 @@ end
 --
 -- Adds a recipe usage for an itemID (recipeID uses itemID as a reagent)
 --
-function Skillet:ItemDataAddUsedInRecipe(itemID,recipeID)
+function CraftForge:ItemDataAddUsedInRecipe(itemID,recipeID)
 	if not itemID or not recipeID or itemID == 0 then return end
 --	if not self.db.global.itemRecipeUsedIn then
 --		self.db.global.itemRecipeUsedIn = {}
@@ -212,7 +212,7 @@ end
 --
 -- Goes thru the stored recipe list and collects reagent and item information as well as skill lookups
 --
-function Skillet:CollectRecipeInformation()
+function CraftForge:CollectRecipeInformation()
 	for recipeID, recipeString in pairs(self.db.global.recipeDB) do
 		local tradeID, itemString, reagentString, numOptional = string.split(" ",recipeString)
 		local itemID = 0
@@ -264,35 +264,35 @@ end
 --
 -- Resets the blizzard tradeskill search filters just to make sure no other addon has monkeyed with them
 --
-function Skillet:ResetTradeSkillFilter()
-	--DA.PROFILE("Skillet:ResetTradeSkillFilter()")
-	Skillet:SetTradeSkillOption("hideuncraftable", false)
-	Skillet:SetTradeSkillOption("isfirstcraft", false)
-	Skillet:SetTradeSkillOption("filterLevel", 1)
+function CraftForge:ResetTradeSkillFilter()
+	--DA.PROFILE("CraftForge:ResetTradeSkillFilter()")
+	CraftForge:SetTradeSkillOption("hideuncraftable", false)
+	CraftForge:SetTradeSkillOption("isfirstcraft", false)
+	CraftForge:SetTradeSkillOption("filterLevel", 1)
 end
 
-function Skillet:SetTradeSkillLearned()
-	Skillet:SetGroupSelection(nil)
-	Skillet.learnedRecipes = true
-	Skillet.unlearnedRecipes = false
-	Skillet.selectedSkill = nil
-	Skillet:FilterDropDown_OnShow()
+function CraftForge:SetTradeSkillLearned()
+	CraftForge:SetGroupSelection(nil)
+	CraftForge.learnedRecipes = true
+	CraftForge.unlearnedRecipes = false
+	CraftForge.selectedSkill = nil
+	CraftForge:FilterDropDown_OnShow()
 end
 
-function Skillet:SetTradeSkillUnlearned()
-	Skillet:SetGroupSelection(nil)
-	Skillet.learnedRecipes = false
-	Skillet.unlearnedRecipes = true
-	Skillet.selectedSkill = nil
-	Skillet:FilterDropDown_OnShow()
+function CraftForge:SetTradeSkillUnlearned()
+	CraftForge:SetGroupSelection(nil)
+	CraftForge.learnedRecipes = false
+	CraftForge.unlearnedRecipes = true
+	CraftForge.selectedSkill = nil
+	CraftForge:FilterDropDown_OnShow()
 end
 
-function Skillet:SetTradeSkillBoth()
-	Skillet:SetGroupSelection(nil)
-	Skillet.learnedRecipes = true
-	Skillet.unlearnedRecipes = true
-	Skillet.selectedSkill = nil
-	Skillet:FilterDropDown_OnShow()
+function CraftForge:SetTradeSkillBoth()
+	CraftForge:SetGroupSelection(nil)
+	CraftForge.learnedRecipes = true
+	CraftForge.unlearnedRecipes = true
+	CraftForge.selectedSkill = nil
+	CraftForge:FilterDropDown_OnShow()
 end
 
 local function GetUnfilteredSubCategoryName(categoryID, ...)
@@ -309,8 +309,8 @@ local function GetUnfilteredSubCategoryName(categoryID, ...)
 			local subCategoryID = select(i, ...)
 			if not C_TradeSkillUI.IsRecipeCategoryFiltered(categoryID, subCategoryID) then
 				local subCategoryData
-				if Skillet.db.global.Categories and tradeID then
-					subCategoryData = Skillet.db.global.Categories[tradeID][subCategoryID]
+				if CraftForge.db.global.Categories and tradeID then
+					subCategoryData = CraftForge.db.global.Categories[tradeID][subCategoryID]
 				else
 					subCategoryData = C_TradeSkillUI.GetCategoryInfo(subCategoryID)
 				end
@@ -333,8 +333,8 @@ local function GetUnfilteredCategoryName(...)
 		local categoryID = select(i, ...)
 		if not C_TradeSkillUI.IsRecipeCategoryFiltered(categoryID) then
 			local categoryData
-			if Skillet.db.global.Categories and tradeID then
-				categoryData = Skillet.db.global.Categories[tradeID][categoryID]
+			if CraftForge.db.global.Categories and tradeID then
+				categoryData = CraftForge.db.global.Categories[tradeID][categoryID]
 			else
 				categoryData = C_TradeSkillUI.GetCategoryInfo(categoryID)
 			end
@@ -354,15 +354,15 @@ local function GetUnfilteredInventorySlotName(...)
 	return nil;
 end
 
-function Skillet:PrintTradeSkillFilter()
+function CraftForge:PrintTradeSkillFilter()
 	DA.DEBUG(0,"PrintTradeSkillFilter()")
 end
 
-function Skillet:ExpandTradeSkillSubClass(i)
+function CraftForge:ExpandTradeSkillSubClass(i)
 	--DA.DEBUG(0,"ExpandTradeSkillSubClass("..tostring(i)..")")
 end
 
-function Skillet:GetRecipeName(id)
+function CraftForge:GetRecipeName(id)
 	if not id then return "unknown" end
 	local name = C_Spell.GetSpellName(id)
 	--DA.DEBUG(0,"name "..(id or "nil").." "..(name or "nil"))
@@ -371,14 +371,14 @@ function Skillet:GetRecipeName(id)
 	end
 end
 
-function Skillet:GetRecipe(id)
+function CraftForge:GetRecipe(id)
 	--DA.DEBUG(0,"GetRecipe("..tostring(id)..")")
 	if id and id ~= 0 then
-		if Skillet.data.recipeList[id] then
-			return Skillet.data.recipeList[id]
+		if CraftForge.data.recipeList[id] then
+			return CraftForge.data.recipeList[id]
 		end
-		if Skillet.db.global.recipeDB[id] then
-			local recipeString = Skillet.db.global.recipeDB[id]
+		if CraftForge.db.global.recipeDB[id] then
+			local recipeString = CraftForge.db.global.recipeDB[id]
 			--DA.DEBUG(0,"recipeString= "..tostring(recipeString))
 			local tradeID, itemString, reagentString, numOptional = string.split(" ",recipeString)
 			--DA.DEBUG(0,"numOptional= "..tostring(numOptional))
@@ -402,77 +402,77 @@ function Skillet:GetRecipe(id)
 			else
 				--DA.DEBUG(0,"id= "..tostring(id)..", recipeString= "..tostring(recipeString))
 			end
-			Skillet.data.recipeList[id] = {}
-			Skillet.data.recipeList[id].spellID = tonumber(id)
-			Skillet.data.recipeList[id].name = C_Spell.GetSpellName(tonumber(id))
-			Skillet.data.recipeList[id].tradeID = tonumber(tradeID)
-			Skillet.data.recipeList[id].itemID = tonumber(itemID)
-			if Skillet.db.global.AdjustNumMade and Skillet.db.global.AdjustNumMade[id] then
-				Skillet.data.recipeList[id].numMade = Skillet.db.global.AdjustNumMade[id]
+			CraftForge.data.recipeList[id] = {}
+			CraftForge.data.recipeList[id].spellID = tonumber(id)
+			CraftForge.data.recipeList[id].name = C_Spell.GetSpellName(tonumber(id))
+			CraftForge.data.recipeList[id].tradeID = tonumber(tradeID)
+			CraftForge.data.recipeList[id].itemID = tonumber(itemID)
+			if CraftForge.db.global.AdjustNumMade and CraftForge.db.global.AdjustNumMade[id] then
+				CraftForge.data.recipeList[id].numMade = CraftForge.db.global.AdjustNumMade[id]
 			else
-				Skillet.data.recipeList[id].numMade = tonumber(numMade)
+				CraftForge.data.recipeList[id].numMade = tonumber(numMade)
 			end
-			Skillet.data.recipeList[id].slot = slot
-			Skillet.data.recipeList[id].reagentData = {}
+			CraftForge.data.recipeList[id].slot = slot
+			CraftForge.data.recipeList[id].reagentData = {}
 			if reagentString then
 				if reagentString ~= "-" then
 					local reagentList = { string.split(":",reagentString) }
 					local numReagents = #reagentList / 2
 					for i=1,numReagents do
-						Skillet.data.recipeList[id].reagentData[i] = {}
-						Skillet.data.recipeList[id].reagentData[i].reagentID = tonumber(reagentList[1 + (i-1)*2])
-						Skillet.data.recipeList[id].reagentData[i].numNeeded = tonumber(reagentList[2 + (i-1)*2])
+						CraftForge.data.recipeList[id].reagentData[i] = {}
+						CraftForge.data.recipeList[id].reagentData[i].reagentID = tonumber(reagentList[1 + (i-1)*2])
+						CraftForge.data.recipeList[id].reagentData[i].numNeeded = tonumber(reagentList[2 + (i-1)*2])
 					end
 				end
 			else
 				--DA.DEBUG(0,"id= "..tostring(id)..", recipeString= "..tostring(recipeString))
 			end
 			if numOptional then
-				Skillet.data.recipeList[id].numOptional = numOptional
-				--DA.DEBUG(0,"id= "..tostring(id)..", recipeString= "..DA.DUMP1(Skillet.data.recipeList[id]))
+				CraftForge.data.recipeList[id].numOptional = numOptional
+				--DA.DEBUG(0,"id= "..tostring(id)..", recipeString= "..DA.DUMP1(CraftForge.data.recipeList[id]))
 			else
 				--DA.DEBUG(0,"id= "..tostring(id)..", recipeString= "..tostring(recipeString))
 			end
-			return Skillet.data.recipeList[id]
+			return CraftForge.data.recipeList[id]
 		end
 	end
-	return Skillet.unknownRecipe
+	return CraftForge.unknownRecipe
 end
 
-function Skillet:GetNumSkills(player, trade)
+function CraftForge:GetNumSkills(player, trade)
 	--DA.DEBUG(0,"GetNumSkills("..tostring(player)..", "..tostring(trade)..")")
-	--DA.PROFILE("Skillet:GetNumSkills("..tostring(player)..", "..tostring(trade)..")")
+	--DA.PROFILE("CraftForge:GetNumSkills("..tostring(player)..", "..tostring(trade)..")")
 	local r
-	if not Skillet.data.skillDB then
+	if not CraftForge.data.skillDB then
 		r = 0
-	elseif not Skillet.data.skillDB[trade] then
+	elseif not CraftForge.data.skillDB[trade] then
 		r = 0
 	else
-		r = #Skillet.data.skillDB[trade]
+		r = #CraftForge.data.skillDB[trade]
 	end
 	--DA.DEBUG(2,"r= "..tostring(r))
 	return r
 end
 
-function Skillet:GetSkillRanks(player, trade)
-	--DA.DEBUG(0,"Skillet:GetSkillRanks("..tostring(player)..", "..tostring(trade)..")")
-	--DA.PROFILE("Skillet:GetSkillRanks("..tostring(player)..", "..tostring(trade)..")")
+function CraftForge:GetSkillRanks(player, trade)
+	--DA.DEBUG(0,"CraftForge:GetSkillRanks("..tostring(player)..", "..tostring(trade)..")")
+	--DA.PROFILE("CraftForge:GetSkillRanks("..tostring(player)..", "..tostring(trade)..")")
 	if player and trade then
-		if Skillet.db.realm.tradeSkills[player] then
-			return Skillet.db.realm.tradeSkills[player][trade]
+		if CraftForge.db.realm.tradeSkills[player] then
+			return CraftForge.db.realm.tradeSkills[player][trade]
 		end
 	end
 end
 
-function Skillet:GetSkill(player,trade,index)
+function CraftForge:GetSkill(player,trade,index)
 	--DA.DEBUG(0,"GetSkill("..tostring(player)..", "..tostring(trade)..", "..tostring(index)..")")
-	--DA.PROFILE("Skillet:GetSkill("..tostring(player)..", "..tostring(trade)..", "..tostring(index)..")")
+	--DA.PROFILE("CraftForge:GetSkill("..tostring(player)..", "..tostring(trade)..", "..tostring(index)..")")
 	if player and trade and index then
-		if not Skillet.data.skillList[trade] then
-			Skillet.data.skillList[trade] = {}
+		if not CraftForge.data.skillList[trade] then
+			CraftForge.data.skillList[trade] = {}
 		end
-		if not Skillet.data.skillList[trade][index] and Skillet.data.skillDB[trade][index] then
-			local skillString = Skillet.data.skillDB[trade][index]
+		if not CraftForge.data.skillList[trade][index] and CraftForge.data.skillDB[trade][index] then
+			local skillString = CraftForge.data.skillDB[trade][index]
 			if skillString then
 				--DA.DEBUG(1,"GetSkill: skillString= ",DA.DUMP1(skillString))
 				local skill = {}
@@ -495,10 +495,10 @@ function Skillet:GetSkill(player,trade,index)
 						end
 					end
 				end
-				Skillet.data.skillList[trade][index] = skill
+				CraftForge.data.skillList[trade][index] = skill
 			end
 		end
-		return Skillet.data.skillList[trade][index]
+		return CraftForge.data.skillList[trade][index]
 	end
 	return self.unknownRecipe
 end
@@ -506,7 +506,7 @@ end
 --
 -- Collects generic tradeskill data (id to name and name to id)
 --
-function Skillet:CollectTradeSkillData()
+function CraftForge:CollectTradeSkillData()
 	--DA.DEBUG(0,"CollectTradeSkillData()")
 	self.tradeSkillIDsByName = {}
 	self.tradeSkillNamesByID = {}
@@ -526,7 +526,7 @@ end
 --
 -- Collects currency data (id to name and name to id)
 --
-function Skillet:CollectCurrencyData()
+function CraftForge:CollectCurrencyData()
 	DA.DEBUG(0,"CollectCurrencyData()")
 	self.currencyIDsByName = {}
 	self.currencyNamesByID = {}
@@ -537,7 +537,7 @@ function Skillet:CollectCurrencyData()
 		local name = info.name
 		local isHeader = info.isHeader
 		local currencyLink = C_CurrencyInfo.GetCurrencyListLink(i)
-		local currencyID = Skillet:GetItemIDFromLink(currencyLink)
+		local currencyID = CraftForge:GetItemIDFromLink(currencyLink)
 		if not isHeader and currencyID and name then
 			self.currencyIDsByName[name] = currencyID
 			self.currencyNamesByID[currencyID] = name
@@ -548,14 +548,14 @@ end
 --
 -- Collects the basic data (which tradeskills a player has)
 --
-function Skillet:ScanPlayerTradeSkills(player)
-	DA.DEBUG(0,"Skillet:ScanPlayerTradeSkills("..tostring(player)..")")
-	if player == (Skillet:unitName("player")) then -- only for active player
+function CraftForge:ScanPlayerTradeSkills(player)
+	DA.DEBUG(0,"CraftForge:ScanPlayerTradeSkills("..tostring(player)..")")
+	if player == (CraftForge:unitName("player")) then -- only for active player
 		if not self.db.realm.tradeSkills then
 			self.db.realm.tradeSkills = {}
 		end
 		self.db.realm.tradeSkills[player] = {}
-		local skillRanksData = Skillet.db.realm.tradeSkills[player]
+		local skillRanksData = CraftForge.db.realm.tradeSkills[player]
 		for i=1,#TradeSkillList,1 do
 			local id = TradeSkillList[i]
 			--DA.DEBUG(3,"ScanPlayerTradeSkills: id= "..tostring(id))
@@ -581,7 +581,7 @@ end
 --
 -- Takes a profession and a skill index and returns the recipe
 --
-function Skillet:GetRecipeDataByTradeIndex(tradeID, index)
+function CraftForge:GetRecipeDataByTradeIndex(tradeID, index)
 	if not tradeID or not index then
 		return self.unknownRecipe
 	end
@@ -596,7 +596,7 @@ function Skillet:GetRecipeDataByTradeIndex(tradeID, index)
 	return self.unknownRecipe
 end
 
-function Skillet:CalculateCraftableCounts()
+function CraftForge:CalculateCraftableCounts()
 	--DA.DEBUG(0,"CalculateCraftableCounts()")
 	local player = self.currentPlayer
 	self.visited = {}
@@ -616,29 +616,29 @@ function Skillet:CalculateCraftableCounts()
 	--DA.DEBUG(0,"CalculateCraftableCounts: #visited= "..tostring(#self.visited))
 end
 
-function Skillet:IsFavorite(recipeID)
+function CraftForge:IsFavorite(recipeID)
 	--DA.DEBUG(0,"IsFavorite("..tostring(recipeID)..")")
 	local info = self.data.recipeInfo
 	return info and info[self.currentTrade] and info[self.currentTrade][recipeID] and info[self.currentTrade][recipeID].favorite
 end
 
-function Skillet:IsFirstCraft(recipeID)
+function CraftForge:IsFirstCraft(recipeID)
 	--DA.DEBUG(0,"IsFirstCraft("..tostring(recipeID)..")")
 	local info = self.data.recipeInfo
 	return info and info[self.currentTrade] and info[self.currentTrade][recipeID] and info[self.currentTrade][recipeID].firstCraft
 end
 
-function Skillet:ToggleFavorite(recipeID)
+function CraftForge:ToggleFavorite(recipeID)
 	local recipeInfo = self.data.recipeInfo[self.currentTrade][recipeID]
 	recipeInfo.favorite = not recipeInfo.favorite
 	C_TradeSkillUI.SetRecipeFavorite(recipeID, recipeInfo.favorite)
 end
 
-function Skillet:IsUpgradeHidden(recipeID)
-	local recipeInfo = self.data.recipeInfo[Skillet.currentTrade][recipeID]
+function CraftForge:IsUpgradeHidden(recipeID)
+	local recipeInfo = self.data.recipeInfo[CraftForge.currentTrade][recipeID]
 	--filter out upgrades
 	if recipeInfo and recipeInfo.upgradeable then
-		if Skillet.unlearnedRecipes then
+		if CraftForge.unlearnedRecipes then
 			-- for unlearned, show next upgrade to learn
 			if recipeInfo.recipeUpgrade ~= recipeInfo.learnedUpgrade + 1 then
 				return true
@@ -653,7 +653,7 @@ function Skillet:IsUpgradeHidden(recipeID)
 	return false
 end
 
-function Skillet:SetUpgradeLevels(recipeInfo)
+function CraftForge:SetUpgradeLevels(recipeInfo)
 	if recipeInfo.previousRecipeID or recipeInfo.nextRecipeID then
 		local n,m = 1,1
 		local firstRecipeInfo = recipeInfo
@@ -704,8 +704,8 @@ end
 --
 local function GetMyCategories(player, tradeID)
 	DA.DEBUG(0,"GetMyCategories("..tostring(player)..", "..tostring(tradeID)..")")
-	if not Skillet.db.global.Categories[tradeID] then
-		Skillet.db.global.Categories[tradeID] = {}
+	if not CraftForge.db.global.Categories[tradeID] then
+		CraftForge.db.global.Categories[tradeID] = {}
 	end
 	local categories = { C_TradeSkillUI.GetCategories() }
 	--DA.DEBUG(1,"GetMyCategories: categories= "..DA.DUMP1(categories))
@@ -714,7 +714,7 @@ local function GetMyCategories(player, tradeID)
 		--DA.DEBUG(2,"GetMyCategories: i= "..tostring(i)..", categoryID= "..tostring(categoryID)..
 		--	", catInfo.name= "..tostring(catInfo.name)..", type= "..tostring(catInfo.type)..", hasProgressBar= "..tostring(catInfo.hasProgressBar))
 		--DA.DEBUG(3,"GetMyCategories: catInfo= "..DA.DUMP1(catInfo))
-		Skillet.db.global.Categories[tradeID][categoryID] = catInfo
+		CraftForge.db.global.Categories[tradeID][categoryID] = catInfo
 
 		local subCategories = { C_TradeSkillUI.GetSubCategories(categoryID) }
 		--DA.DEBUG(4,"GetMyCategories: subCategories= "..DA.DUMP1(subCategories))
@@ -723,7 +723,7 @@ local function GetMyCategories(player, tradeID)
 			--DA.DEBUG(3,"GetMyCategories: j= "..tostring(j)..", subCategory= "..tostring(subCategory)..
 			--	", subCatInfo.name= "..tostring(subCatInfo.name)..", type= "..tostring(subCatInfo.type)..", hasProgressBar= "..tostring(subCatInfo.hasProgressBar))
 			--DA.DEBUG(4,"GetMyCategories: subCatInfo= "..DA.DUMP1(subCatInfo))
-			Skillet.db.global.Categories[tradeID][subCategory] = subCatInfo
+			CraftForge.db.global.Categories[tradeID][subCategory] = subCatInfo
 
 			local subsubCategories = { C_TradeSkillUI.GetSubCategories(subCategory) }
 			--DA.DEBUG(5,"GetMyCategories: subsubCategories= "..DA.DUMP1(subsubCategories))
@@ -732,7 +732,7 @@ local function GetMyCategories(player, tradeID)
 				--DA.DEBUG(4,"GetMyCategories: k= "..tostring(k)..", subsubCategory= "..tostring(subsubCategory)..
 				--	", subsubCatInfo.name= "..tostring(subsubCatInfo.name)..", type= "..tostring(subsubCatInfo.type)..", hasProgressBar= "..tostring(subsubCatInfo.hasProgressBar))
 				--DA.DEBUG(5,"GetMyCategories: subsubCatInfo= "..DA.DUMP1(subsubCatInfo))
-				Skillet.db.global.Categories[tradeID][subsubCategory] = subsubCatInfo
+				CraftForge.db.global.Categories[tradeID][subsubCategory] = subsubCatInfo
 
 				local subsubsubCategories = { C_TradeSkillUI.GetSubCategories(subsubCategory) }
 				if #subsubsubCategories > 0 then
@@ -745,9 +745,9 @@ end
 
 local function GetEmptyCategories(player,tradeID)
 	--DA.DEBUG(0,"GetEmptyCategories("..tostring(player)..", "..tostring(tradeID)..")")
-	Skillet.emptyCategoriesToAdd = {}
+	CraftForge.emptyCategoriesToAdd = {}
 	local count = 0
-	--DA.DEBUG(0,"GetEmptyCategories: "..tostring(count).." emptyCategoriesToAdd= "..DA.DUMP(Skillet.emptyCategoriesToAdd))
+	--DA.DEBUG(0,"GetEmptyCategories: "..tostring(count).." emptyCategoriesToAdd= "..DA.DUMP(CraftForge.emptyCategoriesToAdd))
 end
 
 --
@@ -761,15 +761,15 @@ local function GetRecipeList(player, tradeID)
 	local currentCategoryID, currentParentCategoryID
 	local categoryData, parentCategoryData
 	local isCurrentCategoryEnabled, isCurrentParentCategoryEnabled = true, true
-	Skillet.recipeIDs = C_TradeSkillUI.GetAllRecipeIDs()
-	Skillet.invertedRecipeIDs = tInvert(Skillet.recipeIDs)
-	local recipeIDs = Skillet.recipeIDs
-	local invertedRecipeIDs = Skillet.invertedRecipeIDs
+	CraftForge.recipeIDs = C_TradeSkillUI.GetAllRecipeIDs()
+	CraftForge.invertedRecipeIDs = tInvert(CraftForge.recipeIDs)
+	local recipeIDs = CraftForge.recipeIDs
+	local invertedRecipeIDs = CraftForge.invertedRecipeIDs
 	DA.DEBUG(0,"GetRecipeList: #recipeIDs= "..tostring(#recipeIDs))
 	for i, recipeID in ipairs(recipeIDs) do
 		local recipeInfo = C_TradeSkillUI.GetRecipeInfo(recipeID)
 		--DA.DEBUG(3,"GetRecipeList: i= "..tostring(i)..", recipeID= "..tostring(recipeID)..", recipeInfo.name= "..tostring(recipeInfo.name))
-		if (Skillet.learnedRecipes and recipeInfo.learned) or (Skillet.unlearnedRecipes and not recipeInfo.learned) then
+		if (CraftForge.learnedRecipes and recipeInfo.learned) or (CraftForge.unlearnedRecipes and not recipeInfo.learned) then
 			if recipeInfo.learned then
 				numLearned = numLearned + 1
 			else
@@ -778,7 +778,7 @@ local function GetRecipeList(player, tradeID)
 			--DA.DEBUG(3,"GetRecipeList: i= "..tostring(i)..", recipeID= "..tostring(recipeID)..", recipeInfo= "..DA.DUMP1(recipeInfo))
 			if recipeInfo.categoryID ~= currentCategoryID then
 				currentCategoryID = recipeInfo.categoryID
-				categoryData = Skillet.db.global.Categories[tradeID][currentCategoryID]
+				categoryData = CraftForge.db.global.Categories[tradeID][currentCategoryID]
 				if categoryData then
 					--DA.DEBUG(3,"GetRecipeList: categoryData= "..DA.DUMP1(categoryData))
 					--DA.DEBUG(3,"GetRecipeList: categoryData.name= "..tostring(categoryData.name)..", type= "..tostring(categoryData.type)..", uiOrder= "..tostring(categoryData.uiOrder))
@@ -787,7 +787,7 @@ local function GetRecipeList(player, tradeID)
 						--DA.DEBUG(3,"GetRecipeList: categoryData.parentCategoryID= "..tostring(categoryData.parentCategoryID))
 						currentParentCategoryID = categoryData.parentCategoryID
 						if currentParentCategoryID then
-							parentCategoryData = Skillet.db.global.Categories[tradeID][currentParentCategoryID]
+							parentCategoryData = CraftForge.db.global.Categories[tradeID][currentParentCategoryID]
 							--DA.DEBUG(3,"GetRecipeList: parentCategoryData= "..DA.DUMP1(parentCategoryData))
 							--DA.DEBUG(3,"GetRecipeList: parentCategoryData.name= "..tostring(parentCategoryData.name)..", type= "..tostring(parentCategoryData.type)..", uiOrder= "..tostring(parentCategoryData.uiOrder))
 							isCurrentParentCategoryEnabled = parentCategoryData.enabled
@@ -814,7 +814,7 @@ local function GetRecipeList(player, tradeID)
 		end
 	end
 	DA.DEBUG(0,"GetRecipeList: numLearned= "..tostring(numLearned)..", numUnlearned= "..tostring(numUnlearned))
-	Skillet.dataList = dataList
+	CraftForge.dataList = dataList
 	return dataList
 end
 
@@ -847,58 +847,58 @@ local function ScanTrade()
 		return false
 	end
 
-	if Skillet.BlizzardSkillList[parentSkillLineID] then
-		DA.MARK3("Skillet cannot display "..tostring(parentSkillLineName)..", use the Blizzard UI")
-		Skillet.useBlizzard = true
-		Skillet.currentTrade = nil
-		Skillet:SkilletClose()
+	if CraftForge.BlizzardSkillList[parentSkillLineID] then
+		DA.MARK3("CraftForge cannot display "..tostring(parentSkillLineName)..", use the Blizzard UI")
+		CraftForge.useBlizzard = true
+		CraftForge.currentTrade = nil
+		CraftForge:CraftForgeClose()
 		return false
 	end
-	tradeID = Skillet.SkillLineIDList[parentSkillLineID]	-- names are localized so use a table to translate
-	local profession = Skillet.tradeSkillNamesByID[tradeID]
+	tradeID = CraftForge.SkillLineIDList[parentSkillLineID]	-- names are localized so use a table to translate
+	local profession = CraftForge.tradeSkillNamesByID[tradeID]
 	DA.DEBUG(1,"ScanTrade: tradeID= "..tostring(tradeID)..", profession= "..tostring(profession))
 	if link then
 		DA.DEBUG(1,"ScanTrade: link= "..DA.PLINK(link))
 	else
 		DA.DEBUG(1,"ScanTrade: not linkable")
 	end
-	local player = Skillet.currentPlayer
+	local player = CraftForge.currentPlayer
 	if not player or not tradeID then
 		DA.MARK3("ScanTrade: abort! player= "..tostring(player)..", tradeID= "..tostring(tradeID)..", parentSkillLineID= "..tostring(parentSkillLineID)..", parentSkillLineName= "..tostring(parentSkillLineName))
-		Skillet.InProgress.scan = false
-		Skillet.currentTrade = nil
+		CraftForge.InProgress.scan = false
+		CraftForge.currentTrade = nil
 		return false
 	end
-	Skillet.currentTrade = tradeID
-	if not Skillet.data.skillList[tradeID] then
-		Skillet.data.skillList[tradeID]={}
+	CraftForge.currentTrade = tradeID
+	if not CraftForge.data.skillList[tradeID] then
+		CraftForge.data.skillList[tradeID]={}
 	end
-	if not Skillet.data.Filtered[tradeID] then
-		Skillet.data.Filtered[tradeID] = {}
+	if not CraftForge.data.Filtered[tradeID] then
+		CraftForge.data.Filtered[tradeID] = {}
 	end
-	if not Skillet.data.skillDB[tradeID] then
-		Skillet.data.skillDB[tradeID] = {}
+	if not CraftForge.data.skillDB[tradeID] then
+		CraftForge.data.skillDB[tradeID] = {}
 	end
-	if not Skillet.data.recipeInfo[tradeID] then
-		Skillet.data.recipeInfo[tradeID] = {}
+	if not CraftForge.data.recipeInfo[tradeID] then
+		CraftForge.data.recipeInfo[tradeID] = {}
 	end
-	if not Skillet.db.global.Categories[tradeID] then
-		Skillet.db.global.Categories[tradeID] = {}
+	if not CraftForge.db.global.Categories[tradeID] then
+		CraftForge.db.global.Categories[tradeID] = {}
 	end
-	Skillet.db.realm.tradeSkills[player][tradeID] = {}
-	Skillet.db.realm.tradeSkills[player][tradeID].link = link
+	CraftForge.db.realm.tradeSkills[player][tradeID] = {}
+	CraftForge.db.realm.tradeSkills[player][tradeID].link = link
 	--DA.DEBUG(1,"ScanTrade: skillLineRank= "..tostring(skillLineRank)..", skillLineMaxRank= "..tostring(skillLineMaxRank)..", profession= "..tostring(profession))
-	Skillet.db.realm.tradeSkills[player][tradeID].rank = skillLineRank
-	Skillet.db.realm.tradeSkills[player][tradeID].maxRank = skillLineMaxRank
-	Skillet.db.realm.tradeSkills[player][tradeID].name = profession
+	CraftForge.db.realm.tradeSkills[player][tradeID].rank = skillLineRank
+	CraftForge.db.realm.tradeSkills[player][tradeID].maxRank = skillLineMaxRank
+	CraftForge.db.realm.tradeSkills[player][tradeID].name = profession
 --
 -- Capture Category data
 --
 	GetMyCategories(player, tradeID)
 	GetEmptyCategories(player,tradeID)
-	Skillet.hasProgressBar = {} -- table of (sub)headers in this list with progress bars (used in MainFrame.lua)
+	CraftForge.hasProgressBar = {} -- table of (sub)headers in this list with progress bars (used in MainFrame.lua)
 
-	Skillet:PrintTradeSkillFilter()
+	CraftForge:PrintTradeSkillFilter()
 	local firstPass = {}
 	firstPass = GetRecipeList(player, tradeID)
 	local numSkills = #firstPass
@@ -908,7 +908,7 @@ local function ScanTrade()
 -- Build the Filtered list by removing all but the current upgradeable recipe (if we are looking at learned recipes)
 -- Build a list of categories (headers) used for this set of filtered recipes
 --
-	Skillet.data.Filtered[tradeID] = {}
+	CraftForge.data.Filtered[tradeID] = {}
 	local i = 0
 	local headerUsed = {}
 	for j = 1, numSkills do
@@ -917,52 +917,52 @@ local function ScanTrade()
 			local info = C_TradeSkillUI.GetRecipeInfo(id)
 			if info then
 				headerUsed[info.categoryID] = false
-				info = Skillet:SetUpgradeLevels(info)
-				if not Skillet.unlearnedRecipes and info.upgradeable then		-- for upgradeable recipes
+				info = CraftForge:SetUpgradeLevels(info)
+				if not CraftForge.unlearnedRecipes and info.upgradeable then		-- for upgradeable recipes
 					if info.recipeUpgrade == info.learnedUpgrade then		-- only keep the current one
 						i = i + 1
 						--DA.DEBUG(1,"ScanTrade: Adding upgradable recipe "..tostring(id)..", i= "..tostring(j))
-						Skillet.data.recipeInfo[tradeID][id] = info
-						Skillet.data.Filtered[tradeID][i] = id
+						CraftForge.data.recipeInfo[tradeID][id] = info
+						CraftForge.data.Filtered[tradeID][i] = id
 					else
 						--DA.DEBUG(1,"ScanTrade: Skipping upgradable recipe "..tostring(id)..", i= "..tostring(j))
 					end
 				else		-- not upgradeable
 					i = i + 1
 					--DA.DEBUG(1,"ScanTrade: Adding recipe "..tostring(id)..", i= "..tostring(j))
-					Skillet.data.recipeInfo[tradeID][id] = info
-					Skillet.data.Filtered[tradeID][i] = id
+					CraftForge.data.recipeInfo[tradeID][id] = info
+					CraftForge.data.Filtered[tradeID][i] = id
 				end
 			else		-- no info? probably never get here
 				i = i + 1
 				DA.DEBUG(1,"ScanTrade: Adding recipe with no info "..tostring(id)..", i= "..tostring(j))
-				Skillet.data.Filtered[tradeID][i] = id
+				CraftForge.data.Filtered[tradeID][i] = id
 			end
 		end
 	end
 	numSkills = i
 
 	DA.DEBUG(0,"ScanTrade: Processing, "..tostring(profession)..":"..tostring(tradeID).." "..tostring(numSkills).." recipes")
-	local skillDB = Skillet.data.skillDB[tradeID]
-	local skillData = Skillet.data.skillList[tradeID]
-	local recipeDB = Skillet.db.global.recipeDB
-	local nameDB = Skillet.db.global.recipeNameDB
+	local skillDB = CraftForge.data.skillDB[tradeID]
+	local skillData = CraftForge.data.skillList[tradeID]
+	local recipeDB = CraftForge.db.global.recipeDB
+	local nameDB = CraftForge.db.global.recipeNameDB
 	if not skillData then
 		DA.DEBUG(0,"ScanTrade: no skillData")
 		return false
 	end
 	local currentGroup = nil
-	local mainGroup = Skillet:RecipeGroupNew(player,tradeID,"Blizzard")
+	local mainGroup = CraftForge:RecipeGroupNew(player,tradeID,"Blizzard")
 	mainGroup.locked = true
 	mainGroup.autoGroup = true
-	Skillet:RecipeGroupClearEntries(mainGroup)
+	CraftForge:RecipeGroupClearEntries(mainGroup)
 	local groupList = {}
 	local numHeaders = 0
 	local parent, parentGroup
 	local i = 1
 	for j = 1, numSkills, 1 do
-		local recipeID = Skillet.data.Filtered[tradeID][j]
-		local recipeInfo = Skillet.data.recipeInfo[tradeID][recipeID]
+		local recipeID = CraftForge.data.Filtered[tradeID][j]
+		local recipeInfo = CraftForge.data.recipeInfo[tradeID][recipeID]
 		--DA.DEBUG(1,"ScanTrade: j= "..tostring(j)..", tradeID= "..tostring(tradeID)..", recipeID= "..tostring(recipeID))
 		--DA.DEBUG(1,"ScanTrade: j= "..tostring(j)..", tradeID= "..tostring(tradeID)..", recipeID= "..tostring(recipeID)..", recipeInfo= "..DA.DUMP1(recipeInfo))
 		local skillName = recipeInfo.name
@@ -978,26 +978,26 @@ local function ScanTrade()
 				DA.DEBUG(2,"ScanTrade: j= "..tostring(j)..", tradeID= "..tostring(tradeID)..", recipeID= "..tostring(recipeID)..", recipeInfo= "..DA.DUMP1(recipeInfo))
 			else
 				headerUsed[category] = true
-				local headerType = Skillet.db.global.Categories[tradeID][category].type
-				local headerName = Skillet.db.global.Categories[tradeID][category].name
-				local headerUIOrder = Skillet.db.global.Categories[tradeID][category].uiOrder
+				local headerType = CraftForge.db.global.Categories[tradeID][category].type
+				local headerName = CraftForge.db.global.Categories[tradeID][category].name
+				local headerUIOrder = CraftForge.db.global.Categories[tradeID][category].uiOrder
 				local numCat = 1
 				local catStack = {}
 				catStack[numCat] = category
 				while headerType == "subheader" do
-					if Skillet.db.global.Categories[tradeID][category].parentCategoryID then
-						parent = Skillet.db.global.Categories[tradeID][category].parentCategoryID
-						if Skillet.db.global.Categories[tradeID][parent] then
+					if CraftForge.db.global.Categories[tradeID][category].parentCategoryID then
+						parent = CraftForge.db.global.Categories[tradeID][category].parentCategoryID
+						if CraftForge.db.global.Categories[tradeID][parent] then
 							if not headerUsed[parent] then
 								headerUsed[parent] = true
 								numCat = numCat + 1
 								catStack[numCat] = parent
 							end
 							--DA.DEBUG(3,"ScanTrade: tradeID= "..tostring(tradeID)..", parent="..tostring(parent)..", recipeID="..tostring(recipeID))
-							--DA.DEBUG(3,"ScanTrade: Categories= "..DA.DUMP(Skillet.db.global.Categories[tradeID][parent]))
-							headerType = Skillet.db.global.Categories[tradeID][parent].type
+							--DA.DEBUG(3,"ScanTrade: Categories= "..DA.DUMP(CraftForge.db.global.Categories[tradeID][parent]))
+							headerType = CraftForge.db.global.Categories[tradeID][parent].type
 						else
-							Skillet.db.global.Categories[tradeID][category].type = "header"
+							CraftForge.db.global.Categories[tradeID][category].type = "header"
 							headerType = "header"
 						end
 					end
@@ -1007,12 +1007,12 @@ local function ScanTrade()
 --
 -- Make sure any base-level empty categories with higher priority are added.
 --
-				local emptyCategoriesToAdd = Skillet.emptyCategoriesToAdd
+				local emptyCategoriesToAdd = CraftForge.emptyCategoriesToAdd
 				if emptyCategoriesToAdd then
 					--DA.DEBUG(2,"ScanTrade: emptyCategory= "..DA.DUMP1(emptyCategoriesToAdd[1]))
 					local lastCat = catStack[numCat]
-					--DA.DEBUG(2,"ScanTrade: catStack["..tostring(numCat).."]= "..DA.DUMP1(Skillet.db.global.Categories[tradeID][lastCat]))
-					while (#emptyCategoriesToAdd > 0) and (emptyCategoriesToAdd[1].uiOrder < Skillet.db.global.Categories[tradeID][lastCat].uiOrder) do
+					--DA.DEBUG(2,"ScanTrade: catStack["..tostring(numCat).."]= "..DA.DUMP1(CraftForge.db.global.Categories[tradeID][lastCat]))
+					while (#emptyCategoriesToAdd > 0) and (emptyCategoriesToAdd[1].uiOrder < CraftForge.db.global.Categories[tradeID][lastCat].uiOrder) do
 						--DA.DEBUG(3,"ScanTrade: adding emptyCategory= "..tostring(emptyCategoriesToAdd[1].name)..", type= "..tostring(emptyCategoriesToAdd[1].type))
 						parent = emptyCategoriesToAdd[1].categoryID
 						if not headerUsed[parent] then
@@ -1030,8 +1030,8 @@ local function ScanTrade()
 -- We have a stack of headers. Output them to the skillDB.
 --
 					category = catStack[numCat]
-					headerType = Skillet.db.global.Categories[tradeID][category].type
-					headerName = Skillet.db.global.Categories[tradeID][category].name
+					headerType = CraftForge.db.global.Categories[tradeID][category].type
+					headerName = CraftForge.db.global.Categories[tradeID][category].name
 					--DA.DEBUG(2,"ScanTrade: headerType= "..tostring(headerType)..", headerName= "..tostring(headerName))
 					local groupName
 					if groupList[headerName] then
@@ -1042,20 +1042,20 @@ local function ScanTrade()
 						groupName = headerName
 					end
 					--DA.DEBUG(2,"ScanTrade: groupList[headerName]= "..tostring(groupList[headerName])..", groupName= "..tostring(groupName))
-					if Skillet.db.global.Categories[tradeID][category].hasProgressBar then
+					if CraftForge.db.global.Categories[tradeID][category].hasProgressBar then
 						skillDB[i] = "header "..headerName..":"..tostring(category)
-						Skillet.hasProgressBar[headerName] = category
+						CraftForge.hasProgressBar[headerName] = category
 					else
 						skillDB[i] = "header "..headerName
 					end
 					skillData[i] = nil
-					currentGroup = Skillet:RecipeGroupNew(player, tradeID, "Blizzard", groupName)
+					currentGroup = CraftForge:RecipeGroupNew(player, tradeID, "Blizzard", groupName)
 					currentGroup.autoGroup = true
 					if headerType == "header" then
 						parentGroup = currentGroup
-						Skillet:RecipeGroupAddSubGroup(mainGroup, currentGroup, i)
+						CraftForge:RecipeGroupAddSubGroup(mainGroup, currentGroup, i)
 					else
-						Skillet:RecipeGroupAddSubGroup(parentGroup, currentGroup, i)
+						CraftForge:RecipeGroupAddSubGroup(parentGroup, currentGroup, i)
 					end
 					numHeaders = numHeaders + 1
 					numCat = numCat - 1
@@ -1064,9 +1064,9 @@ local function ScanTrade()
 			end -- category
 		end -- headerUsed
 		if currentGroup then
-			Skillet:RecipeGroupAddRecipe(currentGroup, recipeID, i)
+			CraftForge:RecipeGroupAddRecipe(currentGroup, recipeID, i)
 		else
-			Skillet:RecipeGroupAddRecipe(mainGroup, recipeID, i)
+			CraftForge:RecipeGroupAddRecipe(mainGroup, recipeID, i)
 		end
 
 --
@@ -1099,12 +1099,12 @@ local function ScanTrade()
 		end
 --]]
 		skillDB[i] = skillDBString
-		Skillet.data.skillIndexLookup[recipeID] = i
-		Skillet.data.recipeList[recipeID] = {}
+		CraftForge.data.skillIndexLookup[recipeID] = i
+		CraftForge.data.recipeList[recipeID] = {}
 		local itemString = "-"
 		local reagentString = "-"
 		local recipeString = "-"
-		local recipe = Skillet.data.recipeList[recipeID]
+		local recipe = CraftForge.data.recipeList[recipeID]
 		recipe.tradeID = tradeID
 		recipe.spellID = recipeID
 		recipe.name = skillName
@@ -1349,7 +1349,7 @@ recipeSchematic= {
 		local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
 		--DA.DEBUG(2,"recipeID= "..tostring(recipeID)..", itemLink = "..DA.PLINK(itemLink))
 		if itemLink then
-			local itemID = Skillet:GetItemIDFromLink(itemLink)
+			local itemID = CraftForge:GetItemIDFromLink(itemLink)
 			--DA.DEBUG(2,"itemID= "..tostring(itemID))
 			if (not itemID or tonumber(itemID) == 0) then
 				--DA.DEBUG(0,"recipeID= "..tostring(recipeID)..", itemID= "..tostring(itemID))
@@ -1363,7 +1363,7 @@ recipeSchematic= {
 				local minMade = recipeSchematic.quantityMin
 				local maxMade = recipeSchematic.quantityMax
 				recipe.numMade = (minMade + maxMade)/2
-				local adjustNumMade = Skillet.db.global.AdjustNumMade[recipeID]
+				local adjustNumMade = CraftForge.db.global.AdjustNumMade[recipeID]
 				if adjustNumMade then
 					if recipe.numMade ~= adjustNumMade then
 						recipe.numMade = adjustNumMade
@@ -1372,11 +1372,11 @@ recipeSchematic= {
 					end
 				end
 			elseif recipeInfo.alternateVerb == ENSCRIBE then -- use the itemID of the scroll created by using the enchant on vellum
-				--DA.DEBUG(2,"ScanTrade: recipeID= "..tostring(recipeID)..", name= "..tostring(recipeInfo.name)..", alternateVerb= "..tostring(recipeInfo.alternateVerb)..", scrollData= "..tostring(Skillet.scrollData[recipeID]))
-				if Skillet.isRetail and Skillet.scrollData[recipeID] then  -- note that this table is maintained by datamining
+				--DA.DEBUG(2,"ScanTrade: recipeID= "..tostring(recipeID)..", name= "..tostring(recipeInfo.name)..", alternateVerb= "..tostring(recipeInfo.alternateVerb)..", scrollData= "..tostring(CraftForge.scrollData[recipeID]))
+				if CraftForge.isRetail and CraftForge.scrollData[recipeID] then  -- note that this table is maintained by datamining
 					recipe.itemID = 0
-					recipe.scrollID = Skillet.scrollData[recipeID]
-					itemID = Skillet.scrollData[recipeID]
+					recipe.scrollID = CraftForge.scrollData[recipeID]
+					itemID = CraftForge.scrollData[recipeID]
 				else
 					recipe.itemID = 0
 				end
@@ -1391,7 +1391,7 @@ recipeSchematic= {
 			if itemID == recipeID then
 				--DA.DEBUG(2,"ScanTrade: (itemID == recipeID)= "..tostring(itemID))
 			end
-			Skillet:ItemDataAddRecipeSource(itemID,recipeID) -- add a cross reference for the source of this item
+			CraftForge:ItemDataAddRecipeSource(itemID,recipeID) -- add a cross reference for the source of this item
 		else
 			DA.DEBUG(0,"ScanTrade: recipeID= "..tostring(recipeID).." has no itemLink")
 		end
@@ -1446,7 +1446,7 @@ recipeSchematic= {
 					basicData[numBasic].numNeeded = numNeeded
 					basicData[numBasic].name = C_Item.GetItemInfo(reagentID)
 					basicData[numBasic].schematic = schematic
-					Skillet:ItemDataAddUsedInRecipe(reagentID, recipeID)	-- add a cross reference for where a particular item is used
+					CraftForge:ItemDataAddUsedInRecipe(reagentID, recipeID)	-- add a cross reference for where a particular item is used
 				elseif schematic.dataSlotType == Enum.TradeskillSlotDataType.ModifiedReagent then -- 2
 					numModified = numModified + 1
 					modifiedData[numModified] = {}
@@ -1457,7 +1457,7 @@ recipeSchematic= {
 					modifiedData[numModified].schematic = schematic
 					--DA.DEBUG(2,"ScanTrade: recipeID= "..tostring(recipeID)..", name= "..tostring(recipeInfo.name)..", Modified reagents= "..DA.DUMP(schematic.reagents))
 					for m = 1, #schematic.reagents do
-						Skillet:ItemDataAddUsedInRecipe(schematic.reagents[m].itemID, recipeID) -- cross reference all qualities
+						CraftForge:ItemDataAddUsedInRecipe(schematic.reagents[m].itemID, recipeID) -- cross reference all qualities
 					end
 				elseif schematic.dataSlotType == Enum.TradeskillSlotDataType.Currency then -- 3
 					DA.DEBUG(2,"ScanTrade: recipeID= "..tostring(recipeID)..", name= "..tostring(recipeInfo.name)..", Currency reagents= "..DA.DUMP(schematic.reagents))
@@ -1477,7 +1477,7 @@ recipeSchematic= {
 					requiredData[numRequired].slot = schematic.dataSlotIndex
 					requiredData[numRequired].name = schematic.slotInfo.slotText
 					requiredData[numRequired].schematic = schematic
-					local locked, lockedReason = Skillet:GetReagentSlotStatus(schematic, recipeInfo)
+					local locked, lockedReason = CraftForge:GetReagentSlotStatus(schematic, recipeInfo)
 					if locked then
 						--DA.DEBUG(2,"ScanTrade: recipeID= "..tostring(recipeID)..", name= "..tostring(recipeInfo.name)..", Required lockedReason= "..tostring(lockedReason))
 						requiredData[numRequired].locked = locked
@@ -1491,7 +1491,7 @@ recipeSchematic= {
 					optionalData[numOptional].slot = schematic.dataSlotIndex
 					optionalData[numOptional].name = schematic.slotInfo.slotText
 					optionalData[numOptional].schematic = schematic
-					local locked, lockedReason = Skillet:GetReagentSlotStatus(schematic, recipeInfo)
+					local locked, lockedReason = CraftForge:GetReagentSlotStatus(schematic, recipeInfo)
 					if locked then
 						--DA.DEBUG(2,"ScanTrade: recipeID= "..tostring(recipeID)..", name= "..tostring(recipeInfo.name)..", Optional lockedReason= "..tostring(lockedReason))
 						optionalData[numOptional].locked = locked
@@ -1507,7 +1507,7 @@ recipeSchematic= {
 				finishingData[numFinishing].slot = schematic.dataSlotIndex
 				finishingData[numFinishing].name = schematic.slotInfo.slotText
 				finishingData[numFinishing].schematic = schematic
-				local locked, lockedReason = Skillet:GetReagentSlotStatus(schematic, recipeInfo)
+				local locked, lockedReason = CraftForge:GetReagentSlotStatus(schematic, recipeInfo)
 				if locked then
 					--DA.DEBUG(2,"ScanTrade: recipeID= "..tostring(recipeID)..", name= "..tostring(recipeInfo.name)..", Finishing lockedReason= "..tostring(lockedReason))
 					finishingData[numFinishing].locked = locked
@@ -1543,11 +1543,11 @@ recipeSchematic= {
 		i = i + 1
 	end -- for numSkills
 
-	Skillet.visited = {}
-	Skillet:ScanQueuedReagents()
-	Skillet:InventoryScan()
-	Skillet:CalculateCraftableCounts()
-	Skillet:SortAndFilterRecipes()
+	CraftForge.visited = {}
+	CraftForge:ScanQueuedReagents()
+	CraftForge:InventoryScan()
+	CraftForge:CalculateCraftableCounts()
+	CraftForge:SortAndFilterRecipes()
 	DA.DEBUG(2,"ScanTrade: Complete, numSkills= "..tostring(numSkills)..", numHeaders= "..tostring(numHeaders))
 	if numHeaders == 0 then
 		skillData.scanned = false
@@ -1561,24 +1561,24 @@ end
 -- Called when this profession needs to be rescaned
 -- Initializes tables and calls ScanTrade to do all the work.
 --
-function Skillet:RescanTrade()
-	--DA.PROFILE("Skillet:RescanTrade()")
-	local player, tradeID = Skillet.currentPlayer, Skillet.currentTrade
+function CraftForge:RescanTrade()
+	--DA.PROFILE("CraftForge:RescanTrade()")
+	local player, tradeID = CraftForge.currentPlayer, CraftForge.currentTrade
 	if not player or not tradeID then return end
-	if not Skillet.data.skillIndexLookup then
-		Skillet.data.skillIndexLookup = {}
+	if not CraftForge.data.skillIndexLookup then
+		CraftForge.data.skillIndexLookup = {}
 	end
-	if not Skillet.data.Filtered then
-		Skillet.data.Filtered = {}
+	if not CraftForge.data.Filtered then
+		CraftForge.data.Filtered = {}
 	end
-	if not Skillet.data.skillDB then
-		Skillet.data.skillDB = {}
+	if not CraftForge.data.skillDB then
+		CraftForge.data.skillDB = {}
 	end
-	if not Skillet.db.realm.tradeSkills[player] then
-		Skillet.db.realm.tradeSkills[player] = {}
+	if not CraftForge.db.realm.tradeSkills[player] then
+		CraftForge.db.realm.tradeSkills[player] = {}
 	end
-	Skillet.InProgress.scan = true
-	Skillet.dataScanned = ScanTrade()
-	Skillet.InProgress.scan = false
-	return Skillet.dataScanned
+	CraftForge.InProgress.scan = true
+	CraftForge.dataScanned = ScanTrade()
+	CraftForge.InProgress.scan = false
+	return CraftForge.dataScanned
 end

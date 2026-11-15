@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = Skillet.L
+local L = CraftForge.L
 
 local function tcopy(t)
 	local u = {}
@@ -31,11 +31,11 @@ end
 --
 -- Iterates through a list of reagentIDs and recalculates craftability
 --
-function Skillet:AdjustInventory()
+function CraftForge:AdjustInventory()
 	--DA.DEBUG(0,"AdjustInventory()")
 	-- update queue for faster response time
-	Skillet:ScanQueuedReagents()
-	Skillet:InventoryScan()
+	CraftForge:ScanQueuedReagents()
+	CraftForge:InventoryScan()
 	self:CalculateCraftableCounts()
 	-- update whole window to show craft counts
 	self:UpdateTradeSkillWindow()
@@ -44,7 +44,7 @@ end
 --
 -- This is the simplest command:  iterate recipeID x count
 --
-function Skillet:QueueCommandIterate(recipeID, count)
+function CraftForge:QueueCommandIterate(recipeID, count)
 	local recipe = self:GetRecipe(recipeID)
 	--DA.DEBUG(0,"QueueCommandIterate("..tostring(recipeID)..", "..tostring(count).."), name= "..tostring(recipe.name))
 	--DA.DEBUG(0,"QueueCommandIterate: recipe= "..DA.DUMP1(recipe))
@@ -104,8 +104,8 @@ end
 local function queueAppendReagent(command, reagentID, need, queueCraftables, mreagent)
 	local reagentName = C_Item.GetItemInfo(reagentID)
 	--DA.DEBUG(0,"queueAppendReagent("..tostring(reagentID)..", "..tostring(need)..", "..tostring(queueCraftables).."), name= "..tostring(reagentName))
-	local reagentsInQueue = Skillet.db.realm.reagentsInQueue[Skillet.currentPlayer]
-	local skillIndexLookup = Skillet.data.skillIndexLookup
+	local reagentsInQueue = CraftForge.db.realm.reagentsInQueue[CraftForge.currentPlayer]
+	local skillIndexLookup = CraftForge.data.skillIndexLookup
 	local have = 0
 	if not mreagent then
 		local numInBoth = C_Item.GetItemCount(reagentID,true,false,true,true)
@@ -113,10 +113,10 @@ local function queueAppendReagent(command, reagentID, need, queueCraftables, mre
 		local numInBank =  numInBoth - numInBags
 		local numInQueue = reagentsInQueue[reagentID] or 0
 		--DA.DEBUG(1,"queueAppendReagent: numInBoth= "..tostring(numInBoth)..", numInBags="..tostring(numInBags)..", numInBank="..tostring(numInBank)..", numInQueue="..tostring(numInQueue))
-		if Skillet.db.profile.ignore_queued_reagents then
+		if CraftForge.db.profile.ignore_queued_reagents then
 			numInQueue = 0
 		end
-		if Skillet.db.profile.ignore_banked_reagents or Skillet.isForever then
+		if CraftForge.db.profile.ignore_banked_reagents or CraftForge.isForever then
 			have = numInBags + numInQueue
 		else
 			have = numInBoth + numInQueue
@@ -134,7 +134,7 @@ local function queueAppendReagent(command, reagentID, need, queueCraftables, mre
 	reagentsInQueue[reagentID] = (reagentsInQueue[reagentID] or 0) - need
 	--DA.DEBUG(1,"queueAppendReagent: queueCraftables= "..tostring(queueCraftables)..", need= "..tostring(need)..", have= "..tostring(have))
 	if queueCraftables and need > have then
-		local recipeSource = Skillet.db.global.itemRecipeSource[reagentID]
+		local recipeSource = CraftForge.db.global.itemRecipeSource[reagentID]
 		--DA.DEBUG(2,"queueAppendReagent: recipeSource= "..DA.DUMP1(recipeSource))
 		if recipeSource then
 			for recipeSourceID in pairs(recipeSource) do
@@ -145,16 +145,16 @@ local function queueAppendReagent(command, reagentID, need, queueCraftables, mre
 -- Identify that this queue has craftable reagent requirements
 --
 					command.complex = true
-					local recipeSource = Skillet:GetRecipe(recipeSourceID)
+					local recipeSource = CraftForge:GetRecipe(recipeSourceID)
 					local newCount = math.ceil((need - have)/recipeSource.numMade)
-					local newCommand = Skillet:QueueCommandIterate(recipeSourceID, newCount)
+					local newCommand = CraftForge:QueueCommandIterate(recipeSourceID, newCount)
 					newCommand.level = (command.level or 0) + 1
 --
 -- Do not add IgnoredMats as it would cause loops
 --
-					if not Skillet.TradeSkillIgnoredMats[recipeSourceID] and
-					  not Skillet.db.realm.userIgnoredMats[Skillet.currentPlayer][recipeSourceID] then
-						Skillet:QueueAppendCommand(newCommand, queueCraftables)
+					if not CraftForge.TradeSkillIgnoredMats[recipeSourceID] and
+					  not CraftForge.db.realm.userIgnoredMats[CraftForge.currentPlayer][recipeSourceID] then
+						CraftForge:QueueAppendCommand(newCommand, queueCraftables)
 						break
 					else
 						DA.DEBUG(0,"queueAppendReagent: Did Not Queue "..tostring(recipeSourceID).." ("..tostring(recipeSource.name)..")")
@@ -168,16 +168,16 @@ end
 --
 -- Queue up the command and reserve reagents
 --
-function Skillet:QueueAppendCommand(command, queueCraftables, first)
+function CraftForge:QueueAppendCommand(command, queueCraftables, first)
 	DA.DEBUG(0,"QueueAppendCommand("..DA.DUMP(command)..", "..tostring(queueCraftables).."), visited=  "..tostring(self.visited[command.recipeID]))
 	local recipe = self:GetRecipe(command.recipeID)
 	--DA.DEBUG(0,"QueueAppendCommand: recipe= "..DA.DUMP(recipe))
 	if recipe and not self.visited[command.recipeID] then
 		self.visited[command.recipeID] = true
-		local reagentsInQueue = self.db.realm.reagentsInQueue[Skillet.currentPlayer]
-		local modifiedInQueue = self.db.realm.modifiedInQueue[Skillet.currentPlayer]
+		local reagentsInQueue = self.db.realm.reagentsInQueue[CraftForge.currentPlayer]
+		local modifiedInQueue = self.db.realm.modifiedInQueue[CraftForge.currentPlayer]
 		local skillIndexLookup = self.data.skillIndexLookup
-		local queueGlyph = Skillet.db.profile.queue_glyph_reagents or not recipe.name:match(Skillet.L["Glyph "])
+		local queueGlyph = CraftForge.db.profile.queue_glyph_reagents or not recipe.name:match(CraftForge.L["Glyph "])
 		for i=1,#recipe.reagentData do
 			local reagent = recipe.reagentData[i]
 			if command.recipeLevel and command.recipeLevel > 0 then
@@ -185,7 +185,7 @@ function Skillet:QueueAppendCommand(command, queueCraftables, first)
 				local reagentName, reagentTexture, reagentCount, playerReagentCount = C_TradeSkillUI.GetRecipeReagentInfo(command.recipeID, i, command.recipeLevel)
 				--DA.DEBUG(2,"QueueAppendCommand: reagentName= "..tostring(reagentName)..", reagentCount= "..tostring(reagentCount))
 				local reagentLink = C_TradeSkillUI.GetRecipeReagentItemLink(command.recipeID, i)
-				local reagentID = Skillet:GetItemIDFromLink(reagentLink)
+				local reagentID = CraftForge:GetItemIDFromLink(reagentLink)
 				if reagent.reagentID == reagentID then
 					reagent.numNeeded = reagentCount
 				else
@@ -277,11 +277,11 @@ end
 -- we can't just increase the # of the first command if it happens to be the same recipe without making sure
 -- the additional queue entry doesn't require some additional craftable reagents
 --
-function Skillet:AddToQueue(command, first)
+function CraftForge:AddToQueue(command, first)
 	--DA.DEBUG(0,"AddToQueue("..DA.DUMP1(command)..", "..tostring(first)..")")
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	local added
-	if Skillet.isForever and command.recipeType == Enum.TradeskillRecipeType.Enchant then
+	if CraftForge.isForever and command.recipeType == Enum.TradeskillRecipeType.Enchant then
 		added = false
 	elseif (not command.complex) then
 --
@@ -323,11 +323,11 @@ function Skillet:AddToQueue(command, first)
 	end
 end
 
-function Skillet:RemoveFromQueue(index)
+function CraftForge:RemoveFromQueue(index)
 	--DA.DEBUG(0,"RemoveFromQueue("..tostring(index)..")")
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	local command = queue[index]
-	local reagentsInQueue = self.db.realm.reagentsInQueue[Skillet.currentPlayer]
+	local reagentsInQueue = self.db.realm.reagentsInQueue[CraftForge.currentPlayer]
 	if command.op == "iterate" then
 		local recipe = self:GetRecipe(command.recipeID)
 		if not command.count then
@@ -340,7 +340,7 @@ function Skillet:RemoveFromQueue(index)
 	return #queue or 0
 end
 
-function Skillet:ClearQueue()
+function CraftForge:ClearQueue()
 	--DA.DEBUG(0,"ClearQueue()")
 	if #self.db.realm.queueData[self.currentPlayer] > 0 then
 		if self.db.profile.confirm_queue_clear and not IsAltKeyDown() then
@@ -356,7 +356,7 @@ end
 --
 -- Prints a list of saved queues
 --
-function Skillet:PrintSaved()
+function CraftForge:PrintSaved()
 	--DA.DEBUG(0,"PrintSaved()");
 	local saved = self.db.profile.SavedQueues
 	if saved then
@@ -373,7 +373,7 @@ end
 --
 -- Prints the contents of the queue name or the current queue
 --
-function Skillet:PrintQueue(name, player)
+function CraftForge:PrintQueue(name, player)
 	--DA.DEBUG(0,"PrintQueue("..tostring(name)..", "..tostring(player)..")")
 	local queue
 	if name then
@@ -391,7 +391,7 @@ function Skillet:PrintQueue(name, player)
 	end
 end
 
-function Skillet:PrintAllQueues()
+function CraftForge:PrintAllQueues()
 	--DA.DEBUG(0,"PrintAllQueues()")
 	for player,queue in pairs(self.db.realm.queueData) do
 		if #queue > 0 then
@@ -404,10 +404,10 @@ end
 --
 -- Prints the list of reagentsInQueue
 --
-function Skillet:PrintRIQ()
+function CraftForge:PrintRIQ()
 	--DA.DEBUG(0,"PrintRIQ()");
-	local reagentsInQueue = self.db.realm.reagentsInQueue[Skillet.currentPlayer]
-	local modifiedInQueue = self.db.realm.modifiedInQueue[Skillet.currentPlayer]
+	local reagentsInQueue = self.db.realm.reagentsInQueue[CraftForge.currentPlayer]
+	local modifiedInQueue = self.db.realm.modifiedInQueue[CraftForge.currentPlayer]
 	if reagentsInQueue then
 		for id,count in pairs(reagentsInQueue) do
 			local name = C_Item.GetItemInfo(id)
@@ -460,7 +460,7 @@ local function ApplyAllocations(transaction, requiredReagents, modifiedReagents,
 	end
 end
 
-function Skillet:ProcessQueue(altMode)
+function CraftForge:ProcessQueue(altMode)
 	--DA.DEBUG(0,"ProcessQueue("..tostring(altMode)..")");
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	--DA.DEBUG(1,"queue= "..DA.DUMP1(queue))
@@ -468,7 +468,7 @@ function Skillet:ProcessQueue(altMode)
 	self.processingPosition = nil
 	self.processingCommand = nil
 	self.processingCount = nil
-	if self.currentPlayer ~= (Skillet:unitName("player")) then
+	if self.currentPlayer ~= (CraftForge:unitName("player")) then
 		DA.DEBUG(0,"trying to process from an alt!")
 		return
 	end
@@ -504,7 +504,7 @@ function Skillet:ProcessQueue(altMode)
 							local reagentName, reagentTexture, reagentCount, playerReagentCount = C_TradeSkillUI.GetRecipeReagentInfo(command.recipeID, i, command.recipeLevel)
 							--DA.DEBUG(2,"ProcessQueue: reagentName= "..tostring(reagentName)..", reagentCount= "..tostring(reagentCount))
 							local reagentLink = C_TradeSkillUI.GetRecipeReagentItemLink(command.recipeID, i)
-							local reagentID = Skillet:GetItemIDFromLink(reagentLink)
+							local reagentID = CraftForge:GetItemIDFromLink(reagentLink)
 							if reagent.reagentID == reagentID then
 								reagent.numNeeded = reagentCount
 							else
@@ -655,7 +655,7 @@ function Skillet:ProcessQueue(altMode)
 -- If alt down/right click - auto use items / like vellums
 --
 					if altMode then
-						local itemID = Skillet:GetAutoTargetItem(command.tradeID)
+						local itemID = CraftForge:GetAutoTargetItem(command.tradeID)
 						if itemID then
 							self.processingCount = 1
 							DA.DEBUG(1,"altMode Crafting: "..tostring(self.processingSpell).." ("..tostring(command.recipeID)..") and using "..tostring(itemID))
@@ -706,15 +706,15 @@ function Skillet:ProcessQueue(altMode)
 							DA.DEBUG(1,"ProcessQueue(I): recipeID= "..tostring(command.recipeID))
 							C_TradeSkillUI.CraftRecipe(command.recipeID, command.count, reagentInfoTbl, recipeLevel, nil, self.db.profile.use_concentration)
 						elseif command.recipeType == Enum.TradeskillRecipeType.Enchant then
-							if Skillet.isRetail and command.count > 1 then
-								local itemID = Skillet:GetAutoTargetItem(command.tradeID)
+							if CraftForge.isRetail and command.count > 1 then
+								local itemID = CraftForge:GetAutoTargetItem(command.tradeID)
 								DA.DEBUG(1,"ProcessQueue(E): itemID= "..tostring(itemID))
 								self.itemLocation = self:GetItemLocationFromItemID(itemID)
 								DA.DEBUG(1,"ProcessQueue(E): itemLocation= "..DA.DUMP(self.itemLocation))
 --								C_TradeSkillUI.CraftEnchant(recipeSpellID [, numCasts [, craftingReagents [, itemTarget [, applyConcentration]]]])
 								DA.DEBUG(1,"ProcessQueue(E): recipeID= "..tostring(command.recipeID))
 								C_TradeSkillUI.CraftEnchant(command.recipeID, command.count, reagentInfoTbl, self.itemLocation, self.db.profile.use_concentration)
-							elseif Skillet.isForever and command.count > 1 then
+							elseif CraftForge.isForever and command.count > 1 then
 								DA.MARK3(L["Insufficient Materials available"])
 							else
 --								C_TradeSkillUI.CraftRecipe(recipeSpellID [, numCasts [, craftingReagents [, recipeLevel [, orderID [, applyConcentration]]]]])
@@ -774,7 +774,7 @@ end
 --
 -- Adds the currently selected number of items to the queue
 --
-function Skillet:QueueItems(button, count)
+function CraftForge:QueueItems(button, count)
 	--DA.DEBUG(0,"QueueItems("..tostring(button)..", "..tostring(count)..")")
 	if self.currentTrade and self.selectedSkill then
 		local skill = self:GetSkill(self.currentPlayer, self.currentTrade, self.selectedSkill)
@@ -807,21 +807,21 @@ function Skillet:QueueItems(button, count)
 		self.visited = {}
 		if count > 0 then
 			if recipe then
-				local first = Skillet.db.profile.queue_insert_first or false
+				local first = CraftForge.db.profile.queue_insert_first or false
 				if button == "RightButton" then
 					first = not first
 				end
 				local queueCommand = self:QueueCommandIterate(recipe.spellID, count)
 				if (self.db.profile.queue_one_at_a_time and queueCommand.modified) or
-				   (Skillet.isForever and queueCommand.recipeType == Enum.TradeskillRecipeType.Enchant and queueCommand.count > 1) then
+				   (CraftForge.isForever and queueCommand.recipeType == Enum.TradeskillRecipeType.Enchant and queueCommand.count > 1) then
 					DA.DEBUG(2,"QueueItems: One at a time")
 					queueCommand.count = 1
 					for i=1, count, 1 do
 						local c = tcopy(queueCommand)
-						self:QueueAppendCommand(c, Skillet.db.profile.queue_craftable_reagents, first)
+						self:QueueAppendCommand(c, CraftForge.db.profile.queue_craftable_reagents, first)
 					end
 				else
-					self:QueueAppendCommand(queueCommand, Skillet.db.profile.queue_craftable_reagents, first)
+					self:QueueAppendCommand(queueCommand, CraftForge.db.profile.queue_craftable_reagents, first)
 				end
 				self.requiredSelected = {}
 				self.optionalSelected = {}
@@ -840,7 +840,7 @@ end
 --
 -- Queue the max number of craftable items for the currently selected skill
 --
-function Skillet:QueueAllItems(button)
+function CraftForge:QueueAllItems(button)
 	--DA.DEBUG(0,"QueueAllItems("..tostring(button)..")");
 	local count = self:QueueItems(button)
 	return count
@@ -849,7 +849,7 @@ end
 --
 -- Adds the currently selected number of items to the queue and then starts the queue
 --
-function Skillet:CreateItems(button, count)
+function CraftForge:CreateItems(button, count)
 	--DA.DEBUG(0,"CreateItems("..tostring(button)..", "..tostring(count)..")")
 	if self:QueueItems(button, count) > 0 then
 		self:ProcessQueue(button == "RightButton" or IsAltKeyDown())
@@ -859,7 +859,7 @@ end
 --
 -- Queue and create the max number of craftable items for the currently selected skill
 --
-function Skillet:CreateAllItems(button)
+function CraftForge:CreateAllItems(button)
 	--DA.DEBUG(0,"CreateAllItems("..tostring(button)..")")
 	if self:QueueAllItems(button) > 0 then
 		self:ProcessQueue(button == "RightButton" or IsAltKeyDown())
@@ -869,21 +869,21 @@ end
 --
 -- Events associated with crafting spells
 --
-function Skillet:UNIT_SPELLCAST_SENT(event, unit, target, castGUID, spellID)
+function CraftForge:UNIT_SPELLCAST_SENT(event, unit, target, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_SENT(", unit, target, castGUID, spellID, ")")
 	if unit == "player" then
 		self:IgnoreCast(spellID)
 	end
 end
 
-function Skillet:UNIT_SPELLCAST_START(event, unitTarget, castGUID, spellID)
+function CraftForge:UNIT_SPELLCAST_START(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_START(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		self:IgnoreCast(spellID)
 	end
 end
 
-function Skillet:UNIT_SPELLCAST_SUCCEEDED(event, unitTarget, castGUID, spellID)
+function CraftForge:UNIT_SPELLCAST_SUCCEEDED(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_SUCCEEDED(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		if self.processingLevel and self.processingLevel ~= 0 and self.processingSpellID then
@@ -898,7 +898,7 @@ function Skillet:UNIT_SPELLCAST_SUCCEEDED(event, unitTarget, castGUID, spellID)
 	end
 end
 
-function Skillet:UNIT_SPELLCAST_FAILED(event, unitTarget, castGUID, spellID)
+function CraftForge:UNIT_SPELLCAST_FAILED(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_FAILED(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		if self.processingLevel and self.processingLevel ~= 0 and self.processingSpellID then
@@ -913,7 +913,7 @@ function Skillet:UNIT_SPELLCAST_FAILED(event, unitTarget, castGUID, spellID)
 	end
 end
 
-function Skillet:UNIT_SPELLCAST_FAILED_QUIET(event, unitTarget, castGUID, spellID)
+function CraftForge:UNIT_SPELLCAST_FAILED_QUIET(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_FAILED_QUIET(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		if self.processingLevel and self.processingLevel ~= 0 and self.processingSpellID then
@@ -928,7 +928,7 @@ function Skillet:UNIT_SPELLCAST_FAILED_QUIET(event, unitTarget, castGUID, spellI
 	end
 end
 
-function Skillet:UNIT_SPELLCAST_INTERRUPTED(event, unitTarget, castGUID, spellID)
+function CraftForge:UNIT_SPELLCAST_INTERRUPTED(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_INTERRUPTED(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		if self.processingLevel and self.processingLevel ~= 0 and self.processingSpellID then
@@ -943,29 +943,29 @@ function Skillet:UNIT_SPELLCAST_INTERRUPTED(event, unitTarget, castGUID, spellID
 	end
 end
 
-function Skillet:UNIT_SPELLCAST_DELAYED(event, unitTarget, castGUID, spellID)
+function CraftForge:UNIT_SPELLCAST_DELAYED(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_DELAYED(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		self:IgnoreCast(spellID)
 	end
 end
 
-function Skillet:UNIT_SPELLCAST_STOP(event, unitTarget, castGUID, spellID)
+function CraftForge:UNIT_SPELLCAST_STOP(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_STOP(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		self:IgnoreCast(spellID)
 	end
 end
 
-function Skillet:UPDATE_TRADESKILL_CAST_COMPLETE(event, isScrapping)
+function CraftForge:UPDATE_TRADESKILL_CAST_COMPLETE(event, isScrapping)
 	DA.TRACE("UPDATE_TRADESKILL_CAST_COMPLETE(", isScrapping, ")")
 end
 
-function Skillet:UPDATE_TRADESKILL_RECAST(event)
+function CraftForge:UPDATE_TRADESKILL_RECAST(event)
 	DA.TRACE("UPDATE_TRADESKILL_RECAST")
 end
 
-function Skillet:ITEM_COUNT_CHANGED(event,itemID)
+function CraftForge:ITEM_COUNT_CHANGED(event,itemID)
 	DA.TRACE3("ITEM_COUNT_CHANGED(", itemID, ")")
 --[[
 	if itemID == self.salvageItem then
@@ -977,7 +977,7 @@ function Skillet:ITEM_COUNT_CHANGED(event,itemID)
 --]]
 end
 
-function Skillet:TRADE_SKILL_ITEM_CRAFTED_RESULT(event, CraftingItemResultData)
+function CraftForge:TRADE_SKILL_ITEM_CRAFTED_RESULT(event, CraftingItemResultData)
 	DA.TRACE("TRADE_SKILL_ITEM_CRAFTED_RESULT("..DA.DUMP(CraftingItemResultData)..")")
 end
 
@@ -985,12 +985,12 @@ end
 -- Continue a trade skill currently in progress. Called from UNIT_SPELLCAST_SUCCEEDED when that event applies to us
 -- Counts down each successful completion of the current command and does finish processing when the count reaches zero
 --
-function Skillet:ContinueCast(spellID)
+function CraftForge:ContinueCast(spellID)
 	if self.enabledState then
 		local name = C_Spell.GetSpellName(spellID)
 		DA.DEBUG(0,"ContinueCast("..tostring(spellID).."), "..tostring(name))
 		if spellID == self.processingSpellID then
-			DA.DEBUG(1,"ContinueCast: processingCount= "..tostring(Skillet.processingCount))
+			DA.DEBUG(1,"ContinueCast: processingCount= "..tostring(CraftForge.processingCount))
 			local queue = self.db.realm.queueData[self.currentPlayer]
 			local qpos = self.processingPosition
 			if queue[qpos] and queue[qpos] == self.processingCommand then
@@ -1018,8 +1018,8 @@ function Skillet:ContinueCast(spellID)
 			else
 				DA.DEBUG(1,"ContinueCast: queued command and processingCommand don't match")
 			end
-			Skillet.processingCount = Skillet.processingCount - 1
-			if Skillet.processingCount == 0 then
+			CraftForge.processingCount = CraftForge.processingCount - 1
+			if CraftForge.processingCount == 0 then
 				self.queuecasting = false
 				self.processingSpell = nil
 				self.processingSpellID = nil
@@ -1039,7 +1039,7 @@ end
 --
 -- Stop a trade skill currently in progress. Called from UNIT_SPELLCAST_* events that indicate failure
 --
-function Skillet:StopCast(spellID)
+function CraftForge:StopCast(spellID)
 	if self.enabledState then
 		local name = C_Spell.GetSpellName(spellID)
 		--DA.DEBUG(0,"StopCast("..tostring(spellID).."), "..tostring(name))
@@ -1059,7 +1059,7 @@ end
 -- Ignore a trade skill event directed at the player. Called from UNIT_SPELLCAST_* events that 
 -- don't meet expected criteria
 --
-function Skillet:IgnoreCast(spellID)
+function CraftForge:IgnoreCast(spellID)
 	if self.enabledState then
 		local name = C_Spell.GetSpellName(spellID)
 		DA.DEBUG(4,"IgnoreCast("..tostring(spellID).."), "..tostring(name))
@@ -1071,7 +1071,7 @@ end
 -- item as that requires a "SpellStopCasting" call which can only be
 -- made from secure code. All this does is stop repeating after the current item
 --
-function Skillet:CancelCast()
+function CraftForge:CancelCast()
 	if self.enabledState then
 		DA.DEBUG(0,"CancelCast()")
 --		C_TradeSkillUI.StopRecipeRepeat()
@@ -1081,7 +1081,7 @@ end
 --
 -- Removes an item from the queue
 --
-function Skillet:RemoveQueuedCommand(queueIndex)
+function CraftForge:RemoveQueuedCommand(queueIndex)
 	--DA.DEBUG(0,"RemoveQueuedCommand("..tostring(queueIndex)..")")
 	self:RemoveFromQueue(queueIndex)
 	self:UpdateTradeSkillWindow()
@@ -1090,7 +1090,7 @@ end
 --
 -- Rebuilds reagentsInQueue list
 --
-function Skillet:ScanQueuedReagents()
+function CraftForge:ScanQueuedReagents()
 	--DA.DEBUG(0,"ScanQueuedReagents()")
 	if self.linkedSkill or self.isGuild then
 		return
@@ -1119,7 +1119,7 @@ function Skillet:ScanQueuedReagents()
 					local reagentName, reagentTexture, reagentCount, playerReagentCount = C_TradeSkillUI.GetRecipeReagentInfo(command.recipeID, i, command.recipeLevel)
 					--DA.DEBUG(2,"ScanQueuedReagents: reagentName= "..tostring(reagentName)..", reagentCount= "..tostring(reagentCount))
 					local reagentLink = C_TradeSkillUI.GetRecipeReagentItemLink(command.recipeID, i)
-					local reagentID = Skillet:GetItemIDFromLink(reagentLink)
+					local reagentID = CraftForge:GetItemIDFromLink(reagentLink)
 					if reagent.reagentID == reagentID then
 						reagent.numNeeded = reagentCount
 					else
@@ -1163,7 +1163,7 @@ function Skillet:ScanQueuedReagents()
 	self.db.realm.modifiedInQueue[self.currentPlayer] = modifiedInQueue
 end
 
-function Skillet:QueueMoveToTop(index)
+function CraftForge:QueueMoveToTop(index)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if index > 1 and index <= #queue then
 		table.insert(queue, 1, queue[index])
@@ -1172,7 +1172,7 @@ function Skillet:QueueMoveToTop(index)
 	self:UpdateTradeSkillWindow()
 end
 
-function Skillet:QueueMoveUp(index)
+function CraftForge:QueueMoveUp(index)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if index > 1 and index <= #queue then
 		table.insert(queue, index-1, queue[index])
@@ -1181,7 +1181,7 @@ function Skillet:QueueMoveUp(index)
 	self:UpdateTradeSkillWindow()
 end
 
-function Skillet:QueueMoveDown(index)
+function CraftForge:QueueMoveDown(index)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if index > 0 and index <# queue then
 		table.insert(queue, index+2, queue[index])
@@ -1190,7 +1190,7 @@ function Skillet:QueueMoveDown(index)
 	self:UpdateTradeSkillWindow()
 end
 
-function Skillet:QueueMoveToBottom(index)
+function CraftForge:QueueMoveToBottom(index)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if index > 0 and index < #queue then
 		table.insert(queue, queue[index])
@@ -1199,18 +1199,18 @@ function Skillet:QueueMoveToBottom(index)
 	self:UpdateTradeSkillWindow()
 end
 
-function Skillet:SaveQueue(name, overwrite)
+function CraftForge:SaveQueue(name, overwrite)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	local reagents = self.db.realm.reagentsInQueue[self.currentPlayer]
 	local reagents = self.db.realm.modifiedInQueue[self.currentPlayer]
 	if not name or name == "" then return end
 	if not queue or #queue == 0 then
-		Skillet:MessageBox(L["Queue is empty"])
+		CraftForge:MessageBox(L["Queue is empty"])
 		return
 	end
 	if self.db.profile.SavedQueues[name] and not overwrite then
-		Skillet:AskFor(L["Queue with this name already exsists. Overwrite?"],
-			function() Skillet:SaveQueue(name, true)  end
+		CraftForge:AskFor(L["Queue with this name already exsists. Overwrite?"],
+			function() CraftForge:SaveQueue(name, true)  end
 			)
 		return
 	end
@@ -1218,45 +1218,45 @@ function Skillet:SaveQueue(name, overwrite)
 	self.db.profile.SavedQueues[name].queue = tcopy(queue)
 	self.db.profile.SavedQueues[name].reagents = tcopy(reagents)
 	self.db.profile.SavedQueues[name].modified = tcopy(modified)
-	Skillet.selectedQueueName = name
-	Skillet:QueueLoadDropdown_OnShow()
-	SkilletQueueSaveEditBox:SetText("")
+	CraftForge.selectedQueueName = name
+	CraftForge:QueueLoadDropdown_OnShow()
+	CraftForgeQueueSaveEditBox:SetText("")
 end
 
-function Skillet:LoadQueue(name, overwrite)
+function CraftForge:LoadQueue(name, overwrite)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if not name or name == "" then return end
 	if not self.db.profile.SavedQueues[name] then
-		Skillet:MessageBox(L["No such queue saved"])
+		CraftForge:MessageBox(L["No such queue saved"])
 		return
 	end
 	if queue and #queue > 0 and not overwrite then
-		Skillet:AskFor(L["Queue is not empty. Overwrite?"],
-			function() Skillet:LoadQueue(name, true)  end
+		CraftForge:AskFor(L["Queue is not empty. Overwrite?"],
+			function() CraftForge:LoadQueue(name, true)  end
 			)
 		return
 	end
 	self.db.realm.queueData[self.currentPlayer] = tcopy(self.db.profile.SavedQueues[name].queue)
 	self.db.realm.reagentsInQueue[self.currentPlayer] = tcopy(self.db.profile.SavedQueues[name].reagents)
 	self.db.realm.modifiedInQueue[self.currentPlayer] = tcopy(self.db.profile.SavedQueues[name].modified)
-	Skillet:UpdateTradeSkillWindow()
+	CraftForge:UpdateTradeSkillWindow()
 end
 
-function Skillet:DeleteQueue(name, overwrite)
+function CraftForge:DeleteQueue(name, overwrite)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if not name or name == "" then return end
 	if not self.db.profile.SavedQueues[name] then
-		Skillet:MessageBox(L["No such queue saved"])
+		CraftForge:MessageBox(L["No such queue saved"])
 		return
 	end
 	if not overwrite then
-		Skillet:AskFor(L["Really delete this queue?"],
-			function() Skillet:DeleteQueue(name, true)  end
+		CraftForge:AskFor(L["Really delete this queue?"],
+			function() CraftForge:DeleteQueue(name, true)  end
 			)
 		return
 	end
 	self.db.profile.SavedQueues[name] = nil
-	Skillet.selectedQueueName = ""
-	Skillet:QueueLoadDropdown_OnShow()
-	Skillet:UpdateTradeSkillWindow()
+	CraftForge.selectedQueueName = ""
+	CraftForge:QueueLoadDropdown_OnShow()
+	CraftForge:UpdateTradeSkillWindow()
 end

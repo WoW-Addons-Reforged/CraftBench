@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 --
 -- Our own tables of skill levels:
---    Skillet.db.global.SkillLevels
---    Skillet.db.global.SkillLineAbility
---    Skillet.db.global.NameToSpellID
+--    CraftForge.db.global.SkillLevels
+--    CraftForge.db.global.SkillLineAbility
+--    CraftForge.db.global.NameToSpellID
 --
 -- SkillLevels index is itemID
 -- SkillLineAbility index is recipeID
@@ -46,25 +46,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --   green  is the (numeric) skill level below which the recipe is green
 --   gray   is the (numeric) skill level above which the recipe is gray
 --
--- A global table, Skillet.db.global.MissingSkillLevels, is added to when
+-- A global table, CraftForge.db.global.MissingSkillLevels, is added to when
 -- no other entry is found. The format of this table is the same as
--- the table Skillet.db.global.SkillLevels to facilitate adding to this table.
+-- the table CraftForge.db.global.SkillLevels to facilitate adding to this table.
 --
 -- InitializeSkillLevels is called if the tables do not exist or
--- the Skillet.SkillLevelBuild is different.
+-- the CraftForge.SkillLevelBuild is different.
 --
--- Force refresh with '/skillet initskilllevels'
--- or '/run Skillet:InitializeSkillLevels()'
--- or '/run Skillet.db.global.SkillLevels = nil'
+-- Force refresh with '/craftforge initskilllevels'
+-- or '/run CraftForge:InitializeSkillLevels()'
+-- or '/run CraftForge.db.global.SkillLevels = nil'
 --
 
-Skillet.SkillLevelVersion = 1
-Skillet.SkillLevelBuild = 70938
+CraftForge.SkillLevelVersion = 1
+CraftForge.SkillLevelBuild = 70938
 
-function Skillet:InitializeSkillLevels()
+function CraftForge:InitializeSkillLevels()
 DA.DEBUG(0,"InitializeSkillLevels()");
-Skillet.db.global.MissingSkillLevels = {}
-Skillet.db.global.SkillLevels = {
+CraftForge.db.global.MissingSkillLevels = {}
+CraftForge.db.global.SkillLevels = {
 		[0] = "orange/yellow/green/gray",
 -- alchemy
 [118] = "1/55/75/95",
@@ -6758,7 +6758,7 @@ Skillet.db.global.SkillLevels = {
 	
 }
 -- SkillLineAbility.1.60.1.70938.lua
-Skillet.db.global.SkillLineAbility = {
+CraftForge.db.global.SkillLineAbility = {
 [2149] = '1/40/55/70',    -- Handstitched Leather Boots
 [2153] = '1/45/60/75',    -- Handstitched Leather Pants
 [2152] = '1/30/45/60',    -- Light Armor Kit
@@ -9305,7 +9305,7 @@ Skillet.db.global.SkillLineAbility = {
 [1328948] = '1/280/290/300',    -- Enchant Boots - Speed
 }
 -- SpellName.1.60.1.70938.lua
-Skillet.db.global.NameToSpellID = {
+CraftForge.db.global.NameToSpellID = {
 ["Handstitched Leather Boots"] = 2149,
 ["Handstitched Leather Pants"] = 2153,
 ["Light Armor Kit"] = 2152,

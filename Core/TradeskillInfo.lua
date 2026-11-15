@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,14 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 -- item can be: itemID or "itemString" or "itemName" or "itemLink"
 
-function Skillet:GetLevelRequiredToUse(item)
+function CraftForge:GetLevelRequiredToUse(item)
 	if not item then return end
 		local level = select(5, C_Item.GetItemInfo(item))
 	if not level then level = 0 end
 	return level
 end
 
-function Skillet:GetItemIDFromLink(link)	-- works with items or enchants
+function CraftForge:GetItemIDFromLink(link)	-- works with items or enchants
 	--DA.DEBUG(3,"GetItemIDFromLink("..tostring(DA.PLINK(link))..")")
 	if (link) then
 		local linktype, id = string.match(link, "|H([^:]+):(%d+)")
@@ -45,7 +45,7 @@ end
 --
 -- return GetItemInfo and automatically query server if not cached
 --
-function Skillet:GetItemInfo(id)
+function CraftForge:GetItemInfo(id)
 	if id then
 		local name = C_Item.GetItemInfo(id)
 		if not name then
@@ -57,7 +57,7 @@ function Skillet:GetItemInfo(id)
 end
 
 -- Returns the name of the current trade skill
-function Skillet:GetTradeName(tradeID)
+function CraftForge:GetTradeName(tradeID)
 	local tradeName = C_Spell.GetSpellName(tonumber(tradeID))
 	return tradeName
 end
@@ -65,7 +65,7 @@ end
 -- Returns a link for the currently selected tradeskill item.
 -- The input is an index into the currently selected tradeskill
 -- or craft.
-function Skillet:GetRecipeItemLink(index)
+function CraftForge:GetRecipeItemLink(index)
 	local recipe, recipeID = self:GetRecipeDataByTradeIndex(self.currentTrade, index)
 		if recipe then
 		local _, link = C_Item.GetItemInfo(recipe.itemID)
@@ -74,7 +74,7 @@ function Skillet:GetRecipeItemLink(index)
 		return nil
 end
 
-function Skillet:AdjustNumberMade(index, adjust)
+function CraftForge:AdjustNumberMade(index, adjust)
 	--DA.DEBUG(0,"AdjustNumberMade("..tostring(index)..", "..tostring(adjust)..")")
 	local recipe, recipeID = self:GetRecipeDataByTradeIndex(self.currentTrade, index)
 	local recipeSchematic = C_TradeSkillUI.GetRecipeSchematic(recipeID, false)
@@ -99,7 +99,7 @@ end
 -- Returns a link for the reagent required to create the specified
 -- item, the index'th reagent required for the item is returned
 --
-function Skillet:GetRecipeReagentItemLink(skillIndex, index)
+function CraftForge:GetRecipeReagentItemLink(skillIndex, index)
 	--DA.DEBUG(0,"GetRecipeReagentItemLink("..tostring(skillIndex)..", "..tostring(index)..")")
 	if skillIndex and index then
 		local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
@@ -123,7 +123,7 @@ end
 
 -- Gets the trade skill line, and knows how to do the right
 -- thing depending on whether or not this is a craft.
-function Skillet:GetTradeSkillLine()
+function CraftForge:GetTradeSkillLine()
 	local tradeName = C_Spell.GetSpellName(self.currentTrade)
 	local ranks = self:GetSkillRanks(self.currentPlayer, self.currentTrade)
 	local rank, maxRank
@@ -136,7 +136,7 @@ function Skillet:GetTradeSkillLine()
 	return tradeName, rank, maxRank
 end
 
-function Skillet:IsRecipeOnCooldown(recipeID)
+function CraftForge:IsRecipeOnCooldown(recipeID)
 	local cooldown, isDayCooldown, charges, maxCharges = C_TradeSkillUI.GetRecipeCooldown(recipeID);
 	if not cooldown then
 		return false;
@@ -147,7 +147,7 @@ function Skillet:IsRecipeOnCooldown(recipeID)
 	return true;
 end
 
-function Skillet:UpdateCooldown(recipeID, recipeInfo, fontString)
+function CraftForge:UpdateCooldown(recipeID, recipeInfo, fontString)
 	local cooldown, isDayCooldown, charges, maxCharges = C_TradeSkillUI.GetRecipeCooldown(recipeID);
 	if maxCharges and charges and maxCharges > 0 and (charges > 0 or not cooldown) then
 		fontString:SetFormattedText(TRADESKILL_CHARGES_REMAINING, charges, maxCharges);

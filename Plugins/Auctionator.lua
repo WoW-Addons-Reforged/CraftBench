@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,10 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -- Includes changes from Dranni21312
 --
 
-Skillet.ATRPlugin = {}
+CraftForge.ATRPlugin = {}
 
-local plugin = Skillet.ATRPlugin
-local L = Skillet.L
+local plugin = CraftForge.ATRPlugin
+local L = CraftForge.L
 
 plugin.options =
 {
@@ -37,11 +37,11 @@ plugin.options =
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return Skillet.db.profile.plugins.ATR.enabled
+				return CraftForge.db.profile.plugins.ATR.enabled
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.enabled = value
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge.db.profile.plugins.ATR.enabled = value
+				CraftForge:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1
@@ -51,10 +51,10 @@ plugin.options =
 			name = "useShort",
 			desc = "Use Short money format",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.useShort
+				return CraftForge.db.profile.plugins.ATR.useShort
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.useShort = value
+				CraftForge.db.profile.plugins.ATR.useShort = value
 			end,
 			order = 2
 		},
@@ -63,10 +63,10 @@ plugin.options =
 			name = "onlyPositive",
 			desc = "Only show positive values",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.onlyPositive
+				return CraftForge.db.profile.plugins.ATR.onlyPositive
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.onlyPositive = value
+				CraftForge.db.profile.plugins.ATR.onlyPositive = value
 			end,
 			order = 3
 		},
@@ -75,10 +75,10 @@ plugin.options =
 			name = "reagentPrices",
 			desc = "Show prices for reagents",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.reagentPrices
+				return CraftForge.db.profile.plugins.ATR.reagentPrices
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.reagentPrices = value
+				CraftForge.db.profile.plugins.ATR.reagentPrices = value
 			end,
 			order = 4
 		},
@@ -87,10 +87,10 @@ plugin.options =
 			name = "buyablePrices",
 			desc = "Show vendor prices for buyable reagents",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.buyablePrices
+				return CraftForge.db.profile.plugins.ATR.buyablePrices
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.buyablePrices = value
+				CraftForge.db.profile.plugins.ATR.buyablePrices = value
 			end,
 			order = 5
 		},
@@ -99,10 +99,10 @@ plugin.options =
 			name = "useVendorCalc",
 			desc = "Show calculated cost from vendor sell price for buyable reagents",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.useVendorCalc
+				return CraftForge.db.profile.plugins.ATR.useVendorCalc
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.useVendorCalc = value
+				CraftForge.db.profile.plugins.ATR.useVendorCalc = value
 			end,
 			order = 6
 		},
@@ -111,10 +111,10 @@ plugin.options =
 			name = "useSearchExact",
 			desc = "Use MultiSearchExact instead of MultSearch in Auction House shopping list",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.useSearchExact
+				return CraftForge.db.profile.plugins.ATR.useSearchExact
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.useSearchExact = value
+				CraftForge.db.profile.plugins.ATR.useSearchExact = value
 			end,
 			order = 7
 		},
@@ -123,10 +123,10 @@ plugin.options =
 			name = "extraBuyout",
 			desc = "Show buyout value",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.extraBuyout
+				return CraftForge.db.profile.plugins.ATR.extraBuyout
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.extraBuyout = value
+				CraftForge.db.profile.plugins.ATR.extraBuyout = value
 			end,
 			order = 8
 		},
@@ -135,10 +135,10 @@ plugin.options =
 			name = "extraProfitValue",
 			desc = "Show profit value",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.extraProfitValue
+				return CraftForge.db.profile.plugins.ATR.extraProfitValue
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.extraProfitValue = value
+				CraftForge.db.profile.plugins.ATR.extraProfitValue = value
 			end,
 			order = 9
 		},
@@ -147,10 +147,10 @@ plugin.options =
 			name = "extraProfitPercentage",
 			desc = "Show profit as percentage",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.extraProfitPercentage
+				return CraftForge.db.profile.plugins.ATR.extraProfitPercentage
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.extraProfitPercentage = value
+				CraftForge.db.profile.plugins.ATR.extraProfitPercentage = value
 			end,
 			order = 10
 		},
@@ -160,14 +160,14 @@ plugin.options =
 			desc = "Primary suffix text",
 			order = 1,
 			get = function() 
-				return Skillet.db.profile.plugins.ATR.suffix
+				return CraftForge.db.profile.plugins.ATR.suffix
 			end,
 			set = function(_, value)
-				Skillet.db.profile.plugins.ATR.suffix = value
-				Skillet.db.profile.plugins.ATR.suffixBuyout = (value == 1)
-				Skillet.db.profile.plugins.ATR.suffixCost = (value == 2)
-				Skillet.db.profile.plugins.ATR.suffixProfitValue = (value == 3)
-				Skillet.db.profile.plugins.ATR.suffixProfitPercentage = (value == 4)
+				CraftForge.db.profile.plugins.ATR.suffix = value
+				CraftForge.db.profile.plugins.ATR.suffixBuyout = (value == 1)
+				CraftForge.db.profile.plugins.ATR.suffixCost = (value == 2)
+				CraftForge.db.profile.plugins.ATR.suffixProfitValue = (value == 3)
+				CraftForge.db.profile.plugins.ATR.suffixProfitPercentage = (value == 4)
 			end,
 			values = {
 			[1] = L["Buyout"], 
@@ -184,10 +184,10 @@ plugin.options =
 			name = "colorCode",
 			desc = "Add color to the results",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.colorCode
+				return CraftForge.db.profile.plugins.ATR.colorCode
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.colorCode = value
+				CraftForge.db.profile.plugins.ATR.colorCode = value
 			end,
 --			width = "full",
 			order = 20
@@ -197,10 +197,10 @@ plugin.options =
 			name = "calcProfitAhTax",
 			desc = "Calc profit after AH Tax(5%)",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.calcProfitAhTax
+				return CraftForge.db.profile.plugins.ATR.calcProfitAhTax
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.calcProfitAhTax = value
+				CraftForge.db.profile.plugins.ATR.calcProfitAhTax = value
 			end,
 			order = 22
 		},
@@ -212,10 +212,10 @@ plugin.options =
 				return not Journalator
 			end,
 			get = function()
-				return Skillet.db.profile.plugins.ATR.journalatorE
+				return CraftForge.db.profile.plugins.ATR.journalatorE
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.journalatorE = value
+				CraftForge.db.profile.plugins.ATR.journalatorE = value
 			end,
 			order = 23
 		},
@@ -227,10 +227,10 @@ plugin.options =
 				return not Journalator
 			end,
 			get = function()
-				return Skillet.db.profile.plugins.ATR.journalatorC
+				return CraftForge.db.profile.plugins.ATR.journalatorC
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.journalatorC = value
+				CraftForge.db.profile.plugins.ATR.journalatorC = value
 			end,
 			order = 24
 		},
@@ -242,36 +242,36 @@ plugin.options =
 				return not Journalator
 			end,
 			get = function()
-				return Skillet.db.profile.plugins.ATR.journalatorS
+				return CraftForge.db.profile.plugins.ATR.journalatorS
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.journalatorS = value
+				CraftForge.db.profile.plugins.ATR.journalatorS = value
 			end,
 			order = 25
 		},
 		qualityBuyout = {
-			hidden = not Skillet.isRetail,
+			hidden = not CraftForge.isRetail,
 			type = "toggle",
 			name = "qualityBuyout",
 			desc = "Show all quality buyout values",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.qualityBuyout
+				return CraftForge.db.profile.plugins.ATR.qualityBuyout
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.qualityBuyout = value
+				CraftForge.db.profile.plugins.ATR.qualityBuyout = value
 			end,
 			order = 26
 		},
 		minmaxBuyout = {
-			hidden = not Skillet.isRetail,
+			hidden = not CraftForge.isRetail,
 			type = "toggle",
 			name = "minmaxBuyout",
 			desc = "Show minimum and maximum buyout values",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.minmaxBuyout
+				return CraftForge.db.profile.plugins.ATR.minmaxBuyout
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.minmaxBuyout = value
+				CraftForge.db.profile.plugins.ATR.minmaxBuyout = value
 			end,
 			order = 27
 		},
@@ -280,10 +280,10 @@ plugin.options =
 			name = "customPrice",
 			desc = "Substitute customPrice table values for Auctionator price values",
 			get = function()
-				return Skillet.db.profile.plugins.ATR.customPrice
+				return CraftForge.db.profile.plugins.ATR.customPrice
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.customPrice = value
+				CraftForge.db.profile.plugins.ATR.customPrice = value
 			end,
 			order = 28
 		},
@@ -293,11 +293,11 @@ plugin.options =
 			desc = "Multiply vendor sell price by this to get calculated buy price",
 			min = 1, max = 10, step = .1, isPercent = false,
 			get = function()
-				return Skillet.db.profile.plugins.ATR.buyFactor
+				return CraftForge.db.profile.plugins.ATR.buyFactor
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.buyFactor = value
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge.db.profile.plugins.ATR.buyFactor = value
+				CraftForge:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 30
@@ -307,11 +307,11 @@ plugin.options =
 			name = "Markup %",
 			min = 0, max = 2, step = 0.01, isPercent = true,
 			get = function()
-				return Skillet.db.profile.plugins.ATR.markup
+				return CraftForge.db.profile.plugins.ATR.markup
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.ATR.markup = value
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge.db.profile.plugins.ATR.markup = value
+				CraftForge:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 31,
@@ -333,20 +333,20 @@ local function NOSORT(tradeskill,a,b)
 end
 
 local function GetATRSort()
-	local sortmethod = Skillet:GetTradeSkillOption("sortmethod")
+	local sortmethod = CraftForge:GetTradeSkillOption("sortmethod")
 	--DA.DEBUG(0,"GetATRSort= "..tostring(sortmethod))
 	return sortmethod
 end
 
 local function IsATRSort()
-	local sortmethod = Skillet:GetTradeSkillOption("sortmethod")
+	local sortmethod = CraftForge:GetTradeSkillOption("sortmethod")
 	local found = string.find(sortmethod,"ATR:")
 	--DA.DEBUG(0,"IsATRSort= "..tostring(found))
 	return found
 end
 
 local function IsJNLSort()
-	local sortmethod = Skillet:GetTradeSkillOption("sortmethod")
+	local sortmethod = CraftForge:GetTradeSkillOption("sortmethod")
 	local found = string.find(sortmethod,"JNL:") 
 	--DA.DEBUG(0,"IsJNLSort= "..tostring(found))
 	return found
@@ -354,16 +354,16 @@ end
 
 local function SetATRsuffix(recipe)
 	--DA.DEBUG(0,"SetATRsuffix: recipe= "..DA.DUMP1(recipe,1))
-	if Skillet.db.profile.plugins.ATR.suffixBuyout then
+	if CraftForge.db.profile.plugins.ATR.suffixBuyout then
 		--DA.DEBUG(0,"SetATRsuffix: buyout= "..tostring(recipe.buyout))
 		return recipe.buyout
-	elseif Skillet.db.profile.plugins.ATR.suffixCost then
+	elseif CraftForge.db.profile.plugins.ATR.suffixCost then
 		--DA.DEBUG(0,"SetATRsuffix: cost= "..tostring(recipe.cost))
 		return recipe.cost
-	elseif Skillet.db.profile.plugins.ATR.suffixProfitValue then
+	elseif CraftForge.db.profile.plugins.ATR.suffixProfitValue then
 		--DA.DEBUG(0,"SetATRsuffix: profit= "..tostring(recipe.profit))
 		return recipe.profit
-	elseif Skillet.db.profile.plugins.ATR.suffixProfitPercentage then
+	elseif CraftForge.db.profile.plugins.ATR.suffixProfitPercentage then
 		--DA.DEBUG(0,"SetATRsuffix: percentage= "..tostring(recipe.percentage))
 		return recipe.percentage
 	end
@@ -405,9 +405,9 @@ local function GetBuyout(recipe)
 		itemID = recipe.itemID
 	end
 	sellout = ( select(11,C_Item.GetItemInfo(itemID)) or 0 )
-	if Skillet.isRetail and Skillet.db.profile.plugins.ATR.minmaxBuyout then
+	if CraftForge.isRetail and CraftForge.db.profile.plugins.ATR.minmaxBuyout then
 		minBuyout, maxBuyout = GetMinMaxBuyout(recipe)
-		if Skillet.db.profile.best_quality then
+		if CraftForge.db.profile.best_quality then
 			buyout = maxBuyout
 		else
 			buyout = minBuyout
@@ -416,8 +416,8 @@ local function GetBuyout(recipe)
 		if Atr_GetAuctionBuyout then
 			buyout = (Atr_GetAuctionBuyout(itemID) or 0) * recipe.numMade
 		elseif Auctionator and Auctionator.API.v1 then
-			if Skillet.isRetail then
-				if Skillet.db.profile.best_quality then
+			if CraftForge.isRetail then
+				if CraftForge.db.profile.best_quality then
 					outputItemInfo = C_TradeSkillUI.GetRecipeOutputItemData(recipe.spellID, {}, nil, 8)
 				else
 					outputItemInfo = C_TradeSkillUI.GetRecipeOutputItemData(recipe.spellID, {}, nil, 4)
@@ -443,7 +443,7 @@ local function GetReagentData(reagent)
 	local id, name
 	if reagent then
 		needed = reagent.numNeeded or 0
-		if Skillet.isRetail or Skillet.isForever then
+		if CraftForge.isRetail or CraftForge.isForever then
 			id = reagent.reagentID
 		else
 			id = reagent.id
@@ -459,19 +459,19 @@ local function GetReagentData(reagent)
 		else
 			value = 0
 		end
-		if Skillet:VendorSellsReagent(id) then
-			if Skillet.db.profile.plugins.ATR.buyablePrices then
-				if Skillet.db.profile.plugins.ATR.useVendorCalc then
-					local buyFactor = Skillet.db.profile.plugins.ATR.buyFactor or buyFactorDef
+		if CraftForge:VendorSellsReagent(id) then
+			if CraftForge.db.profile.plugins.ATR.buyablePrices then
+				if CraftForge.db.profile.plugins.ATR.useVendorCalc then
+					local buyFactor = CraftForge.db.profile.plugins.ATR.buyFactor or buyFactorDef
 					value = ( select(11,C_Item.GetItemInfo(id)) or 0 ) * buyFactor
 				end
 			else
 				value = 0
 			end
 		end
-		if Skillet.db.profile.plugins.ATR.customPrice then
-			local server = Skillet.data.server or 0
-			local customPrice = Skillet.db.global.customPrice[server]
+		if CraftForge.db.profile.plugins.ATR.customPrice then
+			local server = CraftForge.data.server or 0
+			local customPrice = CraftForge.db.global.customPrice[server]
 			if customPrice and customPrice[id] then
 				--DA.DEBUG(0,"GetReagentData: id= "..tostring(id)..", "..DA.DUMP1(customPrice[id]))
 				if customPrice[id].name and customPrice[id].name ~= name then
@@ -492,21 +492,21 @@ end
 
 local function AddExtraText(value, needed, id, name, custom)
 	--DA.DEBUG(0,"AddExtraText("..tostring(value)..", "..tostring(needed)..", "..tostring(id)..", "..tostring(name)..", "..tostring(custom)..")")
-	if not Skillet:VendorSellsReagent(id) then
+	if not CraftForge:VendorSellsReagent(id) then
 --
 -- Not sold by a vendor so use the default
 --
 		toConcatLabel[#toConcatLabel+1] = string.format("   %d x %s%s", needed, name, custom)
-		toConcatExtra[#toConcatExtra+1] = Skillet:FormatMoneyFull(value, true)
+		toConcatExtra[#toConcatExtra+1] = CraftForge:FormatMoneyFull(value, true)
 	else
 		toConcatLabel[#toConcatLabel+1] = string.format("   %d x %s  |cff808080(%s)|r", needed, name, L["buyable"])
-		if Skillet.db.profile.plugins.ATR.buyablePrices then
+		if CraftForge.db.profile.plugins.ATR.buyablePrices then
 --
 -- If this reagent is sold by a vendor, then use that (calculated) price instead
 --
-			local buyFactor = Skillet.db.profile.plugins.ATR.buyFactor or buyFactorDef
+			local buyFactor = CraftForge.db.profile.plugins.ATR.buyFactor or buyFactorDef
 			value = ( select(11,C_Item.GetItemInfo(id)) or 0 ) * needed * buyFactor
-			toConcatExtra[#toConcatExtra+1] = Skillet:FormatMoneyFull(value, true)
+			toConcatExtra[#toConcatExtra+1] = CraftForge:FormatMoneyFull(value, true)
 		else
 --
 -- If this reagent is sold by a vendor, don't use the Auctionator price
@@ -528,7 +528,7 @@ local function GetRecipeData(recipe)
 	else
 		itemID = recipe.itemID
 	end
-	if Skillet.db.profile.plugins.ATR.enabled and itemID then
+	if CraftForge.db.profile.plugins.ATR.enabled and itemID then
 		buyout, sellout = GetBuyout(recipe)
 		cost = 0
 		for i=1,#recipe.reagentData do
@@ -542,11 +542,11 @@ local function GetRecipeData(recipe)
 				cost = cost + value
 			end
 		end
-		if Skillet.db.profile.plugins.ATR.useVendorCalc then
-			local markup = Skillet.db.profile.plugins.ATR.markup or markupDef
+		if CraftForge.db.profile.plugins.ATR.useVendorCalc then
+			local markup = CraftForge.db.profile.plugins.ATR.markup or markupDef
 			cost = cost * markup
 		end
-		local ah_tax = Skillet.db.profile.plugins.ATR.calcProfitAhTax and ahtaxDef or 1
+		local ah_tax = CraftForge.db.profile.plugins.ATR.calcProfitAhTax and ahtaxDef or 1
 		profit = buyout * ah_tax - cost
 		vprofit = sellout - cost
 		if cost ~= 0 then
@@ -579,9 +579,9 @@ function plugin.SortByBuyout(skill,a,b)
 		return false
 	end
 	local recipeA, recipeB, idA, idB, buyoutA, buyoutB
-	recipeA = Skillet:GetRecipe(a.recipeID)
+	recipeA = CraftForge:GetRecipe(a.recipeID)
 	--DA.DEBUG(0,"SortByBuyout: recipeA= "..DA.DUMP1(recipeA))
-	recipeB = Skillet:GetRecipe(b.recipeID)
+	recipeB = CraftForge:GetRecipe(b.recipeID)
 	--DA.DEBUG(0,"SortByBuyout: recipeB= "..DA.DUMP1(recipeB))
 	if not recipeA.buyout then
 		GetRecipeData(recipeA)
@@ -608,9 +608,9 @@ function plugin.SortBySellout(skill,a,b)
 		return false
 	end
 	local recipeA, recipeB, idA, idB, selloutA, selloutB
-	recipeA = Skillet:GetRecipe(a.recipeID)
+	recipeA = CraftForge:GetRecipe(a.recipeID)
 	--DA.DEBUG(0,"SortBySellout: recipeA= "..DA.DUMP1(recipeA))
-	recipeB = Skillet:GetRecipe(b.recipeID)
+	recipeB = CraftForge:GetRecipe(b.recipeID)
 	--DA.DEBUG(0,"SortBySellout: recipeB= "..DA.DUMP1(recipeB))
 	if not recipeA.sellout then
 		GetRecipeData(recipeA)
@@ -637,9 +637,9 @@ function plugin.SortByCost(skill,a,b)
 		return false
 	end
 	local recipeA, recipeB, idA, idB, costA, costB
-	recipeA = Skillet:GetRecipe(a.recipeID)
+	recipeA = CraftForge:GetRecipe(a.recipeID)
 	--DA.DEBUG(0,"SortByCost: recipeA= "..DA.DUMP1(recipeA))
-	recipeB = Skillet:GetRecipe(b.recipeID)
+	recipeB = CraftForge:GetRecipe(b.recipeID)
 	--DA.DEBUG(0,"SortByCost: recipeB= "..DA.DUMP1(recipeB))
 	if not recipeA.cost then
 		GetRecipeData(recipeA)
@@ -666,9 +666,9 @@ function plugin.SortByProfit(skill,a,b)
 		return false
 	end
 	local recipeA, recipeB, idA, idB, profitA, profitB
-	recipeA = Skillet:GetRecipe(a.recipeID)
+	recipeA = CraftForge:GetRecipe(a.recipeID)
 	--DA.DEBUG(0,"SortByProfit: recipeA= "..DA.DUMP1(recipeA))
-	recipeB = Skillet:GetRecipe(b.recipeID)
+	recipeB = CraftForge:GetRecipe(b.recipeID)
 	--DA.DEBUG(0,"SortByProfit: recipeB= "..DA.DUMP1(recipeB))
 	if not recipeA.profit then
 		GetRecipeData(recipeA)
@@ -695,9 +695,9 @@ function plugin.SortByVProfit(skill,a,b)
 		return false
 	end
 	local recipeA, recipeB, idA, idB, vprofitA, vprofitB
-	recipeA = Skillet:GetRecipe(a.recipeID)
+	recipeA = CraftForge:GetRecipe(a.recipeID)
 	--DA.DEBUG(0,"SortByProfit: recipeA= "..DA.DUMP1(recipeA))
-	recipeB = Skillet:GetRecipe(b.recipeID)
+	recipeB = CraftForge:GetRecipe(b.recipeID)
 	--DA.DEBUG(0,"SortByProfit: recipeB= "..DA.DUMP1(recipeB))
 	if not recipeA.vprofit then
 		GetRecipeData(recipeA)
@@ -727,9 +727,9 @@ function plugin.SortByPercent(skill,a,b)
 		return false
 	end
 	local recipeA, recipeB, idA, idB, percentA, percentB
-	recipeA = Skillet:GetRecipe(a.recipeID)
+	recipeA = CraftForge:GetRecipe(a.recipeID)
 	--DA.DEBUG(1,"SortByPercent: recipeA= "..DA.DUMP1(recipeA))
-	recipeB = Skillet:GetRecipe(b.recipeID)
+	recipeB = CraftForge:GetRecipe(b.recipeID)
 	--DA.DEBUG(1,"SortByPercent: recipeB= "..DA.DUMP1(recipeB))
 	if not recipeA.percentage then
 		GetRecipeData(recipeA)
@@ -757,9 +757,9 @@ function plugin.SortMostSold(skill,a,b)
 		return
 	end
 	local recipeA, recipeB, itemNameA, itemNameB, successCountA, successCountB
-	recipeA = Skillet:GetRecipe(a.recipeID)
+	recipeA = CraftForge:GetRecipe(a.recipeID)
 	--DA.DEBUG(0,"SortMostSold: recipeA= "..DA.DUMP1(recipeA))
-	recipeB = Skillet:GetRecipe(b.recipeID)
+	recipeB = CraftForge:GetRecipe(b.recipeID)
 	--DA.DEBUG(0,"SortMostSold: recipeB= "..DA.DUMP1(recipeB))
 	if recipeA.scrollID then
 		itemNameA = C_Item.GetItemInfo(recipeA.scrollID)
@@ -800,9 +800,9 @@ function plugin.SortSalesRate(skill,a,b)
 	end
 	local recipeA, recipeB, itemNameA, itemNameB, successCountA, successCountB
 	local failedCountA, failedCountB, salesRateA, salesRateB
-	recipeA = Skillet:GetRecipe(a.recipeID)
+	recipeA = CraftForge:GetRecipe(a.recipeID)
 	--DA.DEBUG(0,"SortSalesRate: recipeA= "..DA.DUMP1(recipeA))
-	recipeB = Skillet:GetRecipe(b.recipeID)
+	recipeB = CraftForge:GetRecipe(b.recipeID)
 	--DA.DEBUG(0,"SortSalesRate: recipeB= "..DA.DUMP1(recipeB))
 	if recipeA.scrollID then
 		itemNameA = C_Item.GetItemInfo(recipeA.scrollID)
@@ -837,25 +837,25 @@ end
 
 function plugin.OnInitialize()
 	--DA.DEBUG(0,"ATR:OnInitialize()")
-	if not Skillet.db.profile.plugins.ATR then
-		Skillet.db.profile.plugins.ATR = {}
-		Skillet.db.profile.plugins.ATR.enabled = true
-		Skillet.db.profile.plugins.ATR.buyFactor = buyFactorDef
-		Skillet.db.profile.plugins.ATR.markup = markupDef
+	if not CraftForge.db.profile.plugins.ATR then
+		CraftForge.db.profile.plugins.ATR = {}
+		CraftForge.db.profile.plugins.ATR.enabled = true
+		CraftForge.db.profile.plugins.ATR.buyFactor = buyFactorDef
+		CraftForge.db.profile.plugins.ATR.markup = markupDef
 	end
-	if Skillet.db.profile.plugins.ATR.showProfitValue == nil then
-		Skillet.db.profile.plugins.ATR.showProfitValue = true
+	if CraftForge.db.profile.plugins.ATR.showProfitValue == nil then
+		CraftForge.db.profile.plugins.ATR.showProfitValue = true
 	end
-	Skillet:AddPluginOptions(plugin.options)
-	Skillet:AddRecipeSorter("ATR: "..L["Buyout"], plugin.SortByBuyout)
-	Skillet:AddRecipeSorter("ATR: "..L["Cost"], plugin.SortByCost)
-	Skillet:AddRecipeSorter("ATR: "..L["Profit"], plugin.SortByProfit)
-	Skillet:AddRecipeSorter("ATR: "..L["Percent"], plugin.SortByPercent)
-	Skillet:AddRecipeSorter("ATR: "..L["Sellout"], plugin.SortBySellout)
-	Skillet:AddRecipeSorter("ATR: "..L["VProfit"], plugin.SortByVProfit)
+	CraftForge:AddPluginOptions(plugin.options)
+	CraftForge:AddRecipeSorter("ATR: "..L["Buyout"], plugin.SortByBuyout)
+	CraftForge:AddRecipeSorter("ATR: "..L["Cost"], plugin.SortByCost)
+	CraftForge:AddRecipeSorter("ATR: "..L["Profit"], plugin.SortByProfit)
+	CraftForge:AddRecipeSorter("ATR: "..L["Percent"], plugin.SortByPercent)
+	CraftForge:AddRecipeSorter("ATR: "..L["Sellout"], plugin.SortBySellout)
+	CraftForge:AddRecipeSorter("ATR: "..L["VProfit"], plugin.SortByVProfit)
 	if Journalator and Journalator.API then
-		Skillet:AddRecipeSorter("JNL: "..L["Most Sold"], plugin.SortMostSold)
-		Skillet:AddRecipeSorter("JNL: "..L["Sales Rate"], plugin.SortSalesRate)
+		CraftForge:AddRecipeSorter("JNL: "..L["Most Sold"], plugin.SortMostSold)
+		CraftForge:AddRecipeSorter("JNL: "..L["Sales Rate"], plugin.SortSalesRate)
 	end
 end
 
@@ -890,37 +890,37 @@ function plugin.GetExtraText(skill, recipe)
 --   In Classic Era, Most recipes don't produce an item but we still should get reagent prices.
 --   In Wrath, Enchants can be applied to vellum to produce scrolls so use the scroll price instead.
 --
-	if Skillet.isCraft then
+	if CraftForge.isCraft then
 		--DA.DEBUG(0,"GetExtraText: itemID= "..tostring(itemID)..", type= "..type(itemID))
 		--DA.DEBUG(0,"GetExtraText: recipe.name= "..tostring(recipe.name)..", recipe.spellID= "..tostring(recipe.spellID)..", recipe.scrollID= "..tostring(recipe.scrollID))
 		if itemID then
-			itemID = Skillet.EnchantSpellToItem[itemID] or 0
+			itemID = CraftForge.EnchantSpellToItem[itemID] or 0
 			--DA.DEBUG(0,"GetExtraText: Change via EnchantSpellToItem, itemID= "..tostring(itemID))
 		end
 	elseif recipe.tradeID == 7411 and itemID == 0 then
 		itemID = recipe.scrollID
 		--DA.DEBUG(0,"GetExtraText: Change to scrollID, itemID= "..tostring(itemID))
 	end
-	if Skillet.db.profile.plugins.ATR.enabled and itemID then
+	if CraftForge.db.profile.plugins.ATR.enabled and itemID then
 --
 -- buyout is Auctionator's price (for one) times the number this recipe makes
 --
 		local buyout, minBuyout, maxBuyout, hasQ
 		buyout = GetBuyout(recipe)
-		if buyout and Skillet.db.profile.plugins.ATR.extraBuyout then
-			if Skillet.db.profile.plugins.ATR.minmaxBuyout and recipe.supportsQualities then
+		if buyout and CraftForge.db.profile.plugins.ATR.extraBuyout then
+			if CraftForge.db.profile.plugins.ATR.minmaxBuyout and recipe.supportsQualities then
 				minBuyout, maxBuyout, hasQ = GetMinMaxBuyout(recipe)
 			end
 			if hasQ then
 				label = "|r".."ATR "..L["Buyout"].." (min):"
-				extra_text = Skillet:FormatMoneyFull(minBuyout, true)
+				extra_text = CraftForge:FormatMoneyFull(minBuyout, true)
 				label = label.."\n".."ATR "..L["Buyout"].." (max):"
-				extra_text = extra_text.."\n"..Skillet:FormatMoneyFull(maxBuyout, true)
+				extra_text = extra_text.."\n"..CraftForge:FormatMoneyFull(maxBuyout, true)
 			else
 				label = "|r".."ATR "..L["Buyout"]..":"
-				extra_text = Skillet:FormatMoneyFull(buyout, true)
+				extra_text = CraftForge:FormatMoneyFull(buyout, true)
 			end
-			if Skillet.db.profile.plugins.ATR.qualityBuyout and recipe.supportsQualities then
+			if CraftForge.db.profile.plugins.ATR.qualityBuyout and recipe.supportsQualities then
 				label = label.."\n"
 				extra_text = extra_text.."\n"
 --
@@ -941,11 +941,11 @@ function plugin.GetExtraText(skill, recipe)
 							--DA.DEBUG(0,"GetExtraText: effectiveILvl= "..tostring(effectiveILvl)..", itemType= "..tostring(recipe.itemType)..", classID= "..tostring(recipe.classID))
 							if recipe.classID == 0 or recipe.classID == 7 then
 								label = label.."\n"..outputItemInfo.hyperlink
-								extra_text = extra_text.."\n".."|T982414:"..tostring(h)..":1|t"..Skillet:FormatMoneyFull(buyout, true)
+								extra_text = extra_text.."\n".."|T982414:"..tostring(h)..":1|t"..CraftForge:FormatMoneyFull(buyout, true)
 							else
 --								label = label.."\n"..recipe.name.." ("..tostring(effectiveILvl)..")".." <"..tostring(age)..">"
 								label = label.."\n"..recipe.name.." ("..tostring(effectiveILvl)..")"
-								extra_text = extra_text.."\n"..Skillet:FormatMoneyFull(buyout, true)
+								extra_text = extra_text.."\n"..CraftForge:FormatMoneyFull(buyout, true)
 							end
 						end
 					end
@@ -975,7 +975,7 @@ function plugin.GetExtraText(skill, recipe)
 --
 -- Show all the reagent information?
 --
-		if Skillet.db.profile.plugins.ATR.reagentPrices then
+		if CraftForge.db.profile.plugins.ATR.reagentPrices then
 			label = label.."\n\n"..table.concat(toConcatLabel,"\n").."\n"
 			extra_text = extra_text.."\n\n"..table.concat(toConcatExtra,"\n").."\n"
 		else
@@ -985,32 +985,32 @@ function plugin.GetExtraText(skill, recipe)
 --
 -- If reagents were priced as bought from a vendor, should we markup the price? 
 --
-		if Skillet.db.profile.plugins.ATR.useVendorCalc then
-			local markup = Skillet.db.profile.plugins.ATR.markup or markupDef
+		if CraftForge.db.profile.plugins.ATR.useVendorCalc then
+			local markup = CraftForge.db.profile.plugins.ATR.markup or markupDef
 			label = label.."\n   "..L["Cost"].." * "..(markup * 100).."%:\n"
 			cost = cost * markup
 		else
 			label = label.."\n   "..L["Cost"]..":\n"
 		end
-		extra_text = extra_text.."\n"..Skillet:FormatMoneyFull(cost, true).."\n"
+		extra_text = extra_text.."\n"..CraftForge:FormatMoneyFull(cost, true).."\n"
 --
 -- If we craft this item, will we make a profit?
 --
 		if buyout then
-			local ah_tax = Skillet.db.profile.plugins.ATR.calcProfitAhTax and ahtaxDef or 1
+			local ah_tax = CraftForge.db.profile.plugins.ATR.calcProfitAhTax and ahtaxDef or 1
 			local profit = buyout * ah_tax - cost
-			if Skillet.db.profile.plugins.ATR.extraProfitValue or Skillet.db.profile.plugins.ATR.extraProfitPercentage then
+			if CraftForge.db.profile.plugins.ATR.extraProfitValue or CraftForge.db.profile.plugins.ATR.extraProfitPercentage then
 				label = label.."\n"
 				extra_text = extra_text.."\n"
 			end
 --
 -- Show the profit absolute value and as a percentage of the cost
 --
-			if Skillet.db.profile.plugins.ATR.extraProfitValue then
+			if CraftForge.db.profile.plugins.ATR.extraProfitValue then
 				label = label.."   Profit:\n"
-				extra_text = extra_text..Skillet:FormatMoneyFull(profit, true).."\n"
+				extra_text = extra_text..CraftForge:FormatMoneyFull(profit, true).."\n"
 			end
-			if Skillet.db.profile.plugins.ATR.extraProfitPercentage then
+			if CraftForge.db.profile.plugins.ATR.extraProfitPercentage then
 				label = label.."   Profit percentage:\n"
 				extra_text = extra_text..profitPctText(profit,cost,9999).."%\n"
 			end
@@ -1018,7 +1018,7 @@ function plugin.GetExtraText(skill, recipe)
 --
 -- Show Journalator sales info
 --
-		if addonName and Journalator and Skillet.db.profile.plugins.ATR.journalatorE then
+		if addonName and Journalator and CraftForge.db.profile.plugins.ATR.journalatorE then
 			label = label.."\n"
 			extra_text = extra_text.."\n"
 			local itemName = C_Item.GetItemInfo(itemID)
@@ -1052,11 +1052,11 @@ function plugin.GetExtraText(skill, recipe)
 			end
 			if lastSold and (lastSold > 0 or DA.DebugShow) then
 				label = label.."   lastSold:\n"
-				extra_text = extra_text..Skillet:FormatMoneyFull(lastSold, true).."\n"
+				extra_text = extra_text..CraftForge:FormatMoneyFull(lastSold, true).."\n"
 			end
 			if lastBought and (lastBought > 0 or DA.DebugShow) then
 				label = label.."   lastBought:\n"
-				extra_text = extra_text..Skillet:FormatMoneyFull(lastBought, true).."\n"
+				extra_text = extra_text..CraftForge:FormatMoneyFull(lastBought, true).."\n"
 			end
 		end
 	end
@@ -1079,11 +1079,11 @@ function plugin.RecipeNameSuffix(skill, recipe)
 -- Check for Enchanting. Most recipes don't produce an item but
 -- we still should get reagent prices.
 --
-	if Skillet.isCraft then
+	if CraftForge.isCraft then
 		--DA.DEBUG(0,"RecipeNameSuffix: itemID= "..tostring(itemID)..", type= "..type(itemID))
 		--DA.DEBUG(0,"RecipeNameSuffix: recipe.name= "..tostring(recipe.name)..", recipe.spellID= "..tostring(recipe.spellID)..", recipe.scrollID= "..tostring(recipe.scrollID))
 		if itemID then
-			itemID = Skillet.EnchantSpellToItem[itemID] or 0
+			itemID = CraftForge.EnchantSpellToItem[itemID] or 0
 			--DA.DEBUG(0,"RecipeNameSuffix: Change via EnchantSpellToItem, itemID= "..tostring(itemID))
 		end
 	elseif recipe.tradeID == 7411 and itemID == 0 then
@@ -1093,7 +1093,7 @@ function plugin.RecipeNameSuffix(skill, recipe)
 	local itemName
 	if itemID then itemName = C_Item.GetItemInfo(itemID) end
 	--DA.DEBUG(0,"RecipeNameSuffix: itemName= "..tostring(itemName)..", type= "..type(itemName))
-	if Skillet.db.profile.plugins.ATR.enabled and itemID then
+	if CraftForge.db.profile.plugins.ATR.enabled and itemID then
 		buyout, sellout = GetBuyout(recipe)
 		cost = 0
 		for i=1,#recipe.reagentData do
@@ -1107,11 +1107,11 @@ function plugin.RecipeNameSuffix(skill, recipe)
 				cost = cost + value
 			end
 		end
-		if Skillet.db.profile.plugins.ATR.useVendorCalc then
-			local markup = Skillet.db.profile.plugins.ATR.markup or markupDef
+		if CraftForge.db.profile.plugins.ATR.useVendorCalc then
+			local markup = CraftForge.db.profile.plugins.ATR.markup or markupDef
 			cost = cost * markup
 		end
-		local ah_tax = Skillet.db.profile.plugins.ATR.calcProfitAhTax and ahtaxDef or 1
+		local ah_tax = CraftForge.db.profile.plugins.ATR.calcProfitAhTax and ahtaxDef or 1
 		profit = buyout * ah_tax - cost
 		vprofit = sellout - cost
 		if cost ~= 0 then
@@ -1140,65 +1140,65 @@ function plugin.RecipeNameSuffix(skill, recipe)
 		local isSortJ = IsJNLSort()
 		local isSort = isSortA or isSortJ
 		--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort))
-		if getSort == "ATR: "..L["Buyout"] or ((not isSortA or isSortJ) and Skillet.db.profile.plugins.ATR.suffixBuyout) then
-			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", suffixBuyout= "..tostring(Skillet.db.profile.plugins.ATR.suffixBuyout))
-			if Skillet.db.profile.plugins.ATR.useShort then
-				text = Skillet:FormatMoneyShort(buyout, true, Skillet.db.profile.plugins.ATR.colorCode)
+		if getSort == "ATR: "..L["Buyout"] or ((not isSortA or isSortJ) and CraftForge.db.profile.plugins.ATR.suffixBuyout) then
+			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", suffixBuyout= "..tostring(CraftForge.db.profile.plugins.ATR.suffixBuyout))
+			if CraftForge.db.profile.plugins.ATR.useShort then
+				text = CraftForge:FormatMoneyShort(buyout, true, CraftForge.db.profile.plugins.ATR.colorCode)
 			else
-				text = Skillet:FormatMoneyFull(buyout, true, Skillet.db.profile.plugins.ATR.colorCode)
+				text = CraftForge:FormatMoneyFull(buyout, true, CraftForge.db.profile.plugins.ATR.colorCode)
 			end
-		elseif getSort == "ATR: "..L["Cost"] or ((not isSortA or isSortJ) and Skillet.db.profile.plugins.ATR.suffixCost) then
-			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", suffixCost= "..tostring(Skillet.db.profile.plugins.ATR.suffixCost))
-			if Skillet.db.profile.plugins.ATR.useShort then
-				text = Skillet:FormatMoneyShort(cost, true, Skillet.db.profile.plugins.ATR.colorCode)
+		elseif getSort == "ATR: "..L["Cost"] or ((not isSortA or isSortJ) and CraftForge.db.profile.plugins.ATR.suffixCost) then
+			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", suffixCost= "..tostring(CraftForge.db.profile.plugins.ATR.suffixCost))
+			if CraftForge.db.profile.plugins.ATR.useShort then
+				text = CraftForge:FormatMoneyShort(cost, true, CraftForge.db.profile.plugins.ATR.colorCode)
 			else
-				text = Skillet:FormatMoneyFull(cost, true, Skillet.db.profile.plugins.ATR.colorCode)
+				text = CraftForge:FormatMoneyFull(cost, true, CraftForge.db.profile.plugins.ATR.colorCode)
 			end
-		elseif getSort == "ATR: "..L["Profit"] or ((not isSortA or isSortJ) and Skillet.db.profile.plugins.ATR.suffixProfitValue) then
-			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", suffixProfitValue= "..tostring(Skillet.db.profile.plugins.ATR.suffixProfitValue))
-			if Skillet.db.profile.plugins.ATR.useShort then
-				text = Skillet:FormatMoneyShort(profit, true, Skillet.db.profile.plugins.ATR.colorCode)
+		elseif getSort == "ATR: "..L["Profit"] or ((not isSortA or isSortJ) and CraftForge.db.profile.plugins.ATR.suffixProfitValue) then
+			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", suffixProfitValue= "..tostring(CraftForge.db.profile.plugins.ATR.suffixProfitValue))
+			if CraftForge.db.profile.plugins.ATR.useShort then
+				text = CraftForge:FormatMoneyShort(profit, true, CraftForge.db.profile.plugins.ATR.colorCode)
 			else
-				text = Skillet:FormatMoneyFull(profit, true, Skillet.db.profile.plugins.ATR.colorCode)
+				text = CraftForge:FormatMoneyFull(profit, true, CraftForge.db.profile.plugins.ATR.colorCode)
 			end
-			if not isSort and Skillet.db.profile.plugins.ATR.onlyPositive and profit <= 0 then
+			if not isSort and CraftForge.db.profile.plugins.ATR.onlyPositive and profit <= 0 then
 				text = nil
 			end
-		elseif getSort == "ATR: "..L["Percent"] or ((not isSortA or isSortJ) and Skillet.db.profile.plugins.ATR.suffixProfitPercentage) then
-			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", suffixProfitPercentage= "..tostring(Skillet.db.profile.plugins.ATR.suffixProfitPercentage))
+		elseif getSort == "ATR: "..L["Percent"] or ((not isSortA or isSortJ) and CraftForge.db.profile.plugins.ATR.suffixProfitPercentage) then
+			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", suffixProfitPercentage= "..tostring(CraftForge.db.profile.plugins.ATR.suffixProfitPercentage))
 			if text then
 				text = text.." ("..profitPctText(profit,cost,999).."%)"
 			else
 				text = "("..profitPctText(profit,cost,999).."%)"
 			end
 		elseif getSort == "ATR: "..L["Sellout"] then
-			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", suffixProfitPercentage= "..tostring(Skillet.db.profile.plugins.ATR.suffixProfitPercentage))
-			if Skillet.db.profile.plugins.ATR.useShort then
-				text = Skillet:FormatMoneyShort(sellout, true, Skillet.db.profile.plugins.ATR.colorCode)
+			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", suffixProfitPercentage= "..tostring(CraftForge.db.profile.plugins.ATR.suffixProfitPercentage))
+			if CraftForge.db.profile.plugins.ATR.useShort then
+				text = CraftForge:FormatMoneyShort(sellout, true, CraftForge.db.profile.plugins.ATR.colorCode)
 			else
-				text = Skillet:FormatMoneyFull(sellout, true, Skillet.db.profile.plugins.ATR.colorCode)
+				text = CraftForge:FormatMoneyFull(sellout, true, CraftForge.db.profile.plugins.ATR.colorCode)
 			end
 		elseif getSort == "ATR: "..L["VProfit"] then
-			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", suffixProfitPercentage= "..tostring(Skillet.db.profile.plugins.ATR.suffixProfitPercentage))
-			if Skillet.db.profile.plugins.ATR.useShort then
-				text = Skillet:FormatMoneyShort(vprofit, true, Skillet.db.profile.plugins.ATR.colorCode)
+			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", suffixProfitPercentage= "..tostring(CraftForge.db.profile.plugins.ATR.suffixProfitPercentage))
+			if CraftForge.db.profile.plugins.ATR.useShort then
+				text = CraftForge:FormatMoneyShort(vprofit, true, CraftForge.db.profile.plugins.ATR.colorCode)
 			else
-				text = Skillet:FormatMoneyFull(vprofit, true, Skillet.db.profile.plugins.ATR.colorCode)
+				text = CraftForge:FormatMoneyFull(vprofit, true, CraftForge.db.profile.plugins.ATR.colorCode)
 			end
-			if Skillet.db.profile.plugins.ATR.onlyPositive and vprofit <= 0 then
+			if CraftForge.db.profile.plugins.ATR.onlyPositive and vprofit <= 0 then
 				text = nil
 			end
 		end
-		if Journalator and Skillet.db.profile.plugins.ATR.journalatorC then
-			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", journalatorC= "..tostring(Skillet.db.profile.plugins.ATR.journalatorC))
+		if Journalator and CraftForge.db.profile.plugins.ATR.journalatorC then
+			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", journalatorC= "..tostring(CraftForge.db.profile.plugins.ATR.journalatorC))
 				if text then
 					text = text.." ["..string.format("%3.0f", successCount).."]"
 				else
 					text = "["..string.format("%3.0f", successCount).."]"
 				end
 		end
-		if Journalator and Skillet.db.profile.plugins.ATR.journalatorS then
-			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", journalatorS= "..tostring(Skillet.db.profile.plugins.ATR.journalatorS))
+		if Journalator and CraftForge.db.profile.plugins.ATR.journalatorS then
+			--DA.DEBUG(1, "RecipeNameSuffix: GetATRSort="..tostring(getSort)..", IsATRSort= "..tostring(isSort)..", journalatorS= "..tostring(CraftForge.db.profile.plugins.ATR.journalatorS))
 			if salesRate and string.find(salesRate,"%%") then
 				if text then
 					text = text.." ["..tostring(salesRate).."]"
@@ -1220,9 +1220,9 @@ function plugin.RecipeNameSuffix(skill, recipe)
 	return text
 end
 
-Skillet:RegisterRecipeNamePlugin("ATRPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
+CraftForge:RegisterRecipeNamePlugin("ATRPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
 
-Skillet:RegisterDisplayDetailPlugin("ATRPlugin")	-- we have a GetExtraText function
+CraftForge:RegisterDisplayDetailPlugin("ATRPlugin")	-- we have a GetExtraText function
 
 --
 -- Auctionator button support
@@ -1230,20 +1230,20 @@ Skillet:RegisterDisplayDetailPlugin("ATRPlugin")	-- we have a GetExtraText funct
 --    true will search for the items in the ShoppingList
 --    false (or nil) will search for the item and reagents in the MainFrame
 --
-function Skillet:AuctionatorSearch(whichOne)
+function CraftForge:AuctionatorSearch(whichOne)
 	--DA.DEBUG(0, "AuctionatorSearch("..tostring(whichOne)..")")
 	local shoppingListName
 	local items = {}
-	local recipe = Skillet:GetRecipeDataByTradeIndex(Skillet.currentTrade, Skillet.selectedSkill)
-	local useSearchExact = Skillet.db.profile.plugins.ATR.useSearchExact
+	local recipe = CraftForge:GetRecipeDataByTradeIndex(CraftForge.currentTrade, CraftForge.selectedSkill)
+	local useSearchExact = CraftForge.db.profile.plugins.ATR.useSearchExact
 	--DA.DEBUG(1,"AuctionatorSearch: recipe= "..DA.DUMP1(recipe))
 	if whichOne then
 		shoppingListName = L["Shopping List"]
 		local name = nil
-		if not Skillet.db.profile.include_alts then
-			name = Skillet.currentPlayer
+		if not CraftForge.db.profile.include_alts then
+			name = CraftForge.currentPlayer
 		end
-		local list = Skillet:GetShoppingList(name, Skillet.db.profile.same_faction, Skillet.db.profile.include_guild)
+		local list = CraftForge:GetShoppingList(name, CraftForge.db.profile.same_faction, CraftForge.db.profile.include_guild)
 		if not list or #list == 0 then
 			--DA.DEBUG(0,"AuctionatorSearch: Shopping List is empty")
 			return
@@ -1251,7 +1251,7 @@ function Skillet:AuctionatorSearch(whichOne)
 		for i=1,#list,1 do
 			local id  = list[i].id
 			local name = C_Item.GetItemInfo(id)
-			if name and not Skillet:VendorSellsReagent(id) then
+			if name and not CraftForge:VendorSellsReagent(id) then
 				table.insert (items, name)
 				--DA.DEBUG(1, "AuctionatorSearch: Item["..tostring(i).."] "..name.." ("..tostring(id)..") added")
 			end
@@ -1264,8 +1264,8 @@ function Skillet:AuctionatorSearch(whichOne)
 --
 -- Check for Enchanting. For Wrath, Add the scroll for the enchant instead
 --
-		if Skillet.isCraft and itemID then
-			itemID = Skillet.EnchantSpellToItem[itemID] or 0
+		if CraftForge.isCraft and itemID then
+			itemID = CraftForge.EnchantSpellToItem[itemID] or 0
 		end
 		if itemID ~= 0 then
 			shoppingListName = C_Item.GetItemInfo(itemID)
@@ -1273,7 +1273,7 @@ function Skillet:AuctionatorSearch(whichOne)
 			shoppingListName = recipe.name
 		end
 		if (shoppingListName) then
-			if recipe.tradeID == 7411 and not Skillet.isCraft then
+			if recipe.tradeID == 7411 and not CraftForge.isCraft then
 				if recipe.scrollID then
 					local scrollName = C_Item.GetItemInfo(recipe.scrollID)
 					table.insert(items, scrollName)
@@ -1293,7 +1293,7 @@ function Skillet:AuctionatorSearch(whichOne)
 			end
 			local needed = reagent.numNeeded or 0
 			local id
-			if Skillet.isRetail or Skillet.isForever then
+			if CraftForge.isRetail or CraftForge.isForever then
 				id = reagent.reagentID
 			else
 				id = reagent.id
@@ -1301,7 +1301,7 @@ function Skillet:AuctionatorSearch(whichOne)
 			if id then
 				local reagentName = C_Item.GetItemInfo(id)
 				if (reagentName) then
-					if not Skillet:VendorSellsReagent(id) then
+					if not CraftForge:VendorSellsReagent(id) then
 						table.insert (items, reagentName)
 						DA.DEBUG(1, "AuctionatorSearch:  Added  ["..i.."] ("..id..") "..reagentName)
 					else
@@ -1320,7 +1320,7 @@ function Skillet:AuctionatorSearch(whichOne)
 				if quality == nil or quality == 1 then
 					local name, bname = self:nameWithQuality(id)
 					if (bname) then
-						if not Skillet:VendorSellsReagent(id) then
+						if not CraftForge:VendorSellsReagent(id) then
 							table.insert (items, bname)
 							--DA.DEBUG(1, "AuctionatorSearch:  Added  ["..i.."] ("..id..") "..bname)
 						else
@@ -1335,7 +1335,7 @@ function Skillet:AuctionatorSearch(whichOne)
 				local id = recipe.modifiedData[i].reagentID
 				local name, bname = self:nameWithQuality(id)
 				if (bname) then
-					if not Skillet:VendorSellsReagent(id) then
+					if not CraftForge:VendorSellsReagent(id) then
 						table.insert (items, bname)
 						--DA.DEBUG(1, "AuctionatorSearch:  Added  ["..i.."] ("..id..") "..bname)
 					else
@@ -1354,7 +1354,7 @@ function Skillet:AuctionatorSearch(whichOne)
 		return
 	end
 --]]
-	if Skillet.auctionOpen then
+	if CraftForge.auctionOpen then
 		if useSearchExact and Auctionator.API.v1.MultiSearchExact then
 			--DA.DEBUG(0, "AuctionatorSearch: (exact) addonName= "..tostring(addonName)..", items= "..DA.DUMP1(items))
 			Auctionator.API.v1.MultiSearchExact(addonName, items)

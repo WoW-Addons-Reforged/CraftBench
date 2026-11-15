@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("Skillet")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
 
 -- Stolen from the Waterfall Ace2 addon.
 local ControlBackdrop  = {
@@ -46,38 +46,38 @@ local bags = {}					-- Detailed contents of player bags (debugging only)
 local banktab = {}
 local bank = {}					-- Detailed contents of the bank.
 local bankFrameOpen = false
-Skillet.bankBusy = false
-Skillet.bankQueue = {}
+CraftForge.bankBusy = false
+CraftForge.bankQueue = {}
 
 local warbandtab = {}
 local warband = {}					-- Detailed contents of the warband bank.
 local warbandFrameOpen = false
-Skillet.warbandBusy = false
-Skillet.warbandQueue = {}
+CraftForge.warbandBusy = false
+CraftForge.warbandQueue = {}
 
 local guildtab = {}
 local guildbank = {}			-- Detailed contents of the guild bank
 local guildbankFrameOpen = false
-Skillet.guildQueue = {}
-Skillet.guildbankOnce = false	-- but only indexGuildBank once for each OPENED
-Skillet.guildbankText = false
-Skillet.guildBusy = false
-Skillet.guildTab = 0
-Skillet.guildText = 0
+CraftForge.guildQueue = {}
+CraftForge.guildbankOnce = false	-- but only indexGuildBank once for each OPENED
+CraftForge.guildbankText = false
+CraftForge.guildBusy = false
+CraftForge.guildTab = 0
+CraftForge.guildText = 0
 
 --
 -- Creates and sets up the shopping list window
 --
-SKILLET_SHOPPING_LIST_HEIGHT = 16
+CRAFTFORGE_SHOPPING_LIST_HEIGHT = 16
 local function createShoppingListFrame(self)
-	local frame = SkilletShoppingList
+	local frame = CraftForgeShoppingList
 	if not frame then
 		return nil
 	end
 	if not frame.SetBackdrop then
 		Mixin(frame, BackdropTemplateMixin)
 	end
-	if TSM_API and Skillet.db.profile.tsm_compat then
+	if TSM_API and CraftForge.db.profile.tsm_compat then
 		frame:SetFrameStrata("HIGH")
 	end
 	frame:SetBackdrop(FrameBackdrop)
@@ -101,35 +101,35 @@ local function createShoppingListFrame(self)
 	local title = CreateFrame("Frame",nil,frame)
 	title:SetPoint("TOPLEFT",titlebar,"TOPLEFT",0,0)
 	title:SetPoint("BOTTOMRIGHT",titlebar2,"BOTTOMRIGHT",0,0)
-	local titletext = title:CreateFontString("SkilletShoppingListTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = title:CreateFontString("CraftForgeShoppingListTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT",title,"TOPLEFT",0,0)
 	titletext:SetPoint("TOPRIGHT",title,"TOPRIGHT",0,0)
 	titletext:SetHeight(26)
 	titletext:SetShadowColor(0,0,0)
 	titletext:SetShadowOffset(1,-1)
 	titletext:SetTextColor(1,1,1)
-	titletext:SetText("Skillet: " .. L["Shopping List"])
+	titletext:SetText("CraftForge: " .. L["Shopping List"])
 
-	SkilletShowQueuesFromAllAltsText:SetText(L["Include alts"])
-	SkilletShowQueuesFromAllAlts:SetChecked(Skillet.db.profile.include_alts)
+	CraftForgeShowQueuesFromAllAltsText:SetText(L["Include alts"])
+	CraftForgeShowQueuesFromAllAlts:SetChecked(CraftForge.db.profile.include_alts)
 
-	SkilletShowQueuesFromSameFactionText:SetText(L["Same faction"])
-	SkilletShowQueuesFromSameFaction:SetChecked(Skillet.db.profile.same_faction)
-	SkilletShowQueuesIgnoreOnHandText:SetText(L["Ignore on hand"])
-	SkilletShowQueuesIgnoreOnHand:SetChecked(Skillet.db.profile.ignore_on_hand)
-	SkilletShowQueuesInItemOrderText:SetText(L["Order by item"])
-	SkilletShowQueuesInItemOrder:SetChecked(Skillet.db.profile.item_order)
-	SkilletShowQueuesMergeItemsText:SetText(L["Merge items"])
-	SkilletShowQueuesMergeItems:SetChecked(Skillet.db.profile.merge_items)
+	CraftForgeShowQueuesFromSameFactionText:SetText(L["Same faction"])
+	CraftForgeShowQueuesFromSameFaction:SetChecked(CraftForge.db.profile.same_faction)
+	CraftForgeShowQueuesIgnoreOnHandText:SetText(L["Ignore on hand"])
+	CraftForgeShowQueuesIgnoreOnHand:SetChecked(CraftForge.db.profile.ignore_on_hand)
+	CraftForgeShowQueuesInItemOrderText:SetText(L["Order by item"])
+	CraftForgeShowQueuesInItemOrder:SetChecked(CraftForge.db.profile.item_order)
+	CraftForgeShowQueuesMergeItemsText:SetText(L["Merge items"])
+	CraftForgeShowQueuesMergeItems:SetChecked(CraftForge.db.profile.merge_items)
 
-	SkilletShowQueuesIncludeGuildText:SetText(L["Include guild"])
-	SkilletShowQueuesIncludeGuild:SetChecked(Skillet.db.profile.include_guild)
+	CraftForgeShowQueuesIncludeGuildText:SetText(L["Include guild"])
+	CraftForgeShowQueuesIncludeGuild:SetChecked(CraftForge.db.profile.include_guild)
 
 --
 -- Button to retrieve items needed from the bank
 --
-	SkilletShoppingListRetrieveButton:SetText(L["Retrieve"])
-	SkilletShoppingListRetrieveButton:Hide()
+	CraftForgeShoppingListRetrieveButton:SetText(L["Retrieve"])
+	CraftForgeShoppingListRetrieveButton:Hide()
 --
 -- Button to create an Auctionator search list for Shopping List contents
 --   should only show if the Auction House is open, Auctionator is
@@ -137,15 +137,15 @@ local function createShoppingListFrame(self)
 --   It should be hidden when the Auction House is closed
 --   Start with it (unconditionally) hidden
 --
-	SkilletSLAuctionatorButton:Hide()
+	CraftForgeSLAuctionatorButton:Hide()
 --
 -- The frame enclosing the scroll list needs a border and a background
 --
-	local backdrop = SkilletShoppingListParent
+	local backdrop = CraftForgeShoppingListParent
 	if not backdrop.SetBackdrop then
 		Mixin(backdrop, BackdropTemplateMixin)
 	end
-	if TSM_API and Skillet.db.profile.tsm_compat then
+	if TSM_API and CraftForge.db.profile.tsm_compat then
 		backdrop:SetFrameStrata("HIGH")
 	end
 	backdrop:SetBackdrop(ControlBackdrop)
@@ -167,7 +167,7 @@ local function createShoppingListFrame(self)
 --
 -- lets play the resize me game!
 --
-	Skillet:EnableResize(frame, 385, 170, Skillet.UpdateShoppingListWindow)
+	CraftForge:EnableResize(frame, 385, 170, CraftForge.UpdateShoppingListWindow)
 --
 -- so hitting [ESC] will close the window
 --
@@ -175,11 +175,11 @@ local function createShoppingListFrame(self)
 --
 -- Adjust the button height
 --
-	SKILLET_SHOPPING_LIST_HEIGHT = math.max(SkilletShoppingListButton1:GetHeight(), SKILLET_SHOPPING_LIST_HEIGHT)
+	CRAFTFORGE_SHOPPING_LIST_HEIGHT = math.max(CraftForgeShoppingListButton1:GetHeight(), CRAFTFORGE_SHOPPING_LIST_HEIGHT)
 	return frame
 end
 
-function Skillet:ShoppingListButton_OnEnter(button)
+function CraftForge:ShoppingListButton_OnEnter(button)
 	local name, link, quality = C_Item.GetItemInfo(button.id)
 	if link then
 		GameTooltip:SetOwner(button, "ANCHOR_TOPLEFT")
@@ -189,7 +189,7 @@ function Skillet:ShoppingListButton_OnEnter(button)
 	CursorUpdate(button)
 end
 
-function Skillet:ClearShoppingList(player)
+function CraftForge:ClearShoppingList(player)
 	--DA.DEBUG(0,"ClearShoppingList("..tostring(player)..")")
 	local playerList
 	if player then
@@ -213,7 +213,7 @@ function Skillet:ClearShoppingList(player)
 	self:UpdateTradeSkillWindow()
 end
 
-function Skillet:GetShoppingList(player, sameFaction, includeGuildbank, includeTools)
+function CraftForge:GetShoppingList(player, sameFaction, includeGuildbank, includeTools)
 	--DA.DEBUG(0,"GetShoppingList("..tostring(player)..", "..tostring(sameFaction)..", "..tostring(includeGuildbank)..", "..tostring(includeTools)..")")
 	self:InventoryScan()
 	local curPlayer = self.currentPlayer
@@ -316,8 +316,8 @@ function Skillet:GetShoppingList(player, sameFaction, includeGuildbank, includeT
 		end
 	end
 
-	if Skillet.db.profile.queue_tools and includeTools then
-		for id,entry in pairs(Skillet.db.realm.toolData[curPlayer]) do
+	if CraftForge.db.profile.queue_tools and includeTools then
+		for id,entry in pairs(CraftForge.db.realm.toolData[curPlayer]) do
 			local have = C_Item.GetItemCount(id,false)	-- bags only
 			local bank = C_Item.GetItemCount(id,true)	-- bags + bank
 			--DA.DEBUG(2,"toolData: id= "..tostring(id)..", name= "..tostring(entry.name)..", value= "..tostring(entry.value))
@@ -333,10 +333,10 @@ end
 
 local function cache_list(self, includeTools)
 	local name = nil
-	if not Skillet.db.profile.include_alts then
-		name = Skillet.currentPlayer
+	if not CraftForge.db.profile.include_alts then
+		name = CraftForge.currentPlayer
 	end
-	self.cachedShoppingList = self:GetShoppingList(name, Skillet.db.profile.same_faction, Skillet.db.profile.include_guild, includeTools)
+	self.cachedShoppingList = self:GetShoppingList(name, CraftForge.db.profile.same_faction, CraftForge.db.profile.include_guild, includeTools)
 end
 
 --
@@ -347,15 +347,15 @@ end
 --
 local function indexBags()
 	--DA.DEBUG(0,"indexBags()")
-	if not Skillet.currentPlayer then Skillet.currentPlayer = Skillet:unitName("player") end
-	local player = Skillet.currentPlayer 	
-	if not Skillet.db.realm.bagData then
-		Skillet.db.realm.bagData = {}
+	if not CraftForge.currentPlayer then CraftForge.currentPlayer = CraftForge:unitName("player") end
+	local player = CraftForge.currentPlayer 	
+	if not CraftForge.db.realm.bagData then
+		CraftForge.db.realm.bagData = {}
 	end
-	if player and not Skillet.db.realm.bagData[player] then
-		Skillet.db.realm.bagData[player] = {}
+	if player and not CraftForge.db.realm.bagData[player] then
+		CraftForge.db.realm.bagData[player] = {}
 	end
-	local bagData = Skillet.db.realm.bagData[player]
+	local bagData = CraftForge.db.realm.bagData[player]
 --	local Bags = {0,1,2,3,4,5}
 	local Bags = {
 		Enum.BagIndex.Backpack, Enum.BagIndex.Bag_1, Enum.BagIndex.Bag_2, 
@@ -401,8 +401,8 @@ local function indexBags()
 				end
 			end
 		end  -- for slots
-		if Skillet.db.profile.collect_details then
-			Skillet.db.realm.bagDetails[player]["B"..tostring(container)] = bags
+		if CraftForge.db.profile.collect_details then
+			CraftForge.db.realm.bagDetails[player]["B"..tostring(container)] = bags
 		else
 			--DA.DEBUG(2,"indexBags: Not collecting details")		
 		end
@@ -417,15 +417,15 @@ end
 --
 local function indexBank()
 	--DA.DEBUG(0,"indexBank()")
-	if not Skillet.currentPlayer then Skillet.currentPlayer = Skillet:unitName("player") end
-	local player = Skillet.currentPlayer
-	if not Skillet.db.realm.bankData then
-		Skillet.db.realm.bankData = {}
+	if not CraftForge.currentPlayer then CraftForge.currentPlayer = CraftForge:unitName("player") end
+	local player = CraftForge.currentPlayer
+	if not CraftForge.db.realm.bankData then
+		CraftForge.db.realm.bankData = {}
 	end
-	if player and not Skillet.db.realm.bankData[player] then
-		Skillet.db.realm.bankData[player] = {}
+	if player and not CraftForge.db.realm.bankData[player] then
+		CraftForge.db.realm.bankData[player] = {}
 	end
-	local bankData = Skillet.db.realm.bankData[player]
+	local bankData = CraftForge.db.realm.bankData[player]
 --	local bankBags = {-1,6,7,8,9,10,11,12,-3,}	-- -1 is main bank, -3 is reagent bank
 	local bankBags = {
 		Enum.BagIndex.CharacterBankTab_1, Enum.BagIndex.CharacterBankTab_2, Enum.BagIndex.CharacterBankTab_3,
@@ -474,8 +474,8 @@ local function indexBank()
 				end
 			end
 		end
-		if Skillet.db.profile.collect_details then
-			Skillet.db.realm.bankDetails[player]["B"..tostring(container)] = banktab
+		if CraftForge.db.profile.collect_details then
+			CraftForge.db.realm.bankDetails[player]["B"..tostring(container)] = banktab
 		else
 			--DA.DEBUG(2,"indexBank: Not collecting details")		
 		end
@@ -490,7 +490,7 @@ end
 --
 local function indexWarband()
 	--DA.DEBUG(0,"indexWarband()")
-	local warbandData = Skillet.db.global.warbandData
+	local warbandData = CraftForge.db.global.warbandData
 	local warbandBags = {
 			Enum.BagIndex.AccountBankTab_1, Enum.BagIndex.AccountBankTab_2, Enum.BagIndex.AccountBankTab_3,
 			Enum.BagIndex.AccountBankTab_4, Enum.BagIndex.AccountBankTab_5,
@@ -539,9 +539,9 @@ local function indexWarband()
 				end
 			end
 		end
-		if Skillet.db.profile.collect_details then
+		if CraftForge.db.profile.collect_details then
 			--DA.DEBUG(2,"indexWarband: container= "..tostring(container)..", warbandtab="..DA.DUMP1(warbandtab))
-			Skillet.db.global.warbandDetails["W"..tostring(container)] = warbandtab
+			CraftForge.db.global.warbandDetails["W"..tostring(container)] = warbandtab
 		else
 			--DA.DEBUG(2,"indexWarband: Not collecting details")		
 		end
@@ -565,7 +565,7 @@ local function indexGuildBank(tab)
 	if tab == 0 then return end		-- Something is wrong, don't make it worse.
 	guildtab = {}
 	local guildName = GetGuildInfo("player")
-	local cachedGuildbank = Skillet.db.global.cachedGuildbank
+	local cachedGuildbank = CraftForge.db.global.cachedGuildbank
 	if guildName and not cachedGuildbank[guildName] then
 		cachedGuildbank[guildName] = {}
 	end
@@ -578,7 +578,7 @@ local function indexGuildBank(tab)
 				--DA.DEBUG(2,"indexGuildBank: tab= "..tostring(tab)..", slot= "..tostring(slot)..", item= "..tostring(item))
 				if item then
 					local _,count = GetGuildBankItemInfo(tab, slot)
-					local id = Skillet:GetItemIDFromLink(item)
+					local id = CraftForge:GetItemIDFromLink(item)
 					if id then
 						local name = string.match(item,"%[.+%]")
 						--DA.DEBUG(2,"indexGuildBank: name= "..tostring(name))
@@ -605,14 +605,14 @@ local function indexGuildBank(tab)
 			end
 		end
 	end
-	if not Skillet.db.global.detailedGuildbank then
-		Skillet.db.global.detailedGuildbank = {}
+	if not CraftForge.db.global.detailedGuildbank then
+		CraftForge.db.global.detailedGuildbank = {}
 	end
-	if not Skillet.db.global.detailedGuildbank[guildName] then
-		Skillet.db.global.detailedGuildbank[guildName] = {}
+	if not CraftForge.db.global.detailedGuildbank[guildName] then
+		CraftForge.db.global.detailedGuildbank[guildName] = {}
 	end
-	if Skillet.db.profile.collect_details then
-		Skillet.db.global.detailedGuildbank[guildName][tabname] = guildtab
+	if CraftForge.db.profile.collect_details then
+		CraftForge.db.global.detailedGuildbank[guildName][tabname] = guildtab
 	else
 		--DA.DEBUG(2,"indexGuildBank: Not collecting details")		
 	end
@@ -729,8 +729,8 @@ end
 --
 local function processBankQueue(where)
 	--DA.DEBUG(0,"processBankQueue("..tostring(where)..")")
-	local bankQueue = Skillet.bankQueue
-	if Skillet.bankBusy then
+	local bankQueue = CraftForge.bankQueue
+	if CraftForge.bankBusy then
 		--DA.DEBUG(1,"processBankQueue: BANK_UPDATE and bankBusy")
 		while true do
 			local queueitem = table.remove(bankQueue,1)
@@ -742,8 +742,8 @@ local function processBankQueue(where)
 				local item = queueitem["item"]
 				--DA.DEBUG(3,"processBankQueue: j=",j,", v=",DA.DUMP1(v))
 				--DA.DEBUG(3,"processBankQueue: i=",i,", item=",DA.DUMP1(item))
-				Skillet.gotBankEvent = false
-				Skillet.gotBagUpdateEvent = false
+				CraftForge.gotBankEvent = false
+				CraftForge.gotBagUpdateEvent = false
 				local moved = getItemFromBank(id, item.bag, item.slot, v.count)
 				if moved > 0 then
 					v.count = v.count - moved
@@ -751,7 +751,7 @@ local function processBankQueue(where)
 					break
 				end
 			else
-				Skillet.bankBusy = false
+				CraftForge.bankBusy = false
 				break
 			end
 		end
@@ -764,8 +764,8 @@ end
 --
 local function processGuildQueue(where)
 	--DA.DEBUG(0,"processGuildQueue("..where..")")
-	local guildQueue = Skillet.guildQueue
-	if Skillet.guildBusy then
+	local guildQueue = CraftForge.guildQueue
+	if CraftForge.guildBusy then
 		while true do
 			local queueitem = table.remove(guildQueue,1)
 			if queueitem then
@@ -776,8 +776,8 @@ local function processGuildQueue(where)
 				local item = queueitem["item"]
 				--DA.DEBUG(2,"processGuildQueue: j=",j,", v=",DA.DUMP1(v))
 				--DA.DEBUG(2,"processGuildQueue: i=",i,", item=",DA.DUMP1(item))
-				Skillet.gotGuildbankEvent = false
-				Skillet.gotBagUpdateEvent = false
+				CraftForge.gotGuildbankEvent = false
+				CraftForge.gotBagUpdateEvent = false
 				local moved = getItemFromGuildBank(id, item.bag, item.slot, v.count)
 				if moved > 0 then
 					v.count = v.count - moved
@@ -785,29 +785,29 @@ local function processGuildQueue(where)
 					break
 				end
 			else
-				Skillet.guildBusy = false
+				CraftForge.guildBusy = false
 				break
 			end
 		end
 	end
 end
 
-function Skillet:BAG_OPEN(event, bagID)			-- Fires when a non-inventory container is opened.
+function CraftForge:BAG_OPEN(event, bagID)			-- Fires when a non-inventory container is opened.
 	DA.TRACE("BAG_OPEN( ", bagID, " )")			-- We don't really care
 end
 
-function Skillet:BAG_CLOSED(event, bagID)		-- Fires when the whole bag is removed from 
+function CraftForge:BAG_CLOSED(event, bagID)		-- Fires when the whole bag is removed from 
 	DA.TRACE("BAG_CLOSED( ", bagID, " )")		-- inventory or bank. We don't really care. 
 end
 
-function Skillet:BAG_CONTAINER_UPDATE(event, bagID)
+function CraftForge:BAG_CONTAINER_UPDATE(event, bagID)
 	DA.TRACE("BAG_CONTAINER_UPDATE( ", bagID, " )")
 end
 
 --
 -- So we can track when the players inventory changes and update craftable counts
 --
-function Skillet:BAG_UPDATE(event, bagID)
+function CraftForge:BAG_UPDATE(event, bagID)
 	DA.TRACE2("BAG_UPDATE( "..bagID.." )")
 	if not self.bagUpdateCounts then
 		self.bagUpdateCounts = {}
@@ -843,7 +843,7 @@ function Skillet:BAG_UPDATE(event, bagID)
 --
 -- a bank update
 --
-			Skillet:BANK_UPDATE(event,bagID) -- Looks like an event but its not.
+			CraftForge:BANK_UPDATE(event,bagID) -- Looks like an event but its not.
 		end
 	end
 end
@@ -852,43 +852,43 @@ end
 -- Event fires after all applicable BAG_UPDATE events for a specific action have been fired.
 -- It doesn't happen as often as BAG_UPDATE so its a better event for us to use.
 --
-function Skillet:BAG_UPDATE_DELAYED(event)
+function CraftForge:BAG_UPDATE_DELAYED(event)
 	DA.TRACE2("BAG_UPDATE_DELAYED")
 	self.bagUpdateDelayedCount = (self.bagUpdateDelayedCount or 0) + 1
-	if Skillet.bagsChanged and not UnitAffectingCombat("player") then
+	if CraftForge.bagsChanged and not UnitAffectingCombat("player") then
 		indexBags()
-		Skillet.bagsChanged = false
+		CraftForge.bagsChanged = false
 	end
-	if Skillet.bankBusy then
+	if CraftForge.bankBusy then
 		--DA.DEBUG(1,"BAG_UPDATE_DELAYED and bankBusy")
-		Skillet.gotBagUpdateEvent = true
-		if Skillet.gotBankEvent and Skillet.gotBagUpdateEvent then
+		CraftForge.gotBagUpdateEvent = true
+		if CraftForge.gotBankEvent and CraftForge.gotBagUpdateEvent then
 			processBankQueue("bag update")
 		end
 	end
-	if Skillet.guildBusy then
+	if CraftForge.guildBusy then
 		--DA.DEBUG(1,"BAG_UPDATE_DELAYED and guildBusy")
-		Skillet.gotBagUpdateEvent = true
-		if Skillet.gotGuildbankEvent and Skillet.gotBagUpdateEvent then
+		CraftForge.gotBagUpdateEvent = true
+		if CraftForge.gotGuildbankEvent and CraftForge.gotBagUpdateEvent then
 			processGuildQueue("bag update")
 		end
 	end
 	local scanned = false
-	if Skillet.tradeSkillFrame and Skillet.tradeSkillFrame:IsVisible() then
-		Skillet:InventoryScan()
+	if CraftForge.tradeSkillFrame and CraftForge.tradeSkillFrame:IsVisible() then
+		CraftForge:InventoryScan()
 		scanned = true
-		Skillet:UpdateTradeSkillWindow()
+		CraftForge:UpdateTradeSkillWindow()
 	end
-	if Skillet.shoppingList and Skillet.shoppingList:IsVisible() then
+	if CraftForge.shoppingList and CraftForge.shoppingList:IsVisible() then
 		if not scanned then
-			Skillet:InventoryScan()
+			CraftForge:InventoryScan()
 			scanned = true
 		end
-		Skillet:UpdateShoppingListWindow(false)
+		CraftForge:UpdateShoppingListWindow(false)
 	end
 	if MerchantFrame and MerchantFrame:IsVisible() then
 		if not scanned then
-			Skillet:InventoryScan()
+			CraftForge:InventoryScan()
 			scanned = true
 		end
 		self:UpdateMerchantFrame()
@@ -898,29 +898,29 @@ end
 --
 -- Event is fired when the inventory (bags) changes
 --
-function Skillet:UNIT_INVENTORY_CHANGED(event, unit)
+function CraftForge:UNIT_INVENTORY_CHANGED(event, unit)
 	DA.TRACE2("UNIT_INVENTORY_CHANGED( ", unit, " )")
 	self.unitInventoryChangedCount = (self.unitInventoryChangedCount or 0) + 1
-	if Skillet.bagsChanged and not UnitAffectingCombat("player") then
+	if CraftForge.bagsChanged and not UnitAffectingCombat("player") then
 		indexBags()
-		Skillet.bagsChanged = false
+		CraftForge.bagsChanged = false
 	end
 	local scanned = false
-	if Skillet.tradeSkillFrame and Skillet.tradeSkillFrame:IsVisible() then
-		Skillet:InventoryScan()
+	if CraftForge.tradeSkillFrame and CraftForge.tradeSkillFrame:IsVisible() then
+		CraftForge:InventoryScan()
 		scanned = true
-		Skillet:UpdateTradeSkillWindow()
+		CraftForge:UpdateTradeSkillWindow()
 	end
-	if Skillet.shoppingList and Skillet.shoppingList:IsVisible() then
+	if CraftForge.shoppingList and CraftForge.shoppingList:IsVisible() then
 		if not scanned then
-			Skillet:InventoryScan()
+			CraftForge:InventoryScan()
 			scanned = true
 		end
-		Skillet:UpdateShoppingListWindow(false)
+		CraftForge:UpdateShoppingListWindow(false)
 	end
 	if MerchantFrame and MerchantFrame:IsVisible() then
 		if not scanned then
-			Skillet:InventoryScan()
+			CraftForge:InventoryScan()
 			scanned = true
 		end
 		self:UpdateMerchantFrame()
@@ -928,10 +928,10 @@ function Skillet:UNIT_INVENTORY_CHANGED(event, unit)
 end
 
 --
--- Subset of the BAG_UPDATE event processed in Skillet.lua
+-- Subset of the BAG_UPDATE event processed in CraftForge.lua
 -- It may look like a real Blizzard event but its not.
 --
-function Skillet:BANK_UPDATE(event,bagID)
+function CraftForge:BANK_UPDATE(event,bagID)
 	DA.TRACE2("BANK_UPDATE( ", bagID, " )")
 	if bagID then
 		if not self.bagUpdateCounts[bagID] then
@@ -941,10 +941,10 @@ function Skillet:BANK_UPDATE(event,bagID)
 		end
 	self.bankUpdateCount = (self.bankUpdateCount or 0) + 1
 	end
-	if Skillet.bankBusy then
+	if CraftForge.bankBusy then
 		--DA.DEBUG(1, "BANK_UPDATE and bankBusy")
-		Skillet.gotBankEvent = true
-		if Skillet.gotBankEvent and Skillet.gotBagUpdateEvent then
+		CraftForge.gotBankEvent = true
+		if CraftForge.gotBankEvent and CraftForge.gotBagUpdateEvent then
 			processBankQueue("bank update")
 		end
 	end
@@ -953,7 +953,7 @@ end
 --
 -- Called when the bank frame is opened
 --
-function Skillet:BANKFRAME_OPENED()
+function CraftForge:BANKFRAME_OPENED()
 	DA.TRACE("BANKFRAME_OPENED")
 	bankFrameOpen = true
 	local player = self.currentPlayer
@@ -971,8 +971,8 @@ function Skillet:BANKFRAME_OPENED()
 	if not self.db.profile.display_shopping_list_at_bank then
 		return
 	end
-	Skillet.bankBusy = false
-	Skillet.bankQueue = {}
+	CraftForge.bankBusy = false
+	CraftForge.bankQueue = {}
 	cache_list(self)
 	if #self.cachedShoppingList == 0 then
 		return
@@ -983,7 +983,7 @@ end
 --
 -- Called when the bank frame is closed
 --
-function Skillet:BANKFRAME_CLOSED()
+function CraftForge:BANKFRAME_CLOSED()
 	DA.TRACE("BANKFRAME_CLOSED")
 	local player = self.currentPlayer
 	self.db.realm.bankData[player] = {}
@@ -1002,22 +1002,22 @@ end
 -- The remaining texts will be queried in the event GUILDBANK_UPDATE_TEXT.
 -- When all the tabs have been queried, the event GUILDBANK_UPDATE_TEXT will query for contents.
 --
-function Skillet:GUILDBANKFRAME_OPENED()
+function CraftForge:GUILDBANKFRAME_OPENED()
 	DA.TRACE("GUILDBANKFRAME_OPENED")
 	guildbankFrameOpen = true
-	Skillet.guildbankText = true
-	Skillet.guildbankOnce = false
-	Skillet.guildBusy = false
-	Skillet.guildText = 1
-	Skillet.guildTab = 1
-	Skillet.guildQueue = {}
+	CraftForge.guildbankText = true
+	CraftForge.guildbankOnce = false
+	CraftForge.guildBusy = false
+	CraftForge.guildText = 1
+	CraftForge.guildTab = 1
+	CraftForge.guildQueue = {}
 	guildbank = {}
 	local guildName = GetGuildInfo("player")
-	Skillet.db.global.cachedGuildbank[guildName] = {}
-	QueryGuildBankText(Skillet.guildText)  -- event GUILDBANK_UPDATE_TEXT will fire when the data is available
+	CraftForge.db.global.cachedGuildbank[guildName] = {}
+	QueryGuildBankText(CraftForge.guildText)  -- event GUILDBANK_UPDATE_TEXT will fire when the data is available
 end
 
-function Skillet:guildbankQueryComplete()
+function CraftForge:guildbankQueryComplete()
 	if not self.db.profile.display_shopping_list_at_guildbank then
 		return
 	end
@@ -1031,7 +1031,7 @@ end
 --
 -- Called when the guild bank frame is closed
 --
-function Skillet:GUILDBANKFRAME_CLOSED()
+function CraftForge:GUILDBANKFRAME_CLOSED()
 	DA.TRACE("GUILDBANKFRAME_CLOSED")
 	guildbankFrameOpen = false
 	self:HideShoppingList()
@@ -1040,7 +1040,7 @@ end
 --
 -- Called when the auction frame is opened
 --
-function Skillet:AUCTION_HOUSE_SHOW()
+function CraftForge:AUCTION_HOUSE_SHOW()
 	DA.TRACE("AUCTION_HOUSE_SHOW")
 	self.auctionOpen = true
 	self:AuctionScan()
@@ -1058,7 +1058,7 @@ end
 --
 -- Called when the auction frame is closed
 --
-function Skillet:AUCTION_HOUSE_CLOSED()
+function CraftForge:AUCTION_HOUSE_CLOSED()
 	DA.TRACE("AUCTION_HOUSE_CLOSED")
 	self.auctionOpen = false
 	self:UnregisterEvent("OWNED_AUCTIONS_UPDATED")
@@ -1068,14 +1068,14 @@ end
 --
 --	Called when the auction list updates and the auction frame is open.
 --
-function Skillet:OWNED_AUCTIONS_UPDATED()
+function CraftForge:OWNED_AUCTIONS_UPDATED()
 	DA.TRACE("OWNED_AUCTIONS_UPDATED")
 	self:AuctionScan()
  end
 
-function Skillet:AuctionScan()
+function CraftForge:AuctionScan()
 	--DA.DEBUG(0,"AuctionScan()")
-	local player = Skillet.currentPlayer
+	local player = CraftForge.currentPlayer
 	local auctionData = {}
 	local owned = C_AuctionHouse.GetNumOwnedAuctions()
 	--DA.DEBUG(1,"AuctionScan: owned= "..tostring(owned))
@@ -1100,9 +1100,9 @@ end
 --
 -- Prints the contents of auctionData for this player
 --
-function Skillet:PrintAuctionData()
+function CraftForge:PrintAuctionData()
 	--DA.DEBUG(0,"PrintAuctionData()");
-	local player = Skillet.currentPlayer
+	local player = CraftForge.currentPlayer
 	local auctionData = self.db.realm.auctionData[player]
 	if auctionData then
 		for itemID,count in pairs(auctionData) do
@@ -1112,7 +1112,7 @@ function Skillet:PrintAuctionData()
 	end
 end
 
-function Skillet:UpdateBankQueue(where)
+function CraftForge:UpdateBankQueue(where)
 	processBankQueue(where)
 end
 
@@ -1121,18 +1121,18 @@ end
 -- Called as a result of a QueryGuildBankText call.
 -- When all the tabs have been queried, query for contents.
 --
-function Skillet:GUILDBANK_UPDATE_TEXT(event)
+function CraftForge:GUILDBANK_UPDATE_TEXT(event)
 	DA.TRACE("GUILDBANK_UPDATE_TEXT")
-	if Skillet.guildbankText then
+	if CraftForge.guildbankText then
 		--DA.DEBUG(0,"GUILDBANK_UPDATE_TEXT and guildbankText")
-		Skillet.guildText = Skillet.guildText + 1
-		if Skillet.guildText > GetNumGuildBankTabs() then
-			Skillet.guildbankText = false
-			Skillet.guildbankOnce = true
-			QueryGuildBankTab(Skillet.guildTab)  -- event GUILDBANKBAGSLOTS_CHANGED will fire when the data is available
+		CraftForge.guildText = CraftForge.guildText + 1
+		if CraftForge.guildText > GetNumGuildBankTabs() then
+			CraftForge.guildbankText = false
+			CraftForge.guildbankOnce = true
+			QueryGuildBankTab(CraftForge.guildTab)  -- event GUILDBANKBAGSLOTS_CHANGED will fire when the data is available
 			return
 		end
-		QueryGuildBankText(Skillet.guildText)  -- event GUILDBANK_UPDATE_TEXT will fire when the data is available
+		QueryGuildBankText(CraftForge.guildText)  -- event GUILDBANK_UPDATE_TEXT will fire when the data is available
 	else
 		--DA.DEBUG(2,"GUILDBANK_UPDATE_TEXT")
 	end
@@ -1142,22 +1142,22 @@ end
 -- Event is fired when the guild bank contents change.
 -- Called as a result of a QueryGuildBankTab call or as a result of a change in the guildbank's contents.
 --
-function Skillet:GUILDBANKBAGSLOTS_CHANGED(event)
+function CraftForge:GUILDBANKBAGSLOTS_CHANGED(event)
 	DA.TRACE("GUILDBANKBAGSLOTS_CHANGED")
-	if Skillet.guildbankOnce then
+	if CraftForge.guildbankOnce then
 		--DA.DEBUG(0,"GUILDBANKBAGSLOTS_CHANGED and guildbankOnce")
-		indexGuildBank(Skillet.guildTab)
-		Skillet.guildTab = Skillet.guildTab + 1
-		if Skillet.guildTab > GetNumGuildBankTabs() then
-			Skillet.guildbankOnce = false
-			Skillet:guildbankQueryComplete()
+		indexGuildBank(CraftForge.guildTab)
+		CraftForge.guildTab = CraftForge.guildTab + 1
+		if CraftForge.guildTab > GetNumGuildBankTabs() then
+			CraftForge.guildbankOnce = false
+			CraftForge:guildbankQueryComplete()
 			return
 		end
-		QueryGuildBankTab(Skillet.guildTab)  -- event GUILDBANKBAGSLOTS_CHANGED will fire when the data is available
-	elseif Skillet.guildBusy then
+		QueryGuildBankTab(CraftForge.guildTab)  -- event GUILDBANKBAGSLOTS_CHANGED will fire when the data is available
+	elseif CraftForge.guildBusy then
 		--DA.DEBUG(0,"GUILDBANKBAGSLOTS_CHANGED and guildBusy")
-		Skillet.gotGuildbankEvent = true
-		if Skillet.gotGuildbankEvent and Skillet.gotBagUpdateEvent then
+		CraftForge.gotGuildbankEvent = true
+		if CraftForge.gotGuildbankEvent and CraftForge.gotBagUpdateEvent then
 			processGuildQueue("guild bank")
 		end
 	else
@@ -1168,12 +1168,12 @@ end
 --
 -- Event is fired when the main bank (bagID == -1) contents change.
 --
-function Skillet:PLAYERBANKSLOTS_CHANGED(event,slot)
+function CraftForge:PLAYERBANKSLOTS_CHANGED(event,slot)
 	DA.TRACE("PLAYERBANKSLOTS_CHANGED, slot= ", slot)
-	if Skillet.bankBusy then
+	if CraftForge.bankBusy then
 		--DA.DEBUG(1,"PLAYERBANKSLOTS_CHANGED and bankBusy")
-		Skillet.gotBankEvent = true
-		if Skillet.gotBankEvent and Skillet.gotBagUpdateEvent then
+		CraftForge.gotBankEvent = true
+		if CraftForge.gotBankEvent and CraftForge.gotBagUpdateEvent then
 			processBankQueue("bag update")
 		end
 	end
@@ -1182,12 +1182,12 @@ end
 --
 -- Event is fired when the reagent bank (bagID == -3) contents change.
 --
-function Skillet:PLAYERREAGENTBANKSLOTS_CHANGED(event,slot)
+function CraftForge:PLAYERREAGENTBANKSLOTS_CHANGED(event,slot)
 	DA.TRACE("PLAYERREAGENTBANKSLOTS_CHANGED, slot= ", slot)
-	if Skillet.bankBusy then
+	if CraftForge.bankBusy then
 		--DA.DEBUG(1,"PLAYERREAGENTBANKSLOTS_CHANGED and bankBusy")
-		Skillet.gotBankEvent = true
-		if Skillet.gotBankEvent and Skillet.gotBagUpdateEvent then
+		CraftForge.gotBankEvent = true
+		if CraftForge.gotBankEvent and CraftForge.gotBagUpdateEvent then
 			processBankQueue("bag update")
 		end
 	end
@@ -1205,16 +1205,16 @@ end
 --
 -- Gets all the reagents possible for queued recipes from the bank
 --
-function Skillet:GetReagentsFromBanks()
+function CraftForge:GetReagentsFromBanks()
 	--DA.DEBUG(0,"GetReagentsFromBanks()")
 	local list = self.cachedShoppingList
-	local incAlts = Skillet.db.profile.include_alts
+	local incAlts = CraftForge.db.profile.include_alts
 --
 -- Add other qualities for modified items
 -- ToDo: clear the base item from the list when an alternate quality is pulled
 --
 	for _,v in pairs(list) do
-		if incAlts or v.player == Skillet.currentPlayer then
+		if incAlts or v.player == CraftForge.currentPlayer then
 			local modifiedInQueue = self.db.realm.modifiedInQueue[v.player]
 			if modifiedInQueue[v.id] then
 				--DA.DEBUG(1,"GetReagentsFromBanks: modified found for: "..DA.DUMP1(v))
@@ -1235,11 +1235,11 @@ function Skillet:GetReagentsFromBanks()
 --
 	if bankFrameOpen then
 		--DA.DEBUG(0,"GetReagentsFromBanks: Bank #list=",#list)
-		local bankQueue = Skillet.bankQueue
+		local bankQueue = CraftForge.bankQueue
 		for j,v in pairs(list) do
 			--DA.DEBUG(2,"GetReagentsFromBanks: j=",j,", v=",DA.DUMP1(v))
 			local id = v.id
-			if incAlts or v.player == Skillet.currentPlayer then
+			if incAlts or v.player == CraftForge.currentPlayer then
 				for i,item in pairs(bank) do
 					if item.id == id then
 						--DA.DEBUG(2,"GetReagentsFromBanks: i=",i,", item=",DA.DUMP1(item))
@@ -1253,8 +1253,8 @@ function Skillet:GetReagentsFromBanks()
 								["i"]     = i,
 								["item"]  = item,
 							})
-							if not Skillet.bankBusy then
-								Skillet.bankBusy = true
+							if not CraftForge.bankBusy then
+								CraftForge.bankBusy = true
 								processBankQueue("get reagents")
 							end
 						end
@@ -1269,7 +1269,7 @@ function Skillet:GetReagentsFromBanks()
 --
 	if guildbankFrameOpen then
 		--DA.DEBUG(0,"GetReagentsFromBanks: Guildbank #list=",#list)
-		local guildQueue = Skillet.guildQueue
+		local guildQueue = CraftForge.guildQueue
 		for j,v in pairs(list) do
 			--DA.DEBUG(2,"GetReagentsFromBanks: j=",j,", v=",DA.DUMP1(v))
 			local id = v.id
@@ -1287,8 +1287,8 @@ function Skillet:GetReagentsFromBanks()
 								["i"]     = i,
 								["item"]  = item,
 							})
-							if not Skillet.guildBusy then
-								Skillet.guildBusy = true
+							if not CraftForge.guildBusy then
+								CraftForge.guildBusy = true
 								processGuildQueue("get reagents")
 							end
 						end
@@ -1299,37 +1299,37 @@ function Skillet:GetReagentsFromBanks()
 	end
 end
 
-function Skillet:ShoppingListToggleShowAlts()
-	Skillet.db.profile.include_alts = not Skillet.db.profile.include_alts
+function CraftForge:ShoppingListToggleShowAlts()
+	CraftForge.db.profile.include_alts = not CraftForge.db.profile.include_alts
 end
 
-function Skillet:ShoppingListToggleSameFaction()
-	Skillet.db.profile.same_faction = not Skillet.db.profile.same_faction
+function CraftForge:ShoppingListToggleSameFaction()
+	CraftForge.db.profile.same_faction = not CraftForge.db.profile.same_faction
 end
 
-function Skillet:ShoppingListToggleItemOrder()
-	Skillet.db.profile.item_order = not Skillet.db.profile.item_order
+function CraftForge:ShoppingListToggleItemOrder()
+	CraftForge.db.profile.item_order = not CraftForge.db.profile.item_order
 end
 
-function Skillet:ShoppingListToggleMergeItems()
-	Skillet.db.profile.merge_items = not Skillet.db.profile.merge_items
+function CraftForge:ShoppingListToggleMergeItems()
+	CraftForge.db.profile.merge_items = not CraftForge.db.profile.merge_items
 end
 
-function Skillet:ShoppingListToggleIncludeGuild()
-	Skillet.db.profile.include_guild = not Skillet.db.profile.include_guild
+function CraftForge:ShoppingListToggleIncludeGuild()
+	CraftForge.db.profile.include_guild = not CraftForge.db.profile.include_guild
 end
 
-function Skillet:ShoppingListToggleIgnoreOnHand()
-	Skillet.db.profile.ignore_on_hand = not Skillet.db.profile.ignore_on_hand
+function CraftForge:ShoppingListToggleIgnoreOnHand()
+	CraftForge.db.profile.ignore_on_hand = not CraftForge.db.profile.ignore_on_hand
 end
 
 local num_buttons = 0
 local function get_button(i)
-	local button = _G["SkilletShoppingListButton"..i]
+	local button = _G["CraftForgeShoppingListButton"..i]
 	if not button then
-		button = CreateFrame("Button", "SkilletShoppingListButton"..i, SkilletShoppingListParent, "SkilletShoppingListItemButtonTemplate")
-		button:SetParent(SkilletShoppingList)
-		button:SetPoint("TOPLEFT", "SkilletShoppingListButton"..(i-1), "BOTTOMLEFT")
+		button = CreateFrame("Button", "CraftForgeShoppingListButton"..i, CraftForgeShoppingListParent, "CraftForgeShoppingListItemButtonTemplate")
+		button:SetParent(CraftForgeShoppingList)
+		button:SetPoint("TOPLEFT", "CraftForgeShoppingListButton"..(i-1), "BOTTOMLEFT")
 	end
 	if not button.valueText then
 		button.valueText = button:CreateFontString(nil, nil, "GameFontNormal")
@@ -1344,7 +1344,7 @@ end
 --
 -- Called to update the shopping list window
 --
-function Skillet:UpdateShoppingListWindow(use_cached_recipes)
+function CraftForge:UpdateShoppingListWindow(use_cached_recipes)
 	--DA.DEBUG(0,"UpdateShoppingListWindow("..tostring(use_cached_recipes)..")")
 	if not self.shoppingList or not self.shoppingList:IsVisible() then
 		return
@@ -1352,15 +1352,15 @@ function Skillet:UpdateShoppingListWindow(use_cached_recipes)
 	if not use_cached_recipes then
 		cache_list(self)
 	end
-	SkilletShoppingList:SetAlpha(self.db.profile.transparency)
-	SkilletShoppingList:SetScale(self.db.profile.scale)
+	CraftForgeShoppingList:SetAlpha(self.db.profile.transparency)
+	CraftForgeShoppingList:SetScale(self.db.profile.scale)
 	local numItems = #self.cachedShoppingList
 	if numItems == 0 then
-		SkilletShoppingListRetrieveButton:Disable()
+		CraftForgeShoppingListRetrieveButton:Disable()
 	else
-		SkilletShoppingListRetrieveButton:Enable()
+		CraftForgeShoppingListRetrieveButton:Enable()
 	end
-	if Skillet.db.profile.item_order then
+	if CraftForge.db.profile.item_order then
 --
 -- sort by item
 --
@@ -1370,7 +1370,7 @@ function Skillet:UpdateShoppingListWindow(use_cached_recipes)
 			nb = C_Item.GetItemInfo(b.id) or ""
 			return nb > na
 		end)
-		if Skillet.db.profile.merge_items then
+		if CraftForge.db.profile.merge_items then
 --
 -- merge counts of same item
 --
@@ -1403,26 +1403,26 @@ function Skillet:UpdateShoppingListWindow(use_cached_recipes)
 			return (b.player > a.player)
 		end)
 	end
-	local height = SkilletShoppingListParent:GetHeight()
-	local width = SkilletShoppingListParent:GetWidth() - 30 -- Allow for scrollbars
-	--DA.DEBUG(1,"UpdateShoppingListWindow: height= "..tostring(height)..", SKILLET_SHOPPING_LIST_HEIGHT= "..tostring(SKILLET_SHOPPING_LIST_HEIGHT))
-	--DA.DEBUG(1,"UpdateShoppingListWindow: SkilletShoppingListParent width= "..tostring(width))
-	local button_count = height / SKILLET_SHOPPING_LIST_HEIGHT
+	local height = CraftForgeShoppingListParent:GetHeight()
+	local width = CraftForgeShoppingListParent:GetWidth() - 30 -- Allow for scrollbars
+	--DA.DEBUG(1,"UpdateShoppingListWindow: height= "..tostring(height)..", CRAFTFORGE_SHOPPING_LIST_HEIGHT= "..tostring(CRAFTFORGE_SHOPPING_LIST_HEIGHT))
+	--DA.DEBUG(1,"UpdateShoppingListWindow: CraftForgeShoppingListParent width= "..tostring(width))
+	local button_count = height / CRAFTFORGE_SHOPPING_LIST_HEIGHT
 	button_count = math.floor(button_count) - 1
 	--DA.DEBUG(1,"UpdateShoppingListWindow: numItems= "..tostring(numItems)..", button_count= "..tostring(button_count)..", num_buttons= "..tostring(num_buttons))
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(SkilletShoppingListList,  		-- frame
+	FauxScrollFrame_Update(CraftForgeShoppingListList,  		-- frame
 							numItems,                		-- num items
 							button_count,            		-- num to display
-							SKILLET_SHOPPING_LIST_HEIGHT)	-- value step (item height)
+							CRAFTFORGE_SHOPPING_LIST_HEIGHT)	-- value step (item height)
 --
 -- Where in the list of items to start counting.
 --
-	local itemOffset = FauxScrollFrame_GetOffset(SkilletShoppingListList)
+	local itemOffset = FauxScrollFrame_GetOffset(CraftForgeShoppingListList)
 	--DA.DEBUG(1,"UpdateShoppingListWindow: itemOffset= "..tostring(itemOffset))
-	local width = SkilletShoppingListList:GetWidth()
+	local width = CraftForgeShoppingListList:GetWidth()
 	local totalPrice = 0
 	for i=1, button_count, 1 do
 		num_buttons = math.max(num_buttons, i)
@@ -1477,27 +1477,27 @@ end
 --
 -- Updates the scrollbar when a scroll event happens
 --
-function Skillet:ShoppingList_OnScroll()
-	Skillet:UpdateShoppingListWindow(true) -- true == use the cached list of recipes
+function CraftForge:ShoppingList_OnScroll()
+	CraftForge:UpdateShoppingListWindow(true) -- true == use the cached list of recipes
 end
 
 --
 -- Fills out and displays the shopping list frame
 --
-function Skillet:DisplayShoppingList(atBank, includeTools)
+function CraftForge:DisplayShoppingList(atBank, includeTools)
 	--DA.DEBUG(0,"DisplayShoppingList("..tostring(atBank)..", "..tostring(includeTools)..")")
 	if not self.shoppingList then
 		self.shoppingList = createShoppingListFrame(self)
 	end
 	if self.auctionOpen and Auctionator and self.ATRPlugin and self.db.profile.plugins.ATR.enabled then
-		SkilletSLAuctionatorButton:Show()
+		CraftForgeSLAuctionatorButton:Show()
 	else
-		SkilletSLAuctionatorButton:Hide()
+		CraftForgeSLAuctionatorButton:Hide()
 	end
 	if atBank then
-		SkilletShoppingListRetrieveButton:Show()
+		CraftForgeShoppingListRetrieveButton:Show()
 	else
-		SkilletShoppingListRetrieveButton:Hide()
+		CraftForgeShoppingListRetrieveButton:Hide()
 	end
 	cache_list(self, includeTools)
 	local frame = self.shoppingList
@@ -1513,7 +1513,7 @@ end
 --
 -- Tests for shopping list window visible
 --
-function Skillet:IsShoppingListVisible()
+function CraftForge:IsShoppingListVisible()
 	if self.shoppingList then
 		return self.shoppingList:IsVisible()
 	end
@@ -1523,20 +1523,20 @@ end
 --
 -- Hides the shopping list window
 --
-function Skillet:HideShoppingList()
+function CraftForge:HideShoppingList()
 	--DA.DEBUG(0,"HideShoppingList()")
 	local closed
 	if self.shoppingList and self.shoppingList:IsVisible() then
 		self.shoppingList:Hide()
-		SkilletSLAuctionatorButton:Hide()
-		SkilletShoppingListRetrieveButton:Hide()
+		CraftForgeSLAuctionatorButton:Hide()
+		CraftForgeShoppingListRetrieveButton:Hide()
 		closed = true
 	end
 	self.cachedShoppingList = nil
 	return closed
 end
 
-function Skillet:PrintShoppingList()
+function CraftForge:PrintShoppingList()
 	--DA.DEBUG(0,"PrintShoppingList()");
 	cache_list(self)
 	for _,v in pairs(self.cachedShoppingList) do

@@ -1,5 +1,5 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet")
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge")
 --[[ deepcopy.lua
 	
 	Deep-copy function for Lua - v0.2

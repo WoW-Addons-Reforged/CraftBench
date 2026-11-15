@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("Skillet")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
 
-function Skillet:SalvageListToggleHaveItems()
+function CraftForge:SalvageListToggleHaveItems()
 	self.db.profile.hide_unowned = not self.db.profile.hide_unowned
 	self:HideSalvageList()
 end
@@ -29,12 +29,12 @@ end
 -- ===========================================================================================
 local num_buttons = 0
 local function get_button(i)
-	local button = _G["SkilletSalvageListButton"..i]
+	local button = _G["CraftForgeSalvageListButton"..i]
 	if not button then
-		button = CreateFrame("Button", "SkilletSalvageListButton"..i, SkilletSalvageListParent, "SkilletSalvageListItemTemplate")
-		button:SetParent(SkilletSalvageListParent)
-		button:SetPoint("TOPLEFT", "SkilletSalvageListButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(SkilletSalvageListParent:GetFrameLevel() + 1)
+		button = CreateFrame("Button", "CraftForgeSalvageListButton"..i, CraftForgeSalvageListParent, "CraftForgeSalvageListItemTemplate")
+		button:SetParent(CraftForgeSalvageListParent)
+		button:SetPoint("TOPLEFT", "CraftForgeSalvageListButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftForgeSalvageListParent:GetFrameLevel() + 1)
 	end
 	return button
 end
@@ -55,14 +55,14 @@ local FrameBackdrop = {
 	insets = { left = 3, right = 3, top = 30, bottom = 3 }
 }
 
-SKILLET_SALVAGE_LIST_HEIGHT = 16
+CRAFTFORGE_SALVAGE_LIST_HEIGHT = 16
 local function createSalvageListFrame(self)
 	--DA.DEBUG(0,"createSalvageListFrame")
-	local frame = SkilletSalvageList
+	local frame = CraftForgeSalvageList
 	if not frame then
 		return nil
 	end
-	if TSM_API and Skillet.db.profile.tsm_compat then
+	if TSM_API and CraftForge.db.profile.tsm_compat then
 		frame:SetFrameStrata("TOOLTIP")
 	else
 		frame:SetFrameStrata("HIGH")
@@ -89,25 +89,25 @@ local function createSalvageListFrame(self)
 	local title = CreateFrame("Frame",nil,frame)
 	title:SetPoint("TOPLEFT",titlebar,"TOPLEFT",0,0)
 	title:SetPoint("BOTTOMRIGHT",titlebar2,"BOTTOMRIGHT",0,0)
-	local titletext = title:CreateFontString("SkilletSalvageListTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = title:CreateFontString("CraftForgeSalvageListTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT",title,"TOPLEFT",0,0)
 	titletext:SetPoint("TOPRIGHT",title,"TOPRIGHT",0,0)
 	titletext:SetHeight(26)
 	titletext:SetShadowColor(0,0,0)
 	titletext:SetShadowOffset(1,-1)
 	titletext:SetTextColor(1,1,1)
-	titletext:SetText("Skillet: Salvage Reagents")
+	titletext:SetText("CraftForge: Salvage Reagents")
 	frame.titletext = titletext
-	SkilletSalvageHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
-	SkilletSalvageHaveItems:SetChecked(Skillet.db.profile.hide_unowned)
+	CraftForgeSalvageHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
+	CraftForgeSalvageHaveItems:SetChecked(CraftForge.db.profile.hide_unowned)
 --
 -- The frame enclosing the scroll list needs a border and a background .....
 --
-	local backdrop = SkilletSalvageListParent
+	local backdrop = CraftForgeSalvageListParent
 	if not backdrop.SetBackdrop then
 		Mixin(backdrop, BackdropTemplateMixin)
 	end
-	if TSM_API and Skillet.db.profile.tsm_compat then
+	if TSM_API and CraftForge.db.profile.tsm_compat then
 		backdrop:SetFrameStrata("HIGH")
 	end
 	backdrop:SetBackdrop(ControlBackdrop)
@@ -128,7 +128,7 @@ local function createSalvageListFrame(self)
 --
 -- lets play the resize me game!
 --
-	Skillet:EnableResize(frame, 420, 240, Skillet.UpdateSalvageListWindow)
+	CraftForge:EnableResize(frame, 420, 240, CraftForge.UpdateSalvageListWindow)
 --
 -- so hitting [ESC] will close the window
 --
@@ -136,14 +136,14 @@ local function createSalvageListFrame(self)
 --
 -- Adjust the button height
 --
-	SKILLET_SALVAGE_LIST_HEIGHT = math.max(SkilletModifiedListButton1:GetHeight(), SKILLET_SALVAGE_LIST_HEIGHT)
+	CRAFTFORGE_SALVAGE_LIST_HEIGHT = math.max(CraftForgeModifiedListButton1:GetHeight(), CRAFTFORGE_SALVAGE_LIST_HEIGHT)
 	return frame
 end
 
 --
 -- Called to update the salvage list window
 --
-function Skillet:UpdateSalvageListWindow()
+function CraftForge:UpdateSalvageListWindow()
 	DA.DEBUG(0,"UpdateSalvageListWindow()")
 	self.InProgress.salvage = true
 	local numItems
@@ -158,24 +158,24 @@ function Skillet:UpdateSalvageListWindow()
 	else
 		return
 	end
-	local height = SkilletSalvageListParent:GetHeight()	local buttonH = SkilletOptionalListButton1:GetHeight()
-	local width = SkilletSalvageListParent:GetWidth() - 30 -- Allow for scrollbars
-	--DA.DEBUG(1,"UpdateSalvageListWindow: height= "..tostring(height)..", SKILLET_SALVAGE_LIST_HEIGHT= "..tostring(SKILLET_SALVAGE_LIST_HEIGHT))
-	--DA.DEBUG(1,"UpdateSalvageListWindow: SkilletSalvageListParent width= "..tostring(width))
-	local button_count = height / SKILLET_SALVAGE_LIST_HEIGHT
+	local height = CraftForgeSalvageListParent:GetHeight()	local buttonH = CraftForgeOptionalListButton1:GetHeight()
+	local width = CraftForgeSalvageListParent:GetWidth() - 30 -- Allow for scrollbars
+	--DA.DEBUG(1,"UpdateSalvageListWindow: height= "..tostring(height)..", CRAFTFORGE_SALVAGE_LIST_HEIGHT= "..tostring(CRAFTFORGE_SALVAGE_LIST_HEIGHT))
+	--DA.DEBUG(1,"UpdateSalvageListWindow: CraftForgeSalvageListParent width= "..tostring(width))
+	local button_count = height / CRAFTFORGE_SALVAGE_LIST_HEIGHT
 	button_count = math.floor(button_count) - 1
 	--DA.DEBUG(1,"UpdateSalvageListWindow: numItems= "..tostring(numItems)..", button_count= "..tostring(button_count)..", num_buttons= "..tostring(num_buttons))
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(SkilletSalvageListList,			-- frame
+	FauxScrollFrame_Update(CraftForgeSalvageListList,			-- frame
 							numItems,						-- num items
 							button_count,					-- num to display
-							SKILLET_SALVAGE_LIST_HEIGHT)	-- value step (item height)
+							CRAFTFORGE_SALVAGE_LIST_HEIGHT)	-- value step (item height)
 --
 -- Where in the list of items to start counting.
 --
-	local itemOffset = FauxScrollFrame_GetOffset(SkilletSalvageListList)
+	local itemOffset = FauxScrollFrame_GetOffset(CraftForgeSalvageListList)
 	--DA.DEBUG(1,"UpdateSalvageListWindow: itemOffset= "..tostring(itemOffset))
 	for i=1, button_count, 1 do
 		num_buttons = math.max(num_buttons, i)
@@ -192,7 +192,7 @@ function Skillet:UpdateSalvageListWindow()
 			local sreagentName, sreagentLink = C_Item.GetItemInfo(sreagentID)
 			local sreagentQuality
 			if not sreagentName then
-				Skillet.salvageDataNeeded = true
+				CraftForge.salvageDataNeeded = true
 				C_Item.RequestLoadItemDataByID(sreagentID)
 				sreagentName = "item:"..tostring(sreagentID)
 			end
@@ -249,25 +249,25 @@ end
 --
 -- Updates the scrollbar when a scroll event happens
 --
-function Skillet:SalvageList_OnScroll()
-	Skillet:UpdateSalvageListWindow()
+function CraftForge:SalvageList_OnScroll()
+	CraftForge:UpdateSalvageListWindow()
 end
 
 --
 -- Functions to show and hide the SalvageList
 --
-function Skillet:DisplaySalvageList()
+function CraftForge:DisplaySalvageList()
 	--DA.DEBUG(0,"DisplaySalvageList()")
 	if not self.SalvageList then
 		self.SalvageList = createSalvageListFrame(self)
 	end
 	if not self.SalvageList:IsVisible() then
-		self.SalvageList.titletext:SetText("Skillet: Salvage Reagents")
+		self.SalvageList.titletext:SetText("CraftForge: Salvage Reagents")
 		self.SalvageList:Show()
 	end
 end
 
-function Skillet:HideSalvageList(clear)
+function CraftForge:HideSalvageList(clear)
 	--DA.DEBUG(0,"HideSalvageList()")
 	if self.SalvageList then
 		self.SalvageList:Hide()
@@ -278,15 +278,15 @@ function Skillet:HideSalvageList(clear)
 end
 
 --
--- Called when an salvage reagent button in the Skillet detail frame is clicked.
+-- Called when an salvage reagent button in the CraftForge detail frame is clicked.
 -- This salvage list is used for selecting Salvage, Salvage, and Finishing reagents.
 -- These all have the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function Skillet:SalvageReagentOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftForge:SalvageReagentOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"SalvageReagentOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
-	SkilletSalvageHaveItems:Show()
+	CraftForgeSalvageHaveItems:Show()
 	self.cachedSalvageList = {}
 	--DA.DEBUG(1,"SalvageReagentOnClick: salvage= "..DA.DUMP1(recipe.salvage))
 	local j = 1
@@ -322,7 +322,7 @@ end
 -- Returns a link for the salvage reagent required to create the specified
 -- item, the index'th reagent required for the item is returned
 --
-function Skillet:GetSalvageItemLink(skillIndex, index)
+function CraftForge:GetSalvageItemLink(skillIndex, index)
 	--DA.DEBUG(0,"GetSalvageItemLink("..tostring(skillIndex)..", "..tostring(index)..")")
 	if skillIndex and index then
 		local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
@@ -337,17 +337,17 @@ end
 --
 -- Called when then mouse enters a salvage button
 --
-function Skillet:SalvageButtonOnEnter(button, skillIndex, salvageIndex)
+function CraftForge:SalvageButtonOnEnter(button, skillIndex, salvageIndex)
 	--DA.DEBUG(0,"SalvageButtonOnEnter("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(salvageIndex)..")")
-	local tip = GameTooltip -- SkilletTradeskillTooltip
+	local tip = GameTooltip -- CraftForgeTradeskillTooltip
 	tip:SetOwner(button, "ANCHOR_BOTTOMRIGHT")
-	if Skillet.db.profile.scale_tooltip then
+	if CraftForge.db.profile.scale_tooltip then
 		local uiScale = 1.0;
 		if ( GetCVar("useUiScale") == "1" ) then
 			uiScale = tonumber(GetCVar("uiscale"))
 		end
-		if Skillet.db.profile.ttscale then
-			uiScale = uiScale * Skillet.db.profile.ttscale
+		if CraftForge.db.profile.ttscale then
+			uiScale = uiScale * CraftForge.db.profile.ttscale
 		end
 		tip:SetScale(uiScale)
 	end
@@ -360,11 +360,11 @@ end
 --
 -- called then the mouse leaves an salvage button
 --
-function Skillet:SalvageButtonOnLeave(button, skillIndex, salvageIndex)
+function CraftForge:SalvageButtonOnLeave(button, skillIndex, salvageIndex)
 	--DA.DEBUG(0,"SalvageButtonOnLeave("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(salvageIndex)..")")
-	local tip = GameTooltip -- SkilletTradeskillTooltip
-	if Skillet.db.profile.scale_tooltip then
-		tip:SetScale(Skillet.gttScale)
+	local tip = GameTooltip -- CraftForgeTradeskillTooltip
+	if CraftForge.db.profile.scale_tooltip then
+		tip:SetScale(CraftForge.gttScale)
 	end
 	tip:Hide()
 	ResetCursor()
@@ -376,7 +376,7 @@ end
 -- These all have the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function Skillet:SalvageButtonOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftForge:SalvageButtonOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"SalvageButtonOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	--DA.DEBUG(1,"SalvageButtonOnClick: cachedSalvageIndex= "..tostring(self.cachedSalvageIndex)..", cachedSalvageList= "..DA.DUMP(self.cachedSalvageList))
 	local sreagentID = self.cachedSalvageList[reagentIndex].itemID

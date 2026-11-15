@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,12 +25,12 @@ local PT = LibStub("LibPeriodicTable-3.1")
 --
 -- Note: this function is recursive
 --
-function Skillet:InventoryReagentCraftability(reagentID)
+function CraftForge:InventoryReagentCraftability(reagentID)
 	--DA.DEBUG(1,"InventoryReagentCraftability("..tostring(reagentID)..") -- "..tostring((C_Item.GetItemInfo(reagentID))))
 	if not reagentID or type(reagentID) == "table" or reagentID == 0 then
 		return 0, 0
 	end
-	local player = Skillet.currentPlayer
+	local player = CraftForge.currentPlayer
 	if not self.db.realm.inventoryData then
 		self.db.realm.inventoryData = {}
 	end
@@ -58,7 +58,7 @@ function Skillet:InventoryReagentCraftability(reagentID)
 				for i=1,#childRecipe.reagentData,1 do
 					local childReagent = childRecipe.reagentData[i]
 					local numReagentOnHand
-					if Skillet.isRetail then
+					if CraftForge.isRetail then
 						numReagentOnHand = C_Item.GetItemCount(childReagent.reagentID,true,false,true,true)
 					else
 						numReagentOnHand = C_Item.GetItemCount(childReagent.reagentID,false) -- Forever can only craft from bags
@@ -100,9 +100,9 @@ end
 -- (not to be confused with the reagent craftability which is designed to determine how many
 -- craftable reagents are available for recipe iterations)
 --
-function Skillet:InventorySkillIterations(tradeID, recipe)
+function CraftForge:InventorySkillIterations(tradeID, recipe)
 	--DA.DEBUG(1,"InventorySkillIterations("..tostring(tradeID)..", "..tostring(recipe.name)..")")
-	local player = Skillet.currentPlayer
+	local player = CraftForge.currentPlayer
 	local faction = self.db.realm.faction[player]
 	if recipe then	-- make sure that recipe is in the database before continuing
 		local recipeID = recipe.spellID
@@ -132,7 +132,7 @@ function Skillet:InventorySkillIterations(tradeID, recipe)
 			local numNeeded = reagent.numNeeded
 			local reagentAvailableAlts = 0
 			local reagentBags, reagentAvailable, reagentCraftable, reagentCraftableVendor = self:GetInventory(player, reagentID)
-			if Skillet.isForever then
+			if CraftForge.isForever then
 				reagentAvailable = reagentBags
 			end
 			if reagentCraftable == 0 then
@@ -144,9 +144,9 @@ function Skillet:InventorySkillIterations(tradeID, recipe)
 					reagentAvailableAlts = reagentAvailableAlts + altBoth
 				end
 			end
-			if Skillet.db.profile.use_guildbank_as_alt then
+			if CraftForge.db.profile.use_guildbank_as_alt then
 				local guildName = GetGuildInfo("player")
-				local cachedGuildbank = Skillet.db.global.cachedGuildbank
+				local cachedGuildbank = CraftForge.db.global.cachedGuildbank
 				if guildName and cachedGuildbank[guildName] then
 					if type(reagentID) ~= "table" then
 						reagentAvailableAlts = reagentAvailableAlts + (cachedGuildbank[guildName][reagentID] or 0)
@@ -158,7 +158,7 @@ function Skillet:InventorySkillIterations(tradeID, recipe)
 				end
 			end
 			if type(reagentID) ~= "table" and self:VendorSellsReagent(reagentID) then	-- if it's available from a vendor, then only worry about bag inventory
-				local vendorAvailable, vendorAvailableAlts = Skillet:VendorItemAvailable(reagentID)
+				local vendorAvailable, vendorAvailableAlts = CraftForge:VendorItemAvailable(reagentID)
 				numCraft = math.min(numCraft, math.floor(reagentAvailable/numNeeded))
 				numCraftable = math.min(numCraftable, math.floor((reagentAvailable+reagentCraftable)/numNeeded))
 				numCraftVendor = math.min(numCraftVendor, math.floor(vendorAvailable/numNeeded))
@@ -187,10 +187,10 @@ function Skillet:InventorySkillIterations(tradeID, recipe)
 	return 0, 0, 0, 0
 end
 
-function Skillet:InventoryScan()
+function CraftForge:InventoryScan()
 	--DA.DEBUG(0,"InventoryScan()")
 	local player = self.currentPlayer
-	if self.linkedSkill or self.isGuild or player ~= Skillet:unitName("player") then
+	if self.linkedSkill or self.isGuild or player ~= CraftForge:unitName("player") then
 		return
 	end
 	local cachedInventory = self.db.realm.inventoryData[player]
@@ -240,7 +240,7 @@ function Skillet:InventoryScan()
 	--DA.DEBUG(0,"InventoryScan: return")
 end
 
-function Skillet:GetInventory(player, reagentID)
+function CraftForge:GetInventory(player, reagentID)
 	--DA.DEBUG(0,"GetInventory("..tostring(player)..", "..tostring(reagentID)..")")
 	if player and reagentID then
 		local bags = 0
@@ -294,11 +294,11 @@ end
 --
 -- queries for vendor info for a particular itemID
 --
-function Skillet:VendorSellsReagent(itemID)
+function CraftForge:VendorSellsReagent(itemID)
 	--DA.DEBUG(0,"VendorSellsReagent("..tostring(itemID)..")")
 	if self.db.global.MissingVendorItems[itemID] then
 		if type(self.db.global.MissingVendorItems[itemID]) == 'table' then
-			if Skillet.db.profile.use_altcurrency_vendor_items then
+			if CraftForge.db.profile.use_altcurrency_vendor_items then
 				--DA.DEBUG(1,"VendorSellsReagent: "..tostring(itemID))
 				return true
 			end
@@ -322,7 +322,7 @@ end
 --
 -- returns the number of items that can be bought limited by the amount of currency available
 --
-function Skillet:VendorItemAvailable(itemID)
+function CraftForge:VendorItemAvailable(itemID)
 	--DA.DEBUG(0,"VendorItemAvailable("..tostring(itemID)..")")
 	local _, divider, currency
 	local currencyAvailable = 0
@@ -341,7 +341,7 @@ function Skillet:VendorItemAvailable(itemID)
 	elseif self.db.global.MissingVendorItems[itemID] then
 		local MissingVendorItem = self.db.global.MissingVendorItems[itemID]
 		if type(MissingVendorItem) == 'table' then	-- table entries are {name, quantity, currencyName, currencyID, currencyCount}
-			if Skillet.db.profile.use_altcurrency_vendor_items then
+			if CraftForge.db.profile.use_altcurrency_vendor_items then
 				--DA.DEBUG(1,"MissingVendorItem="..DA.DUMP1(MissingVendorItem))
 				if MissingVendorItem[4] and MissingVendorItem[4] > 0 then
 					currencyAvailable = self:GetInventory(self.currentPlayer, MissingVendorItem[4])

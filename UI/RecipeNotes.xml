@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	Skillet: A tradeskill window replacement.
+	CraftForge: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
  #  Template for all the buttons used in the list of notes for the recipe
  #
 -->
-<Frame name="SkilletNoteItemButtonTemplate" hidden="false" virtual="true">
+<Frame name="CraftForgeNoteItemButtonTemplate" hidden="false" virtual="true">
 	<Size>
 		<AbsDimension x="190" y="48"/>
 	</Size>
@@ -77,7 +77,7 @@
     </Attributes>
 	<Scripts>
 		<OnClick>
-			Skillet:RecipeNote_OnClick(self)
+			CraftForge:RecipeNote_OnClick(self)
 		</OnClick>
 	</Scripts>
 </Frame>
@@ -87,12 +87,12 @@
  # A frame for displaying the recipe notes
  #
 -->
-<Frame name="SkilletRecipeNotesFrame" parent="SkilletFrame" inherits="BackdropTemplate">
+<Frame name="CraftForgeRecipeNotesFrame" parent="CraftForgeFrame" inherits="BackdropTemplate">
 	<Size>
 		<AbsDimension x="200" y="380"/>
 	</Size>
 	<Anchors>
-		<Anchor point="TOPLEFT" relativeTo="SkilletFrame" relativePoint="TOPRIGHT">
+		<Anchor point="TOPLEFT" relativeTo="CraftForgeFrame" relativePoint="TOPRIGHT">
 			<Offset>
 				<AbsDimension x="-1" y="-75"/>
 			</Offset>
@@ -105,7 +105,7 @@
 					<AbsDimension x="100" y="0"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SkilletRecipeNotesFrame" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftForgeRecipeNotesFrame" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="6" y="-6"/>
 						</Offset>
@@ -121,9 +121,9 @@
 	    # A button on the top right to close the window
 	    #
 	    -->
-		<Button name="SkilletNotesCloseButton" inherits="UIPanelCloseButton">
+		<Button name="CraftForgeNotesCloseButton" inherits="UIPanelCloseButton">
             <Anchors>
-                <Anchor point="TOPRIGHT" relativeTo="SkilletRecipeNotesFrame" relativePoint="TOPRIGHT">
+                <Anchor point="TOPRIGHT" relativeTo="CraftForgeRecipeNotesFrame" relativePoint="TOPRIGHT">
                     <Offset>
                         <AbsDimension x="-1" y="-1"/>
                     </Offset>
@@ -131,17 +131,17 @@
             </Anchors>
 			<Scripts>
 				<OnClick>
-					HideUIPanel(SkilletRecipeNotesFrame);
+					HideUIPanel(CraftForgeRecipeNotesFrame);
 				</OnClick>
 			</Scripts>
         </Button>
 
-        <ScrollFrame name="SkilletNotesList" inherits="FauxScrollFrameTemplate" parent="SkilletRecipeNotesFrame">
+        <ScrollFrame name="CraftForgeNotesList" inherits="FauxScrollFrameTemplate" parent="CraftForgeRecipeNotesFrame">
 			<Size>
 				<AbsDimension x="170" y="345"/>
 			</Size>
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletRecipeNotesFrame" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeRecipeNotesFrame" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="2" y="-30"/>
 					</Offset>
@@ -149,47 +149,47 @@
 			</Anchors>
 		    <Scripts>
 				<OnVerticalScroll>
-				    FauxScrollFrame_OnVerticalScroll(self, offset, SKILLET_NOTES_ITEM_HEIGHT, Skillet.NotesList_OnScroll);
+				    FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_NOTES_ITEM_HEIGHT, CraftForge.NotesList_OnScroll);
 				</OnVerticalScroll>
 			</Scripts>
 		</ScrollFrame>
-		<Button name="SkilletNotesButton1" inherits="SkilletNoteItemButtonTemplate">
+		<Button name="CraftForgeNotesButton1" inherits="CraftForgeNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletNotesList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="3" y="0"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
 		</Button>
-		<Button name="SkilletNotesButton2" inherits="SkilletNoteItemButtonTemplate">
+		<Button name="CraftForgeNotesButton2" inherits="CraftForgeNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletNotesButton1" relativePoint="BOTTOMLEFT"/>
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesButton1" relativePoint="BOTTOMLEFT"/>
 			</Anchors>
 		</Button>
-		<Button name="SkilletNotesButton3" inherits="SkilletNoteItemButtonTemplate">
+		<Button name="CraftForgeNotesButton3" inherits="CraftForgeNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletNotesButton2" relativePoint="BOTTOMLEFT"/>
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesButton2" relativePoint="BOTTOMLEFT"/>
 			</Anchors>
 		</Button>
-		<Button name="SkilletNotesButton4" inherits="SkilletNoteItemButtonTemplate">
+		<Button name="CraftForgeNotesButton4" inherits="CraftForgeNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletNotesButton3" relativePoint="BOTTOMLEFT"/>
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesButton3" relativePoint="BOTTOMLEFT"/>
 			</Anchors>
 		</Button>
-		<Button name="SkilletNotesButton5" inherits="SkilletNoteItemButtonTemplate">
+		<Button name="CraftForgeNotesButton5" inherits="CraftForgeNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletNotesButton4" relativePoint="BOTTOMLEFT"/>
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesButton4" relativePoint="BOTTOMLEFT"/>
 			</Anchors>
 		</Button>
-		<Button name="SkilletNotesButton6" inherits="SkilletNoteItemButtonTemplate">
+		<Button name="CraftForgeNotesButton6" inherits="CraftForgeNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletNotesButton5" relativePoint="BOTTOMLEFT"/>
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesButton5" relativePoint="BOTTOMLEFT"/>
 			</Anchors>
 		</Button>
-		<Button name="SkilletNotesButton7" inherits="SkilletNoteItemButtonTemplate">
+		<Button name="CraftForgeNotesButton7" inherits="CraftForgeNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletNotesButton6" relativePoint="BOTTOMLEFT"/>
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesButton6" relativePoint="BOTTOMLEFT"/>
 			</Anchors>
 		</Button>
     </Frames>

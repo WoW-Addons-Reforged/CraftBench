@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,17 +17,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = Skillet.L
+local L = CraftForge.L
 
-Skillet.registeredPlugins = {}		-- plugins that have registered a function
-Skillet.updatePlugins = {}			-- each plugin will register if it has an Update function
-Skillet.processQueuePlugins = {}	-- each plugin will register if it has a ProcessQueue function
-Skillet.displayDetailPlugins = {}	-- each plugin will register if it has a GetExtraText function
-Skillet.RecipeNamePrefixes = {}		-- each plugin will register, only one can be active
-Skillet.RecipeNameSuffixes = {}		-- each plugin will register, only one can be active
+CraftForge.registeredPlugins = {}		-- plugins that have registered a function
+CraftForge.updatePlugins = {}			-- each plugin will register if it has an Update function
+CraftForge.processQueuePlugins = {}	-- each plugin will register if it has a ProcessQueue function
+CraftForge.displayDetailPlugins = {}	-- each plugin will register if it has a GetExtraText function
+CraftForge.RecipeNamePrefixes = {}		-- each plugin will register, only one can be active
+CraftForge.RecipeNameSuffixes = {}		-- each plugin will register, only one can be active
 
-Skillet.pluginsOrder = 2
-Skillet.pluginsOptions = {
+CraftForge.pluginsOrder = 2
+CraftForge.pluginsOptions = {
 		name = "Plugins",
 		type = "group",
 		childGroups = "tree",
@@ -38,11 +38,11 @@ Skillet.pluginsOptions = {
 				desc = "Only one plugin can supply prefix text",
 				order = 1,
 				get = function() 
-					return Skillet.db.profile.plugins.recipeNamePrefix
+					return CraftForge.db.profile.plugins.recipeNamePrefix
 				end,
 				set = function(_, value)
-					Skillet.db.profile.plugins.recipeNamePrefix = value
-					Skillet:UpdateTradeSkillWindow()
+					CraftForge.db.profile.plugins.recipeNamePrefix = value
+					CraftForge:UpdateTradeSkillWindow()
 				end,
 				values = {
 					[" "] = " ",
@@ -55,11 +55,11 @@ Skillet.pluginsOptions = {
 				desc = "Only one plugin can supply suffix text",
 				order = 1,
 				get = function() 
-					return Skillet.db.profile.plugins.recipeNameSuffix
+					return CraftForge.db.profile.plugins.recipeNameSuffix
 				end,
 				set = function(_, value)
-					Skillet.db.profile.plugins.recipeNameSuffix = value
-					Skillet:UpdateTradeSkillWindow()
+					CraftForge.db.profile.plugins.recipeNameSuffix = value
+					CraftForge:UpdateTradeSkillWindow()
 				end,
 				values = {
 					[" "] = " ",
@@ -70,109 +70,109 @@ Skillet.pluginsOptions = {
 		},
 	}
 
-function Skillet:AddPluginOptions(options)
-	options.order = Skillet.pluginsOrder
-	Skillet.pluginsOrder = Skillet.pluginsOrder + 1
-	Skillet.pluginsOptions.args[options.name] = options
+function CraftForge:AddPluginOptions(options)
+	options.order = CraftForge.pluginsOrder
+	CraftForge.pluginsOrder = CraftForge.pluginsOrder + 1
+	CraftForge.pluginsOptions.args[options.name] = options
 end
 
-function Skillet:RegisterRecipeNamePlugin(moduleName, priority)
+function CraftForge:RegisterRecipeNamePlugin(moduleName, priority)
 	DA.DEBUG(0,"RegisterRecipeNamePlugin("..tostring(moduleName)..", "..tostring(priority))
 	if not priority then priority = 100 end
 	if type(moduleName) == "string" then
-		local module = Skillet[moduleName]
+		local module = CraftForge[moduleName]
 		if module and type(module) == "table" then
 			if module.RecipeNamePrefix then
-				Skillet.RecipeNamePrefixes[moduleName] = module
-				Skillet.registeredPlugins[moduleName] = module
-				Skillet.pluginsOptions.args.RecipeNamePrefix.values[module.options.name] = module.options.name
+				CraftForge.RecipeNamePrefixes[moduleName] = module
+				CraftForge.registeredPlugins[moduleName] = module
+				CraftForge.pluginsOptions.args.RecipeNamePrefix.values[module.options.name] = module.options.name
 			end
 			if module.RecipeNameSuffix then
-				Skillet.RecipeNameSuffixes[moduleName] = module
-				Skillet.registeredPlugins[moduleName] = module
-				Skillet.pluginsOptions.args.RecipeNameSuffix.values[module.options.name] = module.options.name
+				CraftForge.RecipeNameSuffixes[moduleName] = module
+				CraftForge.registeredPlugins[moduleName] = module
+				CraftForge.pluginsOptions.args.RecipeNameSuffix.values[module.options.name] = module.options.name
 			end
 		end
 	end
 end
 
-function Skillet:IsRecipeNamePluginRegistered(moduleName)
+function CraftForge:IsRecipeNamePluginRegistered(moduleName)
 	if type(moduleName)	 == "string" then
-		return Skillet.RecipeNamePlugins[moduleName] ~= nil
+		return CraftForge.RecipeNamePlugins[moduleName] ~= nil
 	end
 end
 
-function Skillet:RegisterDisplayDetailPlugin(moduleName, priority)
+function CraftForge:RegisterDisplayDetailPlugin(moduleName, priority)
 	DA.DEBUG(0,"RegisterDisplayDetailPlugin("..tostring(moduleName)..", "..tostring(priority))
 	if not priority then priority = 100 end
 	if type(moduleName) == "string" then
-		local module = Skillet[moduleName]
+		local module = CraftForge[moduleName]
 		if module and type(module) == "table" and module.GetExtraText then
-			Skillet.displayDetailPlugins[moduleName] = module
-			Skillet.registeredPlugins[moduleName] = module
+			CraftForge.displayDetailPlugins[moduleName] = module
+			CraftForge.registeredPlugins[moduleName] = module
 		end
 	end
 end
 
-function Skillet:IsDisplayDetailPluginRegistered(moduleName)
+function CraftForge:IsDisplayDetailPluginRegistered(moduleName)
 	if type(moduleName)	 == "string" then
-		return Skillet.displayDetailPlugins[moduleName] ~= nil
+		return CraftForge.displayDetailPlugins[moduleName] ~= nil
 	end
 end
 
-function Skillet:RegisterUpdatePlugin(moduleName, priority)
+function CraftForge:RegisterUpdatePlugin(moduleName, priority)
 	DA.DEBUG(0,"RegisterUpdatePlugin("..tostring(moduleName)..", "..tostring(priority))
 	if not priority then priority = 100 end
 	if type(moduleName) == "string" then
-		local module = Skillet[moduleName]
+		local module = CraftForge[moduleName]
 		if module and type(module) == "table" and module.Update then
-			Skillet.updatePlugins[moduleName] = module
-			Skillet.registeredPlugins[moduleName] = module
+			CraftForge.updatePlugins[moduleName] = module
+			CraftForge.registeredPlugins[moduleName] = module
 		end
 	end
 end
 
-function Skillet:IsUpdatePluginRegistered(moduleName)
+function CraftForge:IsUpdatePluginRegistered(moduleName)
 	if type(moduleName)	 == "string" then
-		return Skillet.updatePlugins[moduleName] ~= nil
+		return CraftForge.updatePlugins[moduleName] ~= nil
 	end
 end
 
-function Skillet:UpdatePlugins()
+function CraftForge:UpdatePlugins()
 	--DA.DEBUG(0,"UpdatePlugins()")
-	for k,v in pairs(Skillet.updatePlugins) do
+	for k,v in pairs(CraftForge.updatePlugins) do
 		v.Update()
 	end
 end
 
-function Skillet:RegisterProcessQueuePlugin(moduleName, priority)
+function CraftForge:RegisterProcessQueuePlugin(moduleName, priority)
 	DA.DEBUG(0,"RegisterProcessQueuePlugin("..tostring(moduleName)..", "..tostring(priority))
 	if not priority then priority = 100 end
 	if type(moduleName) == "string" then
-		local module = Skillet[moduleName]
+		local module = CraftForge[moduleName]
 		if module and type(module) == "table" and module.ProcessQueue then
-			Skillet.processQueuePlugins[moduleName] = module
-			Skillet.registeredPlugins[moduleName] = module
+			CraftForge.processQueuePlugins[moduleName] = module
+			CraftForge.registeredPlugins[moduleName] = module
 		end
 	end
 end
 
-function Skillet:IsProcessQueuePluginRegistered(moduleName)
+function CraftForge:IsProcessQueuePluginRegistered(moduleName)
 	if type(moduleName)	 == "string" then
-		return Skillet.processQueuePlugins[moduleName] ~= nil
+		return CraftForge.processQueuePlugins[moduleName] ~= nil
 	end
 end
 
-function Skillet:ProcessQueuePlugins()
+function CraftForge:ProcessQueuePlugins()
 	--DA.DEBUG(0,"ProcessQueuePlugins()")
-	for k,v in pairs(Skillet.processQueuePlugins) do
+	for k,v in pairs(CraftForge.processQueuePlugins) do
 		v.ProcessQueue()
 	end
 end
 
-function Skillet:GetExtraText(skill, recipe)
+function CraftForge:GetExtraText(skill, recipe)
 	local output_label, output_text
-	for k,v in pairs(Skillet.displayDetailPlugins) do
+	for k,v in pairs(CraftForge.displayDetailPlugins) do
 		local label,text = v.GetExtraText(skill, recipe)
 		if label and label ~= "" then
 			if output_label then
@@ -194,11 +194,11 @@ function Skillet:GetExtraText(skill, recipe)
 	return output_label, output_text
 end
 
-function Skillet:RecipeNamePrefix(skill, recipe)
+function CraftForge:RecipeNamePrefix(skill, recipe)
 	local text
 	local recipeNamePrefix = self.db.profile.plugins.recipeNamePrefix
 	if recipeNamePrefix and recipeNamePrefix ~= " " then
-		for k,v in pairs(Skillet.RecipeNamePrefixes) do
+		for k,v in pairs(CraftForge.RecipeNamePrefixes) do
 			--DA.DEBUG(1,"k= "..tostring(k)..", v= "..tostring(v))
 			if v.RecipeNamePrefix and v.options.name == recipeNamePrefix then
 				text = v.RecipeNamePrefix(skill, recipe)
@@ -210,11 +210,11 @@ function Skillet:RecipeNamePrefix(skill, recipe)
 	return text
 end
 
-function Skillet:RecipeNameSuffix(skill, recipe)
+function CraftForge:RecipeNameSuffix(skill, recipe)
 	local text
 	local recipeNameSuffix = self.db.profile.plugins.recipeNameSuffix
 	if recipeNameSuffix and recipeNameSuffix ~= " " then
-		for k,v in pairs(Skillet.RecipeNameSuffixes) do
+		for k,v in pairs(CraftForge.RecipeNameSuffixes) do
 			--DA.DEBUG(1,"k= "..tostring(k)..", v= "..tostring(v))
 			if v.RecipeNameSuffix and v.options.name == recipeNameSuffix then
 				text = v.RecipeNameSuffix(skill, recipe)
@@ -226,9 +226,9 @@ function Skillet:RecipeNameSuffix(skill, recipe)
 	return text
 end
 
-function Skillet:InitializePlugins()
+function CraftForge:InitializePlugins()
 	DA.DEBUG(0,"InitializePlugins()")
-	for k,v in pairs(Skillet.registeredPlugins) do
+	for k,v in pairs(CraftForge.registeredPlugins) do
 		if v and v.OnInitialize then
 			DA.DEBUG(1,"InitializePlugins: k= "..tostring(k)..", v= "..tostring(v))
 			v.OnInitialize()
@@ -236,9 +236,9 @@ function Skillet:InitializePlugins()
 	end
 end
 
-function Skillet:EnablePlugins()
+function CraftForge:EnablePlugins()
 	DA.DEBUG(0,"EnablePlugins()")
-	for k,v in pairs(Skillet.registeredPlugins) do
+	for k,v in pairs(CraftForge.registeredPlugins) do
 		if v and v.OnEnable then
 			DA.DEBUG(1,"EnablePlugins: k= "..tostring(k)..", v= "..tostring(v))
 			v.OnEnable()
@@ -246,9 +246,9 @@ function Skillet:EnablePlugins()
 	end
 end
 
-function Skillet:DisablePlugins()
+function CraftForge:DisablePlugins()
 	DA.DEBUG(0,"DisablePlugins()")
-	for k,v in pairs(Skillet.registeredPlugins) do
+	for k,v in pairs(CraftForge.registeredPlugins) do
 		if v and v.OnDisable then
 			DA.DEBUG(1,"DisablePlugins: k= "..tostring(k)..", v= "..tostring(v))
 			v.OnDisable()

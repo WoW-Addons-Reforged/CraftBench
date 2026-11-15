@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	
 ]]--
 
-Skillet.AHDBPlugin = {}
+CraftForge.AHDBPlugin = {}
 
-local plugin = Skillet.AHDBPlugin
-local L = Skillet.L
+local plugin = CraftForge.AHDBPlugin
+local L = CraftForge.L
 
 plugin.options =
 {
@@ -35,11 +35,11 @@ plugin.options =
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return Skillet.db.profile.plugins.AHDB.enabled
+				return CraftForge.db.profile.plugins.AHDB.enabled
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.AHDB.enabled = value
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge.db.profile.plugins.AHDB.enabled = value
+				CraftForge:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1
@@ -49,12 +49,12 @@ plugin.options =
 			name = "useShort",
 			desc = "Use Short money format",
 			get = function()
-				return Skillet.db.profile.plugins.AHDB.useShort
+				return CraftForge.db.profile.plugins.AHDB.useShort
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.AHDB.useShort = value
+				CraftForge.db.profile.plugins.AHDB.useShort = value
 				if value then
-					Skillet.db.profile.plugins.AHDB.useShort = value
+					CraftForge.db.profile.plugins.AHDB.useShort = value
 				end
 			end,
 			order = 2
@@ -64,12 +64,12 @@ plugin.options =
 			name = "onlyPositive",
 			desc = "Only show positive values",
 			get = function()
-				return Skillet.db.profile.plugins.AHDB.onlyPositive
+				return CraftForge.db.profile.plugins.AHDB.onlyPositive
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.AHDB.onlyPositive = value
+				CraftForge.db.profile.plugins.AHDB.onlyPositive = value
 				if value then
-					Skillet.db.profile.plugins.AHDB.onlyPositive = value
+					CraftForge.db.profile.plugins.AHDB.onlyPositive = value
 				end
 			end,
 			order = 3
@@ -79,12 +79,12 @@ plugin.options =
 			name = "reagentPrices",
 			desc = "Show prices for reagents",
 			get = function()
-				return Skillet.db.profile.plugins.AHDB.reagentPrices
+				return CraftForge.db.profile.plugins.AHDB.reagentPrices
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.AHDB.reagentPrices = value
+				CraftForge.db.profile.plugins.AHDB.reagentPrices = value
 				if value then
-					Skillet.db.profile.plugins.AHDB.reagentPrices = value
+					CraftForge.db.profile.plugins.AHDB.reagentPrices = value
 				end
 			end,
 			order = 4
@@ -94,12 +94,12 @@ plugin.options =
 			name = "buyablePrices",
 			desc = "Show AH prices for buyable reagents",
 			get = function()
-				return Skillet.db.profile.plugins.AHDB.buyablePrices
+				return CraftForge.db.profile.plugins.AHDB.buyablePrices
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.AHDB.buyablePrices = value
+				CraftForge.db.profile.plugins.AHDB.buyablePrices = value
 				if value then
-					Skillet.db.profile.plugins.AHDB.buyablePrices = value
+					CraftForge.db.profile.plugins.AHDB.buyablePrices = value
 				end
 			end,
 			order = 5
@@ -109,12 +109,12 @@ plugin.options =
 			name = "useVendorCalc",
 			desc = "Show calculated cost from vendor sell price for buyable reagents",
 			get = function()
-				return Skillet.db.profile.plugins.AHDB.useVendorCalc
+				return CraftForge.db.profile.plugins.AHDB.useVendorCalc
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.AHDB.useVendorCalc = value
+				CraftForge.db.profile.plugins.AHDB.useVendorCalc = value
 				if value then
-					Skillet.db.profile.plugins.AHDB.useVendorCalc = value
+					CraftForge.db.profile.plugins.AHDB.useVendorCalc = value
 				end
 			end,
 			order = 6
@@ -125,11 +125,11 @@ plugin.options =
 			desc = "Multiply vendor sell price by this to get calculated buy price",
 			min = 1, max = 10, step = 1, isPercent = false,
 			get = function()
-				return Skillet.db.profile.plugins.AHDB.buyFactor
+				return CraftForge.db.profile.plugins.AHDB.buyFactor
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.AHDB.buyFactor = value
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge.db.profile.plugins.AHDB.buyFactor = value
+				CraftForge:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 10
@@ -139,10 +139,10 @@ plugin.options =
 			name = "Markup %",
 			min = 0, max = 2, step = 0.01, isPercent = true,
 			get = function()
-				return Skillet.db.profile.plugins.AHDB.markup
+				return CraftForge.db.profile.plugins.AHDB.markup
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.AHDB.markup = value
+				CraftForge.db.profile.plugins.AHDB.markup = value
 			end,
 			width = "double",
 			order = 11,
@@ -157,13 +157,13 @@ local buyFactorDef = 4
 local markupDef = 1.05
 
 function plugin.OnInitialize()
-	if not Skillet.db.profile.plugins.AHDB then
-		Skillet.db.profile.plugins.AHDB = {}
-		Skillet.db.profile.plugins.AHDB.enabled = true
-		Skillet.db.profile.plugins.AHDB.buyFactor = buyFactorDef
-		Skillet.db.profile.plugins.AHDB.markup = markupDef
+	if not CraftForge.db.profile.plugins.AHDB then
+		CraftForge.db.profile.plugins.AHDB = {}
+		CraftForge.db.profile.plugins.AHDB.enabled = true
+		CraftForge.db.profile.plugins.AHDB.buyFactor = buyFactorDef
+		CraftForge.db.profile.plugins.AHDB.markup = markupDef
 	end
-	Skillet:AddPluginOptions(plugin.options)
+	CraftForge:AddPluginOptions(plugin.options)
 end
 
 local function AHDB_Price(itemID)
@@ -206,16 +206,16 @@ function plugin.GetExtraText(skill, recipe)
 	if not recipe then return end
 	local itemID = recipe.itemID
 	local auctionData = {}
-	if Skillet.db.profile.plugins.AHDB.enabled and itemID and AuctionDB then
+	if CraftForge.db.profile.plugins.AHDB.enabled and itemID and AuctionDB then
 		local itemName, itemLink = C_Item.GetItemInfo(itemID)
 		if not itemLink then 
 			DA.DEBUG(0,"GetExtraText: itemLink is nil")
 			return
 		end
 		local buyout = AHDB_Price(itemID) * recipe.numMade
-		extra_text = Skillet:FormatMoneyFull(buyout, true)
+		extra_text = CraftForge:FormatMoneyFull(buyout, true)
 		label = "|r".."AHDB "..L["Buyout"]..":"
-		if Skillet.db.profile.plugins.AHDB.reagentPrices then
+		if CraftForge.db.profile.plugins.AHDB.reagentPrices then
 			local toConcatLabel = {}
 			local toConcatExtra = {}
 			local cost = 0
@@ -226,7 +226,7 @@ function plugin.GetExtraText(skill, recipe)
 				end
 				local needed = reagent.numNeeded or 0
 				local id = reagent.id
-				if Skillet.isRetail or Skillet.isForever then
+				if CraftForge.isRetail or CraftForge.isForever then
 					id = reagent.reagentID
 				end
 				local reagentName, reagentLink
@@ -237,32 +237,32 @@ function plugin.GetExtraText(skill, recipe)
 				end
 				local text
 				local value = AHDB_Price(id) * needed
-				local buyFactor = Skillet.db.profile.plugins.AHDB.buyFactor or buyFactorDef
-				if Skillet:VendorSellsReagent(id) then
+				local buyFactor = CraftForge.db.profile.plugins.AHDB.buyFactor or buyFactorDef
+				if CraftForge:VendorSellsReagent(id) then
 					toConcatLabel[#toConcatLabel+1] = string.format("   %d x %s  |cff808080(%s)|r", needed, reagentName, L["buyable"])
-					if Skillet.db.profile.plugins.AHDB.buyablePrices then
-						if Skillet.db.profile.plugins.AHDB.useVendorCalc then
+					if CraftForge.db.profile.plugins.AHDB.buyablePrices then
+						if CraftForge.db.profile.plugins.AHDB.useVendorCalc then
 							local sellValue = select(11, C_Item.GetItemInfo(id))
 							value = ( sellValue or 0 ) * needed * buyFactor
 						end
-						toConcatExtra[#toConcatExtra+1] = Skillet:FormatMoneyFull(value, true)
+						toConcatExtra[#toConcatExtra+1] = CraftForge:FormatMoneyFull(value, true)
 					else
 						value = 0
 						toConcatExtra[#toConcatExtra+1] = ""
 					end
 				else
-					toConcatExtra[#toConcatExtra+1] = Skillet:FormatMoneyFull(value, true)
+					toConcatExtra[#toConcatExtra+1] = CraftForge:FormatMoneyFull(value, true)
 					toConcatLabel[#toConcatLabel+1] = string.format("   %d x %s", needed, reagentName or "Unknown")
 				end
 				cost = cost + value
 			end
-			if Skillet.db.profile.plugins.AHDB.useVendorCalc then
-				local markup = Skillet.db.profile.plugins.AHDB.markup or markupDef
+			if CraftForge.db.profile.plugins.AHDB.useVendorCalc then
+				local markup = CraftForge.db.profile.plugins.AHDB.markup or markupDef
 				label = label .. "\n\n" .. table.concat(toConcatLabel,"\n") .. "\n   " .. L["Reagents"] .." * ".. markup * 100 .."%:\n"
-				extra_text =  extra_text .. "\n\n" .. table.concat(toConcatExtra,"\n") .. "\n" .. Skillet:FormatMoneyFull(cost * markup, true) .. "\n"
+				extra_text =  extra_text .. "\n\n" .. table.concat(toConcatExtra,"\n") .. "\n" .. CraftForge:FormatMoneyFull(cost * markup, true) .. "\n"
 			else
 				label = label .. "\n\n" .. table.concat(toConcatLabel,"\n") .. "\n   " .. L["Reagents"] .. ":\n"
-				extra_text =  extra_text .. "\n\n" .. table.concat(toConcatExtra,"\n") .. "\n" .. Skillet:FormatMoneyFull(cost, true) .. "\n"
+				extra_text =  extra_text .. "\n\n" .. table.concat(toConcatExtra,"\n") .. "\n" .. CraftForge:FormatMoneyFull(cost, true) .. "\n"
 			end
 		end
 	end
@@ -274,21 +274,21 @@ function plugin.RecipeNameSuffix(skill, recipe)
 	if not recipe then return end
 	local itemID = recipe.itemID
 	local auctionData = {}
-	if Skillet.db.profile.plugins.AHDB.enabled and itemID and AuctionDB then
+	if CraftForge.db.profile.plugins.AHDB.enabled and itemID and AuctionDB then
 		local buyout = AHDB_Price(itemID) * recipe.numMade
-		if Skillet.db.profile.plugins.AHDB.reagentPrices then
+		if CraftForge.db.profile.plugins.AHDB.reagentPrices then
 			local cost = 0
 			for i=1, #recipe.reagentData, 1 do
 				local needed = recipe.reagentData[i].numNeeded or 0
 				local id = recipe.reagentData[i].id
-				if Skillet.isRetail or Skillet.isForever then
+				if CraftForge.isRetail or CraftForge.isForever then
 					id = recipe.reagentData[i].reagentID
 				end
 				local value = AHDB_Price(id) * recipe.numMade
-				local buyFactor = Skillet.db.profile.plugins.AHDB.buyFactor or buyFactorDef
-				if Skillet:VendorSellsReagent(id) then
-					if Skillet.db.profile.plugins.AHDB.buyablePrices then
-						if Skillet.db.profile.plugins.AHDB.useVendorCalc then
+				local buyFactor = CraftForge.db.profile.plugins.AHDB.buyFactor or buyFactorDef
+				if CraftForge:VendorSellsReagent(id) then
+					if CraftForge.db.profile.plugins.AHDB.buyablePrices then
+						if CraftForge.db.profile.plugins.AHDB.useVendorCalc then
 							local sellValue = select(11, C_Item.GetItemInfo(id))
 							value = ( sellValue or 0 ) * needed * buyFactor
 						end
@@ -298,17 +298,17 @@ function plugin.RecipeNameSuffix(skill, recipe)
 				end
 				cost = cost + value
 			end
-			if Skillet.db.profile.plugins.AHDB.useVendorCalc then
-				local markup = Skillet.db.profile.plugins.AHDB.markup or markupDef
+			if CraftForge.db.profile.plugins.AHDB.useVendorCalc then
+				local markup = CraftForge.db.profile.plugins.AHDB.markup or markupDef
 				cost = cost * markup
 			end
 			local profit = buyout - cost
-			if Skillet.db.profile.plugins.AHDB.useShort then
-				text = Skillet:FormatMoneyShort(profit, true)
+			if CraftForge.db.profile.plugins.AHDB.useShort then
+				text = CraftForge:FormatMoneyShort(profit, true)
 			else
-				text = Skillet:FormatMoneyFull(profit, true)
+				text = CraftForge:FormatMoneyFull(profit, true)
 			end
-			if Skillet.db.profile.plugins.AHDB.onlyPositive and profit <= 0 then
+			if CraftForge.db.profile.plugins.AHDB.onlyPositive and profit <= 0 then
 				text = nil
 			end
 		end
@@ -316,6 +316,6 @@ function plugin.RecipeNameSuffix(skill, recipe)
 	return text
 end
 
-Skillet:RegisterRecipeNamePlugin("AHDBPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
+CraftForge:RegisterRecipeNamePlugin("AHDBPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
 
-Skillet:RegisterDisplayDetailPlugin("AHDBPlugin")	-- we have a GetExtraText function
+CraftForge:RegisterDisplayDetailPlugin("AHDBPlugin")	-- we have a GetExtraText function

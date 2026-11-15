@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	Skillet: A tradeskill window replacement.
+	CraftForge: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #  Template for all the buttons we use to display items in the optional list
 #
 -->
-	<Frame name="SkilletOptionalListItemTemplate" hidden="false" virtual="true">
+	<Frame name="CraftForgeOptionalListItemTemplate" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="190" y="20"/>
 		</Size>
@@ -89,10 +89,10 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 			</OnLoad>
 			<OnEnter>
-				Skillet:OptionalButtonOnEnter(self, SkilletFrame.selectedSkill, self:GetID())
+				CraftForge:OptionalButtonOnEnter(self, CraftForgeFrame.selectedSkill, self:GetID())
 			</OnEnter>
 			<OnLeave>
-				Skillet:OptionalButtonOnLeave(self, SkilletFrame.selectedSkill, self:GetID())
+				CraftForge:OptionalButtonOnLeave(self, CraftForgeFrame.selectedSkill, self:GetID())
 			</OnLeave>
 			<OnUpdate>
 				CursorOnUpdate(self)
@@ -100,19 +100,19 @@
 			<OnClick>
 				if ( button == "LeftButton" and IsShiftKeyDown() ) then
 				<!-- Put a link to the *item* in chat into the current chat edit box -->
-					local link = Skillet:GetOptionalItemLink(Skillet.selectedSkill, self:GetID())
+					local link = CraftForge:GetOptionalItemLink(CraftForge.selectedSkill, self:GetID())
 					if not ChatEdit_InsertLink(link) then
-						Skillet:XMLDebugLink("OptionalItemLink: link= ", link)
+						CraftForge:XMLDebugLink("OptionalItemLink: link= ", link)
 					end
 				else
 				<!-- generic click action -->
-					Skillet:OptionalButtonOnClick(self, button, Skillet.selectedSkill, self:GetID())
+					CraftForge:OptionalButtonOnClick(self, button, CraftForge.selectedSkill, self:GetID())
 				end
 			</OnClick>
 		</Scripts>
 	</Frame>
 
-<CheckButton name="SkilletOptionalListCheckButtonTemplate" virtual="true">
+<CheckButton name="CraftForgeOptionalListCheckButtonTemplate" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -136,7 +136,7 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<CheckButton name="SkilletOptionalListCheckButtonTemplate2" virtual="true">
+<CheckButton name="CraftForgeOptionalListCheckButtonTemplate2" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -160,15 +160,15 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<Frame name="SkilletOptionalList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
+<Frame name="CraftForgeOptionalList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
 	<Size><AbsDimension x="420" y="240"/></Size>
 	<Anchors>
 		<Anchor point="CENTER"/>
 	</Anchors>
 	<Frames>
-		<Button name="SkilletOptionalListCloseButton" inherits="UIPanelCloseButton" parent="SkilletOptionalList">
+		<Button name="CraftForgeOptionalListCloseButton" inherits="UIPanelCloseButton" parent="CraftForgeOptionalList">
 			<Anchors>
-				<Anchor point="TOPRIGHT" relativeTo="SkilletOptionalList" relativePoint="TOPRIGHT">
+				<Anchor point="TOPRIGHT" relativeTo="CraftForgeOptionalList" relativePoint="TOPRIGHT">
 					<Offset>
 						<AbsDimension x="-2" y="-2"/>
 					</Offset>
@@ -176,13 +176,13 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					HideUIPanel(SkilletOptionalList)
+					HideUIPanel(CraftForgeOptionalList)
 				</OnClick>
 			</Scripts>
 		</Button>
-		<CheckButton name="SkilletOptionalHaveItems" inherits="SkilletOptionalListCheckButtonTemplate2">
+		<CheckButton name="CraftForgeOptionalHaveItems" inherits="CraftForgeOptionalListCheckButtonTemplate2">
 			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="SkilletOptionalList" relativePoint="BOTTOMLEFT">
+				<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeOptionalList" relativePoint="BOTTOMLEFT">
 					<Offset>
 						<AbsDimension x="10" y="10"/>
 					</Offset>
@@ -190,33 +190,33 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					Skillet:OptionalListToggleHaveItems()
-					Skillet:UpdateOptionalListWindow()
+					CraftForge:OptionalListToggleHaveItems()
+					CraftForge:UpdateOptionalListWindow()
 				</OnClick>
 			</Scripts>
 		</CheckButton>
-		<Frame name="SkilletOptionalListParent" parent="SkilletOptionalList">
+		<Frame name="CraftForgeOptionalListParent" parent="CraftForgeOptionalList">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletOptionalList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeOptionalList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-35"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="SkilletOptionalList" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeOptionalList" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-5" y="35"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
 		</Frame>
-		<ScrollFrame name="SkilletOptionalListList" inherits="FauxScrollFrameTemplate" parent="SkilletOptionalListParent">
+		<ScrollFrame name="CraftForgeOptionalListList" inherits="FauxScrollFrameTemplate" parent="CraftForgeOptionalListParent">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletOptionalListParent" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeOptionalListParent" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-5"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="SkilletOptionalListParent" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeOptionalListParent" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-27" y="5"/>
 					</Offset>
@@ -224,13 +224,13 @@
 			</Anchors>
 			<Scripts>
 				<OnVerticalScroll>
-					FauxScrollFrame_OnVerticalScroll(self, offset, SKILLET_OPTIONAL_LIST_HEIGHT, Skillet.OptionalList_OnScroll)
+					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_OPTIONAL_LIST_HEIGHT, CraftForge.OptionalList_OnScroll)
 				</OnVerticalScroll>
 			</Scripts>
 		</ScrollFrame>
-		<Button name="SkilletOptionalListButton1" inherits="SkilletOptionalListItemTemplate">
+		<Button name="CraftForgeOptionalListButton1" inherits="CraftForgeOptionalListItemTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletOptionalListList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeOptionalListList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
 					</Offset>

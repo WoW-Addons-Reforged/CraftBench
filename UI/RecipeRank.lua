@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,23 +17,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("Skillet")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
 
 --
 -- Called when the grouping operators drop down is displayed
 --
-function Skillet:RecipeRankSelector_OnClick(this)
-	if not Skillet.RecipeRankMenu then
-		Skillet.RecipeRankMenu = CreateFrame("Frame", "RecipeRankMenu", _G["UIParent"], "UIDropDownMenuTemplate")
+function CraftForge:RecipeRankSelector_OnClick(this)
+	if not CraftForge.RecipeRankMenu then
+		CraftForge.RecipeRankMenu = CreateFrame("Frame", "RecipeRankMenu", _G["UIParent"], "UIDropDownMenuTemplate")
 	end
-	UIDropDownMenu_Initialize(SkilletRecipeRankDropMenu, Skillet.InitializeRecipeRankDropdown, "MENU")
-	ToggleDropDownMenu(1, nil, SkilletRecipeRankDropMenu, this, this:GetWidth(), 0)
+	UIDropDownMenu_Initialize(CraftForgeRecipeRankDropMenu, CraftForge.InitializeRecipeRankDropdown, "MENU")
+	ToggleDropDownMenu(1, nil, CraftForgeRecipeRankDropMenu, this, this:GetWidth(), 0)
 end
 
 --
 -- The method we use the initialize the group ops drop down.
 --
-function Skillet.InitializeRecipeRankDropdown(menuFrame,level)
+function CraftForge.InitializeRecipeRankDropdown(menuFrame,level)
 	if level == 1 then
 		local entry = {}
 		local null = {}
@@ -42,30 +42,30 @@ function Skillet.InitializeRecipeRankDropdown(menuFrame,level)
 
 		entry.text = "Rank 1"
 		entry.value = 1
-		entry.func = Skillet.RecipeRankChange
+		entry.func = CraftForge.RecipeRankChange
 		entry.arg1 = 1
 		entry.arg2 = "Rank 1"
 		UIDropDownMenu_AddButton(entry)
-		if Skillet.recipeRankMax > 1 then
+		if CraftForge.recipeRankMax > 1 then
 			entry.text = "Rank 2"
 			entry.value = 2
-			entry.func = Skillet.RecipeRankChange
+			entry.func = CraftForge.RecipeRankChange
 			entry.arg1 = 2
 			entry.arg2 = "Rank 2"
 			UIDropDownMenu_AddButton(entry)
 		end
-		if Skillet.recipeRankMax > 2 then
+		if CraftForge.recipeRankMax > 2 then
 			entry.text = "Rank 3"
 			entry.value = 3
-			entry.func = Skillet.RecipeRankChange
+			entry.func = CraftForge.RecipeRankChange
 			entry.arg1 = 3
 			entry.arg2 = "Rank 3"
 			UIDropDownMenu_AddButton(entry)
 		end
-		if Skillet:RecipeRankIsMaxLevel() then  -- Skillet.recipeRankMax > 3
+		if CraftForge:RecipeRankIsMaxLevel() then  -- CraftForge.recipeRankMax > 3
 			entry.text = "Rank 4"
 			entry.value = 4
-			entry.func = Skillet.RecipeRankChange
+			entry.func = CraftForge.RecipeRankChange
 			entry.arg1 = 4
 			entry.arg2 = "Rank 4"
 			UIDropDownMenu_AddButton(entry)
@@ -73,14 +73,14 @@ function Skillet.InitializeRecipeRankDropdown(menuFrame,level)
 	end
 end
 
-function Skillet:RecipeRankChange(rank, text)
+function CraftForge:RecipeRankChange(rank, text)
 	DA.DEBUG(0,"RecipeRankChange("..tostring(rank)..", '"..tostring(text).."')")
-	Skillet.recipeRank = rank
-	SkilletRecipeRankLabel:SetText(text)
-	Skillet:UpdateDetailWindow(Skillet.currentSkillIndex)
+	CraftForge.recipeRank = rank
+	CraftForgeRecipeRankLabel:SetText(text)
+	CraftForge:UpdateDetailWindow(CraftForge.currentSkillIndex)
 end
 
-function Skillet:RecipeRankOnEnter(frame)
+function CraftForge:RecipeRankOnEnter(frame)
 	GameTooltip:SetOwner(frame, "ANCHOR_RIGHT")
 	if ( self:RecipeRankIsMaxLevel() ) then
 		GameTooltip_SetTitle(GameTooltip, TRADESKILL_RECIPE_LEVEL_TOOLTIP_HIGHEST_RANK, NORMAL_FONT_COLOR)
@@ -94,26 +94,26 @@ function Skillet:RecipeRankOnEnter(frame)
 	GameTooltip:Show()
 end
 
-function Skillet:RecipeRankOnLeave()
+function CraftForge:RecipeRankOnLeave()
 	GameTooltip_Hide()
 end
 
-function Skillet:RecipeRankSetExperience(currentExperience, maxExperience, currentLevel)
+function CraftForge:RecipeRankSetExperience(currentExperience, maxExperience, currentLevel)
 	self.currentExperience = currentExperience
 	self.maxExperience = maxExperience
 
 	if ( self:RecipeRankIsMaxLevel() ) then
-		SkilletRecipeRankSkill:SetMinMaxValues(0, 1)
-		SkilletRecipeRankSkill:SetValue(1)
-		SkilletRecipeRankSkill.Rank:SetText(TRADESKILL_RECIPE_LEVEL_MAXIMUM)
+		CraftForgeRecipeRankSkill:SetMinMaxValues(0, 1)
+		CraftForgeRecipeRankSkill:SetValue(1)
+		CraftForgeRecipeRankSkill.Rank:SetText(TRADESKILL_RECIPE_LEVEL_MAXIMUM)
 	else
-		SkilletRecipeRankSkill:SetMinMaxValues(0, maxExperience)
-		SkilletRecipeRankSkill:SetValue(currentExperience)
-		SkilletRecipeRankSkill.Rank:SetFormattedText(GENERIC_FRACTION_STRING, currentExperience, maxExperience)
+		CraftForgeRecipeRankSkill:SetMinMaxValues(0, maxExperience)
+		CraftForgeRecipeRankSkill:SetValue(currentExperience)
+		CraftForgeRecipeRankSkill.Rank:SetFormattedText(GENERIC_FRACTION_STRING, currentExperience, maxExperience)
 	end
 end
 
-function Skillet:RecipeRankIsMaxLevel()
+function CraftForge:RecipeRankIsMaxLevel()
 	return self.currentExperience == nil
 end
 

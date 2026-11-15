@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
--- Handy utilities for Skillet UI methods.
+-- Handy utilities for CraftForge UI methods.
 
-local L = LibStub("AceLocale-3.0"):GetLocale("Skillet")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
 
-StaticPopupDialogs["SKILLETMSG"] = {
+StaticPopupDialogs["CRAFTFORGEMSG"] = {
 	text = "",
 	button1 = OKAY,
 	OnAccept = function( self )
@@ -33,12 +33,12 @@ StaticPopupDialogs["SKILLETMSG"] = {
 	hideOnEscape = 1
 };
 
-function Skillet:MessageBox(msg)
-	StaticPopupDialogs.SKILLETMSG.text = msg
-	StaticPopup_Show("SKILLETMSG")
+function CraftForge:MessageBox(msg)
+	StaticPopupDialogs.CRAFTFORGEMSG.text = msg
+	StaticPopup_Show("CRAFTFORGEMSG")
 end
 
-StaticPopupDialogs["SKILLETASKFOR"] = {
+StaticPopupDialogs["CRAFTFORGEASKFOR"] = {
 	text = "",
 	button1 = OKAY,
 	OnAccept = function( self )
@@ -50,17 +50,17 @@ StaticPopupDialogs["SKILLETASKFOR"] = {
 	hideOnEscape = 1
 };
 
-function Skillet:AskFor(msg, handler)
-	StaticPopupDialogs.SKILLETASKFOR.text = msg
-	StaticPopupDialogs.SKILLETASKFOR.OnAccept = handler
-	StaticPopup_Show("SKILLETASKFOR")
+function CraftForge:AskFor(msg, handler)
+	StaticPopupDialogs.CRAFTFORGEASKFOR.text = msg
+	StaticPopupDialogs.CRAFTFORGEASKFOR.OnAccept = handler
+	StaticPopup_Show("CRAFTFORGEASKFOR")
 end
 
 --
 -- Adds resizing to a window. Resizing is both width and height from the
 -- lower right corner only
 --
-function Skillet:EnableResize(frame, min_width, min_height, refresh_method)
+function CraftForge:EnableResize(frame, min_width, min_height, refresh_method)
 	frame:SetResizeBounds(min_width, min_height) -- magic numbers
 	local sizer_se = CreateFrame("Frame", frame:GetName() .. "_SizerSoutheast", frame)
 	sizer_se:SetPoint("BOTTOMRIGHT",frame,"BOTTOMRIGHT",0,0)
@@ -72,10 +72,10 @@ function Skillet:EnableResize(frame, min_width, min_height, refresh_method)
 	end)
 	sizer_se:SetScript("OnMouseUp", function(self)
 		self:GetParent():StopMovingOrSizing()
-		pcall(refresh_method, Skillet)	-- 'Skillet' is passed for the hidden 'self' variable
+		pcall(refresh_method, CraftForge)	-- 'CraftForge' is passed for the hidden 'self' variable
 	end)
 	frame:SetScript("OnSizeChanged", function()
-		pcall(refresh_method, Skillet)	-- 'Skillet' is passed for the hidden 'self' variable
+		pcall(refresh_method, CraftForge)	-- 'CraftForge' is passed for the hidden 'self' variable
 	end)
 
 --

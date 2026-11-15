@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	Skillet: A tradeskill window replacement.
+	CraftForge: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #  Template for all the buttons we use to display items in the finishing list
 #
 -->
-	<Frame name="SkilletFinishingListItemTemplate" hidden="false" virtual="true">
+	<Frame name="CraftForgeFinishingListItemTemplate" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="190" y="20"/>
 		</Size>
@@ -89,10 +89,10 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 			</OnLoad>
 			<OnEnter>
-				Skillet:FinishingButtonOnEnter(self, SkilletFrame.selectedSkill, self:GetID())
+				CraftForge:FinishingButtonOnEnter(self, CraftForgeFrame.selectedSkill, self:GetID())
 			</OnEnter>
 			<OnLeave>
-				Skillet:FinishingButtonOnLeave(self, SkilletFrame.selectedSkill, self:GetID())
+				CraftForge:FinishingButtonOnLeave(self, CraftForgeFrame.selectedSkill, self:GetID())
 			</OnLeave>
 			<OnUpdate>
 				CursorOnUpdate(self)
@@ -100,19 +100,19 @@
 			<OnClick>
 				if ( button == "LeftButton" and IsShiftKeyDown() ) then
 				<!-- Put a link to the *item* in chat into the current chat edit box -->
-					local link = Skillet:GetFinishingItemLink(Skillet.selectedSkill, self:GetID())
+					local link = CraftForge:GetFinishingItemLink(CraftForge.selectedSkill, self:GetID())
 					if not ChatEdit_InsertLink(link) then
-						Skillet:XMLDebugLink("FinishingItemLink: link= ", link)
+						CraftForge:XMLDebugLink("FinishingItemLink: link= ", link)
 					end
 				else
 				<!-- generic click action -->
-					Skillet:FinishingButtonOnClick(self, button, Skillet.selectedSkill, self:GetID())
+					CraftForge:FinishingButtonOnClick(self, button, CraftForge.selectedSkill, self:GetID())
 				end
 			</OnClick>
 		</Scripts>
 	</Frame>
 
-<CheckButton name="SkilletFinishingListCheckButtonTemplate" virtual="true">
+<CheckButton name="CraftForgeFinishingListCheckButtonTemplate" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -136,7 +136,7 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<CheckButton name="SkilletFinishingListCheckButtonTemplate2" virtual="true">
+<CheckButton name="CraftForgeFinishingListCheckButtonTemplate2" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -160,15 +160,15 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<Frame name="SkilletFinishingList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
+<Frame name="CraftForgeFinishingList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
 	<Size><AbsDimension x="420" y="240"/></Size>
 	<Anchors>
 		<Anchor point="CENTER"/>
 	</Anchors>
 	<Frames>
-		<Button name="SkilletFinishingListCloseButton" inherits="UIPanelCloseButton" parent="SkilletFinishingList">
+		<Button name="CraftForgeFinishingListCloseButton" inherits="UIPanelCloseButton" parent="CraftForgeFinishingList">
 			<Anchors>
-				<Anchor point="TOPRIGHT" relativeTo="SkilletFinishingList" relativePoint="TOPRIGHT">
+				<Anchor point="TOPRIGHT" relativeTo="CraftForgeFinishingList" relativePoint="TOPRIGHT">
 					<Offset>
 						<AbsDimension x="-2" y="-2"/>
 					</Offset>
@@ -176,13 +176,13 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					HideUIPanel(SkilletFinishingList)
+					HideUIPanel(CraftForgeFinishingList)
 				</OnClick>
 			</Scripts>
 		</Button>
-		<CheckButton name="SkilletFinishingHaveItems" inherits="SkilletFinishingListCheckButtonTemplate2">
+		<CheckButton name="CraftForgeFinishingHaveItems" inherits="CraftForgeFinishingListCheckButtonTemplate2">
 			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="SkilletFinishingList" relativePoint="BOTTOMLEFT">
+				<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeFinishingList" relativePoint="BOTTOMLEFT">
 					<Offset>
 						<AbsDimension x="10" y="10"/>
 					</Offset>
@@ -190,33 +190,33 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					Skillet:FinishingListToggleHaveItems()
-					Skillet:UpdateFinishingListWindow()
+					CraftForge:FinishingListToggleHaveItems()
+					CraftForge:UpdateFinishingListWindow()
 				</OnClick>
 			</Scripts>
 		</CheckButton>
-		<Frame name="SkilletFinishingListParent" parent="SkilletFinishingList">
+		<Frame name="CraftForgeFinishingListParent" parent="CraftForgeFinishingList">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletFinishingList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeFinishingList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-35"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="SkilletFinishingList" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeFinishingList" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-5" y="35"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
 		</Frame>
-		<ScrollFrame name="SkilletFinishingListList" inherits="FauxScrollFrameTemplate" parent="SkilletFinishingListParent">
+		<ScrollFrame name="CraftForgeFinishingListList" inherits="FauxScrollFrameTemplate" parent="CraftForgeFinishingListParent">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletFinishingListParent" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeFinishingListParent" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-5"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="SkilletFinishingListParent" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeFinishingListParent" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-27" y="5"/>
 					</Offset>
@@ -224,13 +224,13 @@
 			</Anchors>
 			<Scripts>
 				<OnVerticalScroll>
-					FauxScrollFrame_OnVerticalScroll(self, offset, SKILLET_FINISHING_LIST_HEIGHT, Skillet.FinishingList_OnScroll)
+					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_FINISHING_LIST_HEIGHT, CraftForge.FinishingList_OnScroll)
 				</OnVerticalScroll>
 			</Scripts>
 		</ScrollFrame>
-		<Button name="SkilletFinishingListButton1" inherits="SkilletFinishingListItemTemplate">
+		<Button name="CraftForgeFinishingListButton1" inherits="CraftForgeFinishingListItemTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletFinishingListList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeFinishingListList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
 					</Offset>

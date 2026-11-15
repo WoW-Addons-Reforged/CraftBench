@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ local skillLevel = {
 	["trivial"]	        = 1,
 }
 
-function Skillet:RecipeGroupRename(oldName, newName)
+function CraftForge:RecipeGroupRename(oldName, newName)
 	--DA.DEBUG(0,"RecipeGroupRename("..tostring(oldName)..", "..tostring(newName)..")")
 	if self.data.groupList[self.currentTrade][oldName] then
 		self.data.groupList[self.currentTrade][newName] = self.data.groupList[self.currentTrade][oldName]
@@ -42,7 +42,7 @@ function Skillet:RecipeGroupRename(oldName, newName)
 	end
 end
 
-function Skillet:RecipeGroupFind(player, tradeID, label, name)
+function CraftForge:RecipeGroupFind(player, tradeID, label, name)
 	--DA.DEBUG(0,"RecipeGroupFind("..tostring(player)..", "..tostring(tradeID)..", "..tostring(label)..", "..tostring(name)..")")
 	if player and tradeID and label then
 		local groupList = self.data.groupList
@@ -52,7 +52,7 @@ function Skillet:RecipeGroupFind(player, tradeID, label, name)
 	end
 end
 
-function Skillet:RecipeGroupFindRecipe(group, recipeID)
+function CraftForge:RecipeGroupFindRecipe(group, recipeID)
 	--DA.DEBUG(0,"RecipeGroupFindRecipe("..DA.DUMP1(group,1)..", "..tostring(recipeID)..")")
 	if group then
 		local entries = group.entries
@@ -76,7 +76,7 @@ end
 -- returns the newly created group record
 --
 local serial = 0
-function Skillet:RecipeGroupNew(player, tradeID, label, name)
+function CraftForge:RecipeGroupNew(player, tradeID, label, name)
 	--DA.DEBUG(0,"RecipeGroupNew("..tostring(player)..", "..tostring(tradeID)..", "..tostring(label)..", "..tostring(name)..")")
 	local existingGroup = self:RecipeGroupFind(player, tradeID, label, name)
 	if existingGroup then
@@ -104,7 +104,7 @@ function Skillet:RecipeGroupNew(player, tradeID, label, name)
 	end
 end
 
-function Skillet:RecipeGroupClearEntries(group, n)
+function CraftForge:RecipeGroupClearEntries(group, n)
 	--DA.DEBUG(0,"RecipeGroupClearEntries("..DA.DUMP1(group,1))
 	if not n then 
 		n = 0 
@@ -125,7 +125,7 @@ function Skillet:RecipeGroupClearEntries(group, n)
 	end
 end
 
-function Skillet:RecipeGroupCopy(s, d, noDB)
+function CraftForge:RecipeGroupCopy(s, d, noDB)
 	--DA.DEBUG(0,"RecipeGroupCopy("..DA.DUMP1(s,1)..", "..DA.DUMP1(d,1)..", "..tostring(noDB)..")")
 	if s and d then
 		local player, tradeID, label = string.split(":", d.key)
@@ -144,7 +144,7 @@ function Skillet:RecipeGroupCopy(s, d, noDB)
 	end
 end
 
-function Skillet:RecipeGroupAddRecipe(group, recipeID, skillIndex, noDB)
+function CraftForge:RecipeGroupAddRecipe(group, recipeID, skillIndex, noDB)
 	--DA.DEBUG(0,"RecipeGroupAddRecipe("..DA.DUMP1(group,1)..", "..tostring(recipeID)..", "..tostring(skillIndex)..", "..tostring(noDB)..")")
 	recipeID = tonumber(recipeID)
 	if group and recipeID then
@@ -176,7 +176,7 @@ function Skillet:RecipeGroupAddRecipe(group, recipeID, skillIndex, noDB)
 	end
 end
 
-function Skillet:RecipeGroupAddSubGroup(group, subGroup, skillIndex, noDB)
+function CraftForge:RecipeGroupAddSubGroup(group, subGroup, skillIndex, noDB)
 	--DA.DEBUG(0,"RecipeGroupAddSubGroup("..DA.DUMP1(group,1)..", "..DA.DUMP1(subGroup,1)..", "..tostring(skillIndex)..", "..tostring(noDB)..")")
 	if group and subGroup then
 		local currentEntry
@@ -209,7 +209,7 @@ function Skillet:RecipeGroupAddSubGroup(group, subGroup, skillIndex, noDB)
 	end
 end
 
-function Skillet:RecipeGroupPasteEntry(entry, group)
+function CraftForge:RecipeGroupPasteEntry(entry, group)
 	--DA.DEBUG(0,"RecipeGroupPasteEntry("..DA.DUMP1(entry,1)..", "..DA.DUMP1(group,1)..")")
 	if entry and group and entry.parent ~= group then
 		local player = self.currentPlayer
@@ -243,7 +243,7 @@ function Skillet:RecipeGroupPasteEntry(entry, group)
 	end
 end
 
-function Skillet:RecipeGroupMoveEntry(entry, group)
+function CraftForge:RecipeGroupMoveEntry(entry, group)
 	--DA.DEBUG(0,"RecipeGroupMoveEntry("..DA.DUMP1(entry,1)..", "..DA.DUMP1(group,1)..")")
 	if entry and group and entry.parent ~= group then
 		if entry.subGroup then
@@ -263,13 +263,13 @@ function Skillet:RecipeGroupMoveEntry(entry, group)
 			table.remove(entryGroup.entries, loc)
 			table.insert(group.entries, entry)
 			entry.parent = group
-			Skillet:RecipeGroupConstructDBString(group)
-			Skillet:RecipeGroupConstructDBString(entryGroup)
+			CraftForge:RecipeGroupConstructDBString(group)
+			CraftForge:RecipeGroupConstructDBString(entryGroup)
 		end
 	end
 end
 
-function Skillet:RecipeGroupDeleteGroup(group)
+function CraftForge:RecipeGroupDeleteGroup(group)
 	--DA.DEBUG(0,"RecipeGroupDeleteGroup("..DA.DUMP1(group,1)..")")
 	if group then
 		for i=1,#group.entries do
@@ -282,7 +282,7 @@ function Skillet:RecipeGroupDeleteGroup(group)
 	end
 end
 
-function Skillet:RecipeGroupDeleteEntry(entry)
+function CraftForge:RecipeGroupDeleteEntry(entry)
 	--DA.DEBUG(0,"RecipeGroupDeleteEntry("..DA.DUMP1(entry,1)..")")
 	if entry then
 		local entryGroup = entry.parent
@@ -298,11 +298,11 @@ function Skillet:RecipeGroupDeleteEntry(entry)
 		if entry.subGroup then
 			self:RecipeGroupDeleteGroup(entry.subGroup)
 		end
-		Skillet:RecipeGroupConstructDBString(entryGroup)
+		CraftForge:RecipeGroupConstructDBString(entryGroup)
 	end
 end
 
-function Skillet:RecipeGroupNewName(key, name)
+function CraftForge:RecipeGroupNewName(key, name)
 	--DA.DEBUG(0,"RecipeGroupNewName("..tostring(key)..", "..tostring(name)..")")
 	local index = 1
 	if key and name then
@@ -325,7 +325,7 @@ function Skillet:RecipeGroupNewName(key, name)
 	return name, index
 end
 
-function Skillet:RecipeGroupRenameEntry(entry, name)
+function CraftForge:RecipeGroupRenameEntry(entry, name)
 	--DA.DEBUG(0,"RecipeGroupRenameEntry("..DA.DUMP1(entry,1)..", "..tostring(name)..")")
 	if entry and name then
 		local key = entry.parent.key
@@ -348,7 +348,7 @@ function Skillet:RecipeGroupRenameEntry(entry, name)
 	end
 end
 
-function Skillet:RecipeGroupSort(group, sortMethod, reverse, n)
+function CraftForge:RecipeGroupSort(group, sortMethod, reverse, n)
 	--DA.DEBUG(0,"RecipeGroupSort("..tostring(group.skillIndex)..", "..tostring(sortMethod)..","..tostring(reverse)..")")
 	if not n then 
 		n = 0 
@@ -364,18 +364,18 @@ function Skillet:RecipeGroupSort(group, sortMethod, reverse, n)
 		if group.entries and #group.entries > 1 then
 			if reverse then
 				table.sort(group.entries, function(a,b)
-					return sortMethod(Skillet.currentTrade, b, a)
+					return sortMethod(CraftForge.currentTrade, b, a)
 				end)
 			else
 				table.sort(group.entries, function(a,b)
-					return sortMethod(Skillet.currentTrade, a, b)
+					return sortMethod(CraftForge.currentTrade, a, b)
 				end)
 			end
 		end
 	end
 end
 
-function Skillet:RecipeGroupInitFlatten(group, list)
+function CraftForge:RecipeGroupInitFlatten(group, list)
 	--DA.DEBUG(0,"RecipeGroupInitFlatten("..tostring(group.skillIndex)..", "..tostring(list)..")")
 	--DA.DEBUG(1,"RecipeGroupInitFlatten("..DA.DUMP1(group,1)..", "..DA.DUMP1(list,1)..")")
 	if group and list then
@@ -391,7 +391,7 @@ function Skillet:RecipeGroupInitFlatten(group, list)
 	end
 end
 
-function Skillet:RecipeGroupFlatten(group, depth, list, index)
+function CraftForge:RecipeGroupFlatten(group, depth, list, index)
 	--DA.DEBUG(0,"RecipeGroupFlatten("..tostring(group.skillIndex)..", "..tostring(depth)..", "..tostring(list)..", "..tostring(index)..")")
 	--DA.DEBUG(1,"RecipeGroupFlatten("..DA.DUMP1(entry,1)..", "..tostring(depth)..", "..DA.DUMP1(list,1)..", "..tostring(index)..")")
 	--DA.DEBUG(1,"RecipeGroupFlatten: group= "..DA.DUMP1(group,2))
@@ -418,9 +418,9 @@ function Skillet:RecipeGroupFlatten(group, depth, list, index)
 -- Group is empty so remove the header unless
 -- it has a progress bar and the option to keep them is set.
 --
-					if Skillet.hasProgressBar[entry.subGroup.name] then
+					if CraftForge.hasProgressBar[entry.subGroup.name] then
 						--DA.DEBUG(0,"RecipeGroupFlatten: empty hasProgressBar group= "..tostring(entry.subGroup.name))
-						if not Skillet.db.profile.always_show_progress_bar then
+						if not CraftForge.db.profile.always_show_progress_bar then
 							table.remove(list, num + index)
 							num = num - 1
 						end
@@ -438,19 +438,19 @@ function Skillet:RecipeGroupFlatten(group, depth, list, index)
 				if skillData then
 					local filterLevel = ((skillLevel[entry.difficulty] or skillLevel[skillData.difficulty] or 0) < (self:GetTradeSkillOption("filterLevel")))
 					local filterCraftable = false
-					local filterFavoritesOnly = self:GetTradeSkillOption("favoritesOnly") and not Skillet:IsFavorite(entry.recipeID)
-					local filterFirstCraftOnly = self:GetTradeSkillOption("isfirstcraft") and not Skillet:IsFirstCraft(entry.recipeID)
-					if Skillet:GetTradeSkillOption("hideuncraftable") then
+					local filterFavoritesOnly = self:GetTradeSkillOption("favoritesOnly") and not CraftForge:IsFavorite(entry.recipeID)
+					local filterFirstCraftOnly = self:GetTradeSkillOption("isfirstcraft") and not CraftForge:IsFirstCraft(entry.recipeID)
+					if CraftForge:GetTradeSkillOption("hideuncraftable") then
 						--DA.DEBUG(1,"RecipeGroupFlatten: name="..tostring(skillData.name)..", numCraftable="..tostring(skillData.numCraftable)..", numRecursive="..tostring(skillData.numRecursive)..", numCraftableVendor="..tostring(skillData.numCraftableVendor)..", numCraftableAlts="..tostring(skillData.numCraftableAlts))
-						if not (skillData.numCraftable and skillData.numCraftable > 0 and Skillet:GetTradeSkillOption("filterInventory-bag")) and
-						   not (skillData.numRecursive and skillData.numRecursive > 0 and Skillet:GetTradeSkillOption("filterInventory-crafted")) and
-						   not (skillData.numCraftableVendor and skillData.numCraftableVendor > 0 and Skillet:GetTradeSkillOption("filterInventory-vendor")) and
-						   not (skillData.numCraftableAlts and skillData.numCraftableAlts > 0 and Skillet:GetTradeSkillOption("filterInventory-alts")) then
+						if not (skillData.numCraftable and skillData.numCraftable > 0 and CraftForge:GetTradeSkillOption("filterInventory-bag")) and
+						   not (skillData.numRecursive and skillData.numRecursive > 0 and CraftForge:GetTradeSkillOption("filterInventory-crafted")) and
+						   not (skillData.numCraftableVendor and skillData.numCraftableVendor > 0 and CraftForge:GetTradeSkillOption("filterInventory-vendor")) and
+						   not (skillData.numCraftableAlts and skillData.numCraftableAlts > 0 and CraftForge:GetTradeSkillOption("filterInventory-alts")) then
 							filterCraftable = true
 						end
 					end
-					if Skillet.recipeFilters then
-						for _,f in pairs(Skillet.recipeFilters) do
+					if CraftForge.recipeFilters then
+						for _,f in pairs(CraftForge.recipeFilters) do
 							if f.filterMethod(f.namespace, entry.skillIndex) then
 								filterCraftable = true
 							end
@@ -465,7 +465,7 @@ function Skillet:RecipeGroupFlatten(group, depth, list, index)
 					else
 						newSkill.parentIndex = nil
 					end
-					if not (filterLevel or filterCraftable or filterFavoritesOnly or filterFirstCraftOnly or Skillet:IsUpgradeHidden(newSkill.spellID)) then
+					if not (filterLevel or filterCraftable or filterFavoritesOnly or filterFirstCraftOnly or CraftForge:IsUpgradeHidden(newSkill.spellID)) then
 						num = num + 1
 						list[num + index] = newSkill
 					end
@@ -476,7 +476,7 @@ function Skillet:RecipeGroupFlatten(group, depth, list, index)
 	return num
 end
 
-function Skillet:RecipeGroupDump(group)
+function CraftForge:RecipeGroupDump(group)
 	if group then
 		local groupString = group.key.."/"..group.name.."="..group.skillIndex
 		for v,entry in pairs(group.entries) do
@@ -496,7 +496,7 @@ end
 --
 -- Make a db string for saving groups
 --
-function Skillet:RecipeGroupConstructDBString(group)
+function CraftForge:RecipeGroupConstructDBString(group)
 	--DA.DEBUG(0,"RecipeGroupConstructDBString("..DA.DUMP1(group,1)..")")
 	if group and not group.autoGroup then
 		local key = group.key
@@ -520,7 +520,7 @@ function Skillet:RecipeGroupConstructDBString(group)
 	end
 end
 
-function Skillet:RecipeGroupPruneList(player)
+function CraftForge:RecipeGroupPruneList(player)
 	--DA.DEBUG(0,"RecipeGroupPruneList("..tostring(player)..")")
 	if self.data.groupList then
 		for trade, perTradeList in pairs(self.data.groupList) do
@@ -538,7 +538,7 @@ function Skillet:RecipeGroupPruneList(player)
 	end
 end
 
-function Skillet:InitGroupList(player, tradeID, label, autoGroup)
+function CraftForge:InitGroupList(player, tradeID, label, autoGroup)
 	--DA.DEBUG(0,"InitGroupList("..tostring(player)..", "..tostring(tradeID)..", "..tostring(label)..", "..tostring(autoGroup)..")")
 	if not self.data.groupList[tradeID] then
 		self.data.groupList[tradeID] = {}
@@ -549,7 +549,7 @@ function Skillet:InitGroupList(player, tradeID, label, autoGroup)
 	self.data.groupList[tradeID][label].autoGroup = autoGroup
 end
 
-function Skillet:RecipeGroupDeconstructDBStrings()
+function CraftForge:RecipeGroupDeconstructDBStrings()
 	--DA.DEBUG(0,"RecipeGroupDeconstructDBStrings()")
 	local groupNames = {}
 	local serial = 1
@@ -604,57 +604,57 @@ function Skillet:RecipeGroupDeconstructDBStrings()
 	end
 end
 
-function Skillet:RecipeGroupGenerateAutoGroups()
+function CraftForge:RecipeGroupGenerateAutoGroups()
 	--DA.DEBUG(0,"RecipeGroupGenerateAutoGroups()")
 end
 
 --
 -- Called when the grouping drop down is displayed
 --
-function Skillet:RecipeGroupDropdown_OnShow()
+function CraftForge:RecipeGroupDropdown_OnShow()
 	--DA.DEBUG(0,"RecipeGroupDropdown_OnShow()")
-	UIDropDownMenu_Initialize(SkilletRecipeGroupDropdown, Skillet.RecipeGroupDropdown_Initialize)
-	SkilletRecipeGroupDropdown.displayMode = "MENU"
-	Skillet:RecipeGroupDeconstructDBStrings()
+	UIDropDownMenu_Initialize(CraftForgeRecipeGroupDropdown, CraftForge.RecipeGroupDropdown_Initialize)
+	CraftForgeRecipeGroupDropdown.displayMode = "MENU"
+	CraftForge:RecipeGroupDeconstructDBStrings()
 	local groupLabel = self:GetTradeSkillOption("grouping") or self.currentGroupLabel
-	UIDropDownMenu_SetSelectedName(SkilletRecipeGroupDropdown, groupLabel, true)
-	UIDropDownMenu_SetText(SkilletRecipeGroupDropdown, groupLabel)
+	UIDropDownMenu_SetSelectedName(CraftForgeRecipeGroupDropdown, groupLabel, true)
+	UIDropDownMenu_SetText(CraftForgeRecipeGroupDropdown, groupLabel)
 end
 
 --
 -- The method we use the initialize the grouping drop down.
 --
-function Skillet.RecipeGroupDropdown_Initialize(menuFrame,level)
+function CraftForge.RecipeGroupDropdown_Initialize(menuFrame,level)
 	--DA.DEBUG(0,"RecipeGroupDropdown_Initialize("..tostring(menuFrame)..", "..tostring(level)..")")
 	if level == 1 then  -- group labels
 		local entry = {}
 		entry.text = "Flat"
 		entry.value = "Flat"
-		entry.func = Skillet.RecipeGroupSelect
-		entry.arg1 = Skillet
+		entry.func = CraftForge.RecipeGroupSelect
+		entry.arg1 = CraftForge
 		entry.arg2 = "Flat"
-		entry.icon = "Interface\\Addons\\Skillet\\Icons\\locked.tga"
-		if Skillet.currentGroupLabel == "Flat" then
+		entry.icon = "Interface\\Addons\\CraftForge\\Icons\\locked.tga"
+		if CraftForge.currentGroupLabel == "Flat" then
 			entry.checked = true
 		else
 			entry.checked = false
 		end
 		UIDropDownMenu_AddButton(entry)
-		if Skillet.data.groupList then
+		if CraftForge.data.groupList then
 			local numGroupsAdded = 0
-			if Skillet.data.groupList[Skillet.currentTrade] then
-				for labelName, groupData in pairs(Skillet.data.groupList[Skillet.currentTrade]) do
+			if CraftForge.data.groupList[CraftForge.currentTrade] then
+				for labelName, groupData in pairs(CraftForge.data.groupList[CraftForge.currentTrade]) do
 					entry.text = labelName
 					entry.value = labelName
-					entry.func = Skillet.RecipeGroupSelect
-					entry.arg1 = Skillet
+					entry.func = CraftForge.RecipeGroupSelect
+					entry.arg1 = CraftForge
 					entry.arg2 = labelName
-					if labelName == "Blizzard" or Skillet:GetTradeSkillOption(labelName.."-locked") then
-						entry.icon = "Interface\\Addons\\Skillet\\Icons\\locked.tga"
+					if labelName == "Blizzard" or CraftForge:GetTradeSkillOption(labelName.."-locked") then
+						entry.icon = "Interface\\Addons\\CraftForge\\Icons\\locked.tga"
 					else
-						entry.icon = nil -- "Interface\\Addons\\Skillet\\Icons\\unlocked.tga"
+						entry.icon = nil -- "Interface\\Addons\\CraftForge\\Icons\\unlocked.tga"
 					end
-					if Skillet.currentGroupLabel == labelName then
+					if CraftForge.currentGroupLabel == labelName then
 						entry.checked = true
 					else
 						entry.checked = false
@@ -670,25 +670,25 @@ end
 --
 -- Called when the user selects an item in the sorting drop down
 --
-function Skillet:RecipeGroupSelect(menuFrame,label)
+function CraftForge:RecipeGroupSelect(menuFrame,label)
 	--DA.DEBUG(0,"RecipeGroupSelect("..tostring(menuFrame)..", "..tostring(label)..")")
-	Skillet:SetTradeSkillOption("grouping", label)
-	Skillet.currentGroupLabel = label
-	Skillet.currentGroup = nil
-	Skillet:RecipeGroupDropdown_OnShow()
-	Skillet:RecipeGroupGenerateAutoGroups()
-	Skillet:SortAndFilterRecipes()
-	Skillet:UpdateTradeSkillWindow()
+	CraftForge:SetTradeSkillOption("grouping", label)
+	CraftForge.currentGroupLabel = label
+	CraftForge.currentGroup = nil
+	CraftForge:RecipeGroupDropdown_OnShow()
+	CraftForge:RecipeGroupGenerateAutoGroups()
+	CraftForge:SortAndFilterRecipes()
+	CraftForge:UpdateTradeSkillWindow()
 end
 
-function Skillet:RecipeGroupIsLocked()
+function CraftForge:RecipeGroupIsLocked()
 	if self.currentGroupLabel == "Flat" or self.currentGroupLabel == "Blizzard" then
 		return true
 	end
-	return Skillet:GetTradeSkillOption(self.currentGroupLabel.."-locked")
+	return CraftForge:GetTradeSkillOption(self.currentGroupLabel.."-locked")
 end
 
-function Skillet:ToggleTradeSkillOptionDropDown(option)
+function CraftForge:ToggleTradeSkillOptionDropDown(option)
 	self:ToggleTradeSkillOption(option)
 	self:RecipeGroupDropdown_OnShow()
 	self:SortAndFilterRecipes()
@@ -698,18 +698,18 @@ end
 --
 -- Called when the grouping operators drop down is displayed
 --
-function Skillet:RecipeGroupOperations_OnClick(this)
-	if not Skillet.RecipeGroupOpsMenu then
-		Skillet.RecipeGroupOpsMenu = CreateFrame("Frame", "RecipeGroupOpsMenu", _G["UIParent"], "UIDropDownMenuTemplate")
+function CraftForge:RecipeGroupOperations_OnClick(this)
+	if not CraftForge.RecipeGroupOpsMenu then
+		CraftForge.RecipeGroupOpsMenu = CreateFrame("Frame", "RecipeGroupOpsMenu", _G["UIParent"], "UIDropDownMenuTemplate")
 	end
-	UIDropDownMenu_Initialize(Skillet.RecipeGroupOpsMenu, Skillet.RecipeGroupOpsMenu_Init, "MENU")
-	ToggleDropDownMenu(1, nil, Skillet.RecipeGroupOpsMenu, this, this:GetWidth(), 0)
+	UIDropDownMenu_Initialize(CraftForge.RecipeGroupOpsMenu, CraftForge.RecipeGroupOpsMenu_Init, "MENU")
+	ToggleDropDownMenu(1, nil, CraftForge.RecipeGroupOpsMenu, this, this:GetWidth(), 0)
 end
 
 --
 -- The method we use the initialize the group ops drop down.
 --
-function Skillet.RecipeGroupOpsMenu_Init(menuFrame,level)
+function CraftForge.RecipeGroupOpsMenu_Init(menuFrame,level)
 	if level == 1 then
 		local entry = {}
 		local null = {}
@@ -717,117 +717,117 @@ function Skillet.RecipeGroupOpsMenu_Init(menuFrame,level)
 		null.disabled = true
 		entry.text = "New"
 		entry.value = "New"
-		entry.func = Skillet.RecipeGroupOpNew
+		entry.func = CraftForge.RecipeGroupOpNew
 		UIDropDownMenu_AddButton(entry)
 		entry.text = "Copy"
 		entry.value = "Copy"
-		entry.func = Skillet.RecipeGroupOpCopy
+		entry.func = CraftForge.RecipeGroupOpCopy
 		UIDropDownMenu_AddButton(entry)
 		entry.text = "Rename"
 		entry.value = "Rename"
-		entry.func = Skillet.RecipeGroupOpRename
+		entry.func = CraftForge.RecipeGroupOpRename
 		UIDropDownMenu_AddButton(entry)
 		entry.text = "Lock/Unlock"
 		entry.value = "Lock/Unlock"
-		entry.func = Skillet.RecipeGroupOpLock
+		entry.func = CraftForge.RecipeGroupOpLock
 		UIDropDownMenu_AddButton(entry)
 		entry.text = "Delete"
 		entry.value = "Delete"
-		entry.func = Skillet.RecipeGroupOpDelete
+		entry.func = CraftForge.RecipeGroupOpDelete
 		UIDropDownMenu_AddButton(entry)
 	end
 end
 
-function Skillet:RecipeGroupOpNew()
+function CraftForge:RecipeGroupOpNew()
 	--DA.DEBUG(0,"RecipeGroupOpNew()")
 	local label = "Custom"
 	local serial = 1
-	local player = Skillet.currentPlayer
-	local tradeID = Skillet.currentTrade
-	local groupList = Skillet.data.groupList
+	local player = CraftForge.currentPlayer
+	local tradeID = CraftForge.currentTrade
+	local groupList = CraftForge.data.groupList
 	while groupList[tradeID][label] do
 		serial = serial + 1
 		label = "Custom "..serial
 	end
-	local newMain = Skillet:RecipeGroupNew(player, tradeID, label)
-	Skillet:RecipeGroupConstructDBString(newMain)
-	Skillet:SetTradeSkillOption("grouping", label)
-	Skillet.currentGroupLabel = label
-	UIDropDownMenu_SetSelectedName(SkilletRecipeGroupDropdown, label, true)
-	UIDropDownMenu_SetText(SkilletRecipeGroupDropdown, label)
-	Skillet:SortAndFilterRecipes()
-	Skillet:UpdateTradeSkillWindow()
+	local newMain = CraftForge:RecipeGroupNew(player, tradeID, label)
+	CraftForge:RecipeGroupConstructDBString(newMain)
+	CraftForge:SetTradeSkillOption("grouping", label)
+	CraftForge.currentGroupLabel = label
+	UIDropDownMenu_SetSelectedName(CraftForgeRecipeGroupDropdown, label, true)
+	UIDropDownMenu_SetText(CraftForgeRecipeGroupDropdown, label)
+	CraftForge:SortAndFilterRecipes()
+	CraftForge:UpdateTradeSkillWindow()
 end
 
-function Skillet:RecipeGroupOpCopy()
+function CraftForge:RecipeGroupOpCopy()
 	--DA.DEBUG(0,"RecipeGroupOpCopy()")
 	local label = "Custom"
 	local serial = 1
-	local player = Skillet.currentPlayer
-	local tradeID = Skillet.currentTrade
-	local groupList = Skillet.data.groupList
+	local player = CraftForge.currentPlayer
+	local tradeID = CraftForge.currentTrade
+	local groupList = CraftForge.data.groupList
 	while sk[tradeID][label] do
 		serial = serial + 1
 		label = "Custom "..serial
 	end
-	local newMain = Skillet:RecipeGroupNew(player, tradeID, label)
-	local oldMain = Skillet:RecipeGroupFind(player, tradeID, Skillet.currentGroupLabel)
-	Skillet:RecipeGroupCopy(oldMain, newMain, false)
-	Skillet:RecipeGroupConstructDBString(newMain)
-	Skillet:SetTradeSkillOption("grouping", label)
-	Skillet.currentGroupLabel = label
-	UIDropDownMenu_SetSelectedName(SkilletRecipeGroupDropdown, label, true)
-	UIDropDownMenu_SetText(SkilletRecipeGroupDropdown, label)
-	Skillet:SortAndFilterRecipes()
-	Skillet:UpdateTradeSkillWindow()
+	local newMain = CraftForge:RecipeGroupNew(player, tradeID, label)
+	local oldMain = CraftForge:RecipeGroupFind(player, tradeID, CraftForge.currentGroupLabel)
+	CraftForge:RecipeGroupCopy(oldMain, newMain, false)
+	CraftForge:RecipeGroupConstructDBString(newMain)
+	CraftForge:SetTradeSkillOption("grouping", label)
+	CraftForge.currentGroupLabel = label
+	UIDropDownMenu_SetSelectedName(CraftForgeRecipeGroupDropdown, label, true)
+	UIDropDownMenu_SetText(CraftForgeRecipeGroupDropdown, label)
+	CraftForge:SortAndFilterRecipes()
+	CraftForge:UpdateTradeSkillWindow()
 end
 
-function Skillet:GroupNameEditSave()
+function CraftForge:GroupNameEditSave()
 	--DA.DEBUG(0,"GroupNameEditSave()")
 	local newName = GroupButtonNameEdit:GetText()
-	Skillet:RecipeGroupRename(Skillet.currentGroupLabel, newName)
+	CraftForge:RecipeGroupRename(CraftForge.currentGroupLabel, newName)
 	GroupButtonNameEdit:Hide()
-	SkilletRecipeGroupDropdownText:Show()
-	SkilletRecipeGroupDropdownText:SetText(newName)
-	Skillet.currentGroupLabel = newName
+	CraftForgeRecipeGroupDropdownText:Show()
+	CraftForgeRecipeGroupDropdownText:SetText(newName)
+	CraftForge.currentGroupLabel = newName
 end
 
-function Skillet:RecipeGroupOpRename()
+function CraftForge:RecipeGroupOpRename()
 	--DA.DEBUG(0,"RecipeGroupOpRename()")
-	if not Skillet:RecipeGroupIsLocked() then
-		GroupButtonNameEdit:SetText(Skillet.currentGroupLabel)
-		GroupButtonNameEdit:SetParent(SkilletRecipeGroupDropdownText:GetParent())
-		local numPoints = SkilletRecipeGroupDropdownText:GetNumPoints()
+	if not CraftForge:RecipeGroupIsLocked() then
+		GroupButtonNameEdit:SetText(CraftForge.currentGroupLabel)
+		GroupButtonNameEdit:SetParent(CraftForgeRecipeGroupDropdownText:GetParent())
+		local numPoints = CraftForgeRecipeGroupDropdownText:GetNumPoints()
 		for p=1,numPoints do
-			GroupButtonNameEdit:SetPoint(SkilletRecipeGroupDropdownText:GetPoint(p))
+			GroupButtonNameEdit:SetPoint(CraftForgeRecipeGroupDropdownText:GetPoint(p))
 		end
 		GroupButtonNameEdit:Show()
-		SkilletRecipeGroupDropdownText:Hide()
+		CraftForgeRecipeGroupDropdownText:Hide()
 	end
 end
 
-function Skillet:RecipeGroupOpLock()
+function CraftForge:RecipeGroupOpLock()
 	--DA.DEBUG(0,"RecipeGroupOpLock()")
-	local label = Skillet.currentGroupLabel
+	local label = CraftForge.currentGroupLabel
 	if label ~= "Blizzard" and label ~= "Flat" then
-		Skillet:ToggleTradeSkillOption(label.."-locked")
+		CraftForge:ToggleTradeSkillOption(label.."-locked")
 	end
 end
 
-function Skillet:RecipeGroupOpDelete()
+function CraftForge:RecipeGroupOpDelete()
 	--DA.DEBUG(0,"RecipeGroupOpDelete()")
-	if not Skillet:RecipeGroupIsLocked() then
-		local player = Skillet.currentPlayer
-		local tradeID = Skillet.currentTrade
-		local label = Skillet.currentGroupLabel
-		Skillet.data.groupList[tradeID][label] = nil
-		Skillet.db.realm.groupDB[player..":"..tradeID..":"..label] = nil
+	if not CraftForge:RecipeGroupIsLocked() then
+		local player = CraftForge.currentPlayer
+		local tradeID = CraftForge.currentTrade
+		local label = CraftForge.currentGroupLabel
+		CraftForge.data.groupList[tradeID][label] = nil
+		CraftForge.db.realm.groupDB[player..":"..tradeID..":"..label] = nil
 		label = "Blizzard"
-		Skillet:SetTradeSkillOption("grouping", label)
-		Skillet.currentGroupLabel = label
-		UIDropDownMenu_SetSelectedName(SkilletRecipeGroupDropdown, label, true)
-		UIDropDownMenu_SetText(SkilletRecipeGroupDropdown, label)
-		Skillet:SortAndFilterRecipes()
-		Skillet:UpdateTradeSkillWindow()
+		CraftForge:SetTradeSkillOption("grouping", label)
+		CraftForge.currentGroupLabel = label
+		UIDropDownMenu_SetSelectedName(CraftForgeRecipeGroupDropdown, label, true)
+		UIDropDownMenu_SetText(CraftForgeRecipeGroupDropdown, label)
+		CraftForge:SortAndFilterRecipes()
+		CraftForge:UpdateTradeSkillWindow()
 	end
 end

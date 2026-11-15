@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = Skillet.L
+local L = CraftForge.L
 
-local isRetail = Skillet.isRetail
-local isForever = Skillet.isForever
+local isRetail = CraftForge.isRetail
+local isForever = CraftForge.isForever
 
 --
 -- Inspired by Kaliel's Tracker
 --
-StaticPopupDialogs["SKILLET_Version"] = {
-	text = "Skillet - Version",
+StaticPopupDialogs["CRAFTFORGE_Version"] = {
+	text = "CraftForge - Version",
 	button2 = CLOSE,
 	hasEditBox = true,
 	editBoxWidth = 300,
@@ -52,19 +52,19 @@ StaticPopupDialogs["SKILLET_Version"] = {
 --
 -- Pop up a dialog with a Wowhead URL
 --
-function Skillet:ShowVersion()
+function CraftForge:ShowVersion()
 	DA.DEBUG(0,"ShowVersion()")
 	local wowVersion,wowBuild = GetBuildInfo();
-	local text = "Skillet "..tostring(Skillet.version).." on "..tostring(wowVersion).."."..tostring(wowBuild)..", "..tostring(GetLocale())
-	StaticPopup_Show("SKILLET_Version", text)
+	local text = "CraftForge "..tostring(CraftForge.version).." on "..tostring(wowVersion).."."..tostring(wowBuild)..", "..tostring(GetLocale())
+	StaticPopup_Show("CRAFTFORGE_Version", text)
 end
 
 --
 -- All the options that we allow the user to control.
 --
-Skillet.options =
+CraftForge.options =
 {
-	handler = Skillet,
+	handler = CraftForge,
 	type = 'group',
 	args = {
 		features = {
@@ -75,19 +75,19 @@ Skillet.options =
 			args = {
 				header = {
 					type = "header",
-					name = L["Skillet Trade Skills"].." "..Skillet.version,
+					name = L["CraftForge Trade Skills"].." "..CraftForge.version,
 					order = 2
 				},
 				use_first_name_only = {
-					hidden = Skillet.isRetail,
+					hidden = CraftForge.isRetail,
 					type = "toggle",
 					name = L["USEFIRSTONLYNAME"],
 					desc = L["USEFIRSTONLYDESC"],
 					get = function()
-						return Skillet.db.global.useFirstNameOnly
+						return CraftForge.db.global.useFirstNameOnly
 					end,
 					set = function(self,value)
-						Skillet.db.global.useFirstNameOnly = value
+						CraftForge.db.global.useFirstNameOnly = value
 					end,
 					width = "full",
 					order = 3
@@ -97,10 +97,10 @@ Skillet.options =
 					name = L["VENDORBUYBUTTONNAME"],
 					desc = L["VENDORBUYBUTTONDESC"],
 					get = function()
-						return Skillet.db.profile.vendor_buy_button
+						return CraftForge.db.profile.vendor_buy_button
 					end,
 					set = function(self,value)
-						Skillet.db.profile.vendor_buy_button = value
+						CraftForge.db.profile.vendor_buy_button = value
 					end,
 					width = "full",
 					order = 12
@@ -110,10 +110,10 @@ Skillet.options =
 					name = L["VENDORAUTOBUYNAME"],
 					desc = L["VENDORAUTOBUYDESC"],
 					get = function()
-						return Skillet.db.profile.vendor_auto_buy
+						return CraftForge.db.profile.vendor_auto_buy
 					end,
 					set = function(self,value)
-						Skillet.db.profile.vendor_auto_buy = value
+						CraftForge.db.profile.vendor_auto_buy = value
 					end,
 					width = "full",
 					order = 13
@@ -123,10 +123,10 @@ Skillet.options =
 					name = L["SHOWITEMNOTESTOOLTIPNAME"],
 					desc = L["SHOWITEMNOTESTOOLTIPDESC"],
 					get = function()
-						return Skillet.db.profile.show_item_notes_tooltip
+						return CraftForge.db.profile.show_item_notes_tooltip
 					end,
 					set = function(self,value)
-						Skillet.db.profile.show_item_notes_tooltip = value
+						CraftForge.db.profile.show_item_notes_tooltip = value
 					end,
 					width = "full",
 					order = 14
@@ -136,10 +136,10 @@ Skillet.options =
 					name = L["SHOWCRAFTERSTOOLTIPNAME"],
 					desc = L["SHOWCRAFTERSTOOLTIPDESC"],
 					get = function()
-						return Skillet.db.profile.show_crafters_tooltip
+						return CraftForge.db.profile.show_crafters_tooltip
 					end,
 					set = function(self,value)
-						Skillet.db.profile.show_crafters_tooltip = value
+						CraftForge.db.profile.show_crafters_tooltip = value
 					end,
 					width = "full",
 					order = 15
@@ -149,10 +149,10 @@ Skillet.options =
 					name = L["SHOWDETAILEDRECIPETOOLTIPNAME"],
 					desc = L["SHOWDETAILEDRECIPETOOLTIPDESC"],
 					get = function()
-						return Skillet.db.profile.show_detailed_recipe_tooltip
+						return CraftForge.db.profile.show_detailed_recipe_tooltip
 					end,
 					set = function(self,value)
-						Skillet.db.profile.show_detailed_recipe_tooltip = value
+						CraftForge.db.profile.show_detailed_recipe_tooltip = value
 					end,
 					width = "full",
 					order = 16
@@ -162,10 +162,10 @@ Skillet.options =
 					name = L["SHOWFULLTOOLTIPNAME"],
 					desc = L["SHOWFULLTOOLTIPDESC"],
 					get = function()
-						return Skillet.db.profile.display_full_tooltip
+						return CraftForge.db.profile.display_full_tooltip
 					end,
 					set = function(self,value)
-						Skillet.db.profile.display_full_tooltip = value
+						CraftForge.db.profile.display_full_tooltip = value
 					end,
 					width = "full",
 					order = 17
@@ -175,10 +175,10 @@ Skillet.options =
 					name = L["SHOWITEMTOOLTIPNAME"],
 					desc = L["SHOWITEMTOOLTIPDESC"],
 					get = function()
-						return Skillet.db.profile.display_item_tooltip
+						return CraftForge.db.profile.display_item_tooltip
 					end,
 					set = function(self,value)
-						Skillet.db.profile.display_item_tooltip = value
+						CraftForge.db.profile.display_item_tooltip = value
 					end,
 					width = "full",
 					order = 18
@@ -188,10 +188,10 @@ Skillet.options =
 					name = L["LINKCRAFTABLEREAGENTSNAME"],
 					desc = L["LINKCRAFTABLEREAGENTSDESC"],
 					get = function()
-						return Skillet.db.profile.link_craftable_reagents
+						return CraftForge.db.profile.link_craftable_reagents
 					end,
 					set = function(self,value)
-						Skillet.db.profile.link_craftable_reagents = value
+						CraftForge.db.profile.link_craftable_reagents = value
 					end,
 					width = "full",
 					order = 19
@@ -201,10 +201,10 @@ Skillet.options =
 					name = L["QUEUECRAFTABLEREAGENTSNAME"],
 					desc = L["QUEUECRAFTABLEREAGENTSDESC"],
 					get = function()
-						return Skillet.db.profile.queue_craftable_reagents
+						return CraftForge.db.profile.queue_craftable_reagents
 					end,
 					set = function(self,value)
-						Skillet.db.profile.queue_craftable_reagents = value
+						CraftForge.db.profile.queue_craftable_reagents = value
 					end,
 					width = 1.5,
 					order = 20
@@ -214,10 +214,10 @@ Skillet.options =
 					name = L["QUEUETOOLSNAME"],
 					desc = L["QUEUETOOLSDESC"],
 					get = function()
-						return Skillet.db.profile.queue_tools
+						return CraftForge.db.profile.queue_tools
 					end,
 					set = function(self,value)
-						Skillet.db.profile.queue_tools = value
+						CraftForge.db.profile.queue_tools = value
 					end,
 					width = 1.5,
 					order = 21
@@ -227,10 +227,10 @@ Skillet.options =
 					name = L["IGNOREBANKEDREAGENTSNAME"],
 					desc = L["IGNOREBANKEDREAGENTSDESC"],
 					get = function()
-						return Skillet.db.profile.ignore_banked_reagents
+						return CraftForge.db.profile.ignore_banked_reagents
 					end,
 					set = function(self,value)
-						Skillet.db.profile.ignore_banked_reagents = value
+						CraftForge.db.profile.ignore_banked_reagents = value
 					end,
 					width = 1.5,
 					order = 21
@@ -240,10 +240,10 @@ Skillet.options =
 					name = L["IGNOREQUEUEDREAGENTSNAME"],
 					desc = L["IGNOREQUEUEDREAGENTSDESC"],
 					get = function()
-						return Skillet.db.profile.ignore_queued_reagents
+						return CraftForge.db.profile.ignore_queued_reagents
 					end,
 					set = function(self,value)
-						Skillet.db.profile.ignore_queued_reagents = value
+						CraftForge.db.profile.ignore_queued_reagents = value
 					end,
 					width = 1.5,
 					order = 21
@@ -253,10 +253,10 @@ Skillet.options =
 					name = L["QUEUECRAFTABLEREAGENTSNAME"],
 					desc = L["QUEUECRAFTABLEREAGENTSDESC"],
 					get = function()
-						return Skillet.db.profile.queue_craftable_reagents
+						return CraftForge.db.profile.queue_craftable_reagents
 					end,
 					set = function(self,value)
-						Skillet.db.profile.queue_craftable_reagents = value
+						CraftForge.db.profile.queue_craftable_reagents = value
 					end,
 					width = "full",
 					order = 22
@@ -266,10 +266,10 @@ Skillet.options =
 					name = L["QUEUEMATCHTRADENAME"],
 					desc = L["QUEUEMARCHTRADEDESC"],
 					get = function()
-						return Skillet.db.profile.queue_match_trade
+						return CraftForge.db.profile.queue_match_trade
 					end,
 					set = function(self,value)
-						Skillet.db.profile.queue_match_trade = value
+						CraftForge.db.profile.queue_match_trade = value
 					end,
 					width = 1.5,
 					order = 23
@@ -279,10 +279,10 @@ Skillet.options =
 					name = L["QUEUEINSERTFIRSTNAME"],
 					desc = L["QUEUEINSERTFIRSTDESC"],
 					get = function()
-						return Skillet.db.profile.queue_insert_first
+						return CraftForge.db.profile.queue_insert_first
 					end,
 					set = function(self,value)
-						Skillet.db.profile.queue_insert_first = value
+						CraftForge.db.profile.queue_insert_first = value
 					end,
 					width = 1.5,
 					order = 23
@@ -293,25 +293,25 @@ Skillet.options =
 					name = L["QUEUETOFRONTNAME"],
 					desc = L["QUEUETOFRONTDESC"],
 					get = function()
-						return Skillet.db.profile.queue_to_front
+						return CraftForge.db.profile.queue_to_front
 					end,
 					set = function(self,value)
-						Skillet.db.profile.queue_to_front = value
+						CraftForge.db.profile.queue_to_front = value
 					end,
 					width = "full",
 					order = 23
 				},
 --]]
 				queue_glyph_reagents = {
-					hidden = not Skillet.isRetail,
+					hidden = not CraftForge.isRetail,
 					type = "toggle",
 					name = L["QUEUEGLYPHREAGENTSNAME"],
 					desc = L["QUEUEGLYPHREAGENTSDESC"],
 					get = function()
-						return Skillet.db.profile.queue_glyph_reagents
+						return CraftForge.db.profile.queue_glyph_reagents
 					end,
 					set = function(self,value)
-						Skillet.db.profile.queue_glyph_reagents = value
+						CraftForge.db.profile.queue_glyph_reagents = value
 					end,
 					width = "full",
 					order = 24
@@ -326,10 +326,10 @@ Skillet.options =
 						name = L["Bank"],
 						desc = L["DISPLAYSHOPPINGLISTATBANKDESC"],
 						get = function()
-							return Skillet.db.profile.display_shopping_list_at_bank
+							return CraftForge.db.profile.display_shopping_list_at_bank
 						end,
 						set = function(self,value)
-							Skillet.db.profile.display_shopping_list_at_bank = value
+							CraftForge.db.profile.display_shopping_list_at_bank = value
 						end,
 							width = 0.75,
 						order = 26
@@ -339,10 +339,10 @@ Skillet.options =
 						name = L["Guild bank"],
 						desc = L["DISPLAYSHOPPINGLISTATGUILDBANKDESC"],
 						get = function()
-							return Skillet.db.profile.display_shopping_list_at_guildbank
+							return CraftForge.db.profile.display_shopping_list_at_guildbank
 						end,
 						set = function(self,value)
-							Skillet.db.profile.display_shopping_list_at_guildbank = value
+							CraftForge.db.profile.display_shopping_list_at_guildbank = value
 						end,
 							width = 0.75,
 						order = 27
@@ -352,10 +352,10 @@ Skillet.options =
 						name = L["Auction"],
 						desc = L["DISPLAYSHOPPINGLISTATAUCTIONDESC"],
 						get = function()
-							return Skillet.db.profile.display_shopping_list_at_auction
+							return CraftForge.db.profile.display_shopping_list_at_auction
 						end,
 						set = function(self,value)
-							Skillet.db.profile.display_shopping_list_at_auction = value
+							CraftForge.db.profile.display_shopping_list_at_auction = value
 						end,
 							width = 0.75,
 						order = 28
@@ -365,10 +365,10 @@ Skillet.options =
 						name = L["Merchant"],
 						desc = L["DISPLAYSHOPPINGLISTATMERCHANTDESC"],
 						get = function()
-							return Skillet.db.profile.display_shopping_list_at_merchant
+							return CraftForge.db.profile.display_shopping_list_at_merchant
 						end,
 						set = function(self,value)
-							Skillet.db.profile.display_shopping_list_at_merchant = value
+							CraftForge.db.profile.display_shopping_list_at_merchant = value
 						end,
 							width = 0.75,
 						order = 29
@@ -378,11 +378,11 @@ Skillet.options =
 					name = L["USEGUILDBANKASALTNAME"],
 					desc = L["USEGUILDBANKASALTDESC"],
 					get = function()
-						return Skillet.db.profile.use_guildbank_as_alt
+						return CraftForge.db.profile.use_guildbank_as_alt
 					end,
 					set = function(self,value)
-						Skillet.db.profile.use_guildbank_as_alt = value
-						Skillet:UpdateTradeSkillWindow()
+						CraftForge.db.profile.use_guildbank_as_alt = value
+						CraftForge:UpdateTradeSkillWindow()
 					end,
 					width = "full",
 					order = 30
@@ -392,11 +392,11 @@ Skillet.options =
 					name = L["USEALTCURRVENDITEMSNAME"],
 					desc = L["USEALTCURRVENDITEMSDESC"],
 					get = function()
-						return Skillet.db.profile.use_altcurrency_vendor_items
+						return CraftForge.db.profile.use_altcurrency_vendor_items
 					end,
 					set = function(self,value)
-						Skillet.db.profile.use_altcurrency_vendor_items = value
-						Skillet:UpdateTradeSkillWindow()
+						CraftForge.db.profile.use_altcurrency_vendor_items = value
+						CraftForge:UpdateTradeSkillWindow()
 					end,
 					width = "full",
 					order = 31
@@ -413,11 +413,11 @@ Skillet.options =
 					name = L["DISPLAYREQUIREDLEVELNAME"],
 					desc = L["DISPLAYREQUIREDLEVELDESC"],
 					get = function()
-						return Skillet.db.profile.display_required_level
+						return CraftForge.db.profile.display_required_level
 					end,
 					set = function(self,value)
-						Skillet.db.profile.display_required_level = value
-						Skillet:UpdateTradeSkillWindow()
+						CraftForge.db.profile.display_required_level = value
+						CraftForge:UpdateTradeSkillWindow()
 					end,
 					width = "full",
 					order = 1
@@ -427,11 +427,11 @@ Skillet.options =
 					name = L["SHOWMAXUPGRADENAME"],
 					desc = L["SHOWMAXUPGRADEDESC"],
 					get = function()
-						return Skillet.db.profile.show_max_upgrade
+						return CraftForge.db.profile.show_max_upgrade
 					end,
 					set = function(self,value)
-						Skillet.db.profile.show_max_upgrade = value
-						Skillet:UpdateTradeSkillWindow()
+						CraftForge.db.profile.show_max_upgrade = value
+						CraftForge:UpdateTradeSkillWindow()
 					end,
 					width = "full",
 					order = 2
@@ -441,11 +441,11 @@ Skillet.options =
 					name = L["SHOWCRAFTCOUNTSNAME"],
 					desc = L["SHOWCRAFTCOUNTSDESC"],
 					get = function()
-						return Skillet.db.profile.show_craft_counts
+						return CraftForge.db.profile.show_craft_counts
 					end,
 					set = function(self,value)
-						Skillet.db.profile.show_craft_counts = value
-						Skillet:UpdateTradeSkillWindow()
+						CraftForge.db.profile.show_craft_counts = value
+						CraftForge:UpdateTradeSkillWindow()
 					end,
 					width = "full",
 					order = 3
@@ -455,10 +455,10 @@ Skillet.options =
 					name = L["RECIPESOURCEFIRSTNAME"],
 					desc = L["RECIPESOURCEFIRSTDESC"],
 					get = function()
-						return Skillet.db.profile.recipe_source_first
+						return CraftForge.db.profile.recipe_source_first
 					end,
 					set = function(self,value)
-						Skillet.db.profile.recipe_source_first = value
+						CraftForge.db.profile.recipe_source_first = value
 					end,
 					width = 1.5,
 					order = 4
@@ -468,24 +468,24 @@ Skillet.options =
 					name = L["SHOWRECIPESOURCEFORLEARNEDNAME"],
 					desc = L["SHOWRECIPESOURCEFORLEARNEDDESC"],
 					get = function()
-						return Skillet.db.profile.show_recipe_source_for_learned
+						return CraftForge.db.profile.show_recipe_source_for_learned
 					end,
 					set = function(self,value)
-						Skillet.db.profile.show_recipe_source_for_learned = value
+						CraftForge.db.profile.show_recipe_source_for_learned = value
 					end,
 					width = 1.5,
 					order = 5
 				},
 				use_blizzard_for_followers = {
-					hidden = not Skillet.isRetail,
+					hidden = not CraftForge.isRetail,
 					type = "toggle",
 					name = L["USEBLIZZARDFORFOLLOWERSNAME"],
 					desc = L["USEBLIZZARDFORFOLLOWERSDESC"],
 					get = function()
-						return Skillet.db.profile.use_blizzard_for_followers
+						return CraftForge.db.profile.use_blizzard_for_followers
 					end,
 					set = function(self,value)
-						Skillet.db.profile.use_blizzard_for_followers = value
+						CraftForge.db.profile.use_blizzard_for_followers = value
 					end,
 					width = "full",
 					order = 6
@@ -495,49 +495,49 @@ Skillet.options =
 					name = L["SHOWPROGRESSBARNAME"],
 					desc = L["SHOWPROGRESSBARDESC"],
 					get = function()
-						return Skillet.db.profile.always_show_progress_bar
+						return CraftForge.db.profile.always_show_progress_bar
 					end,
 					set = function(self,value)
-						Skillet.db.profile.always_show_progress_bar = value
+						CraftForge.db.profile.always_show_progress_bar = value
 					end,
 					width = "full",
 					order = 7
 				},
 				hide_blizzard_frame = {
-					hidden = Skillet.isRetail,
+					hidden = CraftForge.isRetail,
 					type = "toggle",
 					name = L["HIDEBLIZZARDFRAMENAME"],
 					desc = L["HIDEBLIZZARDFRAMEDESC"],
 					get = function()
-						return Skillet.db.profile.hide_blizzard_frame
+						return CraftForge.db.profile.hide_blizzard_frame
 					end,
 					set = function(self,value)
-						Skillet.db.profile.hide_blizzard_frame = value
+						CraftForge.db.profile.hide_blizzard_frame = value
 						if not value and ProfessionsFrame then
 							ProfessionsFrame:SetScale(1.0)
 						end
-						if value and Skillet.db.profile.scale_blizzard_frame then
-							Skillet.db.profile.scale_blizzard_frame = false
+						if value and CraftForge.db.profile.scale_blizzard_frame then
+							CraftForge.db.profile.scale_blizzard_frame = false
 						end
 					end,
 					width = 1.5,
 					order = 7
 				},
 				scale_blizzard_frame = {
-					hidden = Skillet.isRetail,
+					hidden = CraftForge.isRetail,
 					type = "toggle",
 					name = L["SCALEBLIZZARDFRAMENAME"],
 					desc = L["SCALEBLIZZARDFRAMEDESC"],
 					get = function()
-						return Skillet.db.profile.scale_blizzard_frame
+						return CraftForge.db.profile.scale_blizzard_frame
 					end,
 					set = function(self,value)
-						Skillet.db.profile.scale_blizzard_frame = value
+						CraftForge.db.profile.scale_blizzard_frame = value
 						if not value and ProfessionsFrame then
 							ProfessionsFrame:SetScale(1.0)
 						end
-						if value and Skillet.db.profile.hide_blizzard_frame then
-							Skillet.db.profile.hide_blizzard_frame = false
+						if value and CraftForge.db.profile.hide_blizzard_frame then
+							CraftForge.db.profile.hide_blizzard_frame = false
 						end
 					end,
 					width = 1.5,
@@ -549,11 +549,11 @@ Skillet.options =
 					name = L["SELECTTOPRECIPENAME"],
 					desc = L["SELECTTOPRECIPEDESC"],
 					get = function()
-						return Skillet.db.profile.select_top_recipe
+						return CraftForge.db.profile.select_top_recipe
 					end,
 					set = function(self,value)
-						Skillet.db.profile.select_top_recipe = value
-						Skillet:UpdateTradeSkillWindow()
+						CraftForge.db.profile.select_top_recipe = value
+						CraftForge:UpdateTradeSkillWindow()
 					end,
 					width = "full",
 					order = 8,
@@ -564,11 +564,11 @@ Skillet.options =
 					name = L["ENHANCHEDRECIPEDISPLAYNAME"],
 					desc = L["ENHANCHEDRECIPEDISPLAYDESC"],
 					get = function()
-						return Skillet.db.profile.enhanced_recipe_display
+						return CraftForge.db.profile.enhanced_recipe_display
 					end,
 					set = function(self,value)
-						Skillet.db.profile.enhanced_recipe_display = value
-						Skillet:UpdateTradeSkillWindow()
+						CraftForge.db.profile.enhanced_recipe_display = value
+						CraftForge:UpdateTradeSkillWindow()
 					end,
 					width = 1.5,
 					order = 9
@@ -578,11 +578,11 @@ Skillet.options =
 					name = L["ENHANCHEDCHANCEDISPLAYNAME"],
 					desc = L["ENHANCHEDCHANCEDISPLAYDESC"],
 					get = function()
-						return Skillet.db.profile.enhanced_chance_display
+						return CraftForge.db.profile.enhanced_chance_display
 					end,
 					set = function(self,value)
-						Skillet.db.profile.enhanced_chance_display = value
-						Skillet:UpdateTradeSkillWindow()
+						CraftForge.db.profile.enhanced_chance_display = value
+						CraftForge:UpdateTradeSkillWindow()
 					end,
 --					width = "full",
 					width = 1.5,
@@ -593,11 +593,11 @@ Skillet.options =
 					name = L["CONFIRMQUEUECLEARNAME"],
 					desc = L["CONFIRMQUEUECLEARDESC"],
 					get = function()
-						return Skillet.db.profile.confirm_queue_clear
+						return CraftForge.db.profile.confirm_queue_clear
 					end,
 					set = function(self,value)
-						Skillet.db.profile.confirm_queue_clear = value
-						Skillet:UpdateTradeSkillWindow()
+						CraftForge.db.profile.confirm_queue_clear = value
+						CraftForge:UpdateTradeSkillWindow()
 					end,
 					width = "full",
 					order = 10
@@ -607,11 +607,11 @@ Skillet.options =
 					name = L["QUEUEONLYVIEWNAME"],
 					desc = L["QUEUEONLYVIEWDESC"],
 					get = function()
-						return Skillet.db.profile.queue_only_view
+						return CraftForge.db.profile.queue_only_view
 					end,
 					set = function(self,value)
-						Skillet.db.profile.queue_only_view = value
-						Skillet:UpdateTradeSkillWindow()
+						CraftForge.db.profile.queue_only_view = value
+						CraftForge:UpdateTradeSkillWindow()
 					end,
 					width = "full",
 					order = 11
@@ -621,10 +621,10 @@ Skillet.options =
 					name = L["DIALOGSWITCHNAME"],
 					desc = L["DIALOGSWITCHDESC"],
 					get = function()
-						return Skillet.db.profile.dialog_switch
+						return CraftForge.db.profile.dialog_switch
 					end,
 					set = function(self,value)
-						Skillet.db.profile.dialog_switch = value
+						CraftForge.db.profile.dialog_switch = value
 					end,
 					width = "full",
 					order = 12
@@ -634,10 +634,10 @@ Skillet.options =
 					name = L["TSMCOMPATNAME"],
 					desc = L["TSMCOMPATDESC"],
 					get = function()
-						return Skillet.db.profile.tsm_compat
+						return CraftForge.db.profile.tsm_compat
 					end,
 					set = function(self,value)
-						Skillet.db.profile.tsm_compat = value
+						CraftForge.db.profile.tsm_compat = value
 					end,
 --					width = "full",
 					width = 1.5,
@@ -648,10 +648,10 @@ Skillet.options =
 					name = L["TSMPREFERNAME"],
 					desc = L["TSMPREFERDESC"],
 					get = function()
-						return Skillet.db.profile.tsm_prefer
+						return CraftForge.db.profile.tsm_prefer
 					end,
 					set = function(self,value)
-						Skillet.db.profile.tsm_prefer = value
+						CraftForge.db.profile.tsm_prefer = value
 					end,
 --					width = "full",
 					width = 1.5,
@@ -662,10 +662,10 @@ Skillet.options =
 					name = L["SCALETOOLTIPNAME"],
 					desc = L["SCALETOOLTIPDESC"],
 					get = function()
-						return Skillet.db.profile.scale_tooltip
+						return CraftForge.db.profile.scale_tooltip
 					end,
 					set = function(self,value)
-						Skillet.db.profile.scale_tooltip = value
+						CraftForge.db.profile.scale_tooltip = value
 					end,
 					width = "full",
 					order = 14
@@ -675,10 +675,10 @@ Skillet.options =
 					name = L["SOUNDONEMPTYQUEUENAME"],
 					desc = L["SOUNDONEMPTYQUEUEDESC"],
 					get = function()
-						return Skillet.db.profile.sound_on_empty_queue
+						return CraftForge.db.profile.sound_on_empty_queue
 					end,
 					set = function(self,value)
-						Skillet.db.profile.sound_on_empty_queue = value
+						CraftForge.db.profile.sound_on_empty_queue = value
 					end,
 					width = 1.5,
 					order = 15,
@@ -688,10 +688,10 @@ Skillet.options =
 					name = L["FLASHONEMPTYQUEUENAME"],
 					desc = L["FLASHONEMPTYQUEUEDESC"],
 					get = function()
-						return Skillet.db.profile.flash_on_empty_queue
+						return CraftForge.db.profile.flash_on_empty_queue
 					end,
 					set = function(self,value)
-						Skillet.db.profile.flash_on_empty_queue = value
+						CraftForge.db.profile.flash_on_empty_queue = value
 					end,
 					width = 1.5,
 					order = 16,
@@ -701,10 +701,10 @@ Skillet.options =
 					name = L["SOUNDONREMOVEQUEUENAME"],
 					desc = L["SOUNDONREMOVEQUEUEDESC"],
 					get = function()
-						return Skillet.db.profile.sound_on_remove_queue
+						return CraftForge.db.profile.sound_on_remove_queue
 					end,
 					set = function(self,value)
-						Skillet.db.profile.sound_on_remove_queue = value
+						CraftForge.db.profile.sound_on_remove_queue = value
 					end,
 					width = 1.5,
 					order = 17,
@@ -714,10 +714,10 @@ Skillet.options =
 					name = L["FLASHONREMOVEQUEUENAME"],
 					desc = L["FLASHONREMOVEQUEUEDESC"],
 					get = function()
-						return Skillet.db.profile.flash_on_remove_queue
+						return CraftForge.db.profile.flash_on_remove_queue
 					end,
 					set = function(self,value)
-						Skillet.db.profile.flash_on_remove_queue = value
+						CraftForge.db.profile.flash_on_remove_queue = value
 					end,
 					width = 1.5,
 					order = 18,
@@ -728,13 +728,13 @@ Skillet.options =
 					desc = L["TRANSPARAENCYDESC"],
 					min = 0.1, max = 1, step = 0.05, isPercent = true,
 					get = function()
-						return Skillet.db.profile.transparency
+						return CraftForge.db.profile.transparency
 					end,
 					set = function(self,t)
-						Skillet.db.profile.transparency = t
-						Skillet:UpdateTradeSkillWindow()
-						Skillet:UpdateShoppingListWindow(false)
-						Skillet:UpdateStandaloneQueueWindow()
+						CraftForge.db.profile.transparency = t
+						CraftForge:UpdateTradeSkillWindow()
+						CraftForge:UpdateShoppingListWindow(false)
+						CraftForge:UpdateStandaloneQueueWindow()
 					end,
 					width = "full",
 					order = 20
@@ -745,13 +745,13 @@ Skillet.options =
 					desc = L["SCALEDESC"],
 					min = 0.1, max = 1.25, step = 0.05, isPercent = true,
 					get = function()
-						return Skillet.db.profile.scale
+						return CraftForge.db.profile.scale
 					end,
 					set = function(self,t)
-						Skillet.db.profile.scale = t
-						Skillet:UpdateTradeSkillWindow()
-						Skillet:UpdateShoppingListWindow(false)
-						Skillet:UpdateStandaloneQueueWindow()
+						CraftForge.db.profile.scale = t
+						CraftForge:UpdateTradeSkillWindow()
+						CraftForge:UpdateShoppingListWindow(false)
+						CraftForge:UpdateStandaloneQueueWindow()
 					end,
 					width = "full",
 					order = 21
@@ -762,13 +762,13 @@ Skillet.options =
 					desc = L["TOOLTIPSCALEDESC"],
 					min = 0.1, max = 1.25, step = 0.05, isPercent = true,
 					get = function()
-						return Skillet.db.profile.ttscale
+						return CraftForge.db.profile.ttscale
 					end,
 					set = function(self,t)
-						Skillet.db.profile.ttscale = t
-						Skillet:UpdateTradeSkillWindow()
-						Skillet:UpdateShoppingListWindow(false)
-						Skillet:UpdateStandaloneQueueWindow()
+						CraftForge.db.profile.ttscale = t
+						CraftForge:UpdateTradeSkillWindow()
+						CraftForge:UpdateShoppingListWindow(false)
+						CraftForge:UpdateStandaloneQueueWindow()
 					end,
 					width = "full",
 					order = 22
@@ -781,9 +781,9 @@ Skillet.options =
 			desc = L["CONFIGDESC"],
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:ShowOptions()
+					CraftForge:ShowOptions()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			guiHidden = true,
@@ -795,13 +795,13 @@ Skillet.options =
 			desc = L["SHOPPINGLISTDESC"],
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					if Skillet:IsShoppingListVisible() then
-						Skillet:HideShoppingList()
+					if CraftForge:IsShoppingListVisible() then
+						CraftForge:HideShoppingList()
 					else
-						Skillet:DisplayShoppingList(false)
+						CraftForge:DisplayShoppingList(false)
 					end
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 52
@@ -812,9 +812,9 @@ Skillet.options =
 			desc = L["SHOPPINGCLEARDESC"],
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:ClearShoppingList()
+					CraftForge:ClearShoppingList()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction." .." Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction." .." Leave combat and try again.")
 				end
 			end,
 			order = 53
@@ -825,12 +825,12 @@ Skillet.options =
 			desc = L["FLUSHALLDATADESC"],
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:FlushAllData()
-					Skillet.CleanDatabase = true
-					Skillet:InitializeDatabase(Skillet:unitName("player"))
-					Skillet.CleanDatabase = false
+					CraftForge:FlushAllData()
+					CraftForge.CleanDatabase = true
+					CraftForge:InitializeDatabase(CraftForge:unitName("player"))
+					CraftForge.CleanDatabase = false
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 54
@@ -841,10 +841,10 @@ Skillet.options =
 			desc = L["FLUSHRECIPEDATADESC"],
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:FlushRecipeData()
-					Skillet:InitializeDatabase(Skillet:unitName("player"))
+					CraftForge:FlushRecipeData()
+					CraftForge:InitializeDatabase(CraftForge:unitName("player"))
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 55
@@ -855,10 +855,10 @@ Skillet.options =
 			desc = "Flush Custom Group Data",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:FlushCustomData()
-					Skillet:InitializeDatabase(Skillet:unitName("player"))
+					CraftForge:FlushCustomData()
+					CraftForge:InitializeDatabase(CraftForge:unitName("player"))
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 56
@@ -869,10 +869,10 @@ Skillet.options =
 			desc = "Flush Queue Data",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:FlushQueueData()
-					Skillet:InitializeDatabase(Skillet:unitName("player"))
+					CraftForge:FlushQueueData()
+					CraftForge:InitializeDatabase(CraftForge:unitName("player"))
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 57
@@ -883,10 +883,10 @@ Skillet.options =
 			desc = L["Flush Player Data"],
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:FlushPlayerData()
-					Skillet:InitializeDatabase(Skillet:unitName("player"))
+					CraftForge:FlushPlayerData()
+					CraftForge:InitializeDatabase(CraftForge:unitName("player"))
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 58
@@ -897,10 +897,10 @@ Skillet.options =
 			desc = "Clear the collected bag, bank, guildbank details",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:FlushDetailData()
-					Skillet:InitializeDatabase(Skillet:unitName("player"))
+					CraftForge:FlushDetailData()
+					CraftForge:InitializeDatabase(CraftForge:unitName("player"))
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 59
@@ -910,10 +910,10 @@ Skillet.options =
 			name = "Collect details",
 			desc = "Disable/Enable collecting bag, bank, guildbank details",
 			get = function()
-				return Skillet.db.profile.collect_details
+				return CraftForge.db.profile.collect_details
 			end,
 			set = function(self,value)
-				Skillet.db.profile.collect_details = value
+				CraftForge.db.profile.collect_details = value
 			end,
 			order = 60
 		},
@@ -922,12 +922,12 @@ Skillet.options =
 			name = L["STANDBYNAME"],
 			desc = L["STANDBYDESC"],
 			func = function()
-				if Skillet:IsEnabled() then
-					Skillet:Disable()
-					Skillet:Print(RED_FONT_COLOR_CODE..L["is now disabled"]..FONT_COLOR_CODE_CLOSE)
+				if CraftForge:IsEnabled() then
+					CraftForge:Disable()
+					CraftForge:Print(RED_FONT_COLOR_CODE..L["is now disabled"]..FONT_COLOR_CODE_CLOSE)
 				else
-					Skillet:Enable()
-					Skillet:Print(GREEN_FONT_COLOR_CODE..L["is now enabled"]..FONT_COLOR_CODE_CLOSE)
+					CraftForge:Enable()
+					CraftForge:Print(GREEN_FONT_COLOR_CODE..L["is now enabled"]..FONT_COLOR_CODE_CLOSE)
 				end
 			end,
 			guiHidden = true,
@@ -939,9 +939,9 @@ Skillet.options =
 			desc = L["IGNORELISTDESC"],
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:DisplayIgnoreList()
+					CraftForge:DisplayIgnoreList()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 62
@@ -952,9 +952,9 @@ Skillet.options =
 			desc = L["IGNORECLEARDESC"],
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:ClearIgnoreList()
+					CraftForge:ClearIgnoreList()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 63
@@ -965,11 +965,11 @@ Skillet.options =
 			desc = "Add to userIgnoredMats",
 			get = function()
 				local value = tonumber(value)
-				return Skillet.db.realm.userIgnoredMats[Skillet:unitName("player")][value]
+				return CraftForge.db.realm.userIgnoredMats[CraftForge:unitName("player")][value]
 			end,
 			set = function(self,value)
 				local value = tonumber(value)
-				Skillet.db.realm.userIgnoredMats[Skillet:unitName("player")][value] = 1
+				CraftForge.db.realm.userIgnoredMats[CraftForge:unitName("player")][value] = 1
 			end,
 			order = 64
 		},
@@ -979,11 +979,11 @@ Skillet.options =
 			desc = "Delete from userIgnoredMats",
 			get = function()
 				local value = tonumber(value)
-				return Skillet.db.realm.userIgnoredMats[Skillet:unitName("player")][value]
+				return CraftForge.db.realm.userIgnoredMats[CraftForge:unitName("player")][value]
 			end,
 			set = function(self,value)
 				local value = tonumber(value)
-				Skillet.db.realm.userIgnoredMats[Skillet:unitName("player")][value] = nil
+				CraftForge.db.realm.userIgnoredMats[CraftForge:unitName("player")][value] = nil
 			end,
 			order = 65
 		},
@@ -993,9 +993,9 @@ Skillet.options =
 			desc = L["RESETRECIPEFILTERDESC"],
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:ResetTradeSkillFilter()
+					CraftForge:ResetTradeSkillFilter()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 66
@@ -1006,8 +1006,8 @@ Skillet.options =
 			desc = "Print version information",
 			func = function()
 --				local wowVersion,wowBuild = GetBuildInfo();
---				print("Skillet "..tostring(Skillet.version).." on "..tostring(wowVersion).."."..tostring(wowBuild)..", "..tostring(GetLocale()))
-			Skillet:ShowVersion()
+--				print("CraftForge "..tostring(CraftForge.version).." on "..tostring(wowVersion).."."..tostring(wowBuild)..", "..tostring(GetLocale()))
+			CraftForge:ShowVersion()
 			end,
 			order = 66
 		},
@@ -1017,9 +1017,9 @@ Skillet.options =
 			desc = "Print list of SavedQueues",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:PrintSaved()
+					CraftForge:PrintSaved()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 67
@@ -1030,9 +1030,9 @@ Skillet.options =
 			desc = "Print Current Queue",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:PrintQueue()
+					CraftForge:PrintQueue()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 68
@@ -1043,9 +1043,9 @@ Skillet.options =
 			desc = "Print All Player Queues",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:PrintAllQueues()
+					CraftForge:PrintAllQueues()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 68
@@ -1059,9 +1059,9 @@ Skillet.options =
 			end,
 			set = function(self,value)
 				if not (UnitAffectingCombat("player")) then
-					Skillet:PrintQueue(value)
+					CraftForge:PrintQueue(value)
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 69
@@ -1072,9 +1072,9 @@ Skillet.options =
 			desc = "Clear Current Queue",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:ClearQueue()
+					CraftForge:ClearQueue()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 70
@@ -1085,9 +1085,9 @@ Skillet.options =
 			desc = "Print Auction Data",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:PrintAuctionData()
+					CraftForge:PrintAuctionData()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 71
@@ -1098,9 +1098,9 @@ Skillet.options =
 			desc = "Print Reagents In Queue",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:PrintRIQ()
+					CraftForge:PrintRIQ()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 72
@@ -1111,9 +1111,9 @@ Skillet.options =
 			desc = "Print ShoppingList",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:PrintShoppingList()
+					CraftForge:PrintShoppingList()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 73
@@ -1126,16 +1126,16 @@ Skillet.options =
 			name = "BTSUI",
 			desc = "Show/Hide the Blizzard TradeSkill frame",
 			get = function()
-				return Skillet.data.btsui
+				return CraftForge.data.btsui
 			end,
 			set = function(self,value)
-				Skillet.data.btsui = value
+				CraftForge.data.btsui = value
 				if value then
 					ShowUIPanel(ProfessionsFrame)
-					Skillet.BlizzardUIshowing = true
+					CraftForge.BlizzardUIshowing = true
 				else
 					HideUIPanel(ProfessionsFrame)
-					Skillet.BlizzardUIshowing = false
+					CraftForge.BlizzardUIshowing = false
 				end
 			end,
 			order = 74
@@ -1145,10 +1145,10 @@ Skillet.options =
 			name = "BCUI",
 			desc = "Show/Hide the Blizzard Crafting frame",
 			get = function()
-				return Skillet.data.bcui
+				return CraftForge.data.bcui
 			end,
 			set = function(self,value)
-				Skillet.data.bcui = value
+				CraftForge.data.bcui = value
 				if value then
 					ShowUIPanel(CraftFrame)
 				else
@@ -1163,7 +1163,7 @@ Skillet.options =
 			desc = "Scale Blizzard frame down",
 			get = function()
 				local value = tonumber(value)
-				return Skillet.db.profile.scale_blizzard_down
+				return CraftForge.db.profile.scale_blizzard_down
 			end,
 			set = function(self,value)
 				local value = tonumber(value)
@@ -1173,9 +1173,9 @@ Skillet.options =
 					elseif value > 1.0 then
 						value = 1.0
 					end
-					Skillet.db.profile.scale_blizzard_down = value
+					CraftForge.db.profile.scale_blizzard_down = value
 				else
-					print("scalesmall= "..tostring(Skillet.db.profile.scale_blizzard_down))
+					print("scalesmall= "..tostring(CraftForge.db.profile.scale_blizzard_down))
 				end
 			end,
 			order = 75
@@ -1186,7 +1186,7 @@ Skillet.options =
 			desc = "Scale Blizzard frame up",
 			get = function()
 				local value = tonumber(value)
-				return Skillet.db.profile.scale_blizzard_up
+				return CraftForge.db.profile.scale_blizzard_up
 			end,
 			set = function(self,value)
 				local value = tonumber(value)
@@ -1196,31 +1196,31 @@ Skillet.options =
 					elseif value > 1.0 then
 						value = 1.0
 					end
-					Skillet.db.profile.scale_blizzard_up = value
+					CraftForge.db.profile.scale_blizzard_up = value
 				else
-					print("scalelarge= "..tostring(Skillet.db.profile.scale_blizzard_up))
+					print("scalelarge= "..tostring(CraftForge.db.profile.scale_blizzard_up))
 				end
 			end,
 			order = 75
 		},
 --
--- commands to update Skillet's main windows
+-- commands to update CraftForge's main windows
 --
 		uslw = {
 			type = 'execute',
 			name = "UpdateShoppingListWindow",
-			desc = "Update (Skillet's) Shopping List Window",
+			desc = "Update (CraftForge's) Shopping List Window",
 			func = function()
-				Skillet:UpdateShoppingListWindow(false)
+				CraftForge:UpdateShoppingListWindow(false)
 			end,
 			order = 76
 		},
 		utsw = {
 			type = 'execute',
 			name = "UpdateTradeSkillWindow",
-			desc = "Update (Skillet's) TradeSkill Window",
+			desc = "Update (CraftForge's) TradeSkill Window",
 			func = function()
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge:UpdateTradeSkillWindow()
 			end,
 			order = 77
 		},
@@ -1233,14 +1233,14 @@ Skillet.options =
 			name = "CustomGroups",
 			desc = "Enable / Disable Custom Groups button",
 			get = function()
-				return Skillet.data.customgroups
+				return CraftForge.data.customgroups
 			end,
 			set = function(self,value)
-				Skillet.data.customgroups = value
+				CraftForge.data.customgroups = value
 				if value then
-					SkilletRecipeGroupOperations:Enable()
+					CraftForgeRecipeGroupOperations:Enable()
 				else
-					SkilletRecipeGroupOperations:Disable()
+					CraftForgeRecipeGroupOperations:Disable()
 				end
 			end,
 			order = 78
@@ -1250,10 +1250,10 @@ Skillet.options =
 			name = "NoModKeys",
 			desc = "Disable/Enable Mod Keys to open the Blizzard frames",
 			get = function()
-				return Skillet.db.profile.nomodkeys
+				return CraftForge.db.profile.nomodkeys
 			end,
 			set = function(self,value)
-				Skillet.db.profile.nomodkeys = value
+				CraftForge.db.profile.nomodkeys = value
 			end,
 			order = 79
 		},
@@ -1262,10 +1262,10 @@ Skillet.options =
 			name = "SwapShiftKey",
 			desc = "Swap Shift Key to open the Blizzard frames",
 			get = function()
-				return Skillet.db.profile.swapshiftkey
+				return CraftForge.db.profile.swapshiftkey
 			end,
 			set = function(self,value)
-				Skillet.db.profile.swapshiftkey = value
+				CraftForge.db.profile.swapshiftkey = value
 			end,
 			order = 80
 		},
@@ -1275,9 +1275,9 @@ Skillet.options =
 			desc = "Initialize Skill Levels",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet:InitializeSkillLevels()
+					CraftForge:InitializeSkillLevels()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 81
@@ -1287,10 +1287,10 @@ Skillet.options =
 			name = "AltSkillLevels",
 			desc = "Use Alternate Skill Levels",
 			get = function()
-				return Skillet.db.profile.altskilllevels
+				return CraftForge.db.profile.altskilllevels
 			end,
 			set = function(self,value)
-				Skillet.db.profile.altskilllevels = value
+				CraftForge.db.profile.altskilllevels = value
 			end,
 			order = 82
 		},
@@ -1299,10 +1299,10 @@ Skillet.options =
 			name = "BaseSkillLevel",
 			desc = "Use Alternate Base Skill Level",
 			get = function()
-				return Skillet.db.profile.baseskilllevel
+				return CraftForge.db.profile.baseskilllevel
 			end,
 			set = function(self,value)
-				Skillet.db.profile.baseskilllevel = value
+				CraftForge.db.profile.baseskilllevel = value
 			end,
 			order = 83
 		},
@@ -1312,9 +1312,9 @@ Skillet.options =
 			desc = "Display the news frame",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					Skillet.NewsGUI:Toggle()
+					CraftForge.NewsGUI:Toggle()
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 84
@@ -1329,14 +1329,14 @@ Skillet.options =
 			name = "WarnShow",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.WarnShow
+				return CraftForge.db.profile.WarnShow
 			end,
 			set = function(self,value)
-				Skillet.db.profile.WarnShow = value
-				Skillet.WarnShow = value
+				CraftForge.db.profile.WarnShow = value
+				CraftForge.WarnShow = value
 				if value then
-					Skillet.db.profile.WarnLog = value
-					Skillet.WarnLog = value
+					CraftForge.db.profile.WarnLog = value
+					CraftForge.WarnLog = value
 				end
 			end,
 			order = 81
@@ -1346,11 +1346,11 @@ Skillet.options =
 			name = "WarnLog",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.WarnLog
+				return CraftForge.db.profile.WarnLog
 			end,
 			set = function(self,value)
-				Skillet.db.profile.WarnLog = value
-				Skillet.WarnLog = value
+				CraftForge.db.profile.WarnLog = value
+				CraftForge.WarnLog = value
 			end,
 			order = 82
 		},
@@ -1359,14 +1359,14 @@ Skillet.options =
 			name = "DebugShow",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.DebugShow
+				return CraftForge.db.profile.DebugShow
 			end,
 			set = function(self,value)
-				Skillet.db.profile.DebugShow = value
-				Skillet.DebugShow = value
+				CraftForge.db.profile.DebugShow = value
+				CraftForge.DebugShow = value
 				if value then
-					Skillet.db.profile.DebugLogging = value
-					Skillet.DebugLogging = value
+					CraftForge.db.profile.DebugLogging = value
+					CraftForge.DebugLogging = value
 				end
 			end,
 			order = 83
@@ -1376,11 +1376,11 @@ Skillet.options =
 			name = "DebugLogging",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.DebugLogging
+				return CraftForge.db.profile.DebugLogging
 			end,
 			set = function(self,value)
-				Skillet.db.profile.DebugLogging = value
-				Skillet.DebugLogging = value
+				CraftForge.db.profile.DebugLogging = value
+				CraftForge.DebugLogging = value
 			end,
 			order = 84
 		},
@@ -1389,15 +1389,15 @@ Skillet.options =
 			name = "DebugLevel",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.DebugLevel
+				return CraftForge.db.profile.DebugLevel
 			end,
 			set = function(self,value)
 				value = tonumber(value)
 				if not value then value = 1
 				elseif value < 1 then value = 1
 				elseif value > 9 then value = 10 end
-				Skillet.db.profile.DebugLevel = value
-				Skillet.DebugLevel = value
+				CraftForge.db.profile.DebugLevel = value
+				CraftForge.DebugLevel = value
 			end,
 			order = 85
 		},
@@ -1406,11 +1406,11 @@ Skillet.options =
 			name = "TableDump",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.TableDump
+				return CraftForge.db.profile.TableDump
 			end,
 			set = function(self,value)
-				Skillet.db.profile.TableDump = value
-				Skillet.TableDump = value
+				CraftForge.db.profile.TableDump = value
+				CraftForge.TableDump = value
 			end,
 			order = 86
 		},
@@ -1419,14 +1419,14 @@ Skillet.options =
 			name = "TraceShow",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.TraceShow
+				return CraftForge.db.profile.TraceShow
 			end,
 			set = function(self,value)
-				Skillet.db.profile.TraceShow = value
-				Skillet.TraceShow = value
+				CraftForge.db.profile.TraceShow = value
+				CraftForge.TraceShow = value
 				if value then
-					Skillet.db.profile.TraceLog = value
-					Skillet.TraceLog = value
+					CraftForge.db.profile.TraceLog = value
+					CraftForge.TraceLog = value
 				end
 			end,
 			order = 87
@@ -1436,11 +1436,11 @@ Skillet.options =
 			name = "TraceLog",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.TraceLog
+				return CraftForge.db.profile.TraceLog
 			end,
 			set = function(self,value)
-				Skillet.db.profile.TraceLog = value
-				Skillet.TraceLog = value
+				CraftForge.db.profile.TraceLog = value
+				CraftForge.TraceLog = value
 			end,
 			order = 88
 		},
@@ -1449,11 +1449,11 @@ Skillet.options =
 			name = "TraceLog2",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.TraceLog2
+				return CraftForge.db.profile.TraceLog2
 			end,
 			set = function(self,value)
-				Skillet.db.profile.TraceLog2 = value
-				Skillet.TraceLog2 = value
+				CraftForge.db.profile.TraceLog2 = value
+				CraftForge.TraceLog2 = value
 			end,
 			order = 88
 		},
@@ -1462,11 +1462,11 @@ Skillet.options =
 			name = "TraceLog3",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.TraceLog3
+				return CraftForge.db.profile.TraceLog3
 			end,
 			set = function(self,value)
-				Skillet.db.profile.TraceLog3 = value
-				Skillet.TraceLog3 = value
+				CraftForge.db.profile.TraceLog3 = value
+				CraftForge.TraceLog3 = value
 			end,
 			order = 88
 		},
@@ -1475,11 +1475,11 @@ Skillet.options =
 			name = "ProfileShow",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.ProfileShow
+				return CraftForge.db.profile.ProfileShow
 			end,
 			set = function(self,value)
-				Skillet.db.profile.ProfileShow = value
-				Skillet.ProfileShow = value
+				CraftForge.db.profile.ProfileShow = value
+				CraftForge.ProfileShow = value
 			end,
 			order = 89
 		},
@@ -1488,8 +1488,8 @@ Skillet.options =
 			name = "ClearDebugLog",
 			desc = "Option for debugging",
 			func = function()
-				SkilletDBPC = {}
-				DA.DebugLog = SkilletDBPC
+				CraftForgeDBPC = {}
+				DA.DebugLog = CraftForgeDBPC
 			end,
 			order = 90
 		},
@@ -1498,8 +1498,8 @@ Skillet.options =
 			name = "ClearProfileLog",
 			desc = "Option for debugging",
 			func = function()
-				SkilletProfile = {}
-				DA.DebugProfile = SkilletProfile
+				CraftForgeProfile = {}
+				DA.DebugProfile = CraftForgeProfile
 			end,
 			order = 91
 		},
@@ -1518,59 +1518,59 @@ Skillet.options =
 			desc = "Turn Debug On",
 			func = function()
 --[[
-				if Skillet.db.profile.WarnShow then
-					Skillet.db.profile.WarnShow = true
-					Skillet.WarnShow = true
+				if CraftForge.db.profile.WarnShow then
+					CraftForge.db.profile.WarnShow = true
+					CraftForge.WarnShow = true
 				end
-				if Skillet.db.profile.WarnLog then
-					Skillet.db.profile.WarnLog = true
-					Skillet.WarnLog = true
+				if CraftForge.db.profile.WarnLog then
+					CraftForge.db.profile.WarnLog = true
+					CraftForge.WarnLog = true
 				end
-				if Skillet.db.profile.DebugShow then
-					Skillet.db.profile.DebugShow= true
-					Skillet.DebugShow = true
+				if CraftForge.db.profile.DebugShow then
+					CraftForge.db.profile.DebugShow= true
+					CraftForge.DebugShow = true
 				end
-				if Skillet.db.profile.DebugLogging then
-					Skillet.db.profile.DebugLogging = true
-					Skillet.DebugLogging = true
+				if CraftForge.db.profile.DebugLogging then
+					CraftForge.db.profile.DebugLogging = true
+					CraftForge.DebugLogging = true
 				end
-				if Skillet.db.profile.DebugLevel then
-					Skillet.db.profile.DebugLevel = 4
+				if CraftForge.db.profile.DebugLevel then
+					CraftForge.db.profile.DebugLevel = 4
 				end
-				if Skillet.db.profile.TableDump then
-					Skillet.db.profile.TableDump = true
+				if CraftForge.db.profile.TableDump then
+					CraftForge.db.profile.TableDump = true
 				end
 --
 -- LogLevel is left undefined or set to false as
 -- the default should be log everything.
 --
-				if Skillet.db.profile.LogLevel then
-					Skillet.db.profile.LogLevel = false
-					Skillet.LogLevel = false
+				if CraftForge.db.profile.LogLevel then
+					CraftForge.db.profile.LogLevel = false
+					CraftForge.LogLevel = false
 				end
-				if Skillet.db.profile.TraceShow then
-					Skillet.db.profile.TraceShow = true
-					Skillet.TraceShow = true
+				if CraftForge.db.profile.TraceShow then
+					CraftForge.db.profile.TraceShow = true
+					CraftForge.TraceShow = true
 				end
-				if Skillet.db.profile.TraceLog then
-					Skillet.db.profile.TraceLog = true
-					Skillet.TraceLog = true
+				if CraftForge.db.profile.TraceLog then
+					CraftForge.db.profile.TraceLog = true
+					CraftForge.TraceLog = true
 				end
-				if Skillet.db.profile.TraceLog2 then
-					Skillet.db.profile.TraceLog2 = false
-					Skillet.TraceLog2 = false
+				if CraftForge.db.profile.TraceLog2 then
+					CraftForge.db.profile.TraceLog2 = false
+					CraftForge.TraceLog2 = false
 				end
-				if Skillet.db.profile.TraceLog3 then
-					Skillet.db.profile.TraceLog3 = false
-					Skillet.TraceLog3 = false
+				if CraftForge.db.profile.TraceLog3 then
+					CraftForge.db.profile.TraceLog3 = false
+					CraftForge.TraceLog3 = false
 				end
-				if Skillet.db.profile.ProfileShow then
-					Skillet.db.profile.ProfileShow = false
-					Skillet.ProfileShow = false
+				if CraftForge.db.profile.ProfileShow then
+					CraftForge.db.profile.ProfileShow = false
+					CraftForge.ProfileShow = false
 				end
 --]]
 				DA.DEBUGON()
-				Skillet:Print(GREEN_FONT_COLOR_CODE.."DebugOn:"..FONT_COLOR_CODE_CLOSE)
+				CraftForge:Print(GREEN_FONT_COLOR_CODE.."DebugOn:"..FONT_COLOR_CODE_CLOSE)
 				DA.DebugAidsStatus()
 			end,
 			order = 93
@@ -1581,54 +1581,54 @@ Skillet.options =
 			desc = "Turn Debug Off",
 			func = function()
 --[[
-				if Skillet.db.profile.WarnShow then
-					Skillet.db.profile.WarnShow = false
-					Skillet.WarnShow = false
+				if CraftForge.db.profile.WarnShow then
+					CraftForge.db.profile.WarnShow = false
+					CraftForge.WarnShow = false
 				end
-				if Skillet.db.profile.WarnLog then
-					Skillet.db.profile.WarnLog = false
-					Skillet.WarnLog = false
+				if CraftForge.db.profile.WarnLog then
+					CraftForge.db.profile.WarnLog = false
+					CraftForge.WarnLog = false
 				end
-				if Skillet.db.profile.DebugShow then
-					Skillet.db.profile.DebugShow= false
-					Skillet.DebugShow = false
+				if CraftForge.db.profile.DebugShow then
+					CraftForge.db.profile.DebugShow= false
+					CraftForge.DebugShow = false
 				end
-				if Skillet.db.profile.DebugLogging then
-					Skillet.db.profile.DebugLogging = false
-					Skillet.DebugLogging = false
+				if CraftForge.db.profile.DebugLogging then
+					CraftForge.db.profile.DebugLogging = false
+					CraftForge.DebugLogging = false
 				end
 --
 -- DebugLevel is left alone but
 -- LogLevel is left undefined or set to false as
 -- the default should be log everything.
 --
-				if Skillet.db.profile.LogLevel then
-					Skillet.db.profile.LogLevel = false
-					Skillet.LogLevel = false
+				if CraftForge.db.profile.LogLevel then
+					CraftForge.db.profile.LogLevel = false
+					CraftForge.LogLevel = false
 				end
-				if Skillet.db.profile.TraceShow then
-					Skillet.db.profile.TraceShow = false
-					Skillet.TraceShow = false
+				if CraftForge.db.profile.TraceShow then
+					CraftForge.db.profile.TraceShow = false
+					CraftForge.TraceShow = false
 				end
-				if Skillet.db.profile.TraceLog then
-					Skillet.db.profile.TraceLog = false
-					Skillet.TraceLog = false
+				if CraftForge.db.profile.TraceLog then
+					CraftForge.db.profile.TraceLog = false
+					CraftForge.TraceLog = false
 				end
-				if Skillet.db.profile.TraceLog2 then
-					Skillet.db.profile.TraceLog2 = false
-					Skillet.TraceLog2 = false
+				if CraftForge.db.profile.TraceLog2 then
+					CraftForge.db.profile.TraceLog2 = false
+					CraftForge.TraceLog2 = false
 				end
-				if Skillet.db.profile.TraceLog3 then
-					Skillet.db.profile.TraceLog3 = false
-					Skillet.TraceLog3 = false
+				if CraftForge.db.profile.TraceLog3 then
+					CraftForge.db.profile.TraceLog3 = false
+					CraftForge.TraceLog3 = false
 				end
-				if Skillet.db.profile.ProfileShow then
-					Skillet.db.profile.ProfileShow = false
-					Skillet.ProfileShow = false
+				if CraftForge.db.profile.ProfileShow then
+					CraftForge.db.profile.ProfileShow = false
+					CraftForge.ProfileShow = false
 				end
 --]]
 				DA.DEBUGOFF()
-				Skillet:Print(RED_FONT_COLOR_CODE.."DebugOff:"..FONT_COLOR_CODE_CLOSE)
+				CraftForge:Print(RED_FONT_COLOR_CODE.."DebugOff:"..FONT_COLOR_CODE_CLOSE)
 				DA.DebugAidsStatus()
 			end,
 			order = 93
@@ -1638,11 +1638,11 @@ Skillet.options =
 			name = "LogLevel",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.LogLevel
+				return CraftForge.db.profile.LogLevel
 			end,
 			set = function(self,value)
-				Skillet.db.profile.LogLevel = value
-				Skillet.LogLevel = value
+				CraftForge.db.profile.LogLevel = value
+				CraftForge.LogLevel = value
 			end,
 			order = 94
 		},
@@ -1651,13 +1651,13 @@ Skillet.options =
 			name = "MaxDebug",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.MAXDEBUG
+				return CraftForge.db.profile.MAXDEBUG
 			end,
 			set = function(self,value)
 				value = tonumber(value)
 				if not value then value = 4000 end
-				Skillet.db.profile.MAXDEBUG = value
-				Skillet.MAXDEBUG = value
+				CraftForge.db.profile.MAXDEBUG = value
+				CraftForge.MAXDEBUG = value
 			end,
 			order = 95
 		},
@@ -1666,13 +1666,13 @@ Skillet.options =
 			name = "MaxProfile",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.MAXPROFILE
+				return CraftForge.db.profile.MAXPROFILE
 			end,
 			set = function(self,value)
 				value = tonumber(value)
 				if not value then value = 2000 end
-				Skillet.db.profile.MAXPROFILE = value
-				Skillet.MAXPROFILE = value
+				CraftForge.db.profile.MAXPROFILE = value
+				CraftForge.MAXPROFILE = value
 			end,
 			order = 96
 		},
@@ -1681,14 +1681,14 @@ Skillet.options =
 			name = "FixBugs",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.FixBugs
+				return CraftForge.db.profile.FixBugs
 			end,
 			set = function(self,value)
-				Skillet.db.profile.FixBugs = value
-				Skillet.FixBugs = value
+				CraftForge.db.profile.FixBugs = value
+				CraftForge.FixBugs = value
 				if value then
-					Skillet.db.profile.TraceLog = value
-					Skillet.TraceLog = value
+					CraftForge.db.profile.TraceLog = value
+					CraftForge.TraceLog = value
 				end
 			end,
 			order = 97
@@ -1706,7 +1706,7 @@ Skillet.options =
 		},
 
 --
--- command to reset the position of the major Skillet frames
+-- command to reset the position of the major CraftForge frames
 --
 		reset = {
 			type = 'execute',
@@ -1715,56 +1715,56 @@ Skillet.options =
 			func = function()
 				if not (UnitAffectingCombat("player")) then
 					local windowManager = LibStub("LibWindow-1.1")
-					if SkilletFrame and SkilletFrame:IsVisible() then
-						SkilletFrame:SetWidth(750);
-						SkilletFrame:SetHeight(580);
-						SkilletFrame:SetPoint("TOPLEFT",200,-100);
-						windowManager.SavePosition(SkilletFrame)
+					if CraftForgeFrame and CraftForgeFrame:IsVisible() then
+						CraftForgeFrame:SetWidth(750);
+						CraftForgeFrame:SetHeight(580);
+						CraftForgeFrame:SetPoint("TOPLEFT",200,-100);
+						windowManager.SavePosition(CraftForgeFrame)
 					end
-					if SkilletStandaloneQueue and SkilletStandaloneQueue:IsVisible() then
-						SkilletStandaloneQueue:SetWidth(385);
-						SkilletStandaloneQueue:SetHeight(170);
-						SkilletStandaloneQueue:SetPoint("TOPLEFT",950,-100);
-						windowManager.SavePosition(SkilletStandaloneQueue)
+					if CraftForgeStandaloneQueue and CraftForgeStandaloneQueue:IsVisible() then
+						CraftForgeStandaloneQueue:SetWidth(385);
+						CraftForgeStandaloneQueue:SetHeight(170);
+						CraftForgeStandaloneQueue:SetPoint("TOPLEFT",950,-100);
+						windowManager.SavePosition(CraftForgeStandaloneQueue)
 					end
-					if SkilletShoppingList and SkilletShoppingList:IsVisible() then
-						SkilletShoppingList:SetWidth(385);
-						SkilletShoppingList:SetHeight(240);
-						SkilletShoppingList:SetPoint("TOPLEFT",950,-400);
-						windowManager.SavePosition(SkilletShoppingList)
+					if CraftForgeShoppingList and CraftForgeShoppingList:IsVisible() then
+						CraftForgeShoppingList:SetWidth(385);
+						CraftForgeShoppingList:SetHeight(240);
+						CraftForgeShoppingList:SetPoint("TOPLEFT",950,-400);
+						windowManager.SavePosition(CraftForgeShoppingList)
 					end
-					if SkilletIgnoreList and SkilletIgnoreList:IsVisible() then
-						SkilletIgnoreList:SetWidth(320);
-						SkilletIgnoreList:SetHeight(150);
-						SkilletIgnoreList:SetPoint("TOPLEFT",950,-400);
-						windowManager.SavePosition(SkilletIgnoreList)
+					if CraftForgeIgnoreList and CraftForgeIgnoreList:IsVisible() then
+						CraftForgeIgnoreList:SetWidth(320);
+						CraftForgeIgnoreList:SetHeight(150);
+						CraftForgeIgnoreList:SetPoint("TOPLEFT",950,-400);
+						windowManager.SavePosition(CraftForgeIgnoreList)
 					end
-					if SkilletOptionalList and SkilletOptionalList:IsVisible() then
-						SkilletOptionalList:SetWidth(420);
-						SkilletOptionalList:SetHeight(230);
-						SkilletOptionalList:SetPoint("TOPLEFT",950,-400);
-						windowManager.SavePosition(SkilletOptionalList)
+					if CraftForgeOptionalList and CraftForgeOptionalList:IsVisible() then
+						CraftForgeOptionalList:SetWidth(420);
+						CraftForgeOptionalList:SetHeight(230);
+						CraftForgeOptionalList:SetPoint("TOPLEFT",950,-400);
+						windowManager.SavePosition(CraftForgeOptionalList)
 					end
-					if SkilletModifiedList and SkilletModifiedList:IsVisible() then
-						SkilletModifiedList:SetWidth(420);
-						SkilletModifiedList:SetHeight(230);
-						SkilletModifiedList:SetPoint("TOPLEFT",950,-400);
-						windowManager.SavePosition(SkilletModifiedList)
+					if CraftForgeModifiedList and CraftForgeModifiedList:IsVisible() then
+						CraftForgeModifiedList:SetWidth(420);
+						CraftForgeModifiedList:SetHeight(230);
+						CraftForgeModifiedList:SetPoint("TOPLEFT",950,-400);
+						windowManager.SavePosition(CraftForgeModifiedList)
 					end
-					if SkilletSalvageList and SkilletSalvageList:IsVisible() then
-						SkilletSalvageList:SetWidth(420);
-						SkilletSalvageList:SetHeight(230);
-						SkilletSalvageList:SetPoint("TOPLEFT",950,-400);
-						windowManager.SavePosition(SkilletSalvageList)
+					if CraftForgeSalvageList and CraftForgeSalvageList:IsVisible() then
+						CraftForgeSalvageList:SetWidth(420);
+						CraftForgeSalvageList:SetHeight(230);
+						CraftForgeSalvageList:SetPoint("TOPLEFT",950,-400);
+						windowManager.SavePosition(CraftForgeSalvageList)
 					end
-					if SkilletFinishingList and SkilletFinishingList:IsVisible() then
-						SkilletFinishingList:SetWidth(420);
-						SkilletFinishingList:SetHeight(230);
-						SkilletFinishingList:SetPoint("TOPLEFT",950,-400);
-						windowManager.SavePosition(SkilletFinishingList)
+					if CraftForgeFinishingList and CraftForgeFinishingList:IsVisible() then
+						CraftForgeFinishingList:SetWidth(420);
+						CraftForgeFinishingList:SetHeight(230);
+						CraftForgeFinishingList:SetPoint("TOPLEFT",950,-400);
+						windowManager.SavePosition(CraftForgeFinishingList)
 					end
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction." .." Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction." .." Leave combat and try again.")
 				end
 			end,
 			order = 99
@@ -1774,11 +1774,11 @@ Skillet.options =
 			name = "BlizzOR",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.db.profile.BlizzOR
+				return CraftForge.db.profile.BlizzOR
 			end,
 			set = function(self,value)
-				Skillet.db.profile.BlizzOR = value
-				Skillet.BlizzOR = value
+				CraftForge.db.profile.BlizzOR = value
+				CraftForge.BlizzOR = value
 			end,
 			order = 100
 		},
@@ -1791,14 +1791,14 @@ Skillet.options =
 			name = "FakeIt",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.FakeIt
+				return CraftForge.FakeIt
 			end,
 			set = function(self,value)
-				Skillet.FakeIt = value
-				if Skillet.FakeIt then
-					Skillet:Print(RED_FONT_COLOR_CODE.."FakeIt is on"..FONT_COLOR_CODE_CLOSE)
+				CraftForge.FakeIt = value
+				if CraftForge.FakeIt then
+					CraftForge:Print(RED_FONT_COLOR_CODE.."FakeIt is on"..FONT_COLOR_CODE_CLOSE)
 				else
-					Skillet:Print(GREEN_FONT_COLOR_CODE.."FakeIt is off"..FONT_COLOR_CODE_CLOSE)
+					CraftForge:Print(GREEN_FONT_COLOR_CODE.."FakeIt is off"..FONT_COLOR_CODE_CLOSE)
 				end
 			end,
 			order = 101
@@ -1817,21 +1817,21 @@ Skillet.options =
 				if not (UnitAffectingCombat("player")) then
 					if value then
 						local item, id, price, name, link
-						local server = Skillet.data.server or 0
+						local server = CraftForge.data.server or 0
 						DA.DEBUG(0,"value= "..value)
 						item, price = string.split(",",value)
 						if string.find(item,"|H") then
-							id = Skillet:GetItemIDFromLink(item)
+							id = CraftForge:GetItemIDFromLink(item)
 						else
 							id = tonumber(item)
 						end
 						name, link = C_Item.GetItemInfo(id)
 						price = tonumber(price)
 						DA.DEBUG(0,"id= "..tostring(id)..", name= "..tostring(name)..", price= "..tostring(price)..", link= "..tostring(link))
-						Skillet.db.global.customPrice[server][id] = { ["name"] = name, ["value"] = price }
+						CraftForge.db.global.customPrice[server][id] = { ["name"] = name, ["value"] = price }
 						end
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction." .." Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction." .." Leave combat and try again.")
 				end
 			end,
 			order = 105
@@ -1847,17 +1847,17 @@ Skillet.options =
 				if not (UnitAffectingCombat("player")) then
 					if value then
 						local id
-						local server = Skillet.data.server or 0
+						local server = CraftForge.data.server or 0
 						DA.DEBUG(0,"value= "..value)
 						if string.find(value,"|H") then
-							id = Skillet:GetItemIDFromLink(value)
+							id = CraftForge:GetItemIDFromLink(value)
 						else
 							id = tonumber(value)
 						end
-						Skillet.db.global.customPrice[server][id] = nil
+						CraftForge.db.global.customPrice[server][id] = nil
 						end
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction." .." Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction." .." Leave combat and try again.")
 				end
 			end,
 			order = 106
@@ -1867,9 +1867,9 @@ Skillet.options =
 			name = "customshow",
 			desc = "Print the custom reagent price table",
 			func = function()
-				local server = Skillet.data.server or 0
-				for id,entry in pairs(Skillet.db.global.customPrice[server]) do
-					print(tostring(entry.name)..", "..Skillet:FormatMoneyFull(entry.value,true))
+				local server = CraftForge.data.server or 0
+				for id,entry in pairs(CraftForge.db.global.customPrice[server]) do
+					print(tostring(entry.name)..", "..CraftForge:FormatMoneyFull(entry.value,true))
 				end
 			end,
 			order = 107
@@ -1879,8 +1879,8 @@ Skillet.options =
 			name = "customdump",
 			desc = "Print the custom reagent price table",
 			func = function()
-				local server = Skillet.data.server or 0
-				for id,entry in pairs(Skillet.db.global.customPrice[server]) do
+				local server = CraftForge.data.server or 0
+				for id,entry in pairs(CraftForge.db.global.customPrice[server]) do
 					print("id= "..tostring(id)..", name= "..tostring(entry.name)..", value= "..tostring(entry.value))
 				end
 			end,
@@ -1891,8 +1891,8 @@ Skillet.options =
 			name = "customclear",
 			desc = "Clear the custom reagent price table",
 			func = function()
-				local server = Skillet.data.server or 0
-				Skillet.db.global.customPrice[server] = {}
+				local server = CraftForge.data.server or 0
+				CraftForge.db.global.customPrice[server] = {}
 			end,
 			order = 109
 		},
@@ -1910,21 +1910,21 @@ Skillet.options =
 				if not (UnitAffectingCombat("player")) then
 					if value then
 						local item, id, data, name, link
-						local player = Skillet.currentPlayer
+						local player = CraftForge.currentPlayer
 						DA.DEBUG(0,"value= "..value)
 						item, data = string.split(",",value)
 						if string.find(item,"|H") then
-							id = Skillet:GetItemIDFromLink(item)
+							id = CraftForge:GetItemIDFromLink(item)
 						else
 							id = tonumber(item)
 						end
 						name, link = C_Item.GetItemInfo(id)
 						data = tonumber(data)
 						DA.DEBUG(0,"id= "..tostring(id)..", name= "..tostring(name)..", data= "..tostring(data)..", link= "..tostring(link))
-						Skillet.db.realm.toolData[player][id] = { ["name"] = name, ["value"] = data }
+						CraftForge.db.realm.toolData[player][id] = { ["name"] = name, ["value"] = data }
 						end
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 120
@@ -1940,17 +1940,17 @@ Skillet.options =
 				if not (UnitAffectingCombat("player")) then
 					if value then
 						local id
-						local player = Skillet.currentPlayer
+						local player = CraftForge.currentPlayer
 						DA.DEBUG(0,"value= "..value)
 						if string.find(value,"|H") then
-							id = Skillet:GetItemIDFromLink(value)
+							id = CraftForge:GetItemIDFromLink(value)
 						else
 							id = tonumber(value)
 						end
-						Skillet.db.realm.toolData[player][id] = nil
+						CraftForge.db.realm.toolData[player][id] = nil
 						end
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction. Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction. Leave combat and try again.")
 				end
 			end,
 			order = 121
@@ -1960,11 +1960,11 @@ Skillet.options =
 			name = "tooldump",
 			desc = "Print the toolData table",
 			func = function()
-				local player = Skillet.currentPlayer
-				if next(Skillet.db.realm.toolData[player]) == nil then
+				local player = CraftForge.currentPlayer
+				if next(CraftForge.db.realm.toolData[player]) == nil then
 					print("toolData is empty")
 				end
-				for id,entry in pairs(Skillet.db.realm.toolData[player]) do
+				for id,entry in pairs(CraftForge.db.realm.toolData[player]) do
 					print("id= "..tostring(id)..", name= "..tostring(entry.name)..", value= "..tostring(entry.value))
 				end
 			end,
@@ -1975,8 +1975,8 @@ Skillet.options =
 			name = "toolclear",
 			desc = "Clear the custom reagent data table",
 			func = function()
-				local player = Skillet.currentPlayer
-				Skillet.db.realm.toolData[player] = {}
+				local player = CraftForge.currentPlayer
+				CraftForge.db.realm.toolData[player] = {}
 			end,
 			order = 123
 		},
@@ -1990,14 +1990,14 @@ Skillet.options =
 			name = "MissAll",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.MissAll
+				return CraftForge.MissAll
 			end,
 			set = function(self,value)
-				Skillet.MissAll = value
-				if Skillet.MissAll then
-					Skillet:Print(RED_FONT_COLOR_CODE.."MissAll is on"..FONT_COLOR_CODE_CLOSE)
+				CraftForge.MissAll = value
+				if CraftForge.MissAll then
+					CraftForge:Print(RED_FONT_COLOR_CODE.."MissAll is on"..FONT_COLOR_CODE_CLOSE)
 				else
-					Skillet:Print(GREEN_FONT_COLOR_CODE.."MissAll is off"..FONT_COLOR_CODE_CLOSE)
+					CraftForge:Print(GREEN_FONT_COLOR_CODE.."MissAll is off"..FONT_COLOR_CODE_CLOSE)
 				end
 			end,
 			order = 111
@@ -2017,7 +2017,7 @@ Skillet.options =
 					if value then
 						DA.DEBUG(0,"value= "..value)
 						local id
-						for id,entry in pairs(Skillet.db.global.MissingVendorItems) do
+						for id,entry in pairs(CraftForge.db.global.MissingVendorItems) do
 							if type(entry) == 'table' then	-- table entries are {name, quantity, currencyName, currencyID, currencyCount}
 								if #entry ~= tonumber(value) then
 									print("id= "..tostring(id)..", size= "..tostring(#entry)..", "..DA.DUMP(entry))
@@ -2026,7 +2026,7 @@ Skillet.options =
 						end
 					end
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction." .." Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction." .." Leave combat and try again.")
 				end
 			end,
 			order = 112
@@ -2037,21 +2037,21 @@ Skillet.options =
 			desc = "Delete MissingVendorItems entries that are tables and not the correct size",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					if not Skillet.db.global.RemovedVendorItems then
-						Skillet.db.global.RemovedVendorItems = {}
+					if not CraftForge.db.global.RemovedVendorItems then
+						CraftForge.db.global.RemovedVendorItems = {}
 					end
-					for id,entry in pairs(Skillet.db.global.MissingVendorItems) do
+					for id,entry in pairs(CraftForge.db.global.MissingVendorItems) do
 						if type(entry) == 'table' then
 							local size = #entry
 							if not (size == 5 or size == 9) then
 								print("id= "..tostring(id)..", size= "..tostring(size)..", "..DA.DUMP(entry))
-								Skillet.db.global.RemovedVendorItems[id] = entry
-								Skillet.db.global.MissingVendorItems[id] = nil
+								CraftForge.db.global.RemovedVendorItems[id] = entry
+								CraftForge.db.global.MissingVendorItems[id] = nil
 							end
 						end
 					end
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction." .." Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction." .." Leave combat and try again.")
 				end
 			end,
 			order = 113
@@ -2061,7 +2061,7 @@ Skillet.options =
 			name = "missingclear",
 			desc = "Clear the MissingVendorItems table",
 			func = function()
-				Skillet.db.global.MissingVendorItems = {}
+				CraftForge.db.global.MissingVendorItems = {}
 			end,
 			order = 114
 		},
@@ -2074,13 +2074,13 @@ Skillet.options =
 			desc = "Print the RemovedVendorItems table",
 			func = function()
 				if not (UnitAffectingCombat("player")) then
-					if Skillet.db.global.RemovedVendorItems then
-						for id,entry in pairs(Skillet.db.global.RemovedVendorItems) do
+					if CraftForge.db.global.RemovedVendorItems then
+						for id,entry in pairs(CraftForge.db.global.RemovedVendorItems) do
 							print("id= "..tostring(id)..", size= "..tostring(#entry)..", "..DA.DUMP(entry))
 						end
 					end
 				else
-					DA.DEBUG(0,"|cff8888ffSkillet|r: Combat lockdown restriction." .." Leave combat and try again.")
+					DA.DEBUG(0,"|cff8888ffCraftForge|r: Combat lockdown restriction." .." Leave combat and try again.")
 				end
 			end,
 			order = 116
@@ -2090,7 +2090,7 @@ Skillet.options =
 			name = "removedclear",
 			desc = "Clear the RemovedVendorItems table",
 			func = function()
-				Skillet.db.global.RemovedVendorItems = {}
+				CraftForge.db.global.RemovedVendorItems = {}
 			end,
 			order = 117
 		},
@@ -2102,20 +2102,20 @@ Skillet.options =
 			name = "bagevents",
 			desc = "Option for debugging",
 			get = function()
-				return Skillet.BagEvents
+				return CraftForge.BagEvents
 			end,
 			set = function(self,value)
-				Skillet.BagEvents = value
-				if Skillet.BagEvents then
-					Skillet:UnregisterEvent("BAG_UPDATE") 				-- Fires for both bag and bank updates.
-					Skillet:UnregisterEvent("BAG_UPDATE_DELAYED")		-- Fires after all applicable BAG_UPDATE events for a specific action have been fired.
-					Skillet:UnregisterEvent("UNIT_INVENTORY_CHANGED")	-- BAG_UPDATE_DELAYED seems to have disappeared. Using this instead.
-					Skillet:Print(RED_FONT_COLOR_CODE.."BAG_UPDATE events are off"..FONT_COLOR_CODE_CLOSE)
+				CraftForge.BagEvents = value
+				if CraftForge.BagEvents then
+					CraftForge:UnregisterEvent("BAG_UPDATE") 				-- Fires for both bag and bank updates.
+					CraftForge:UnregisterEvent("BAG_UPDATE_DELAYED")		-- Fires after all applicable BAG_UPDATE events for a specific action have been fired.
+					CraftForge:UnregisterEvent("UNIT_INVENTORY_CHANGED")	-- BAG_UPDATE_DELAYED seems to have disappeared. Using this instead.
+					CraftForge:Print(RED_FONT_COLOR_CODE.."BAG_UPDATE events are off"..FONT_COLOR_CODE_CLOSE)
 				else
-					Skillet:RegisterEvent("BAG_UPDATE") 				-- Fires for both bag and bank updates.
-					Skillet:RegisterEvent("BAG_UPDATE_DELAYED")		-- Fires after all applicable BAG_UPDATE events for a specific action have been fired.
-					Skillet:RegisterEvent("UNIT_INVENTORY_CHANGED")	-- BAG_UPDATE_DELAYED seems to have disappeared. Using this instead.
-					Skillet:Print(GREEN_FONT_COLOR_CODE.."BAG_UPDATE events are on"..FONT_COLOR_CODE_CLOSE)
+					CraftForge:RegisterEvent("BAG_UPDATE") 				-- Fires for both bag and bank updates.
+					CraftForge:RegisterEvent("BAG_UPDATE_DELAYED")		-- Fires after all applicable BAG_UPDATE events for a specific action have been fired.
+					CraftForge:RegisterEvent("UNIT_INVENTORY_CHANGED")	-- BAG_UPDATE_DELAYED seems to have disappeared. Using this instead.
+					CraftForge:Print(GREEN_FONT_COLOR_CODE.."BAG_UPDATE events are on"..FONT_COLOR_CODE_CLOSE)
 				end
 			end,
 			order = 120
@@ -2125,10 +2125,10 @@ Skillet.options =
 			name = "bagcounts",
 			desc = "Option for debugging",
 			func = function()
-				Skillet:Print("bagUpdateCounts= "..DA.DUMP1(Skillet.bagUpdateCounts))
-				Skillet:Print("bagUpdateDelayedCount= "..tostring(Skillet.bagUpdateDelayedCount))
-				Skillet:Print("unitInventoryChangedCount= "..tostring(Skillet.unitInventoryChangedCount))
-				Skillet:Print("bankUpdateCount= "..tostring(Skillet.bankUpdateCount))
+				CraftForge:Print("bagUpdateCounts= "..DA.DUMP1(CraftForge.bagUpdateCounts))
+				CraftForge:Print("bagUpdateDelayedCount= "..tostring(CraftForge.bagUpdateDelayedCount))
+				CraftForge:Print("unitInventoryChangedCount= "..tostring(CraftForge.unitInventoryChangedCount))
+				CraftForge:Print("bankUpdateCount= "..tostring(CraftForge.bankUpdateCount))
 			end,
 			order = 121
 		},
@@ -2137,35 +2137,35 @@ Skillet.options =
 			name = "bagclear",
 			desc = "Option for debugging",
 			func = function()
-				Skillet.bagUpdateCounts = {}
-				Skillet.bagUpdateDelayedCount = 0
-				Skillet.unitInventoryChangedCount = 0
-				Skillet.bankUpdateCount = 0
+				CraftForge.bagUpdateCounts = {}
+				CraftForge.bagUpdateDelayedCount = 0
+				CraftForge.unitInventoryChangedCount = 0
+				CraftForge.bankUpdateCount = 0
 			end,
 			order = 122
 		},
 	}
 }
 
-function Skillet:ConfigureOptions()
+function CraftForge:ConfigureOptions()
 	local acecfg = LibStub("AceConfig-3.0")
-	acecfg:RegisterOptionsTable("Skillet", self.options, "skillet")
-	acecfg:RegisterOptionsTable("Skillet Features", self.options.args.features)
-	acecfg:RegisterOptionsTable("Skillet Appearance", self.options.args.appearance)
-	acecfg:RegisterOptionsTable("Skillet Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db))
-	acecfg:RegisterOptionsTable("Skillet Plugins", Skillet.pluginsOptions)
+	acecfg:RegisterOptionsTable("CraftForge", self.options, "craftforge")
+	acecfg:RegisterOptionsTable("CraftForge Features", self.options.args.features)
+	acecfg:RegisterOptionsTable("CraftForge Appearance", self.options.args.appearance)
+	acecfg:RegisterOptionsTable("CraftForge Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db))
+	acecfg:RegisterOptionsTable("CraftForge Plugins", CraftForge.pluginsOptions)
 	local acedia = LibStub("AceConfigDialog-3.0")
-	Skillet.optionsFrame, Skillet.categoryID = acedia:AddToBlizOptions("Skillet Features", "Skillet")
-	acedia:AddToBlizOptions("Skillet Appearance", "Appearance", "Skillet")
-	acedia:AddToBlizOptions("Skillet Profiles", "Profiles", "Skillet")
-	acedia:AddToBlizOptions("Skillet Plugins", "Plugins", "Skillet")
+	CraftForge.optionsFrame, CraftForge.categoryID = acedia:AddToBlizOptions("CraftForge Features", "CraftForge")
+	acedia:AddToBlizOptions("CraftForge Appearance", "Appearance", "CraftForge")
+	acedia:AddToBlizOptions("CraftForge Profiles", "Profiles", "CraftForge")
+	acedia:AddToBlizOptions("CraftForge Plugins", "Plugins", "CraftForge")
 end
 
 --
 -- Show the options window
 --
-function Skillet:ShowOptions()
---	Settings.OpenToCategory("Skillet")
-	Settings.OpenToCategory(Skillet.categoryID)
+function CraftForge:ShowOptions()
+--	Settings.OpenToCategory("CraftForge")
+	Settings.OpenToCategory(CraftForge.categoryID)
 end
 

@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("Skillet")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
 
-SKILLET_TRADE_SKILL_HEIGHT = 16
+CRAFTFORGE_TRADE_SKILL_HEIGHT = 16
 
 local COLORORANGE = "|cffff8040"
 local COLORYELLOW = "|cffffff00"
@@ -38,36 +38,36 @@ local CCRAFT =  "|cffffff80"	-- Yellow = How many you can make by crafting the r
 local CVENDOR = "|cffffa050"	-- Orange = How many you can make if you purchase materials from a vendor
 local CALTS = "|cffff80ff"		-- Purple = How many you can make using materials on your alts
 
--- min height for Skillet window
-local SKILLET_MIN_HEIGHT = 580
+-- min height for CraftForge window
+local CRAFTFORGE_MIN_HEIGHT = 580
 --
 -- height of the header portion
 --
 -- this value reflects the offsets of 
--- SkilletSkillListParent and SkilletReagentParent
+-- CraftForgeSkillListParent and CraftForgeReagentParent
 --   (Y offset is either 110 or 130)
 --   (we really should compute this from those values)
 --
-local SKILLET_HEADER_HEIGHT = 145		-- 125 if Filter is removed under Search
+local CRAFTFORGE_HEADER_HEIGHT = 145		-- 125 if Filter is removed under Search
 
 -- min width for skill list window
-local SKILLET_SKILLLIST_MIN_WIDTH = 440
+local CRAFTFORGE_SKILLLIST_MIN_WIDTH = 440
 
 -- min/max width for the reagent window
-local SKILLET_REAGENT_MIN_WIDTH = 350
-local SKILLET_REAGENT_MAX_WIDTH = 400
-local SKILLET_REAGENT_MIN_HEIGHT = 300
+local CRAFTFORGE_REAGENT_MIN_WIDTH = 350
+local CRAFTFORGE_REAGENT_MAX_WIDTH = 400
+local CRAFTFORGE_REAGENT_MIN_HEIGHT = 300
 local reagent_height
 
 -- min width of count text
-local SKILLET_COUNT_MIN_WIDTH = 100
+local CRAFTFORGE_COUNT_MIN_WIDTH = 100
 
 --
 -- Stack of previsouly selected skills for use by the
 -- "click on reagent, go to recipe" code and for clicking on Queue'd recipes
 -- stack is stack of tables: { "player", "tradeID", "skillIndex"}
 --
-Skillet.skillStack = {}
+CraftForge.skillStack = {}
 
 --
 -- Stolen from the Waterfall Ace2 addon.
@@ -100,15 +100,15 @@ local pre_show_callbacks = {}
 --
 local pre_hide_callbacks = {}
 
-function Skillet:AddPreButtonShowCallback(method)
+function CraftForge:AddPreButtonShowCallback(method)
 	assert(method and type(method) == "function",
-		   "Usage: Skillet:AddPreButtonShowCallback(method). method must be a non-nil function")
+		   "Usage: CraftForge:AddPreButtonShowCallback(method). method must be a non-nil function")
 	table.insert(pre_show_callbacks, method)
 end
 
-function Skillet:AddPreButtonHideCallback(method)
+function CraftForge:AddPreButtonHideCallback(method)
 	assert(method and type(method) == "function",
-		   "Usage: Skillet:AddPreButtonHideCallback(method). method must be a non-nil function")
+		   "Usage: CraftForge:AddPreButtonHideCallback(method). method must be a non-nil function")
 	table.insert(pre_hide_callbacks, method)
 end
 
@@ -120,7 +120,7 @@ local function get_craftable_counts(skill, numMade)
 	--DA.DEBUG(2,"get_craftable_counts: name= "..tostring(skill.name)..", numMade= "..tostring(numMade))
 	--DA.DEBUG(3,"get_craftable_counts: skill= "..DA.DUMP1(skill,1))
 	local factor = 1
-	if Skillet.db.profile.show_craft_counts then
+	if CraftForge.db.profile.show_craft_counts then
 		factor = numMade or 1
 	end
 	local num          = math.floor((skill.numCraftable or 0) / factor)
@@ -131,11 +131,11 @@ local function get_craftable_counts(skill, numMade)
 	return num, numrecursive, numwvendor, numwalts
 end
 
-function Skillet:CreateTradeSkillWindow()
+function CraftForge:CreateTradeSkillWindow()
 --
--- The SkilletFrame is defined in the file MainFrame.xml
+-- The CraftForgeFrame is defined in the file MainFrame.xml
 --
-	local frame = SkilletFrame
+	local frame = CraftForgeFrame
 	if not frame then
 		return frame
 	end
@@ -149,7 +149,7 @@ function Skillet:CreateTradeSkillWindow()
 	if not frame.SetBackdrop then
 		Mixin(frame, BackdropTemplateMixin)
 	end
-	if TSM_API and Skillet.db.profile.tsm_compat then
+	if TSM_API and CraftForge.db.profile.tsm_compat then
 		frame:SetFrameStrata("HIGH")
 		frame:SetBackdrop(TSMBackdrop)
 	else
@@ -178,76 +178,76 @@ function Skillet:CreateTradeSkillWindow()
 	title:SetPoint("TOPLEFT",titlebar,"TOPLEFT",0,0)
 	title:SetPoint("BOTTOMRIGHT",titlebar2,"BOTTOMRIGHT",0,0)
 
-	local titletext = title:CreateFontString("SkilletTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = title:CreateFontString("CraftForgeTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT",title,"TOPLEFT",0,0)
 	titletext:SetPoint("TOPRIGHT",title,"TOPRIGHT",0,0)
 	titletext:SetHeight(26)
 	titletext:SetShadowColor(0,0,0)
 	titletext:SetShadowOffset(1,-1)
 	titletext:SetTextColor(1,1,1)
-	titletext:SetText(L["Skillet Trade Skills"].." "..Skillet.version)
-	local label = _G["SkilletFilterLabel"]
+	titletext:SetText(L["CraftForge Trade Skills"].." "..CraftForge.version)
+	local label = _G["CraftForgeFilterLabel"]
 	label:SetText(L["Filter"])
-	local label = _G["SkilletFilterText"]
+	local label = _G["CraftForgeFilterText"]
 	label:SetText("")
-	local label = _G["SkilletSearchLabel"]
+	local label = _G["CraftForgeSearchLabel"]
 	label:SetText(L["Search"])
-	SkilletPluginButton:SetText(L["Plugins"])
-	SkilletPluginButton:Hide()
-	SkilletCreateAllButton:SetText(L["Create All"])
-	SkilletQueueAllButton:SetText(L["Queue All"])
-	SkilletCreateButton:SetText(L["Create"])
-	SkilletQueueButton:SetText(L["Queue"])
-	SkilletStartQueueButton:SetText(L["Process"])
-	SkilletEmptyQueueButton:SetText(L["Clear"])
-	SkilletEnchantButton:SetText(L["Enchant"])
-	SkilletRecipeNotesButton:SetText(L["Notes"])
-	SkilletRecipeNotesFrameLabel:SetText(L["Notes"])
-	SkilletShoppingListButton:SetText(L["Shopping List"])
-	SkilletSortLabel:SetText(L["Sorting"])
-	SkilletGroupLabel:SetText(L["Grouping"])
-	SkilletIgnoredMatsButton:SetText(L["Ignored List"])
-	SkilletQueueManagementButton:SetText(L["Queues"])
-	SkilletQueueLoadButton:SetText(L["Load"])
-	SkilletQueueDeleteButton:SetText(L["Delete"])
-	SkilletQueueSaveButton:SetText(L["Save"])
-	SkilletQueueOnlyButton:SetText(">")
+	CraftForgePluginButton:SetText(L["Plugins"])
+	CraftForgePluginButton:Hide()
+	CraftForgeCreateAllButton:SetText(L["Create All"])
+	CraftForgeQueueAllButton:SetText(L["Queue All"])
+	CraftForgeCreateButton:SetText(L["Create"])
+	CraftForgeQueueButton:SetText(L["Queue"])
+	CraftForgeStartQueueButton:SetText(L["Process"])
+	CraftForgeEmptyQueueButton:SetText(L["Clear"])
+	CraftForgeEnchantButton:SetText(L["Enchant"])
+	CraftForgeRecipeNotesButton:SetText(L["Notes"])
+	CraftForgeRecipeNotesFrameLabel:SetText(L["Notes"])
+	CraftForgeShoppingListButton:SetText(L["Shopping List"])
+	CraftForgeSortLabel:SetText(L["Sorting"])
+	CraftForgeGroupLabel:SetText(L["Grouping"])
+	CraftForgeIgnoredMatsButton:SetText(L["Ignored List"])
+	CraftForgeQueueManagementButton:SetText(L["Queues"])
+	CraftForgeQueueLoadButton:SetText(L["Load"])
+	CraftForgeQueueDeleteButton:SetText(L["Delete"])
+	CraftForgeQueueSaveButton:SetText(L["Save"])
+	CraftForgeQueueOnlyButton:SetText(">")
 --
 -- Always want these visible.
 --
-	SkilletItemCountInputBox:SetText("1");
+	CraftForgeItemCountInputBox:SetText("1");
 --
 -- Progression status bar
 --
-	SkilletRankFrame:SetStatusBarColor(0.2, 0.2, 1.0, 1.0)
-	SkilletRankFrameBackground:SetVertexColor(0.0, 0.0, 0.5, 0.2)
-	if not SkilletRankFrame.subRanks then
-		SkilletRankFrame.subRanks = {}
-		SkilletRankFrame.subRanks.red = CreateFrame("StatusBar", "SkilletRankFrameRed", SkilletFrame, "SkilletRankFrameTemplate")
-		SkilletRankFrame.subRanks.red:SetStatusBarColor(1.00, 0.00, 0.00, 1.00);
-		SkilletRankFrame.subRanks.red:SetFrameLevel(SkilletFrame:GetFrameLevel()+8)
-		SkilletRankFrame.subRanks.orange = CreateFrame("StatusBar", "SkilletRankFrameOrange", SkilletFrame, "SkilletRankFrameTemplate")
-		SkilletRankFrame.subRanks.orange:SetStatusBarColor(1.00, 0.50, 0.25, 1.00);
-		SkilletRankFrame.subRanks.orange:SetFrameLevel(SkilletFrame:GetFrameLevel()+7)
-		SkilletRankFrame.subRanks.yellow = CreateFrame("StatusBar", "SkilletRankFrameYellow", SkilletFrame, "SkilletRankFrameTemplate")
-		SkilletRankFrame.subRanks.yellow:SetStatusBarColor(1.00, 1.00, 0.00, 1.00);
-		SkilletRankFrame.subRanks.yellow:SetFrameLevel(SkilletFrame:GetFrameLevel()+6)
-		SkilletRankFrame.subRanks.green  = CreateFrame("StatusBar", "SkilletRankFrameGreen" , SkilletFrame, "SkilletRankFrameTemplate")
-		SkilletRankFrame.subRanks.green:SetStatusBarColor(0.25, 0.75, 0.25, 1.00);
-		SkilletRankFrame.subRanks.green:SetFrameLevel(SkilletFrame:GetFrameLevel()+5)
-		SkilletRankFrame.subRanks.gray   = CreateFrame("StatusBar", "SkilletRankFrameGray"  , SkilletFrame, "SkilletRankFrameTemplate")
-		SkilletRankFrame.subRanks.gray:SetStatusBarColor(0.50, 0.50, 0.50, 1.00);
-		SkilletRankFrame.subRanks.gray:SetFrameLevel(SkilletFrame:GetFrameLevel()+4)
+	CraftForgeRankFrame:SetStatusBarColor(0.2, 0.2, 1.0, 1.0)
+	CraftForgeRankFrameBackground:SetVertexColor(0.0, 0.0, 0.5, 0.2)
+	if not CraftForgeRankFrame.subRanks then
+		CraftForgeRankFrame.subRanks = {}
+		CraftForgeRankFrame.subRanks.red = CreateFrame("StatusBar", "CraftForgeRankFrameRed", CraftForgeFrame, "CraftForgeRankFrameTemplate")
+		CraftForgeRankFrame.subRanks.red:SetStatusBarColor(1.00, 0.00, 0.00, 1.00);
+		CraftForgeRankFrame.subRanks.red:SetFrameLevel(CraftForgeFrame:GetFrameLevel()+8)
+		CraftForgeRankFrame.subRanks.orange = CreateFrame("StatusBar", "CraftForgeRankFrameOrange", CraftForgeFrame, "CraftForgeRankFrameTemplate")
+		CraftForgeRankFrame.subRanks.orange:SetStatusBarColor(1.00, 0.50, 0.25, 1.00);
+		CraftForgeRankFrame.subRanks.orange:SetFrameLevel(CraftForgeFrame:GetFrameLevel()+7)
+		CraftForgeRankFrame.subRanks.yellow = CreateFrame("StatusBar", "CraftForgeRankFrameYellow", CraftForgeFrame, "CraftForgeRankFrameTemplate")
+		CraftForgeRankFrame.subRanks.yellow:SetStatusBarColor(1.00, 1.00, 0.00, 1.00);
+		CraftForgeRankFrame.subRanks.yellow:SetFrameLevel(CraftForgeFrame:GetFrameLevel()+6)
+		CraftForgeRankFrame.subRanks.green  = CreateFrame("StatusBar", "CraftForgeRankFrameGreen" , CraftForgeFrame, "CraftForgeRankFrameTemplate")
+		CraftForgeRankFrame.subRanks.green:SetStatusBarColor(0.25, 0.75, 0.25, 1.00);
+		CraftForgeRankFrame.subRanks.green:SetFrameLevel(CraftForgeFrame:GetFrameLevel()+5)
+		CraftForgeRankFrame.subRanks.gray   = CreateFrame("StatusBar", "CraftForgeRankFrameGray"  , CraftForgeFrame, "CraftForgeRankFrameTemplate")
+		CraftForgeRankFrame.subRanks.gray:SetStatusBarColor(0.50, 0.50, 0.50, 1.00);
+		CraftForgeRankFrame.subRanks.gray:SetFrameLevel(CraftForgeFrame:GetFrameLevel()+4)
 	end
-	SkilletFrameEmptySpace = CreateFrame("Button", nil, SkilletSkillListParent, "SkilletEmptySpaceTemplate")
-	SkilletFrameEmptySpace.skill = { ["mainGroup"] = true, }
-	SkilletFrameEmptySpace:SetPoint("TOPLEFT",SkilletSkillListParent,"TOPLEFT")
-	SkilletFrameEmptySpace:SetPoint("BOTTOMRIGHT",SkilletSkillListParent,"BOTTOMRIGHT")
-	SkilletFrameEmptySpace:Show()
+	CraftForgeFrameEmptySpace = CreateFrame("Button", nil, CraftForgeSkillListParent, "CraftForgeEmptySpaceTemplate")
+	CraftForgeFrameEmptySpace.skill = { ["mainGroup"] = true, }
+	CraftForgeFrameEmptySpace:SetPoint("TOPLEFT",CraftForgeSkillListParent,"TOPLEFT")
+	CraftForgeFrameEmptySpace:SetPoint("BOTTOMRIGHT",CraftForgeSkillListParent,"BOTTOMRIGHT")
+	CraftForgeFrameEmptySpace:Show()
 --
 -- The frame enclosing the scroll list needs a border and a background .....
 --
-	local backdrop = SkilletSkillListParent
+	local backdrop = CraftForgeSkillListParent
 	if not backdrop.SetBackdrop then
 		Mixin(backdrop, BackdropTemplateMixin)
 	end
@@ -258,7 +258,7 @@ function Skillet:CreateTradeSkillWindow()
 --
 -- Frame enclosing the reagent list
 --
-	backdrop = SkilletReagentParent
+	backdrop = CraftForgeReagentParent
 	if not backdrop.SetBackdrop then
 		Mixin(backdrop, BackdropTemplateMixin)
 	end
@@ -269,7 +269,7 @@ function Skillet:CreateTradeSkillWindow()
 --
 -- Frame enclosing the queue
 --
-	backdrop = SkilletQueueParent
+	backdrop = CraftForgeQueueParent
 	if not backdrop.SetBackdrop then
 		Mixin(backdrop, BackdropTemplateMixin)
 	end
@@ -280,7 +280,7 @@ function Skillet:CreateTradeSkillWindow()
 --
 -- Frame enclosing the pop out notes panel
 --
-	backdrop = SkilletRecipeNotesFrame
+	backdrop = CraftForgeRecipeNotesFrame
 	if not backdrop.SetBackdrop then
 		Mixin(backdrop, BackdropTemplateMixin)
 	end
@@ -289,7 +289,7 @@ function Skillet:CreateTradeSkillWindow()
 	backdrop:SetBackdropBorderColor(0.6, 0.6, 0.6)
 	backdrop:SetResizable(true)
 	backdrop:Hide() -- initially hidden
-	backdrop = SkilletQueueManagementParent
+	backdrop = CraftForgeQueueManagementParent
 	if not backdrop.SetBackdrop then
 		Mixin(backdrop, BackdropTemplateMixin)
 	end
@@ -297,7 +297,7 @@ function Skillet:CreateTradeSkillWindow()
 	backdrop:SetBackdropBorderColor(0.6, 0.6, 0.6)
 	backdrop:SetBackdropColor(0.05, 0.05, 0.05)
 	backdrop:SetResizable(true)
-	self.gearTexture = SkilletReagentParent:CreateTexture(nil, "OVERLAY")
+	self.gearTexture = CraftForgeReagentParent:CreateTexture(nil, "OVERLAY")
 	self.gearTexture:SetTexture("Interface\\Icons\\Trade_Engineering")
 	self.gearTexture:SetHeight(16)
 	self.gearTexture:SetWidth(16)
@@ -315,31 +315,31 @@ function Skillet:CreateTradeSkillWindow()
 --
 -- Lets play the resize me game!
 --
-	local minwidth = SKILLET_SKILLLIST_MIN_WIDTH
+	local minwidth = CRAFTFORGE_SKILLLIST_MIN_WIDTH
 	minwidth = minwidth +                  -- minwidth of scroll button
 			   20 +                        -- padding between sroll and detail
-			   SKILLET_REAGENT_MIN_WIDTH + -- reagent window (fixed width)
+			   CRAFTFORGE_REAGENT_MIN_WIDTH + -- reagent window (fixed width)
 			   10                          -- padding about window borders
-	self:EnableResize(frame, minwidth, SKILLET_MIN_HEIGHT, Skillet.UpdateTradeSkillWindow)
+	self:EnableResize(frame, minwidth, CRAFTFORGE_MIN_HEIGHT, CraftForge.UpdateTradeSkillWindow)
 --
 -- Set up the sorting methods here
 --
 	self:InitializeSorting()
 	self:ConfigureRecipeControls(false)				-- initial setting
-	self.skilletStandaloneQueue=Skillet:CreateStandaloneQueueFrame()
+	self.craftforgeStandaloneQueue=CraftForge:CreateStandaloneQueueFrame()
 	self.fullView = true
 	self.saved_full_button_count = 0
 	self.saved_SA_button_count = 0
 	return frame
 end
 
-function Skillet:InitRecipeFilterButtons()
-	local lastButton = SkilletRecipeDifficultyButton
+function CraftForge:InitRecipeFilterButtons()
+	local lastButton = CraftForgeRecipeDifficultyButton
 	if self.recipeFilters then
 		for name, filter in pairs(self.recipeFilters) do
 			local newButton = filter.initMethod(filter.namespace)
 			if newButton then
-				newButton:SetParent(SkilletFrame)
+				newButton:SetParent(CraftForgeFrame)
 				newButton:SetPoint("BOTTOMRIGHT", lastButton, "BOTTOMLEFT", -5, 0)
 				lastButton = newButton
 				newButton:Show()
@@ -353,17 +353,17 @@ end
 -- This is called when the window has changed enough that
 -- sorting or filtering may need to be updated.
 --
-function Skillet:ResetTradeSkillWindow()
+function CraftForge:ResetTradeSkillWindow()
 	--DA.DEBUG(0,"ResetTradeSkillWindow()")
-	Skillet:SortDropdown_OnShow()
-	local buttons = SkilletFrame.added_buttons
+	CraftForge:SortDropdown_OnShow()
+	local buttons = CraftForgeFrame.added_buttons
 	if buttons then
-		local last_button = SkilletPluginButton
+		local last_button = CraftForgePluginButton
 		for i=1, #buttons, 1 do
 			local button = buttons[i]
 			if button then
 				button:ClearAllPoints()
-				button:SetParent(SkilletFrame)
+				button:SetParent(CraftForgeFrame)
 				button:SetPoint("TOPLEFT", last_button, "BOTTOMLEFT", 0, -1)
 				button:Hide()
 				button:SetAlpha(0)
@@ -377,25 +377,25 @@ end
 --
 -- Something has changed in the tradeskills, and the window needs to be updated
 --
-function Skillet:TradeSkillRank_Updated()
+function CraftForge:TradeSkillRank_Updated()
 	--DA.DEBUG(0,"TradeSkillRank_Updated()")
 	local _, rank, maxRank = self:GetTradeSkillLine();
 	if rank and maxRank then
-		SkilletRankFrame:SetMinMaxValues(0, maxRank);
-		SkilletRankFrame:SetValue(rank);
-		SkilletRankFrameSkillRank:SetText(rank.."/"..maxRank);
-		for c,s in pairs(SkilletRankFrame.subRanks) do
+		CraftForgeRankFrame:SetMinMaxValues(0, maxRank);
+		CraftForgeRankFrame:SetValue(rank);
+		CraftForgeRankFrameSkillRank:SetText(rank.."/"..maxRank);
+		for c,s in pairs(CraftForgeRankFrame.subRanks) do
 			s:SetMinMaxValues(0, maxRank)
 		end
-		SkilletRankFrame.subRanks.gray:SetValue(maxRank)
+		CraftForgeRankFrame.subRanks.gray:SetValue(maxRank)
 	end
 	--DA.DEBUG(0,"TradeSkillRank_Updated over")
 end
 
-function Skillet:ClickSkillButton(skillIndex)
+function CraftForge:ClickSkillButton(skillIndex)
 	if skillIndex and self.button_count then
 		for i=1, self.button_count, 1 do
-			local button = _G["SkilletScrollButton"..i]
+			local button = _G["CraftForgeScrollButton"..i]
 			if button and button.skill and button.skill.skillIndex and button.skill.skillIndex == skillIndex and button:IsVisible() and not button.skill.subGroup then
 				button:Click("LeftButton", true);
 			end
@@ -406,38 +406,38 @@ end
 --
 -- Called when the list of skills is scrolled
 --
-function Skillet:SkillList_OnScroll()
-	Skillet:UpdateTradeSkillWindow()
+function CraftForge:SkillList_OnScroll()
+	CraftForge:UpdateTradeSkillWindow()
 end
 
 local num_recipe_buttons = 1
 local function get_recipe_button(i)
-	local button = _G["SkilletScrollButton"..i]
+	local button = _G["CraftForgeScrollButton"..i]
 	if not button then
-		button = CreateFrame("Button", "SkilletScrollButton"..i, SkilletSkillListParent, "SkilletSkillButtonTemplate")
-		button:SetParent(SkilletSkillListParent)
-		button:SetPoint("TOPLEFT", "SkilletScrollButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(SkilletSkillListParent:GetFrameLevel() + 3)
+		button = CreateFrame("Button", "CraftForgeScrollButton"..i, CraftForgeSkillListParent, "CraftForgeSkillButtonTemplate")
+		button:SetParent(CraftForgeSkillListParent)
+		button:SetPoint("TOPLEFT", "CraftForgeScrollButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftForgeSkillListParent:GetFrameLevel() + 3)
 		num_recipe_buttons = i
 	end
-	local buttonDrag = _G["SkilletScrollButtonDrag"..i]
+	local buttonDrag = _G["CraftForgeScrollButtonDrag"..i]
 	if not buttonDrag then
-		buttonDrag = CreateFrame("Frame", "SkilletScrollButtonDrag"..i, SkilletSkillListParent, "SkilletSkillButtonDragTemplate")
-		buttonDrag:SetParent(SkilletSkillListParent)
-		buttonDrag:SetPoint("TOPLEFT", "SkilletScrollButton"..i, "TOPLEFT")
-		buttonDrag:SetFrameLevel(SkilletSkillListParent:GetFrameLevel() + 2)
+		buttonDrag = CreateFrame("Frame", "CraftForgeScrollButtonDrag"..i, CraftForgeSkillListParent, "CraftForgeSkillButtonDragTemplate")
+		buttonDrag:SetParent(CraftForgeSkillListParent)
+		buttonDrag:SetPoint("TOPLEFT", "CraftForgeScrollButton"..i, "TOPLEFT")
+		buttonDrag:SetFrameLevel(CraftForgeSkillListParent:GetFrameLevel() + 2)
 		buttonDrag:Hide()
 	end
 	if not button.highlight then
 		button.index = i
-		button.highlight = CreateFrame("Frame", "SkilletScrollHightlight"..i, button)
+		button.highlight = CreateFrame("Frame", "CraftForgeScrollHightlight"..i, button)
 		button.highlight:SetParent(button)
 		button.highlight:SetWidth(290)
 		button.highlight:SetHeight(16)
 --		button.highlight:SetFrameStrata("HIGH")
 		button.highlight:SetPoint("LEFT", button:GetName(), "LEFT")
 		button.highlight:SetPoint("RIGHT", button:GetName(), "RIGHT")
-		button:SetFrameLevel(SkilletSkillListParent:GetFrameLevel())
+		button:SetFrameLevel(CraftForgeSkillListParent:GetFrameLevel())
 		local t = button.highlight:CreateTexture(nil,"ARTWORK")
 		t:SetTexture("Interface\\Buttons\\UI-Listbox-Highlight2.blp")
 		t:SetAllPoints(button.highlight)
@@ -445,8 +445,8 @@ local function get_recipe_button(i)
 		button.highlight:SetAlpha(.25)
 		button.highlight:Hide()
 	end
-	if Skillet.customSkillButtons then
-		for n, b in pairs(Skillet.customSkillButtons) do
+	if CraftForge.customSkillButtons then
+		for n, b in pairs(CraftForge.customSkillButtons) do
 			b.initMethod(b.namespace, button, i)
 		end
 	end
@@ -487,75 +487,75 @@ end
 -- Hide UI components that cannot be used for crafts and show that
 -- that are only applicable to trade skills, as needed
 --
-function Skillet:ConfigureRecipeControls(enchant)
+function CraftForge:ConfigureRecipeControls(enchant)
 	--DA.DEBUG(0,"ConfigureRecipeControls("..tostring(enchant)..")")
 	if enchant then
-		SkilletQueueAllButton:Hide()
-		SkilletQueueButton:Hide()
-		SkilletCreateAllButton:Hide()
-		SkilletCreateButton:Hide()
-		SkilletQueueParent:Hide()
-		SkilletStartQueueButton:Hide()
-		SkilletEmptyQueueButton:Hide()
-		SkilletItemCountInputBox:Hide()
-		SkilletSub10Button:Hide()
-		SkilletSub1Button:Hide()
-		SkilletAdd1Button:Hide()
-		SkilletAdd10Button:Hide()
-		SkilletClearNumButton:Hide()
-		SkilletQueueOnlyButton:Hide()
-		SkilletEnchantButton:Show();
+		CraftForgeQueueAllButton:Hide()
+		CraftForgeQueueButton:Hide()
+		CraftForgeCreateAllButton:Hide()
+		CraftForgeCreateButton:Hide()
+		CraftForgeQueueParent:Hide()
+		CraftForgeStartQueueButton:Hide()
+		CraftForgeEmptyQueueButton:Hide()
+		CraftForgeItemCountInputBox:Hide()
+		CraftForgeSub10Button:Hide()
+		CraftForgeSub1Button:Hide()
+		CraftForgeAdd1Button:Hide()
+		CraftForgeAdd10Button:Hide()
+		CraftForgeClearNumButton:Hide()
+		CraftForgeQueueOnlyButton:Hide()
+		CraftForgeEnchantButton:Show();
 	else
-		SkilletQueueAllButton:Show()
-		SkilletQueueButton:Show()
-		SkilletCreateAllButton:Show()
-		SkilletCreateButton:Show()
-		SkilletQueueParent:Show()
-		SkilletStartQueueButton:Show()
-		SkilletEmptyQueueButton:Show()
-		SkilletItemCountInputBox:Show()
-		SkilletSub10Button:Show()
-		SkilletSub1Button:Show()
-		SkilletAdd1Button:Show()
-		SkilletAdd10Button:Show()
-		SkilletClearNumButton:Show()
-		SkilletQueueOnlyButton:Show()
-		SkilletEnchantButton:Hide()
+		CraftForgeQueueAllButton:Show()
+		CraftForgeQueueButton:Show()
+		CraftForgeCreateAllButton:Show()
+		CraftForgeCreateButton:Show()
+		CraftForgeQueueParent:Show()
+		CraftForgeStartQueueButton:Show()
+		CraftForgeEmptyQueueButton:Show()
+		CraftForgeItemCountInputBox:Show()
+		CraftForgeSub10Button:Show()
+		CraftForgeSub1Button:Show()
+		CraftForgeAdd1Button:Show()
+		CraftForgeAdd10Button:Show()
+		CraftForgeClearNumButton:Show()
+		CraftForgeQueueOnlyButton:Show()
+		CraftForgeEnchantButton:Hide()
 	end
 	self:InitRecipeFilterButtons()
-	if self.currentPlayer ~= (Skillet:unitName("player")) then
+	if self.currentPlayer ~= (CraftForge:unitName("player")) then
 --
 -- Disable processing because this is not the current player
 --
-		SkilletStartQueueButton:Disable()
-		SkilletCreateAllButton:Disable()
-		SkilletCreateButton:Disable()
+		CraftForgeStartQueueButton:Disable()
+		CraftForgeCreateAllButton:Disable()
+		CraftForgeCreateButton:Disable()
 	else
-		SkilletStartQueueButton:Enable()
-		SkilletCreateAllButton:Enable()
-		SkilletCreateButton:Enable()
+		CraftForgeStartQueueButton:Enable()
+		CraftForgeCreateAllButton:Enable()
+		CraftForgeCreateButton:Enable()
 	end
 end
 
-function Skillet:RecipeDifficultyButton_OnShow()
+function CraftForge:RecipeDifficultyButton_OnShow()
 	local level = self:GetTradeSkillOption("filterLevel")
 	local v = 1-level/4
-	SkilletRecipeDifficultyButtonTexture:SetTexCoord(0,1,v,v+.25)
+	CraftForgeRecipeDifficultyButtonTexture:SetTexCoord(0,1,v,v+.25)
 end
 
-function Skillet:ShowReagentDetails()
+function CraftForge:ShowReagentDetails()
 	--DA.DEBUG(0,"ShowReagentDetails()")
-	SkilletQueueManagementParent:Hide();
-	SkilletReagentParent:Show()
-	SkilletReagentParent:SetHeight(reagent_height)
-	Skillet:ReAnchorButtons(SkilletReagentParent)
+	CraftForgeQueueManagementParent:Hide();
+	CraftForgeReagentParent:Show()
+	CraftForgeReagentParent:SetHeight(reagent_height)
+	CraftForge:ReAnchorButtons(CraftForgeReagentParent)
 end
 
 --
 -- Updates the trade skill window whenever anything has changed,
 -- number of skills, skill type, skill level, etc
 --
-function Skillet:UpdateTradeSkillWindow()
+function CraftForge:UpdateTradeSkillWindow()
 	--DA.DEBUG(0,"UpdateTradeSkillWindow()")
 --[[
 	if self.InProgress.main then 
@@ -594,14 +594,14 @@ function Skillet:UpdateTradeSkillWindow()
 	self:UpdateDetailWindow(self.selectedSkill)
 	self:UpdateTradeButtons(self.currentPlayer)
 	self:UpdateIgnoredMatsButton()
-	SkilletIgnoredMatsButton:Show()
+	CraftForgeIgnoredMatsButton:Show()
 --
 -- Plugin button only shows if any plugins have registered
 --
-	if SkilletPluginButton and SkilletFrame.added_buttons and #SkilletFrame.added_buttons > 0 then
-		SkilletPluginButton:Show()
+	if CraftForgePluginButton and CraftForgeFrame.added_buttons and #CraftForgeFrame.added_buttons > 0 then
+		CraftForgePluginButton:Show()
 	else
-		SkilletPluginButton:Hide()
+		CraftForgePluginButton:Hide()
 	end
 --
 -- If any plugins have registered an Update function, call it now
@@ -610,44 +610,44 @@ function Skillet:UpdateTradeSkillWindow()
 --
 -- shopping list button always shown
 --
-	SkilletShoppingListButton:Show()
-	SkilletFrame:SetAlpha(self.db.profile.transparency)
-	SkilletFrame:SetScale(self.db.profile.scale)
-	local uiScale = SkilletFrame:GetEffectiveScale()
-	local width = SkilletFrame:GetWidth() - 20 -- for padding.
-	local height = SkilletFrame:GetHeight()
+	CraftForgeShoppingListButton:Show()
+	CraftForgeFrame:SetAlpha(self.db.profile.transparency)
+	CraftForgeFrame:SetScale(self.db.profile.scale)
+	local uiScale = CraftForgeFrame:GetEffectiveScale()
+	local width = CraftForgeFrame:GetWidth() - 20 -- for padding.
+	local height = CraftForgeFrame:GetHeight()
 	local reagent_width = width / 2
-	reagent_height = SKILLET_REAGENT_MIN_HEIGHT + ((height - SKILLET_MIN_HEIGHT) * 2) / 3
+	reagent_height = CRAFTFORGE_REAGENT_MIN_HEIGHT + ((height - CRAFTFORGE_MIN_HEIGHT) * 2) / 3
 	--DA.DEBUG(0,"UpdateTradeSkillWindow: fullView="..tostring(self.fullView)..", reagent_height="..string.format("%.0d", reagent_height))
 	if not self.fullView then
-		reagent_height = SKILLET_REAGENT_MIN_HEIGHT + height - SKILLET_MIN_HEIGHT + 85
+		reagent_height = CRAFTFORGE_REAGENT_MIN_HEIGHT + height - CRAFTFORGE_MIN_HEIGHT + 85
 		--DA.DEBUG(0,"UpdateTradeSkillWindow: new_reagent_height="..string.format("%.0d", reagent_height))
 	end
-	if reagent_width < SKILLET_REAGENT_MIN_WIDTH then
-		reagent_width = SKILLET_REAGENT_MIN_WIDTH
-	elseif reagent_width > SKILLET_REAGENT_MAX_WIDTH then
-		reagent_width = SKILLET_REAGENT_MAX_WIDTH
+	if reagent_width < CRAFTFORGE_REAGENT_MIN_WIDTH then
+		reagent_width = CRAFTFORGE_REAGENT_MIN_WIDTH
+	elseif reagent_width > CRAFTFORGE_REAGENT_MAX_WIDTH then
+		reagent_width = CRAFTFORGE_REAGENT_MAX_WIDTH
 	end
-	SkilletReagentParent:SetWidth(reagent_width)
-	SkilletReagentParent:SetHeight(reagent_height)
-	SkilletQueueManagementParent:SetWidth(reagent_width)
-	width = SkilletFrame:GetWidth() - reagent_width - 20 -- padding
-	SkilletSkillListParent:SetWidth(width)
+	CraftForgeReagentParent:SetWidth(reagent_width)
+	CraftForgeReagentParent:SetHeight(reagent_height)
+	CraftForgeQueueManagementParent:SetWidth(reagent_width)
+	width = CraftForgeFrame:GetWidth() - reagent_width - 20 -- padding
+	CraftForgeSkillListParent:SetWidth(width)
 	--DA.DEBUG(0,"UpdateTradeSkillWindow: width= "..string.format("%.0d", width)..", height= "..string.format("%.0d", height)..", reagent_width= "..string.format("%.0d", reagent_width)..", reagent_height= "..string.format("%.0d", reagent_height))
 --
 -- Set the state of any craft specific options
 --
 	self:RecipeDifficultyButton_OnShow()
-	if Skillet.isRetail then
-		SkilletUseHighestQuality:SetChecked(self.db.profile.best_quality)
-		SkilletUseHighestQuality:Show()
-		SkilletUseConcentration:SetChecked(self.db.profile.use_concentration)
-		SkilletUseConcentration:Show()
+	if CraftForge.isRetail then
+		CraftForgeUseHighestQuality:SetChecked(self.db.profile.best_quality)
+		CraftForgeUseHighestQuality:Show()
+		CraftForgeUseConcentration:SetChecked(self.db.profile.use_concentration)
+		CraftForgeUseConcentration:Show()
 	else
-		SkilletUseHighestQuality:Hide()
-		SkilletUseConcentration:Hide()
+		CraftForgeUseHighestQuality:Hide()
+		CraftForgeUseConcentration:Hide()
 	end
-	SkilletHideUncraftableRecipes:SetChecked(self:GetTradeSkillOption("hideuncraftable"))
+	CraftForgeHideUncraftableRecipes:SetChecked(self:GetTradeSkillOption("hideuncraftable"))
 	C_TradeSkillUI.SetOnlyShowMakeableRecipes(self:GetTradeSkillOption("hideuncraftable"))
 	self:UpdateQueueWindow()
 	self:UpdateShoppingListWindow()
@@ -657,9 +657,9 @@ function Skillet:UpdateTradeSkillWindow()
 --
 	local tradeName = self:GetTradeName(self.currentTrade)
 	if not tradeName then tradeName = "" end
-	local title = _G["SkilletTitleText"];
+	local title = _G["CraftForgeTitleText"];
 	if title then
-		title:SetText(L["Skillet Trade Skills"] .. " "..self.version..": " .. self.currentPlayer .. "/" .. tradeName)
+		title:SetText(L["CraftForge Trade Skills"] .. " "..self.version..": " .. self.currentPlayer .. "/" .. tradeName)
 	end
 	local sortedSkillList = self.data.sortedSkillList[skillListKey]
 	local rank,maxRank = 0,0
@@ -670,37 +670,37 @@ function Skillet:UpdateTradeSkillWindow()
 --
 -- Progression status bar
 --
-	SkilletRankFrame:SetMinMaxValues(0, maxRank)
-	SkilletRankFrame:SetValue(rank)
-	SkilletRankFrameSkillRank:SetText(tradeName.."    "..rank.."/"..maxRank)
-	SkilletRankFrame.subRanks.gray:SetValue(maxRank)
-	for c,s in pairs(SkilletRankFrame.subRanks) do
+	CraftForgeRankFrame:SetMinMaxValues(0, maxRank)
+	CraftForgeRankFrame:SetValue(rank)
+	CraftForgeRankFrameSkillRank:SetText(tradeName.."    "..rank.."/"..maxRank)
+	CraftForgeRankFrame.subRanks.gray:SetValue(maxRank)
+	for c,s in pairs(CraftForgeRankFrame.subRanks) do
 		s:SetMinMaxValues(0, maxRank)
 	end
 --
--- it seems the resize for the main skillet window happens before the resize for the skill list box
+-- it seems the resize for the main craftforge window happens before the resize for the skill list box
 --
-	local button_count = (SkilletFrame:GetHeight() - SKILLET_HEADER_HEIGHT) / SKILLET_TRADE_SKILL_HEIGHT
+	local button_count = (CraftForgeFrame:GetHeight() - CRAFTFORGE_HEADER_HEIGHT) / CRAFTFORGE_TRADE_SKILL_HEIGHT
 	button_count = math.floor(button_count)
 	self.button_count = button_count
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(SkilletSkillList,				-- frame
+	FauxScrollFrame_Update(CraftForgeSkillList,				-- frame
 							numTradeSkills,					-- num items
 							button_count,					-- num to display
-							SKILLET_TRADE_SKILL_HEIGHT)		-- value step (item height)
+							CRAFTFORGE_TRADE_SKILL_HEIGHT)		-- value step (item height)
 --
 -- Where in the list of skill to start counting.
 --
-	local skillOffset = FauxScrollFrame_GetOffset(SkilletSkillList);
+	local skillOffset = FauxScrollFrame_GetOffset(CraftForgeSkillList);
 --
 -- Remove any selected highlight, it will be added back as needed
 --
-	SkilletHighlightFrame:Hide();
+	CraftForgeHighlightFrame:Hide();
 	local nilFound = false
-	width = SkilletSkillListParent:GetWidth() - 10
-	if SkilletSkillList:IsVisible() then
+	width = CraftForgeSkillListParent:GetWidth() - 10
+	if CraftForgeSkillList:IsVisible() then
 --
 -- Adjust for the width of the scroll bar, if it is visible.
 --
@@ -715,7 +715,7 @@ function Skillet:UpdateTradeSkillWindow()
 	local showVendor = self:GetTradeSkillOption("filterInventory-vendor")
 	local showAlts = self:GetTradeSkillOption("filterInventory-alts")
 	local catstring = {}
-	SkilletFrameEmptySpace.skill.subGroup = self:RecipeGroupFind(self.currentPlayer,self.currentTrade,self.currentGroupLabel,self.currentGroup)
+	CraftForgeFrameEmptySpace.skill.subGroup = self:RecipeGroupFind(self.currentPlayer,self.currentTrade,self.currentGroupLabel,self.currentGroup)
 	--DA.DEBUG(0,"UpdateTradeSkillWindow: GroupLabel= "..tostring(self.currentGroupLabel)..", Group= "..tostring(self.currentGroup))
 	self.visibleSkillButtons = math.min(numTradeSkills - skillOffset, button_count)
 --
@@ -757,7 +757,7 @@ function Skillet:UpdateTradeSkillWindow()
 --
 -- end of FUBAR fixes
 --
-			local hasProgressBar = Skillet.hasProgressBar[skill.name]
+			local hasProgressBar = CraftForge.hasProgressBar[skill.name]
 			buttonText:SetText("")
 			levelText:SetText("")
 			countText:SetText("")
@@ -776,12 +776,12 @@ function Skillet:UpdateTradeSkillWindow()
 			if self.dragEngaged then
 				buttonDrag:SetWidth(width)
 				button.highlight:Hide()
-				if Skillet.mouseOver then
-					if Skillet.mouseOver.skill.subGroup then
-						if button == Skillet.mouseOver then
+				if CraftForge.mouseOver then
+					if CraftForge.mouseOver.skill.subGroup then
+						if button == CraftForge.mouseOver then
 							button.highlight:Show()
 						end
-					elseif skill.subGroup == Skillet.mouseOver.skill.parent then
+					elseif skill.subGroup == CraftForge.mouseOver.skill.parent then
 						button.highlight:Show()
 					end
 				end
@@ -805,11 +805,11 @@ function Skillet:UpdateTradeSkillWindow()
 					countText:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, textAlpha)
 					local expanded = skill.subGroup.expanded
 					if expanded then
-						buttonExpand:SetNormalTexture("Interface\\Addons\\Skillet\\Icons\\expand_arrow_open.tga")
-						buttonExpand:SetHighlightTexture("Interface\\Addons\\Skillet\\Icons\\expand_arrow_open.tga")
+						buttonExpand:SetNormalTexture("Interface\\Addons\\CraftForge\\Icons\\expand_arrow_open.tga")
+						buttonExpand:SetHighlightTexture("Interface\\Addons\\CraftForge\\Icons\\expand_arrow_open.tga")
 					else
-						buttonExpand:SetNormalTexture("Interface\\Addons\\Skillet\\Icons\\expand_arrow_closed.tga")
-						buttonExpand:SetHighlightTexture("Interface\\Addons\\Skillet\\Icons\\expand_arrow_closed.tga")
+						buttonExpand:SetNormalTexture("Interface\\Addons\\CraftForge\\Icons\\expand_arrow_closed.tga")
+						buttonExpand:SetHighlightTexture("Interface\\Addons\\CraftForge\\Icons\\expand_arrow_closed.tga")
 					end
 					local name = string.split(":", skill.name).." ("..#skill.subGroup.entries..")"
 					buttonText:SetText(name)
@@ -819,7 +819,7 @@ function Skillet:UpdateTradeSkillWindow()
 					button:UnlockHighlight() -- headers never get highlighted
 					buttonExpand:Show()
 					if hasProgressBar then
-						local category = Skillet.db.global.Categories[self.currentTrade][hasProgressBar]
+						local category = CraftForge.db.global.Categories[self.currentTrade][hasProgressBar]
 						local currentRank = category.skillLineCurrentLevel
 						local startingRank = category.skillLineStartingRank
 						local maxRank = category.skillLineMaxLevel
@@ -839,7 +839,7 @@ function Skillet:UpdateTradeSkillWindow()
 				local recipe = self:GetRecipe(skill.recipeID)
 				buttonExpand.group = nil
 				button.skill = skill
-				local skill_color = Skillet.skill_style_type[recipe.difficulty] or skill.color or skill.skillData.color or NORMAL_FONT_COLOR
+				local skill_color = CraftForge.skill_style_type[recipe.difficulty] or skill.color or skill.skillData.color or NORMAL_FONT_COLOR
 				buttonText:SetTextColor(skill_color.r, skill_color.g, skill_color.b, textAlpha)
 				countText:SetTextColor(skill_color.r, skill_color.g, skill_color.b, textAlpha)
 				buttonExpand:Hide()
@@ -851,7 +851,7 @@ function Skillet:UpdateTradeSkillWindow()
 						self:GetNormalTexture():SetAlpha(0)
 					end
 				end
-				buttonFavorite:SetFavorite(Skillet:IsFavorite(skill.recipeID))
+				buttonFavorite:SetFavorite(CraftForge:IsFavorite(skill.recipeID))
 				buttonFavorite:Show()
 --
 -- If the item has a minimum level requirement, then print that here
@@ -938,7 +938,7 @@ function Skillet:UpdateTradeSkillWindow()
 --
 -- Show the count of the item currently owned that the recipe will produce
 --
-				if showOwned and self.currentPlayer == Skillet:unitName("player") then
+				if showOwned and self.currentPlayer == CraftForge:unitName("player") then
 					local numowned = (self.db.realm.auctionData[self.currentPlayer][recipe.itemID] or 0) + C_Item.GetItemCount(recipe.itemID,true)
 					if numowned > 0 then
 						if numowned >= 1000 then
@@ -957,7 +957,7 @@ function Skillet:UpdateTradeSkillWindow()
 						countText:Show()
 					end
 				end
-				countText:SetWidth(math.max(countText:GetStringWidth(),SKILLET_COUNT_MIN_WIDTH)) -- make end of buttonText have a fixed location
+				countText:SetWidth(math.max(countText:GetStringWidth(),CRAFTFORGE_COUNT_MIN_WIDTH)) -- make end of buttonText have a fixed location
 				button:SetID(skillIndex or 0)
 --
 -- If enhanced recipe display is enabled, show the difficulty as text,
@@ -971,10 +971,10 @@ function Skillet:UpdateTradeSkillWindow()
 -- If this recipe is upgradable, append the current and maximum upgrade levels
 --
 				--DA.DEBUG(0,"UpdateTradeSkillWindow: skill= "..DA.DUMP1(skill,1))
-				local recipeInfo = Skillet.data.recipeInfo[self.currentTrade][skill.recipeID]
+				local recipeInfo = CraftForge.data.recipeInfo[self.currentTrade][skill.recipeID]
 				--DA.DEBUG(0,"UpdateTradeSkillWindow: recipeInfo= "..DA.DUMP1(recipeInfo))
 				if recipeInfo and recipeInfo.upgradeable then
-					if Skillet.db.profile.show_max_upgrade then
+					if CraftForge.db.profile.show_max_upgrade then
 						text = text .. " ("..tostring(recipeInfo.recipeUpgrade).."/"..tostring(recipeInfo.maxUpgrade)..")"
 					else
 						text = text .. " ("..tostring(recipeInfo.recipeUpgrade)..")"
@@ -1003,20 +1003,20 @@ function Skillet:UpdateTradeSkillWindow()
 -- Set this line's highlight and color
 --
 				if not self.dragEngaged and self.selectedSkill and self.selectedSkill == skillIndex then
-					SkilletHighlightFrame:SetPoint("TOPLEFT", "SkilletScrollButton"..i, "TOPLEFT", 0, 0)
-					SkilletHighlightFrame:SetWidth(button:GetWidth())
-					SkilletHighlightFrame:SetFrameLevel(button:GetFrameLevel())
+					CraftForgeHighlightFrame:SetPoint("TOPLEFT", "CraftForgeScrollButton"..i, "TOPLEFT", 0, 0)
+					CraftForgeHighlightFrame:SetWidth(button:GetWidth())
+					CraftForgeHighlightFrame:SetFrameLevel(button:GetFrameLevel())
 					if color then
-						SkilletHighlight:SetColorTexture(color.r, color.g, color.b, 0.4)
+						CraftForgeHighlight:SetColorTexture(color.r, color.g, color.b, 0.4)
 					else
-						SkilletHighlight:SetColorTexture(0.7, 0.7, 0.7, 0.4)
+						CraftForgeHighlight:SetColorTexture(0.7, 0.7, 0.7, 0.4)
 					end
 --
 -- Update the details for this skill, just in case something
 -- has changed (mats consumed, etc)
 --
 					self:UpdateDetailWindow(self.selectedSkill)
-					SkilletHighlightFrame:Show()
+					CraftForgeHighlightFrame:Show()
 					button:LockHighlight()
 				else
 --
@@ -1042,11 +1042,11 @@ function Skillet:UpdateTradeSkillWindow()
 	end
 	if self.visibleSkillButtons > 0 then
 		local button = get_recipe_button(self.visibleSkillButtons)
-		SkilletFrameEmptySpace:SetPoint("TOPLEFT",button,"BOTTOMLEFT")
+		CraftForgeFrameEmptySpace:SetPoint("TOPLEFT",button,"BOTTOMLEFT")
 	else
-		SkilletFrameEmptySpace:SetPoint("TOPLEFT",SkilletSkillListParent,"TOPLEFT")
+		CraftForgeFrameEmptySpace:SetPoint("TOPLEFT",CraftForgeSkillListParent,"TOPLEFT")
 	end
-	SkilletFrameEmptySpace:SetPoint("BOTTOMRIGHT",SkilletSkillListParent,"BOTTOMRIGHT")
+	CraftForgeFrameEmptySpace:SetPoint("BOTTOMRIGHT",CraftForgeSkillListParent,"BOTTOMRIGHT")
 	self.InProgress.main = false
 --	self.InProgress.mainDepth = self.InProgress.mainDepth - 1
 	--DA.DEBUG(3,"UpdateTradeSkillWindow Complete")
@@ -1056,7 +1056,7 @@ end
 -- Display an action packed tooltip when we are over
 -- a recipe in the list of skills
 --
-function Skillet:SkillButton_OnEnter(button)
+function CraftForge:SkillButton_OnEnter(button)
 	--DA.DEBUG(0,"SkillButton_OnEnter("..tostring(button)..")")
 	local id = button:GetID()
 	if not id then
@@ -1093,7 +1093,7 @@ function Skillet:SkillButton_OnEnter(button)
 		return
 	end
 	buttonName:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
-	local recipe = self:GetRecipe(skill.recipeID) or Skillet.unknownRecipe
+	local recipe = self:GetRecipe(skill.recipeID) or CraftForge.unknownRecipe
 	if not self.db.profile.show_detailed_recipe_tooltip then
 --
 -- User does not want the tooltip displayed, it can get a bit big after all
@@ -1101,7 +1101,7 @@ function Skillet:SkillButton_OnEnter(button)
 		button.locked = false
 		return
 	end
-	local tip = GameTooltip -- SkilletTradeskillTooltip
+	local tip = GameTooltip -- CraftForgeTradeskillTooltip
 	tip:SetOwner(button, "ANCHOR_BOTTOMRIGHT",-300);
 	if not tip.SetBackdrop then
 		Mixin(tip, BackdropTemplateMixin)
@@ -1116,21 +1116,21 @@ function Skillet:SkillButton_OnEnter(button)
 	if ( GetCVar("useUiScale") == "1" ) then
 		uiScale = tonumber(GetCVar("uiscale"))
 	end
-	if Skillet.db.profile.ttscale then
-		uiScale = uiScale * Skillet.db.profile.ttscale
+	if CraftForge.db.profile.ttscale then
+		uiScale = uiScale * CraftForge.db.profile.ttscale
 	end
 	tip:SetScale(uiScale)
 --
 -- Name of the recipe
 --
-		local color = Skillet.skill_style_type[skill.difficulty]
+		local color = CraftForge.skill_style_type[skill.difficulty]
 		if (color) then
 			tip:AddLine(skill.name, color.r, color.g, color.b, false)
 		else
 			tip:AddLine(skill.name, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, false)
 		end
 --
---	Add Skillet specific information to the tooltip
+--	Add CraftForge specific information to the tooltip
 --
 	local num, numrecursive, numwvendor, numwalts = 0, 0, 0, 0
 	if skill.skillData then
@@ -1225,9 +1225,9 @@ function Skillet:SkillButton_OnEnter(button)
 	tip:AddLine("\n")
 	local text1 = string.format("recipeID= %d",skill.recipeID)
 	local item = string.format("itemID= %d",recipe.itemID)
-	local scroll = string.format("scrollID= %d", Skillet.scrollData[skill.recipeID])
-	--DA.DEBUG(1,"SkillButton_OnEnter: recipeID= "..tostring(skill.recipeID)..", scrollData= "..tostring(Skillet.scrollData[skill.recipeID]))
-	if Skillet.scrollData[skill.recipeID] then
+	local scroll = string.format("scrollID= %d", CraftForge.scrollData[skill.recipeID])
+	--DA.DEBUG(1,"SkillButton_OnEnter: recipeID= "..tostring(skill.recipeID)..", scrollData= "..tostring(CraftForge.scrollData[skill.recipeID]))
+	if CraftForge.scrollData[skill.recipeID] then
 		tip:AddDoubleLine(text1, scroll)
 	elseif recipe.recipeType == Enum.TradeskillRecipeType.Enchant then
 		tip:AddDoubleLine(text1, "Enchant")
@@ -1243,16 +1243,16 @@ end
 --
 -- Sets the game tooltip item to the selected skill
 --
-function Skillet:SetTradeSkillToolTip(skillIndex)
+function CraftForge:SetTradeSkillToolTip(skillIndex)
 	--DA.DEBUG(2,"SetTradeSkillToolTip("..tostring(skillIndex)..", "..tostring(onEvent)..")")
 	GameTooltip:ClearLines()
-	if Skillet.db.profile.scale_tooltip then
+	if CraftForge.db.profile.scale_tooltip then
 		local uiScale = 1.0;
 		if ( GetCVar("useUiScale") == "1" ) then
 			uiScale = tonumber(GetCVar("uiscale"))
 		end
-		if Skillet.db.profile.ttscale then
-			uiScale = uiScale * Skillet.db.profile.ttscale
+		if CraftForge.db.profile.ttscale then
+			uiScale = uiScale * CraftForge.db.profile.ttscale
 		end
 		GameTooltip:SetScale(uiScale)
 	end
@@ -1279,16 +1279,16 @@ end
 --
 -- Clears any changes and hides the game tooltip
 --
-function Skillet:ClearTradeSkillToolTip(skillIndex)
-	if Skillet.db.profile.scale_tooltip then
-		GameTooltip:SetScale(Skillet.gttScale)
+function CraftForge:ClearTradeSkillToolTip(skillIndex)
+	if CraftForge.db.profile.scale_tooltip then
+		GameTooltip:SetScale(CraftForge.gttScale)
 	end
 	GameTooltip:Hide()
 	ResetCursor()
 end
 
-Skillet.bopCache = {}
-function Skillet:bopCheck(item)
+CraftForge.bopCache = {}
+function CraftForge:bopCheck(item)
 	--DA.DEBUG(0,"bopCheck("..tostring(item)..")")
 	if not self.bopCache[item] then
 		local _, link, _, _, _, _, _, _, _, _, _, _, _, bindType, _, _, _ = C_Item.GetItemInfo(item)
@@ -1301,7 +1301,7 @@ function Skillet:bopCheck(item)
 	return false
 end
 
-function Skillet:SkillButton_SetSelections(id1, id2)
+function CraftForge:SkillButton_SetSelections(id1, id2)
 	local skillListKey = self.currentPlayer..":"..self.currentTrade..":"..self.currentGroupLabel
 	local sortedSkillList = self.data.sortedSkillList[skillListKey]
 	if id1 > id2 then id1,id2 = id2,id1 end
@@ -1314,7 +1314,7 @@ function Skillet:SkillButton_SetSelections(id1, id2)
 	end
 end
 
-function Skillet:SkillButton_SetAllSelections(toggle)
+function CraftForge:SkillButton_SetAllSelections(toggle)
 	local skillListKey = self.currentPlayer..":"..self.currentTrade..":"..self.currentGroupLabel
 	local sortedSkillList = self.data.sortedSkillList[skillListKey]
 	for i=1,sortedSkillList.count do
@@ -1322,11 +1322,11 @@ function Skillet:SkillButton_SetAllSelections(toggle)
 	end
 end
 
-function Skillet:SkillButton_ClearSelections()
+function CraftForge:SkillButton_ClearSelections()
 	self:SkillButton_SetAllSelections(false)
 end
 
-function Skillet:NameEditSave()
+function CraftForge:NameEditSave()
 	if SkillButtonNameEdit:IsVisible() and SkillButtonNameEdit.originalButton then
 		SkillButtonNameEdit.originalButton:SetText(SkillButtonNameEdit:GetText())
 		self:RecipeGroupRenameEntry(SkillButtonNameEdit.skill, SkillButtonNameEdit:GetText())
@@ -1334,16 +1334,16 @@ function Skillet:NameEditSave()
 	SkillButtonNameEdit:ClearFocus()
 end
 
-function Skillet:SkillButton_OnMouseDown(button)
+function CraftForge:SkillButton_OnMouseDown(button)
 	self.dragStartXY = { GetCursorPosition() }
 	self.selectedTextOffsetXY = { 0, 0 }
 end
 
-function Skillet:SkillButton_OnMouseUp(button)
+function CraftForge:SkillButton_OnMouseUp(button)
 	--DA.DEBUG(0, "SkillButton_OnMouseUp")
 end
 
-function Skillet:SkillButton_DragUpdate()
+function CraftForge:SkillButton_DragUpdate()
 	if self.dragEngaged then
 		local x,y = GetCursorPosition()
 		self.selectedTextOffsetXY[1] = x - self.dragStartXY[1]
@@ -1352,8 +1352,8 @@ function Skillet:SkillButton_DragUpdate()
 	end
 end
 
-function Skillet:SkillButton_OnDragStop(button, mouse)
-	Skillet:SkillButton_OnReceiveDrag(Skillet.mouseOver, mouse)
+function CraftForge:SkillButton_OnDragStop(button, mouse)
+	CraftForge:SkillButton_OnReceiveDrag(CraftForge.mouseOver, mouse)
 	for i=1,num_recipe_buttons do
 		local button, buttonDrag = get_recipe_button(i)
 		buttonDrag:Hide()
@@ -1363,7 +1363,7 @@ function Skillet:SkillButton_OnDragStop(button, mouse)
 	self:UpdateTradeSkillWindow()
 end
 
-function Skillet:SkillButton_OnDragStart(button, mouse)
+function CraftForge:SkillButton_OnDragStart(button, mouse)
 	local skill = button.skill
 	if skill.selected and skill then
 		if not self:RecipeGroupIsLocked() then
@@ -1394,7 +1394,7 @@ function Skillet:SkillButton_OnDragStart(button, mouse)
 	self:UpdateTradeSkillWindow()
 end
 
-function Skillet:SkillButton_OnReceiveDrag(button, mouse)
+function CraftForge:SkillButton_OnReceiveDrag(button, mouse)
 	if not self:RecipeGroupIsLocked() then
 		local skill = nil
 		local destinationGroup = nil
@@ -1427,9 +1427,9 @@ function Skillet:SkillButton_OnReceiveDrag(button, mouse)
 	end
 end
 
-function Skillet:SkillButton_LinkRecipe()
+function CraftForge:SkillButton_LinkRecipe()
 	DA.DEBUG(0,"SkillButton_LinkRecipe()")
-	local skill = Skillet.menuButton.skill
+	local skill = CraftForge.menuButton.skill
 	if skill and skill.recipeID then
 		local spellLink = C_TradeSkillUI.GetRecipeLink(skill.recipeID)
 		if spellLink then
@@ -1448,8 +1448,8 @@ end
 --
 -- Inspired by Kaliel's Tracker
 --
-StaticPopupDialogs["SKILLET_WowheadURL"] = {
-	text = "Skillet - Wowhead URL",
+StaticPopupDialogs["CRAFTFORGE_WowheadURL"] = {
+	text = "CraftForge - Wowhead URL",
 	button2 = CLOSE,
 	hasEditBox = true,
 	editBoxWidth = 300,
@@ -1489,9 +1489,9 @@ StaticPopupDialogs["SKILLET_WowheadURL"] = {
 --
 -- Pop up a dialog with a Wowhead URL
 --
-function Skillet:SkillButton_WowheadURL()
+function CraftForge:SkillButton_WowheadURL()
 	DA.DEBUG(0,"SkillButton_WowheadURL()")
-	local skill = Skillet.menuButton.skill
+	local skill = CraftForge.menuButton.skill
 	--DA.DEBUG(1,"SkillButton_WowheadURL: skill= "..DA.DUMP1(skill,1))
 	if skill and skill.recipeID then
 		--DA.DEBUG(1,"SkillButton_WowheadURL: recipeID= "..tostring(skill.recipeID)..", name= "..tostring(skill.name))
@@ -1499,12 +1499,12 @@ function Skillet:SkillButton_WowheadURL()
 		--DA.DEBUG(2,"SkillButton_WowheadURL: recipe= "..DA.DUMP1(recipe,1))
 		if recipe and recipe.itemID then
 			--DA.DEBUG(2,"SkillButton_WowheadURL: itemID= "..tostring(recipe.itemID)..", name= "..tostring(recipe.name))
-			StaticPopup_Show("SKILLET_WowheadURL", recipe.itemID, recipe.name)
+			StaticPopup_Show("CRAFTFORGE_WowheadURL", recipe.itemID, recipe.name)
 		end
 	end
 end
 
-function Skillet:SkillButton_CopySelected()
+function CraftForge:SkillButton_CopySelected()
 	DA.DEBUG(0,"SkillButton_CopySelected()")
 	local skillListKey = self.currentPlayer..":"..self.currentTrade..":"..self.currentGroupLabel
 	local sortedSkillList = self.data.sortedSkillList[skillListKey]
@@ -1522,7 +1522,7 @@ function Skillet:SkillButton_CopySelected()
 	end
 end
 
-function Skillet:SkillButton_PasteSelected(button)
+function CraftForge:SkillButton_PasteSelected(button)
 	DA.DEBUG(0,"SkillButton_PasteSelected("..tostring(button)..")")
 	if not self:RecipeGroupIsLocked() then
 		local parentGroup
@@ -1542,7 +1542,7 @@ function Skillet:SkillButton_PasteSelected(button)
 	end
 end
 
-function Skillet:SkillButton_DeleteSelected()
+function CraftForge:SkillButton_DeleteSelected()
 	DA.DEBUG(0,"SkillButton_DeleteSelected()")
 	if not self:RecipeGroupIsLocked() then
 		local skillListKey = self.currentPlayer..":"..self.currentTrade..":"..self.currentGroupLabel
@@ -1558,13 +1558,13 @@ function Skillet:SkillButton_DeleteSelected()
 	end
 end
 
-function Skillet:SkillButton_CutSelected()
+function CraftForge:SkillButton_CutSelected()
 	DA.DEBUG(0,"SkillButton_CutSelected()")
-	Skillet:SkillButton_CopySelected()
-	Skillet:SkillButton_DeleteSelected()
+	CraftForge:SkillButton_CopySelected()
+	CraftForge:SkillButton_DeleteSelected()
 end
 
-function Skillet:SkillButton_NewGroup()
+function CraftForge:SkillButton_NewGroup()
 	DA.DEBUG(0,"SkillButton_NewGroup()")
 	if not self:RecipeGroupIsLocked() then
 		local player = self.currentPlayer
@@ -1579,7 +1579,7 @@ function Skillet:SkillButton_NewGroup()
 	end
 end
 
-function Skillet:SkillButton_MakeGroup()
+function CraftForge:SkillButton_MakeGroup()
 	DA.DEBUG(0,"SkillButton_MakeGroup()")
 	if not self:RecipeGroupIsLocked() then
 		local player = self.currentPlayer
@@ -1601,7 +1601,7 @@ function Skillet:SkillButton_MakeGroup()
 	end
 end
 
-function Skillet:SkillButton_OnKeyDown(button, key)
+function CraftForge:SkillButton_OnKeyDown(button, key)
 	DA.DEBUG(3,"SkillButton_OnKeyDown("..tostring(button)..", "..tostring(key)..")")
 	if key == "D" then
 		self:SkillButton_SetAllSelections(false)
@@ -1625,7 +1625,7 @@ function Skillet:SkillButton_OnKeyDown(button, key)
 	self:UpdateTradeSkillWindow()
 end
 
-function Skillet:SkillButton_NameEditEnable(button)
+function CraftForge:SkillButton_NameEditEnable(button)
 	DA.DEBUG(3,"SkillButton_NameEditEnable("..tostring(button)..")")
 	if not self:RecipeGroupIsLocked() then
 		SkillButtonNameEdit:SetText(button.skill.name)
@@ -1643,35 +1643,35 @@ function Skillet:SkillButton_NameEditEnable(button)
 	end
 end
 
-function Skillet:FavoriteButton_OnClick(button, mouse)
+function CraftForge:FavoriteButton_OnClick(button, mouse)
 	if (mouse=="LeftButton") then
 	  if button.skill then
-			Skillet:ToggleFavorite(button.skill.recipeID)
-			button:SetFavorite(Skillet:IsFavorite(button.skill.recipeID))
+			CraftForge:ToggleFavorite(button.skill.recipeID)
+			button:SetFavorite(CraftForge:IsFavorite(button.skill.recipeID))
 		end
 	end
 end
 
-function Skillet:FavoritesOnlyRefresh()
-	if Skillet:GetTradeSkillOption("favoritesOnly") then
-		SkilletFavoritesOnlyButton:LockHighlight()
+function CraftForge:FavoritesOnlyRefresh()
+	if CraftForge:GetTradeSkillOption("favoritesOnly") then
+		CraftForgeFavoritesOnlyButton:LockHighlight()
 	else
-		SkilletFavoritesOnlyButton:UnlockHighlight()
+		CraftForgeFavoritesOnlyButton:UnlockHighlight()
 	end
 end
 
-function Skillet:SetGroupSelection(skillName)
+function CraftForge:SetGroupSelection(skillName)
 	self.currentGroup = skillName
-	Skillet:SetTradeSkillOption("group", skillName)
+	CraftForge:SetTradeSkillOption("group", skillName)
 end
 
 --
 -- When one of the skill buttons in the left scroll pane is clicked
 --
 local lastClick = 0
-function Skillet:SkillButton_OnClick(button, mouse)
+function CraftForge:SkillButton_OnClick(button, mouse)
 	if (mouse == "LeftButton") then
-		Skillet:QueueManagementToggle(true)
+		CraftForge:QueueManagementToggle(true)
 		local doubleClicked = false
 		local thisClick = GetTime()
 		local delay = thisClick - lastClick
@@ -1683,10 +1683,10 @@ function Skillet:SkillButton_OnClick(button, mouse)
 		if doubleClicked then
 			if button.skill.subGroup then
 				if button.skill.mainGroup or self.currentGroup == button.skill.name then
-					Skillet:SetGroupSelection(nil)
+					CraftForge:SetGroupSelection(nil)
 					button.skill.subGroup.expanded = true
 				else
-					Skillet:SetGroupSelection(button.skill.name)
+					CraftForge:SetGroupSelection(button.skill.name)
 					button.skill.subGroup.expanded = true
 				end
 				self:SortAndFilterRecipes()
@@ -1759,7 +1759,7 @@ function Skillet:SkillButton_OnClick(button, mouse)
 --
 -- Currently the only "useful" option.
 --
-			self:SkilletSkillMenu_Show(button)
+			self:CraftForgeSkillMenu_Show(button)
 		end
 	end
 end
@@ -1767,7 +1767,7 @@ end
 --
 -- When one of the skill buttons in the left scroll pane is clicked
 --
-function Skillet:SkillExpandButton_OnClick(button, mouse, doubleClicked)
+function CraftForge:SkillExpandButton_OnClick(button, mouse, doubleClicked)
 	--DA.DEBUG(3,"SkillExpandButton_OnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(doubleClicked))
 	if (mouse=="LeftButton") then
 		if button.group then
@@ -1782,7 +1782,7 @@ end
 -- This function assures that a recipe that is indirectly selected (via reagent clicks, for example)
 -- will be visible in the skill list (ie, not scrolled off the top/bottom)
 --
-function Skillet:ScrollToSkillIndex(skillIndex)
+function CraftForge:ScrollToSkillIndex(skillIndex)
 	--DA.DEBUG(0,"ScrollToSkillIndex("..tostring(skillIndex)..")")
 	if skillIndex == nil then
 		return
@@ -1790,7 +1790,7 @@ function Skillet:ScrollToSkillIndex(skillIndex)
 --
 -- Scroll the skill list to make sure the new skill is revealed
 --
-	if SkilletSkillList:IsVisible() then
+	if CraftForgeSkillList:IsVisible() then
 		local skillListKey = self.currentPlayer..":"..self.currentTrade..":"..self.currentGroupLabel
 		local sortedSkillList = self.data.sortedSkillList[skillListKey]
 		if sortedSkillList then
@@ -1802,19 +1802,19 @@ function Skillet:ScrollToSkillIndex(skillIndex)
 				end
 			end
 			sortedIndex = sortedIndex or 1
-			local scrollbar = _G["SkilletSkillListScrollBar"]
-			local button_count = SkilletSkillList:GetHeight() / SKILLET_TRADE_SKILL_HEIGHT
+			local scrollbar = _G["CraftForgeSkillListScrollBar"]
+			local button_count = CraftForgeSkillList:GetHeight() / CRAFTFORGE_TRADE_SKILL_HEIGHT
 			button_count = math.floor(button_count)
-			local skillOffset = FauxScrollFrame_GetOffset(SkilletSkillList)
+			local skillOffset = FauxScrollFrame_GetOffset(CraftForgeSkillList)
 			--DA.DEBUG(0,"ScrollToSkillIndex: "..(skillOffset or "nil").." > "..(sortedIndex or "nil"))
 			if skillOffset > sortedIndex then
 				sortedIndex = sortedIndex - 1
-				FauxScrollFrame_SetOffset(SkilletSkillList, sortedIndex)
-				scrollbar:SetValue(sortedIndex * SKILLET_TRADE_SKILL_HEIGHT)
+				FauxScrollFrame_SetOffset(CraftForgeSkillList, sortedIndex)
+				scrollbar:SetValue(sortedIndex * CRAFTFORGE_TRADE_SKILL_HEIGHT)
 			elseif (skillOffset + button_count) < sortedIndex then
 				sortedIndex = sortedIndex - button_count
-				FauxScrollFrame_SetOffset(SkilletSkillList, sortedIndex)
-				scrollbar:SetValue(sortedIndex * SKILLET_TRADE_SKILL_HEIGHT)
+				FauxScrollFrame_SetOffset(CraftForgeSkillList, sortedIndex)
+				scrollbar:SetValue(sortedIndex * CRAFTFORGE_TRADE_SKILL_HEIGHT)
 			end
 		end
 	end
@@ -1824,29 +1824,29 @@ end
 --
 -- Go to the previous recipe in the history list.
 --
-function Skillet:GoToPreviousSkill()
+function CraftForge:GoToPreviousSkill()
 	local entry = table.remove(self.skillStack)
 	if entry then
 		self:SetTradeSkill(entry.player,entry.tradeID,entry.skillIndex)
 	end
 end
 
-function Skillet:PushSkill(player, tradeID, skillIndex)
+function CraftForge:PushSkill(player, tradeID, skillIndex)
 	local entry = { ["player"] = player, ["tradeID"] = tradeID, ["skillIndex"] = skillIndex }
 	table.insert(self.skillStack, entry)
 end
 
-function Skillet:getLvlUpChance()
+function CraftForge:getLvlUpChance()
 --
 -- % to level up with this receipt is calculated by: (greySkill - yourSkill) / (greySkill - yellowSkill
 --
-	local skilRanks = Skillet:GetSkillRanks(Skillet.currentPlayer, Skillet.currentTrade)
+	local skilRanks = CraftForge:GetSkillRanks(CraftForge.currentPlayer, CraftForge.currentTrade)
 	local currentLevel, maxLevel = 0, 0
 	if skilRanks then
 		currentLevel, maxLevel = skilRanks.rank, skilRanks.maxRank
 	end
-	local gray = tonumber(SkilletRankFrame.subRanks.green:GetValue())
-	local yellow = tonumber(SkilletRankFrame.subRanks.orange:GetValue())
+	local gray = tonumber(CraftForgeRankFrame.subRanks.green:GetValue())
+	local yellow = tonumber(CraftForgeRankFrame.subRanks.orange:GetValue())
 	--DA.DEBUG(0,"getLvlUpChance: currentLevel= "..tostring(currentLevel)..", gray= "..tostring(gray)..", yellow= "..tostring(yellow))
 	if (currentLevel > gray) then
 		return 0
@@ -1861,27 +1861,27 @@ function Skillet:getLvlUpChance()
 	end
 end
 
-local function RankFrameMenuList(SkilletRankFrameMenu, rootDescription)
-	if Skillet.isTest then 
+local function RankFrameMenuList(CraftForgeRankFrameMenu, rootDescription)
+	if CraftForge.isTest then 
 		local title = "RankFrameMenuList"
 		rootDescription:CreateTitle(title);
 	end
-	rootDescription:CreateButton(L["Button 1"], function() Skillet:RankFrame_Button1() end);
+	rootDescription:CreateButton(L["Button 1"], function() CraftForge:RankFrame_Button1() end);
 	rootDescription:CreateDivider(); -- CreateSpacer, CreateDivider
-	rootDescription:CreateButton(L["Button 2"], function() Skillet:RankFrame_Button2() end);
+	rootDescription:CreateButton(L["Button 2"], function() CraftForge:RankFrame_Button2() end);
 end
 
 --
 -- Called when then mouse enters the rank status bar
 --
-function Skillet:RankFrame_OnEnter(button)
+function CraftForge:RankFrame_OnEnter(button)
 	GameTooltip:SetOwner(button, "ANCHOR_BOTTOMLEFT")
-	local r,g,b = SkilletSkillName:GetTextColor()
-	GameTooltip:AddLine(SkilletSkillName:GetText(),r,g,b)
-	local gray = SkilletRankFrame.subRanks.green:GetValue()
-	local green = SkilletRankFrame.subRanks.yellow:GetValue()
-	local yellow = SkilletRankFrame.subRanks.orange:GetValue()
-	local orange = SkilletRankFrame.subRanks.red:GetValue()
+	local r,g,b = CraftForgeSkillName:GetTextColor()
+	GameTooltip:AddLine(CraftForgeSkillName:GetText(),r,g,b)
+	local gray = CraftForgeRankFrame.subRanks.green:GetValue()
+	local green = CraftForgeRankFrame.subRanks.yellow:GetValue()
+	local yellow = CraftForgeRankFrame.subRanks.orange:GetValue()
+	local orange = CraftForgeRankFrame.subRanks.red:GetValue()
 	-- lets add the chance to level up that skill with that receipt
 	local chance = self:getLvlUpChance()
 	chance = math.floor(chance*10)/10		-- one decimal is enough
@@ -1892,63 +1892,63 @@ end
 --
 -- Called when then mouse leaves the rank status bar
 --
-function Skillet:RankFrame_OnLeave(button)
-	Skillet.RankFrameExtra = false
+function CraftForge:RankFrame_OnLeave(button)
+	CraftForge.RankFrameExtra = false
 	GameTooltip:Hide()
 end
 
-function Skillet:RankFrame_OnMouseDown(button)
+function CraftForge:RankFrame_OnMouseDown(button)
 	local mouse = GetMouseButtonClicked()
 	DA.DEBUG(3,"RankFrame_OnMouseDown("..tostring(button).."), "..tostring(mouse))
 	if (mouse == "LeftButton") then
-		if not Skillet.RankFrameExtra then
+		if not CraftForge.RankFrameExtra then
 			GameTooltip:AddLine("RankFrame_OnMouseDown")
-			Skillet.RankFrameExtra = true
+			CraftForge.RankFrameExtra = true
 		end
 		GameTooltip:Show()
 	elseif (mouse == "RightButton") then
-		self:SkilletRankFrame_Show(button)
+		self:CraftForgeRankFrame_Show(button)
 	end
 end
 
-function Skillet:RankFrame_OnMouseUp(button)
+function CraftForge:RankFrame_OnMouseUp(button)
 	local mouse = GetMouseButtonClicked()
 	DA.DEBUG(3,"RankFrame_OnMouseUp("..tostring(button).."), "..tostring(mouse))
 	if (mouse == "LeftButton") then
 		GameTooltip:AddLine("RankFrame_OnMouseUp")
 		GameTooltip:Show()
 	elseif (mouse == "RightButton") then
-		self:SkilletRankFrame_Show(button)
+		self:CraftForgeRankFrame_Show(button)
 	end
 end
 
-function Skillet:SkilletRankFrame_Show(button)
-	--DA.DEBUG(0,"SkilletRankFrame_Show("..tostring(button)..")")
+function CraftForge:CraftForgeRankFrame_Show(button)
+	--DA.DEBUG(0,"CraftForgeRankFrame_Show("..tostring(button)..")")
 	local x, y = GetCursorPosition()
 	local uiScale = UIParent:GetEffectiveScale()
-	if not SkilletRankFrameMenu then
-		SkilletRankFrameMenu = CreateFrame("Frame", "SkilletRankFrameMenu", _G["UIParent"], "UIDropDownMenuTemplate")
-		SkilletRankFrameMenu:SetScale(uiScale)
+	if not CraftForgeRankFrameMenu then
+		CraftForgeRankFrameMenu = CreateFrame("Frame", "CraftForgeRankFrameMenu", _G["UIParent"], "UIDropDownMenuTemplate")
+		CraftForgeRankFrameMenu:SetScale(uiScale)
 	end
 	self.menuButton = button
 --	GameTooltip:Hide() --hide tooltip, because it may be over the menu, sometimes it still fails
-	MenuUtil.CreateContextMenu(SkilletRankFrameMenu, RankFrameMenuList);
+	MenuUtil.CreateContextMenu(CraftForgeRankFrameMenu, RankFrameMenuList);
 end
 
-function Skillet:RankFrame_Button1()
+function CraftForge:RankFrame_Button1()
 	DA.DEBUG(0,"RankFrame_Button1()")
 end
 
-function Skillet:RankFrame_Button2()
+function CraftForge:RankFrame_Button2()
 	DA.DEBUG(0,"RankFrame_Button2()")
 end
 
-function Skillet:SkilletFrameForceClose()
-	--DA.DEBUG(0,"SkilletFrameForceClose()")
+function CraftForge:CraftForgeFrameForceClose()
+	--DA.DEBUG(0,"CraftForgeFrameForceClose()")
 --
--- Skillet's Close (X) button just hides our frames to avoid crashing TSM
+-- CraftForge's Close (X) button just hides our frames to avoid crashing TSM
 --
-	if TSM_API and Skillet.db.profile.tsm_compat then
+	if TSM_API and CraftForge.db.profile.tsm_compat then
 		if TSM_API.IsUIVisible("CRAFTING") then
 			return self:HideAllWindows()
 		end
@@ -1957,7 +1957,7 @@ function Skillet:SkilletFrameForceClose()
 	return self:HideAllWindows()
 end
 
-function Skillet:InventoryFilterButton_OnClick(button)
+function CraftForge:InventoryFilterButton_OnClick(button)
 	local slot = button.slot or ""
 	local option = "filterInventory-"..slot
 	self:ToggleTradeSkillOption(option)
@@ -1967,7 +1967,7 @@ function Skillet:InventoryFilterButton_OnClick(button)
 	self:UpdateTradeSkillWindow()
 end
 
-function Skillet:InventoryFilterButton_OnEnter(button)
+function CraftForge:InventoryFilterButton_OnEnter(button)
 	local slot = button.slot or ""
 	local option = "filterInventory-"..slot
 	local value = self:GetTradeSkillOption(option)
@@ -1980,11 +1980,11 @@ function Skillet:InventoryFilterButton_OnEnter(button)
 	GameTooltip:Show()
 end
 
-function Skillet:InventoryFilterButton_OnLeave(button)
+function CraftForge:InventoryFilterButton_OnLeave(button)
 	GameTooltip:Hide()
 end
 
-function Skillet:InventoryFilterButton_OnShow(button)
+function CraftForge:InventoryFilterButton_OnShow(button)
 	local slot = button.slot or ""
 	local option = "filterInventory-"..slot
 	local value = self:GetTradeSkillOption(option)
@@ -1995,203 +1995,203 @@ function Skillet:InventoryFilterButton_OnShow(button)
 	end
 end
 
-function Skillet:InventoryFilterButtons_Show()
-	SkilletInventoryFilterBag:Show()
-	SkilletInventoryFilterCraft:Show()
-	SkilletInventoryFilterVendor:Show()
-	SkilletInventoryFilterAlts:Show()
-	SkilletInventoryFilterOwned:Show()
+function CraftForge:InventoryFilterButtons_Show()
+	CraftForgeInventoryFilterBag:Show()
+	CraftForgeInventoryFilterCraft:Show()
+	CraftForgeInventoryFilterVendor:Show()
+	CraftForgeInventoryFilterAlts:Show()
+	CraftForgeInventoryFilterOwned:Show()
 end
 
-function Skillet:InventoryFilterButtons_Hide()
-	SkilletInventoryFilterBag:Hide()
-	SkilletInventoryFilterCraft:Hide()
-	SkilletInventoryFilterVendor:Hide()
-	SkilletInventoryFilterAlts:Hide()
-	SkilletInventoryFilterOwned:Hide()
+function CraftForge:InventoryFilterButtons_Hide()
+	CraftForgeInventoryFilterBag:Hide()
+	CraftForgeInventoryFilterCraft:Hide()
+	CraftForgeInventoryFilterVendor:Hide()
+	CraftForgeInventoryFilterAlts:Hide()
+	CraftForgeInventoryFilterOwned:Hide()
 end
 
-local function SkillMenuList(SkilletSkillMenu, rootDescription)
-	if Skillet.isTest then 
+local function SkillMenuList(CraftForgeSkillMenu, rootDescription)
+	if CraftForge.isTest then 
 		local title = "skillMenuList"
-		if Skillet.isLocked then
+		if CraftForge.isLocked then
 			title = title .. "(locked)"
 		end
 		rootDescription:CreateTitle(title);
 	end
-	rootDescription:CreateButton(L["Link Recipe"], function() Skillet:SkillButton_LinkRecipe() end);
-	rootDescription:CreateButton(L["Wowhead URL"], function() Skillet:SkillButton_WowheadURL() end);
-	if Skillet.isLocked then
+	rootDescription:CreateButton(L["Link Recipe"], function() CraftForge:SkillButton_LinkRecipe() end);
+	rootDescription:CreateButton(L["Wowhead URL"], function() CraftForge:SkillButton_WowheadURL() end);
+	if CraftForge.isLocked then
 		rootDescription:CreateButton(L["Add to Ignore Materials"], function()
-			local skill = Skillet.menuButton.skill
+			local skill = CraftForge.menuButton.skill
 			if skill and skill.recipeID then
 				local recipeID = skill.recipeID
 				local spellLink = C_TradeSkillUI.GetRecipeLink(skill.recipeID)
-				Skillet.db.realm.userIgnoredMats[Skillet.currentPlayer][recipeID] = spellLink
-				if Skillet.ignoreList and Skillet.ignoreList:IsVisible() then
-					Skillet:UpdateIgnoreListWindow()
+				CraftForge.db.realm.userIgnoredMats[CraftForge.currentPlayer][recipeID] = spellLink
+				if CraftForge.ignoreList and CraftForge.ignoreList:IsVisible() then
+					CraftForge:UpdateIgnoreListWindow()
 				end
 			end
 		end);
 	end
-	rootDescription:CreateButton(Skillet.favoriteMenuText, function()
-		local recipeID = Skillet.menuButton.skill.recipeID
-		local favoriteButton = _G[Skillet.menuButton:GetName() .. "Favorite"]
-		Skillet:ToggleFavorite(recipeID)
-		favoriteButton:SetFavorite(Skillet:IsFavorite(recipeID))
+	rootDescription:CreateButton(CraftForge.favoriteMenuText, function()
+		local recipeID = CraftForge.menuButton.skill.recipeID
+		local favoriteButton = _G[CraftForge.menuButton:GetName() .. "Favorite"]
+		CraftForge:ToggleFavorite(recipeID)
+		favoriteButton:SetFavorite(CraftForge:IsFavorite(recipeID))
 	end);
-	if not Skillet.isLocked then
+	if not CraftForge.isLocked then
 		local submenu1 = rootDescription:CreateButton(L["Ignore"]);
 			submenu1:CreateButton(L["Add Recipe to Ignored List"], function()
-				local index = Skillet.menuButton:GetID()
-				local skillDB = Skillet.db.realm.skillDB[Skillet.currentPlayer][Skillet.currentTrade][index]
+				local index = CraftForge.menuButton:GetID()
+				local skillDB = CraftForge.db.realm.skillDB[CraftForge.currentPlayer][CraftForge.currentTrade][index]
 				local recipeID = string.sub(skillDB,2)
 				local print=(tostring(index)..", "..tostring(skillDB)..", "..tostring(recipeID))
-				Skillet.db.realm.userIgnoredMats[Skillet.currentPlayer][recipeID] = Skillet.currentTrade
-				if Skillet.ignoreList and Skillet.ignoreList:IsVisible() then
-					Skillet:UpdateIgnoreListWindow()
+				CraftForge.db.realm.userIgnoredMats[CraftForge.currentPlayer][recipeID] = CraftForge.currentTrade
+				if CraftForge.ignoreList and CraftForge.ignoreList:IsVisible() then
+					CraftForge:UpdateIgnoreListWindow()
 				end
 			end);
 			submenu1:CreateButton(L["Remove Recipe from Ignored List"], function()
-				local index = Skillet.menuButton:GetID()
-				local skillDB = Skillet.db.realm.skillDB[Skillet.currentPlayer][Skillet.currentTrade][index]
+				local index = CraftForge.menuButton:GetID()
+				local skillDB = CraftForge.db.realm.skillDB[CraftForge.currentPlayer][CraftForge.currentTrade][index]
 				local recipeID = string.sub(skillDB,2)
 				local print=(tostring(index)..", "..tostring(skillDB)..", "..tostring(recipeID))
-				Skillet.db.realm.userIgnoredMats[Skillet.currentPlayer][recipeID] = nil
-				if Skillet.ignoreList and Skillet.ignoreList:IsVisible() then
-					Skillet:UpdateIgnoreListWindow()
+				CraftForge.db.realm.userIgnoredMats[CraftForge.currentPlayer][recipeID] = nil
+				if CraftForge.ignoreList and CraftForge.ignoreList:IsVisible() then
+					CraftForge:UpdateIgnoreListWindow()
 				end
 			end);
 		local submenu2 = rootDescription:CreateButton(L["New Group"]);
-			submenu2:CreateButton(L["Empty Group"], function() Skillet:SkillButton_NewGroup() end);
-			submenu2:CreateButton(L["From Selection"], function() Skillet:SkillButton_MakeGroup() end);
+			submenu2:CreateButton(L["Empty Group"], function() CraftForge:SkillButton_NewGroup() end);
+			submenu2:CreateButton(L["From Selection"], function() CraftForge:SkillButton_MakeGroup() end);
 	end
 	rootDescription:CreateDivider(); -- CreateSpacer, CreateDivider
-	rootDescription:CreateButton(L["Copy"], function() Skillet:SkillButton_CopySelected() end);
-	if not Skillet.isLocked then
-		rootDescription:CreateButton(L["Cut"], function() Skillet:SkillButton_CutSelected() end);
-		rootDescription:CreateButton(L["Paste"], function() Skillet:SkillButton_PasteSelected(Skillet.menuButton) end);
+	rootDescription:CreateButton(L["Copy"], function() CraftForge:SkillButton_CopySelected() end);
+	if not CraftForge.isLocked then
+		rootDescription:CreateButton(L["Cut"], function() CraftForge:SkillButton_CutSelected() end);
+		rootDescription:CreateButton(L["Paste"], function() CraftForge:SkillButton_PasteSelected(CraftForge.menuButton) end);
 	end
 end;
 
-local function HeaderMenuList(SkilletSkillMenu, rootDescription)
-	if Skillet.isTest then 
+local function HeaderMenuList(CraftForgeSkillMenu, rootDescription)
+	if CraftForge.isTest then 
 		local title = "headerMenuList"
-		if Skillet.isLocked then
+		if CraftForge.isLocked then
 			title = title .. "(locked)"
 		end
 		rootDescription:CreateTitle(title);
 	end
-	if not Skillet.isLocked then
-		rootDescription:CreateButton(L["Rename Group"], function() Skillet:SkillButton_NameEditEnable(Skillet.menuButton) end);
+	if not CraftForge.isLocked then
+		rootDescription:CreateButton(L["Rename Group"], function() CraftForge:SkillButton_NameEditEnable(CraftForge.menuButton) end);
 		local submenu1 = rootDescription:CreateButton(L["New Group"]);
-			submenu1:CreateButton(L["Empty Group"], function() Skillet:SkillButton_NewGroup() end);
-			submenu1:CreateButton(L["From Selection"], function() Skillet:SkillButton_MakeGroup() end);
+			submenu1:CreateButton(L["Empty Group"], function() CraftForge:SkillButton_NewGroup() end);
+			submenu1:CreateButton(L["From Selection"], function() CraftForge:SkillButton_MakeGroup() end);
 		rootDescription:CreateDivider(); -- CreateSpacer, CreateDivider
 	end
 	local submenu2 = rootDescription:CreateButton(L["Selection"]);
-		submenu2:CreateButton(L["Select All"], function() Skillet:SkillButton_SetAllSelections(true) Skillet:UpdateTradeSkillWindow() end);
-		submenu2:CreateButton(L["Select None"], function() Skillet:SkillButton_SetAllSelections(false) Skillet:UpdateTradeSkillWindow() end);
+		submenu2:CreateButton(L["Select All"], function() CraftForge:SkillButton_SetAllSelections(true) CraftForge:UpdateTradeSkillWindow() end);
+		submenu2:CreateButton(L["Select None"], function() CraftForge:SkillButton_SetAllSelections(false) CraftForge:UpdateTradeSkillWindow() end);
 	rootDescription:CreateDivider(); -- CreateSpacer, CreateDivider
-	rootDescription:CreateButton(L["Copy"], function() Skillet:SkillButton_CopySelected() end);
-	if not Skillet.isLocked then
-		rootDescription:CreateButton(L["Cut"], function() Skillet:SkillButton_CutSelected() end);
-		rootDescription:CreateButton(L["Paste"], function() Skillet:SkillButton_PasteSelected(Skillet.menuButton) end);
+	rootDescription:CreateButton(L["Copy"], function() CraftForge:SkillButton_CopySelected() end);
+	if not CraftForge.isLocked then
+		rootDescription:CreateButton(L["Cut"], function() CraftForge:SkillButton_CutSelected() end);
+		rootDescription:CreateButton(L["Paste"], function() CraftForge:SkillButton_PasteSelected(CraftForge.menuButton) end);
 	end
 end;
 
-local function HeaderMenuListMainGroup(SkilletSkillMenu, rootDescription)
-	if Skillet.isTest then 
+local function HeaderMenuListMainGroup(CraftForgeSkillMenu, rootDescription)
+	if CraftForge.isTest then 
 		local title = "headerMenuListMainGroup"
-		if Skillet.isLocked then
+		if CraftForge.isLocked then
 			title = title .. "(locked)"
 		end
 		rootDescription:CreateTitle(title);
 	end
-	if not Skillet.isLocked then
+	if not CraftForge.isLocked then
 		local submenu1 = rootDescription:CreateButton(L["New Group"]);
-			submenu1:CreateButton(L["Empty Group"], function() Skillet:SkillButton_NewGroup() end);
-			submenu1:CreateButton(L["From Selection"], function() Skillet:SkillButton_MakeGroup() end);
+			submenu1:CreateButton(L["Empty Group"], function() CraftForge:SkillButton_NewGroup() end);
+			submenu1:CreateButton(L["From Selection"], function() CraftForge:SkillButton_MakeGroup() end);
 		rootDescription:CreateDivider(); -- CreateSpacer, CreateDivider
 		local submenu2 = rootDescription:CreateButton(L["Selection"]);
-			submenu2:CreateButton(L["Select All"], function() Skillet:SkillButton_SetAllSelections(true) Skillet:UpdateTradeSkillWindow() end);
-			submenu2:CreateButton(L["Select None"], function() Skillet:SkillButton_SetAllSelections(false) Skillet:UpdateTradeSkillWindow() end);
+			submenu2:CreateButton(L["Select All"], function() CraftForge:SkillButton_SetAllSelections(true) CraftForge:UpdateTradeSkillWindow() end);
+			submenu2:CreateButton(L["Select None"], function() CraftForge:SkillButton_SetAllSelections(false) CraftForge:UpdateTradeSkillWindow() end);
 		rootDescription:CreateDivider(); -- CreateSpacer, CreateDivider
 	end
-	rootDescription:CreateButton(L["Copy"], function() Skillet:SkillButton_CopySelected() end);
-	if not Skillet.isLocked then
-		rootDescription:CreateButton(L["Cut"], function() Skillet:SkillButton_CutSelected() end);
-		rootDescription:CreateButton(L["Paste"], function() Skillet:SkillButton_PasteSelected(Skillet.menuButton) end);
+	rootDescription:CreateButton(L["Copy"], function() CraftForge:SkillButton_CopySelected() end);
+	if not CraftForge.isLocked then
+		rootDescription:CreateButton(L["Cut"], function() CraftForge:SkillButton_CutSelected() end);
+		rootDescription:CreateButton(L["Paste"], function() CraftForge:SkillButton_PasteSelected(CraftForge.menuButton) end);
 	end
 end;
 
 --
 -- Called when the skill operators drop down is displayed
 --
-function Skillet:SkilletSkillMenu_Show(button)
-	--DA.DEBUG(0,"SkilletSkillMenu_Show("..tostring(button)..")")
+function CraftForge:CraftForgeSkillMenu_Show(button)
+	--DA.DEBUG(0,"CraftForgeSkillMenu_Show("..tostring(button)..")")
 	local x, y = GetCursorPosition()
 	local uiScale = UIParent:GetEffectiveScale()
 	local locked = self:RecipeGroupIsLocked()
 	self.isLocked = locked
-	if not SkilletSkillMenu then
-		SkilletSkillMenu = CreateFrame("Frame", "SkilletSkillMenu", _G["UIParent"], "UIDropDownMenuTemplate") -- WowStyle1DropdownTemplate
-		SkilletSkillMenu:SetScale(uiScale)
+	if not CraftForgeSkillMenu then
+		CraftForgeSkillMenu = CreateFrame("Frame", "CraftForgeSkillMenu", _G["UIParent"], "UIDropDownMenuTemplate") -- WowStyle1DropdownTemplate
+		CraftForgeSkillMenu:SetScale(uiScale)
 	end
 	self.menuButton = button
 	if button.skill.subGroup then
 		if button.skill.mainGroup then
-			MenuUtil.CreateContextMenu(SkilletSkillMenu, HeaderMenuListMainGroup);
+			MenuUtil.CreateContextMenu(CraftForgeSkillMenu, HeaderMenuListMainGroup);
 		else
-			MenuUtil.CreateContextMenu(SkilletSkillMenu, HeaderMenuList);
+			MenuUtil.CreateContextMenu(CraftForgeSkillMenu, HeaderMenuList);
 		end
 	else
 		GameTooltip:Hide() --hide tooltip, because it may be over the menu, sometimes it still fails
 		if C_TradeSkillUI.GetShowLearned() then
-			Skillet.favoriteMenuText = L["Set Favorite"]
+			CraftForge.favoriteMenuText = L["Set Favorite"]
 		else
-			Skillet.favoriteMenuText = L["Cannot Set Favorite"]
+			CraftForge.favoriteMenuText = L["Cannot Set Favorite"]
 		end
-		if Skillet:IsFavorite(button.skill.recipeID) then
-			Skillet.favoriteMenuText = L["Remove Favorite"]
+		if CraftForge:IsFavorite(button.skill.recipeID) then
+			CraftForge.favoriteMenuText = L["Remove Favorite"]
 		end
-		MenuUtil.CreateContextMenu(SkilletSkillMenu, SkillMenuList);
+		MenuUtil.CreateContextMenu(CraftForgeSkillMenu, SkillMenuList);
 	end
 end
 
-function Skillet:ReAnchorButtons(newFrame)
+function CraftForge:ReAnchorButtons(newFrame)
 	--DA.DEBUG(0,"ReAnchorButtons("..tostring(newFrame)..")")
-	SkilletRecipeNotesButton:SetPoint("BOTTOMRIGHT",newFrame,"TOPRIGHT",0,0)
-	SkilletQueueAllButton:SetPoint("TOPLEFT",newFrame,"BOTTOMLEFT",0,-2)
-	SkilletEnchantButton:SetPoint("TOPLEFT",newFrame,"BOTTOMLEFT",0,-2)
---	SkilletQueueButton:SetPoint("TOPRIGHT",newFrame,"BOTTOMRIGHT",0,-2)
+	CraftForgeRecipeNotesButton:SetPoint("BOTTOMRIGHT",newFrame,"TOPRIGHT",0,0)
+	CraftForgeQueueAllButton:SetPoint("TOPLEFT",newFrame,"BOTTOMLEFT",0,-2)
+	CraftForgeEnchantButton:SetPoint("TOPLEFT",newFrame,"BOTTOMLEFT",0,-2)
+--	CraftForgeQueueButton:SetPoint("TOPRIGHT",newFrame,"BOTTOMRIGHT",0,-2)
 end
 
 --
--- The SkilletQueue and StandaloneQueue functions start here
+-- The CraftForgeQueue and StandaloneQueue functions start here
 --
-function Skillet:SkilletQueueMenu_Show(button)
-	--DA.DEBUG(0,"SkilletQueueMenu_Show("..tostring(button)..")")
+function CraftForge:CraftForgeQueueMenu_Show(button)
+	--DA.DEBUG(0,"CraftForgeQueueMenu_Show("..tostring(button)..")")
 	local x, y = GetCursorPosition()
 	local uiScale = UIParent:GetEffectiveScale()
-	if not SkilletQueueMenu then
-		SkilletQueueMenu = CreateFrame("Frame", "SkilletQueueMenu", _G["UIParent"], "UIDropDownMenuTemplate")
-		--DA.DEBUG(0,"SkilletQueueMenu_Show: uiScale= "..tostring(uiScale))
-		SkilletQueueMenu:SetScale(uiScale)
+	if not CraftForgeQueueMenu then
+		CraftForgeQueueMenu = CreateFrame("Frame", "CraftForgeQueueMenu", _G["UIParent"], "UIDropDownMenuTemplate")
+		--DA.DEBUG(0,"CraftForgeQueueMenu_Show: uiScale= "..tostring(uiScale))
+		CraftForgeQueueMenu:SetScale(uiScale)
 	end
 	self.queueMenuButton = button
-	MenuUtil.CreateButtonContextMenu(SkilletQueueMenu,
-	{L["Move to Top"], function() Skillet:QueueMoveToTop(Skillet.queueMenuButton:GetID()) end},
-	{L["Move Up"], function() Skillet:QueueMoveUp(Skillet.queueMenuButton:GetID()) end},
-	{L["Move Down"], function() Skillet:QueueMoveDown(Skillet.queueMenuButton:GetID()) end},
-	{L["Move to Bottom"], function() Skillet:QueueMoveToBottom(Skillet.queueMenuButton:GetID()) end}
+	MenuUtil.CreateButtonContextMenu(CraftForgeQueueMenu,
+	{L["Move to Top"], function() CraftForge:QueueMoveToTop(CraftForge.queueMenuButton:GetID()) end},
+	{L["Move Up"], function() CraftForge:QueueMoveUp(CraftForge.queueMenuButton:GetID()) end},
+	{L["Move Down"], function() CraftForge:QueueMoveDown(CraftForge.queueMenuButton:GetID()) end},
+	{L["Move to Bottom"], function() CraftForge:QueueMoveToBottom(CraftForge.queueMenuButton:GetID()) end}
 	);
 end
 
 --
 -- The start/pause queue button.
 --
-function Skillet:StartQueue_OnClick(button, mouse)
+function CraftForge:StartQueue_OnClick(button, mouse)
 	if self.queuecasting then
 		DA.MARK3(L["Cancel incomplete processing"])
 		self:CancelCast()
@@ -2203,23 +2203,23 @@ function Skillet:StartQueue_OnClick(button, mouse)
 	self:UpdateQueueWindow()
 end
 
-function Skillet:QueueManagementToggle(showDetails)
+function CraftForge:QueueManagementToggle(showDetails)
 	--DA.DEBUG(0,"QueueManagementToggle("..tostring(showDetails)..")")
-	if SkilletQueueManagementParent:IsVisible() or showDetails then
-		Skillet:ShowReagentDetails()
+	if CraftForgeQueueManagementParent:IsVisible() or showDetails then
+		CraftForge:ShowReagentDetails()
 	else
-		SkilletQueueManagementParent:Show();
-		SkilletQueueManagementParent:SetHeight(100)
-		SkilletReagentParent:Hide()
-		Skillet:ReAnchorButtons(SkilletQueueManagementParent)
+		CraftForgeQueueManagementParent:Show();
+		CraftForgeQueueManagementParent:SetHeight(100)
+		CraftForgeReagentParent:Hide()
+		CraftForge:ReAnchorButtons(CraftForgeQueueManagementParent)
 	end
 end
 
-function Skillet:QueueItemButton_OnClick(this, button)
+function CraftForge:QueueItemButton_OnClick(this, button)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	local index = this:GetID()
 	if button == "LeftButton" then
-		Skillet:QueueManagementToggle(true)
+		CraftForge:QueueManagementToggle(true)
 		local recipeID = queue[index].recipeID
 		local recipe = self:GetRecipe(recipeID)
 		local tradeID = recipe.tradeID
@@ -2228,25 +2228,25 @@ function Skillet:QueueItemButton_OnClick(this, button)
 		self:SetTradeSkill(self.currentPlayer, tradeID, newSkillIndex)
 		--DA.DEBUG(0,"QueueItemButton_OnClick: done selecting new skill")
 	elseif button == "RightButton" then
-		Skillet:SkilletQueueMenu_Show(this)
+		CraftForge:CraftForgeQueueMenu_Show(this)
 	end
 end
 
 --
 -- Called when the list of queued items is scrolled
 --
-function Skillet:QueueList_OnScroll()
-	Skillet:UpdateQueueWindow()
+function CraftForge:QueueList_OnScroll()
+	CraftForge:UpdateQueueWindow()
 end
 
 local num_queue_buttons = 0
 local function get_queue_button(i)
-	local button = _G["SkilletQueueButton"..i]
+	local button = _G["CraftForgeQueueButton"..i]
 	if not button then
-		button = CreateFrame("Button", "SkilletQueueButton"..i, SkilletQueueParent, "SkilletQueueItemButtonTemplate")
-		button:SetParent(SkilletQueueParent)
-		button:SetPoint("TOPLEFT", "SkilletQueueButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(SkilletQueueParent:GetFrameLevel() + 1)
+		button = CreateFrame("Button", "CraftForgeQueueButton"..i, CraftForgeQueueParent, "CraftForgeQueueItemButtonTemplate")
+		button:SetParent(CraftForgeQueueParent)
+		button:SetPoint("TOPLEFT", "CraftForgeQueueButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftForgeQueueParent:GetFrameLevel() + 1)
 	end
 	return button
 end
@@ -2255,29 +2255,29 @@ end
 -- Updates the window/scroll list displaying queue of items
 -- that are waiting to be crafted.
 --
-function Skillet:UpdateQueueWindow()
+function CraftForge:UpdateQueueWindow()
 	--DA.DEBUG(0,"UpdateQueueWindow()")
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if not queue then
-		SkilletStartQueueButton:SetText(L["Process"])
-		SkilletEmptyQueueButton:Disable()
-		SkilletStartQueueButton:Disable()
+		CraftForgeStartQueueButton:SetText(L["Process"])
+		CraftForgeEmptyQueueButton:Disable()
+		CraftForgeStartQueueButton:Disable()
 		return
 	end
 	local numItems = #queue
 	if numItems > 0 then
-		SkilletStartQueueButton:Enable()
-		SkilletEmptyQueueButton:Enable()
+		CraftForgeStartQueueButton:Enable()
+		CraftForgeEmptyQueueButton:Enable()
 	else
-		SkilletStartQueueButton:Disable()
-		SkilletEmptyQueueButton:Disable()
+		CraftForgeStartQueueButton:Disable()
+		CraftForgeEmptyQueueButton:Disable()
 	end
 	if self.queuecasting and UnitCastingInfo("player") then
-		SkilletStartQueueButton:SetText(L["Pause"])
+		CraftForgeStartQueueButton:SetText(L["Pause"])
 	else
-		SkilletStartQueueButton:SetText(L["Process"])
+		CraftForgeStartQueueButton:SetText(L["Process"])
 	end
-	local button_count = SkilletQueueParentBase:GetHeight() / SKILLET_TRADE_SKILL_HEIGHT
+	local button_count = CraftForgeQueueParentBase:GetHeight() / CRAFTFORGE_TRADE_SKILL_HEIGHT
 	button_count = math.max(0, (math.floor(button_count) - 1))
 	--DA.DEBUG(0,"UpdateQueueWindow: button_count="..button_count)
 	if button_count == 0 then
@@ -2296,16 +2296,16 @@ function Skillet:UpdateQueueWindow()
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(SkilletQueueList,				-- frame
+	FauxScrollFrame_Update(CraftForgeQueueList,				-- frame
 						   numItems,                        -- num items
 						   button_count,                    -- num to display
-						   SKILLET_TRADE_SKILL_HEIGHT)      -- value step (item height)
+						   CRAFTFORGE_TRADE_SKILL_HEIGHT)      -- value step (item height)
 --
 -- Where in the list of skill to start counting.
 --
-	local itemOffset = FauxScrollFrame_GetOffset(SkilletQueueList)
+	local itemOffset = FauxScrollFrame_GetOffset(CraftForgeQueueList)
 	--DA.DEBUG(0,"UpdateQueueWindow: itemOffset="..itemOffset)
-	local width = SkilletQueueList:GetWidth()
+	local width = CraftForgeQueueList:GetWidth()
 --
 -- Iterate through all the buttons that make up the scroll window
 -- and fill then in with data or hide them, as necessary
@@ -2371,60 +2371,60 @@ function Skillet:UpdateQueueWindow()
 	end
 end
 
-function Skillet:ShowFullView()
-	Skillet.fullView = true
-	SkilletQueueParentBase:SetParent(SkilletFrame)
-	SkilletQueueParentBase:ClearAllPoints()
-	SkilletQueueParentBase:SetPoint("TOPLEFT",SkilletCreateAllButton,"BOTTOMLEFT",0,-3)
-	SkilletQueueParentBase:SetPoint("BOTTOMRIGHT",SkilletFrame,"BOTTOMRIGHT",-10,32)
-	SkilletStandaloneQueue:Hide()
-	SkilletQueueOnlyButton:SetText(">")
-	Skillet:UpdateQueueWindow()
+function CraftForge:ShowFullView()
+	CraftForge.fullView = true
+	CraftForgeQueueParentBase:SetParent(CraftForgeFrame)
+	CraftForgeQueueParentBase:ClearAllPoints()
+	CraftForgeQueueParentBase:SetPoint("TOPLEFT",CraftForgeCreateAllButton,"BOTTOMLEFT",0,-3)
+	CraftForgeQueueParentBase:SetPoint("BOTTOMRIGHT",CraftForgeFrame,"BOTTOMRIGHT",-10,32)
+	CraftForgeStandaloneQueue:Hide()
+	CraftForgeQueueOnlyButton:SetText(">")
+	CraftForge:UpdateQueueWindow()
 end
 
-function Skillet:ShowQueueView()
+function CraftForge:ShowQueueView()
 	--DA.DEBUG(0,"ShowQueueView()")
-	Skillet.fullView = false
-	SkilletQueueParentBase:SetParent(SkilletStandaloneQueue)
-	SkilletQueueParentBase:ClearAllPoints()
-	SkilletQueueParentBase:SetPoint("TOPLEFT",SkilletStandaloneQueue,"TOPLEFT",5,-32)
-	SkilletQueueParentBase:SetPoint("BOTTOMRIGHT",SkilletStandaloneQueue,"BOTTOMRIGHT",-5,30)
-	SkilletStandaloneQueue:Show()
-	SkilletQueueOnlyButton:SetText("<")
-	Skillet:UpdateQueueWindow()
+	CraftForge.fullView = false
+	CraftForgeQueueParentBase:SetParent(CraftForgeStandaloneQueue)
+	CraftForgeQueueParentBase:ClearAllPoints()
+	CraftForgeQueueParentBase:SetPoint("TOPLEFT",CraftForgeStandaloneQueue,"TOPLEFT",5,-32)
+	CraftForgeQueueParentBase:SetPoint("BOTTOMRIGHT",CraftForgeStandaloneQueue,"BOTTOMRIGHT",-5,30)
+	CraftForgeStandaloneQueue:Show()
+	CraftForgeQueueOnlyButton:SetText("<")
+	CraftForge:UpdateQueueWindow()
 end
 
-function Skillet:QueueOnlyViewToggle()
+function CraftForge:QueueOnlyViewToggle()
 	--DA.DEBUG(0,"QueueOnlyViewToggle()")
-	FauxScrollFrame_SetOffset(SkilletQueueList, 0)
+	FauxScrollFrame_SetOffset(CraftForgeQueueList, 0)
 	self.fullView = not self.fullView
 	if self.fullView then
 		self:ShowFullView()
 		if self.db.profile.queue_only_view then
-			SkilletFrame:Show()
+			CraftForgeFrame:Show()
 		end
 		self:UpdateTradeSkillWindow()
 	else
 		self:ShowQueueView()
 		if self.db.profile.queue_only_view then
-			SkilletFrame:Hide()
+			CraftForgeFrame:Hide()
 		end
 	end
 end
 
-function Skillet:StandaloneQueueClose()
+function CraftForge:StandaloneQueueClose()
 	--DA.DEBUG(0,"StandaloneQueueClose()")
 	self:ShowFullView()
 	if self.db.profile.queue_only_view then
-		self:SkilletFrameForceClose()
+		self:CraftForgeFrameForceClose()
 	end
 end
 
-function Skillet:HideStandaloneQueue()
+function CraftForge:HideStandaloneQueue()
 	--DA.DEBUG(0,"HideStandaloneQueue()")
 	local closed
-	if self.skilletStandaloneQueue and self.skilletStandaloneQueue:IsVisible() then
-		SkilletStandaloneQueue:Hide()
+	if self.craftforgeStandaloneQueue and self.craftforgeStandaloneQueue:IsVisible() then
+		CraftForgeStandaloneQueue:Hide()
 		closed = true
 	end
 	return closed
@@ -2433,16 +2433,16 @@ end
 --
 -- Creates and sets up the Standalone Queue Frame
 --
-function Skillet:CreateStandaloneQueueFrame()
+function CraftForge:CreateStandaloneQueueFrame()
 	--DA.DEBUG(0,"CreateStandaloneQueueFrame()")
-	local frame = SkilletStandaloneQueue
+	local frame = CraftForgeStandaloneQueue
 	if not frame then
 		return nil
 	end
 	if not frame.SetBackdrop then
 		Mixin(frame, BackdropTemplateMixin)
 	end
-	if TSM_API and Skillet.db.profile.tsm_compat then
+	if TSM_API and CraftForge.db.profile.tsm_compat then
 		frame:SetFrameStrata("HIGH")
 	end
 	frame:SetBackdrop(FrameBackdrop);
@@ -2464,14 +2464,14 @@ function Skillet:CreateStandaloneQueueFrame()
 	local title = CreateFrame("Frame",nil,frame)
 	title:SetPoint("TOPLEFT",titlebar,"TOPLEFT",0,0)
 	title:SetPoint("BOTTOMRIGHT",titlebar2,"BOTTOMRIGHT",0,0)
-	local titletext = title:CreateFontString("SkilletStandaloneQueueTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = title:CreateFontString("CraftForgeStandaloneQueueTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT",title,"TOPLEFT",0,0)
 	titletext:SetPoint("TOPRIGHT",title,"TOPRIGHT",0,0)
 	titletext:SetHeight(26)
 	titletext:SetShadowColor(0,0,0)
 	titletext:SetShadowOffset(1,-1)
 	titletext:SetTextColor(1,1,1)
-	titletext:SetText("Skillet: " .. L["Queue"])
+	titletext:SetText("CraftForge: " .. L["Queue"])
 
 --
 -- Ace Window manager library, allows the window position (and size)
@@ -2487,7 +2487,7 @@ function Skillet:CreateStandaloneQueueFrame()
 --
 -- lets play the resize me game!
 --
-	Skillet:EnableResize(frame, 385, 170, Skillet.UpdateStandaloneQueueWindow)
+	CraftForge:EnableResize(frame, 385, 170, CraftForge.UpdateStandaloneQueueWindow)
 --
 -- so hitting [ESC] will close the window
 --
@@ -2495,13 +2495,13 @@ function Skillet:CreateStandaloneQueueFrame()
 	return frame
 end
 
-function Skillet:UpdateStandaloneQueueWindow()
+function CraftForge:UpdateStandaloneQueueWindow()
 	--DA.DEBUG(0,"UpdateStandaloneQueueWindow()")
-	if not self.skilletStandaloneQueue or not self.skilletStandaloneQueue:IsVisible() then
+	if not self.craftforgeStandaloneQueue or not self.craftforgeStandaloneQueue:IsVisible() then
 		return
 	end
-	SkilletStandaloneQueue:SetAlpha(self.db.profile.transparency)
-	SkilletStandaloneQueue:SetScale(self.db.profile.scale)
+	CraftForgeStandaloneQueue:SetAlpha(self.db.profile.transparency)
+	CraftForgeStandaloneQueue:SetScale(self.db.profile.scale)
 	self:UpdateQueueWindow()
 end
 
@@ -2512,30 +2512,30 @@ end
 -- The frame representing the main tradeskill window will be
 -- returned in case you need to pop up a frame attached to it.
 --
-function Skillet:AddButtonToTradeskillWindow(button)
+function CraftForge:AddButtonToTradeskillWindow(button)
 	--DA.DEBUG(0,"AddButtonToTradeskillWindow("..tostring(button)..")")
-	if not SkilletFrame.added_buttons then
-		SkilletFrame.added_buttons = {}
+	if not CraftForgeFrame.added_buttons then
+		CraftForgeFrame.added_buttons = {}
 	end
 	button:Hide()
 --
 -- See if this button has already been added ...
 --
-	for i=1, #SkilletFrame.added_buttons, 1 do
-		if SkilletFrame.added_buttons[i] == button then
+	for i=1, #CraftForgeFrame.added_buttons, 1 do
+		if CraftForgeFrame.added_buttons[i] == button then
 			return	-- ... yup
 		end
 	end
-	table.insert(SkilletFrame.added_buttons, button)	-- ... nope
-	if SkilletPluginButton then
-		SkilletPluginButton:Show()
+	table.insert(CraftForgeFrame.added_buttons, button)	-- ... nope
+	if CraftForgePluginButton then
+		CraftForgePluginButton:Show()
 	end
-	return SkilletFrame
+	return CraftForgeFrame
 end
 
-function Skillet:ToggleUseConcentration()
+function CraftForge:ToggleUseConcentration()
 	self.db.profile.use_concentration = not self.db.profile.use_concentration
 	--DA.DEBUG(0,"ToggleUseConcentration: use_concentration= "..tostring(self.db.profile.use_concentration))
-	SkilletUseConcentration:SetChecked(self.db.profile.use_concentration)
+	CraftForgeUseConcentration:SetChecked(self.db.profile.use_concentration)
 	self:UpdateDetailWindow(self.selectedSkill)
 end

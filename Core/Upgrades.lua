@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
 --[[
-  Contains methods to upgrade Skillet from previous versions. This is
+  Contains methods to upgrade CraftForge from previous versions. This is
   for when I screw up the SavedVariables layout and need to fix it somehow.
 ]]--
 
@@ -40,7 +40,7 @@ end
 
 --
 -- Runs all the update functions, should they be required
-function Skillet:UpgradeDataAndOptions()
+function CraftForge:UpgradeDataAndOptions()
 	DA.DEBUG(0,"UpgradeDataAndOptions()")
 	if not self.db.realm.options then
 		self.db.realm.options = {}
@@ -57,10 +57,10 @@ function Skillet:UpgradeDataAndOptions()
 		end
 	end
 
-	if SkilletDB.servers then
-		SkilletDB.realms = SkilletDB.servers
-		SkilletDB.servers = nil
-		self.db = LibStub("AceDB-3.0"):New("SkilletDB")
+	if CraftForgeDB.servers then
+		CraftForgeDB.realms = CraftForgeDB.servers
+		CraftForgeDB.servers = nil
+		self.db = LibStub("AceDB-3.0"):New("CraftForgeDB")
 	end
 
 	if self.db.profile.transparency<0.1 or self.db.profile.transparency>1 then
@@ -71,7 +71,7 @@ function Skillet:UpgradeDataAndOptions()
 		self.db.profile.scale=1
 	end
 
-	-- Upgrade from Skillet 1.2 and earlier where recipes where (stupidly)
+	-- Upgrade from CraftForge 1.2 and earlier where recipes where (stupidly)
 	-- stored per-charcter where no one else could see them
 	if self.db.char.recipes then
 		self.db.char.recipes = nil
@@ -81,7 +81,7 @@ function Skillet:UpgradeDataAndOptions()
 		self.db.realm.recipes = nil
 	end
 
-	-- Update from Skillet 1.5 or earlier where profile options were
+	-- Update from CraftForge 1.5 or earlier where profile options were
 	-- actually stored per character
 	if self.db.char.vendor_buy_button then
 		self.db.profile.vendor_buy_button = self.db.char.vendor_buy_button
@@ -106,7 +106,7 @@ function Skillet:UpgradeDataAndOptions()
 
 	-- Moved any recipe notes to the server level so all alts can see them
 	if self.db.char.notes then
-		self.db.realm.notes[Skillet:unitName("player")] = self.db.char.notes
+		self.db.realm.notes[CraftForge:unitName("player")] = self.db.char.notes
 		self.db.char.notes = nil
 	end
 

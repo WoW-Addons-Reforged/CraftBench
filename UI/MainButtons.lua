@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("Skillet")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
 
 local nonLinkingTrade
-if Skillet.isRetail then
+if CraftForge.isRetail then
 	nonLinkingTrade = { [2656] = true, [53428] = true, [193290] = true, [250046] = true } -- smelting, runeforging, herbalism, skinning
 else
 	nonLinkingTrade = { [2656] = true, [53428] = true }	-- smelting, runeforging
 end
 
-function Skillet:TradeButton_OnEnter(this)
+function CraftForge:TradeButton_OnEnter(this)
 	GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
 	GameTooltip:ClearLines()
 	local bName = this:GetName()
@@ -50,14 +50,14 @@ function Skillet:TradeButton_OnEnter(this)
 		if g == 0 then
 			GameTooltip:AddLine("scan incomplete...",1,0,0)
 		end
-		if nonLinkingTrade[tradeID] and player ~= Skillet:unitName("player") then
+		if nonLinkingTrade[tradeID] and player ~= CraftForge:unitName("player") then
 			GameTooltip:AddLine(sName.." not available for alts")
 		end
 	end
 	GameTooltip:Show()
 end
 
-function Skillet:TradeButton_OnClick(this,button)
+function CraftForge:TradeButton_OnClick(this,button)
 	local bName = this:GetName()
 	local _, player, tradeID = string.split("-", bName)
 	local sName = C_Spell.GetSpellName(tradeID)
@@ -65,7 +65,7 @@ function Skillet:TradeButton_OnClick(this,button)
 	tradeID = tonumber(tradeID)
 	local data =  self:GetSkillRanks(player, tradeID)
 	if button == "LeftButton" then
-		if player == Skillet:unitName("player") or (data and data ~= nil) then
+		if player == CraftForge:unitName("player") or (data and data ~= nil) then
 			if IsShiftKeyDown() then
 				if self.currentTrade == tradeID then
 					local link = C_TradeSkillUI.GetTradeSkillListLink()
@@ -80,14 +80,14 @@ function Skillet:TradeButton_OnClick(this,button)
 					return
 				end
 			else
-				if player == Skillet:unitName("player") then
+				if player == CraftForge:unitName("player") then
 					self:SetTradeSkill(self.currentPlayer, tradeID)
 				else
 					local link = self.db.realm.tradeSkills[player][tradeID].link
 					local _,tradeString
-					if Skillet.wowVersion >= 50400 then
+					if CraftForge.wowVersion >= 50400 then
 						_,_,tradeString = string.find(link, "(trade:[0-9a-fA-F]+:%d+:[a-zA-Z0-9+/:]+)")
-					elseif Skillet.wowVersion >= 50300 then
+					elseif CraftForge.wowVersion >= 50300 then
 						_,_,tradeString = string.find(link, "(trade:[0-9a-fA-F]+:%d+:%d+:%d+:[a-zA-Z0-9+/:]+)")
 					else
 						_,_,tradeString = string.find(link, "(trade:%d+:%d+:%d+:[0-9a-fA-F]+:[a-zA-Z0-9+/]+)")
@@ -105,7 +105,7 @@ function Skillet:TradeButton_OnClick(this,button)
 	GameTooltip:Hide()
 end
 
-function Skillet:TradeButtonAdditional_OnEnter(this)
+function CraftForge:TradeButtonAdditional_OnEnter(this)
 	--DA.DEBUG(0,"TradeButtonAdditional_OnEnter("..tostring(this)..")")
 	DA.DEBUG(0,"TradeButtonAdditional_OnEnter: this= "..DA.DUMP(this))
 	GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
@@ -119,7 +119,7 @@ function Skillet:TradeButtonAdditional_OnEnter(this)
 	--DA.DEBUG(1,"TradeButtonAdditional_OnEnter: spellName= "..tostring(spellName))
 	GameTooltip:AddLine(spellName)
 	if not this.Toy then
-		local itemID = Skillet:GetAutoTargetItem(spellID)
+		local itemID = CraftForge:GetAutoTargetItem(spellID)
 		if itemID and IsAltKeyDown() then
 			GameTooltip:AddLine("/use "..C_Item.GetItemInfo(itemID))
 		end
@@ -131,14 +131,14 @@ end
 -- A SecureActionButtonTemplate button can't override the OnClick so 
 -- this function will never be called.
 --
-function Skillet:TradeButtonAdditional_OnClick(this,button)
+function CraftForge:TradeButtonAdditional_OnClick(this,button)
 	--DA.DEBUG(0,"TradeButtonAdditional_OnClick("..DA.DUMP1(this)..", "..tostring(button)..")")
 	local name = this:GetName()
 	--DA.DEBUG(0,"TradeButtonAdditional_OnClick: name= "..tostring(name))
 	GameTooltip:Hide()
 end
 
-function Skillet:BlizzardUIButton_OnEnter(this)
+function CraftForge:BlizzardUIButton_OnEnter(this)
 	--DA.DEBUG(0,"BlizzardUIButton_OnEnter("..tostring(this)..")")
 	GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
 	GameTooltip:ClearLines()
@@ -146,42 +146,42 @@ function Skillet:BlizzardUIButton_OnEnter(this)
 	GameTooltip:Show()
 end
 
-function Skillet:BlizzardUIButton_OnClick(this,button)
+function CraftForge:BlizzardUIButton_OnClick(this,button)
 	--DA.DEBUG(0,"BlizzardUIButton_OnClick")
 	GameTooltip:Hide()
 	if self.BlizzardUIshowing then
-		if Skillet.isRetail or self.db.profile.hide_blizzard_frame then
+		if CraftForge.isRetail or self.db.profile.hide_blizzard_frame then
 			HideUIPanel(ProfessionsFrame)
 		elseif self.db.profile.scale_blizzard_frame then
 			ProfessionsFrame:SetScale(self.db.profile.scale_blizzard_down or 0.4)
 		end
 		self.BlizzardUIshowing = false
 	else
-		if Skillet.isRetail or self.db.profile.hide_blizzard_frame then
+		if CraftForge.isRetail or self.db.profile.hide_blizzard_frame then
 			ShowUIPanel(ProfessionsFrame)
-			ProfessionsFrame.CloseButton:HookScript("OnClick",function(...) Skillet.BlizzardUIshowing = false end)
+			ProfessionsFrame.CloseButton:HookScript("OnClick",function(...) CraftForge.BlizzardUIshowing = false end)
 		elseif self.db.profile.scale_blizzard_frame then
 			ProfessionsFrame:SetScale(self.db.profile.scale_blizzard_up or 1.0)
 		end
 		ProfessionsFrame:Refresh()
 		self.BlizzardUIshowing = true
-		if SkilletFrame.selectedSkill and SkilletFrame.selectedSkill ~= -1 then
-			self:SetSelectedSkill(SkilletFrame.selectedSkill)
+		if CraftForgeFrame.selectedSkill and CraftForgeFrame.selectedSkill ~= -1 then
+			self:SetSelectedSkill(CraftForgeFrame.selectedSkill)
 		end
 	end
 end
 
-function Skillet:CreateAdditionalButtonsList()
+function CraftForge:CreateAdditionalButtonsList()
 	--DA.DEBUG(0,"CreateAdditionalButtonsList()")
-	Skillet.AdditionalButtonsList = {}
+	CraftForge.AdditionalButtonsList = {}
 	local seenButtons = {}
 	local tradeSkillList = self.tradeSkillList
 	for i=1,#tradeSkillList,1 do
 		local tradeID = tradeSkillList[i]
-		local ranks = self:GetSkillRanks(Skillet.currentPlayer, tradeID)
+		local ranks = self:GetSkillRanks(CraftForge.currentPlayer, tradeID)
 		--DA.DEBUG(1,"tradeID= "..tostring(tradeID)..", ranks= "..tostring(ranks))
 		if ranks then	-- this player knows this skill
-			local additionalSpellTab = Skillet.TradeSkillAdditionalAbilities[tradeID]
+			local additionalSpellTab = CraftForge.TradeSkillAdditionalAbilities[tradeID]
 			if additionalSpellTab then -- this skill has additional abilities
 				if type(additionalSpellTab[1]) == "table" then
 					for j=1,#additionalSpellTab,1 do
@@ -195,10 +195,10 @@ function Skillet:CreateAdditionalButtonsList()
 								end
 								--DA.DEBUG(1,"CreateAdditionalButtonsList: name= "..tostring(name))
 								if name then
-									table.insert(Skillet.AdditionalButtonsList, additionalSpellTab[j])
+									table.insert(CraftForge.AdditionalButtonsList, additionalSpellTab[j])
 								end
 							else
-								table.insert(Skillet.AdditionalButtonsList, additionalSpellTab[j])
+								table.insert(CraftForge.AdditionalButtonsList, additionalSpellTab[j])
 							end
 							seenButtons[spellID] = true
 						end
@@ -207,24 +207,24 @@ function Skillet:CreateAdditionalButtonsList()
 					local spellID = additionalSpellTab[1]
 					if not seenButtons[spellID] then
 						--DA.DEBUG(1,"CreateAdditionalButtonsList: tradeID= "..tostring(tradeID)..", additionalSpellTab= "..DA.DUMP1(additionalSpellTab))
-						table.insert(Skillet.AdditionalButtonsList, additionalSpellTab)
+						table.insert(CraftForge.AdditionalButtonsList, additionalSpellTab)
 						seenButtons[spellID] = true
 					end
 				end
 			end		-- additionalSpellTab
 		end		-- ranks
 	end		-- for
-	--DA.DEBUG(0,"CreateAdditionalButtonsList: AdditionalButtonsList= "..DA.DUMP(Skillet.AdditionalButtonsList))
+	--DA.DEBUG(0,"CreateAdditionalButtonsList: AdditionalButtonsList= "..DA.DUMP(CraftForge.AdditionalButtonsList))
 end
 
-function Skillet:UpdateTradeButtons(player)
+function CraftForge:UpdateTradeButtons(player)
 	--DA.DEBUG(0,"UpdateTradeButtons("..tostring(player)..")")
 	local position = 0 -- pixels
 	local tradeSkillList = self.tradeSkillList
-	local frameName = "SkilletFrameTradeButtons-"..player
+	local frameName = "CraftForgeFrameTradeButtons-"..player
 	local frame = _G[frameName]
 	if not frame then
-		frame = CreateFrame("Frame", frameName, SkilletFrame)
+		frame = CreateFrame("Frame", frameName, CraftForgeFrame)
 	end
 	frame:Show()
 	for i=1,#tradeSkillList,1 do	-- iterate thru all skills in defined order for neatness (professions, secondary, class skills)
@@ -247,26 +247,26 @@ function Skillet:UpdateTradeButtons(player)
 			--DA.DEBUG(1,"UpdateTradeButtons: spellInfo= "..DA.DUMP1(spellInfo))
 			spellName = spellInfo.name
 			spellIcon = spellInfo.iconID
-			local buttonName = "SkilletFrameTradeButton-"..player.."-"..tradeID
+			local buttonName = "CraftForgeFrameTradeButton-"..player.."-"..tradeID
 			local button = _G[buttonName]
 			if not button then
 				--DA.DEBUG(1,"UpdateTradeButtons: CreateFrame for "..tostring(buttonName))
-				button = CreateFrame("CheckButton", buttonName, frame, "SkilletTradeButtonTemplate")
+				button = CreateFrame("CheckButton", buttonName, frame, "CraftForgeTradeButtonTemplate")
 			end
-			if player ~= Skillet:unitName("player") and not tradeLink then		-- fade out buttons that don't have data collected
+			if player ~= CraftForge:unitName("player") and not tradeLink then		-- fade out buttons that don't have data collected
 				button:SetAlpha(.4)
 				button:SetHighlightTexture("")
 				button:SetPushedTexture("")
 				button:SetCheckedTexture("")
 			end
 			button:ClearAllPoints()
-			button:SetPoint("BOTTOMLEFT", SkilletRankFrame, "TOPLEFT", position, 3)
+			button:SetPoint("BOTTOMLEFT", CraftForgeRankFrame, "TOPLEFT", position, 3)
 			local buttonIcon = _G[buttonName.."Icon"]
 			buttonIcon:SetTexture(spellIcon)
 			position = position + button:GetWidth()
 			if tradeID == self.currentTrade then
 				button:SetChecked(true)
-				if Skillet.data.skillList[tradeID].scanned then
+				if CraftForge.data.skillList[tradeID].scanned then
 					buttonIcon:SetVertexColor(1,1,1)
 				else
 					buttonIcon:SetVertexColor(1,0,0)
@@ -284,7 +284,7 @@ function Skillet:UpdateTradeButtons(player)
 --
 -- Create list of additional skills (if it doesn't exist)
 --
-	if not Skillet.AdditionalButtonsList then
+	if not CraftForge.AdditionalButtonsList then
 		self:CreateAdditionalButtonsList()
 	end
 --
@@ -295,9 +295,9 @@ function Skillet:UpdateTradeButtons(player)
 --   isPet is true if the name is a pet
 --   isKnown is true if the spellID must be known by the player.
 --
-	--DA.DEBUG(1,"UpdateTradeButtons: doing "..tostring(#Skillet.AdditionalButtonsList).." AdditionalButtonsList entries")
-	for i=1,#Skillet.AdditionalButtonsList,1 do
-		local additionalSpellTab = Skillet.AdditionalButtonsList[i]
+	--DA.DEBUG(1,"UpdateTradeButtons: doing "..tostring(#CraftForge.AdditionalButtonsList).." AdditionalButtonsList entries")
+	for i=1,#CraftForge.AdditionalButtonsList,1 do
+		local additionalSpellTab = CraftForge.AdditionalButtonsList[i]
 		local additionalSpellId = additionalSpellTab[1]
 		local additionalSpellName = additionalSpellTab[2]
 		local additionalToy = additionalSpellTab[3]
@@ -330,11 +330,11 @@ function Skillet:UpdateTradeButtons(player)
 		end
 		if spellName then
 			--DA.DEBUG(1,"UpdateTradeButtons: i= "..tostring(i)..", additionalSpellId= "..tostring(additionalSpellId)..", spellName= "..tostring(spellName)..", spellIcon= "..tostring(spellIcon))
-			local buttonName = "SkilletDo"..additionalSpellName
+			local buttonName = "CraftForgeDo"..additionalSpellName
 			local button = _G[buttonName]
 			if not button then
 				--DA.DEBUG(0,"UpdateTradeButtons: CreateFrame for "..tostring(buttonName))
-				button = CreateFrame("Button", buttonName, frame, "SkilletTradeButtonAdditionalTemplate")
+				button = CreateFrame("Button", buttonName, frame, "CraftForgeTradeButtonAdditionalTemplate")
 				button:SetID(additionalSpellId)
 				if additionalToy then
 					button.Toy = true
@@ -360,11 +360,11 @@ function Skillet:UpdateTradeButtons(player)
 -- execute a macro on any click
 --
 			button:SetAttribute("type", "macro");
-			local macrotext = Skillet:GetAutoTargetMacro(additionalSpellId, button.Toy, button.Pet, petGUID)
+			local macrotext = CraftForge:GetAutoTargetMacro(additionalSpellId, button.Toy, button.Pet, petGUID)
 			--DA.DEBUG(1,"UpdateTradeButtons: macrotext= "..tostring(macrotext))
 			button:SetAttribute("macrotext", macrotext)
 			button:ClearAllPoints()
-			button:SetPoint("BOTTOMLEFT", SkilletRankFrame, "TOPLEFT", position, 3)
+			button:SetPoint("BOTTOMLEFT", CraftForgeRankFrame, "TOPLEFT", position, 3)
 			local buttonIcon = _G[buttonName.."Icon"]
 			if spellIcon then
 				buttonIcon:SetTexture(spellIcon)
@@ -398,27 +398,27 @@ function Skillet:UpdateTradeButtons(player)
 -- One more button to toggle the Blizzard TradeSkillFrame
 --
 	position = position + 10	-- Add some space
-	local buttonName = "SkilletBlizzardUI"
+	local buttonName = "CraftForgeBlizzardUI"
 	local button = _G[buttonName]
 	if not button then
 		--DA.DEBUG(0,"UpdateTradeButtons: CreateFrame for "..tostring(buttonName))
-		button = CreateFrame("Button", buttonName, frame, "SkilletBlizzardUITemplate")
+		button = CreateFrame("Button", buttonName, frame, "CraftForgeBlizzardUITemplate")
 		button:SetID(2)
 	end
 	button:ClearAllPoints()
-	button:SetPoint("BOTTOMLEFT", SkilletRankFrame, "TOPLEFT", position, 3)
+	button:SetPoint("BOTTOMLEFT", CraftForgeRankFrame, "TOPLEFT", position, 3)
 	local buttonIcon = _G[buttonName.."Icon"]
 	buttonIcon:SetTexture(3573824)
 	position = position + button:GetWidth()
 	button:Show()
 end
 
-function Skillet.PluginDropdown_OnClick(this)
+function CraftForge.PluginDropdown_OnClick(this)
 	--DA.DEBUG(0,"PluginDropdown_OnClick()")
 	local oldScript = this.oldButton:GetScript("OnClick")
 	oldScript(this)
-	for i=1,#SkilletFrame.added_buttons do
-		local buttonName = "SkilletPluginDropdown"..i
+	for i=1,#CraftForgeFrame.added_buttons do
+		local buttonName = "CraftForgePluginDropdown"..i
 		local button = _G[buttonName]
 		if button then
 			button:Hide()
@@ -426,23 +426,23 @@ function Skillet.PluginDropdown_OnClick(this)
 	end
 end
 
-function Skillet:PluginButton_OnClick(button)
+function CraftForge:PluginButton_OnClick(button)
 	--DA.DEBUG(0,"PluginButton_OnClick()")
-	if SkilletFrame.added_buttons then
-		for i=1,#SkilletFrame.added_buttons do
-			local oldButton = SkilletFrame.added_buttons[i]
-			local buttonName = "SkilletPluginDropdown"..i
+	if CraftForgeFrame.added_buttons then
+		for i=1,#CraftForgeFrame.added_buttons do
+			local oldButton = CraftForgeFrame.added_buttons[i]
+			local buttonName = "CraftForgePluginDropdown"..i
 			local button = _G[buttonName]
 			if not button then
-				button = CreateFrame("button", buttonName, SkilletPluginButton, "UIPanelButtonTemplate")
+				button = CreateFrame("button", buttonName, CraftForgePluginButton, "UIPanelButtonTemplate")
 				button:Hide()
 			end
 			--DA.DEBUG(1,"PluginButton_OnClick: "..buttonName)
 			button:SetText(oldButton:GetText())
 			button:SetWidth(100)
 			button:SetHeight(22)
-			button:SetFrameLevel(SkilletFrame:GetFrameLevel()+10)
-			button:SetScript("OnClick", Skillet.PluginDropdown_OnClick)
+			button:SetFrameLevel(CraftForgeFrame:GetFrameLevel()+10)
+			button:SetScript("OnClick", CraftForge.PluginDropdown_OnClick)
 			button:SetPoint("TOPLEFT", 0, -i*20)
 			button.oldButton = oldButton
 			oldButton:Hide()

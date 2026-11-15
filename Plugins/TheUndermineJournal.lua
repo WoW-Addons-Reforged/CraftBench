@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,10 +47,10 @@ Prices are returned in copper, but accurate to the last *silver* (with coppers a
 	TUJTooltip(false)	-> disables TUJ tooltips
 ]]--
 
-Skillet.TUJPlugin = {}
+CraftForge.TUJPlugin = {}
 
-local plugin = Skillet.TUJPlugin
-local L = Skillet.L
+local plugin = CraftForge.TUJPlugin
+local L = CraftForge.L
 
 plugin.options =
 {
@@ -62,11 +62,11 @@ plugin.options =
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return Skillet.db.profile.plugins.TUJ.enabled
+				return CraftForge.db.profile.plugins.TUJ.enabled
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.TUJ.enabled = value
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge.db.profile.plugins.TUJ.enabled = value
+				CraftForge:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1
@@ -76,12 +76,12 @@ plugin.options =
 			name = "useShort",
 			desc = "Use Short money format",
 			get = function()
-				return Skillet.db.profile.plugins.TUJ.useShort
+				return CraftForge.db.profile.plugins.TUJ.useShort
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.TUJ.useShort = value
+				CraftForge.db.profile.plugins.TUJ.useShort = value
 				if value then
-					Skillet.db.profile.plugins.TUJ.useShort = value
+					CraftForge.db.profile.plugins.TUJ.useShort = value
 				end
 			end,
 			order = 2
@@ -91,12 +91,12 @@ plugin.options =
 			name = "onlyPositive",
 			desc = "Only show positive values",
 			get = function()
-				return Skillet.db.profile.plugins.TUJ.onlyPositive
+				return CraftForge.db.profile.plugins.TUJ.onlyPositive
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.TUJ.onlyPositive = value
+				CraftForge.db.profile.plugins.TUJ.onlyPositive = value
 				if value then
-					Skillet.db.profile.plugins.TUJ.onlyPositive = value
+					CraftForge.db.profile.plugins.TUJ.onlyPositive = value
 				end
 			end,
 			order = 3
@@ -106,12 +106,12 @@ plugin.options =
 			name = "colorCode",
 			desc = "Add color to the results",
 			get = function()
-				return Skillet.db.profile.plugins.TUJ.colorCode
+				return CraftForge.db.profile.plugins.TUJ.colorCode
 			end,
 			set = function(self,value)
-				Skillet.db.profile.plugins.TUJ.colorCode = value
+				CraftForge.db.profile.plugins.TUJ.colorCode = value
 				if value then
-					Skillet.db.profile.plugins.TUJ.colorCode = value
+					CraftForge.db.profile.plugins.TUJ.colorCode = value
 				end
 			end,
 			order = 4
@@ -120,11 +120,11 @@ plugin.options =
 }
 
 function plugin.OnInitialize()
-	if not Skillet.db.profile.plugins.TUJ then
-		Skillet.db.profile.plugins.TUJ = {}
-		Skillet.db.profile.plugins.TUJ.enabled = true
+	if not CraftForge.db.profile.plugins.TUJ then
+		CraftForge.db.profile.plugins.TUJ = {}
+		CraftForge.db.profile.plugins.TUJ.enabled = true
 	end
-	Skillet:AddPluginOptions(plugin.options)
+	CraftForge:AddPluginOptions(plugin.options)
 end
 
 function plugin.GetExtraText(skill, recipe)
@@ -132,12 +132,12 @@ function plugin.GetExtraText(skill, recipe)
 	local bop
 	if not skill or not recipe then return end
 	local itemID = recipe.itemID
-	if TUJMarketInfo and Skillet.db.profile.plugins.TUJ.enabled and itemID then
+	if TUJMarketInfo and CraftForge.db.profile.plugins.TUJ.enabled and itemID then
 		local o={}
 		TUJMarketInfo(itemID,o)
 		local value = o['market']
 		if value then
-			extra_text = Skillet:FormatMoneyFull(value, true);
+			extra_text = CraftForge:FormatMoneyFull(value, true);
 			label = "|r"..L["Market"]..":"
 		end
 	end
@@ -157,7 +157,7 @@ function plugin.RecipeNameSuffix(skill, recipe)
 	local text
 	if recipe then
 		local itemID = recipe.itemID
-		if TUJMarketInfo and Skillet.db.profile.plugins.TUJ.enabled and itemID then
+		if TUJMarketInfo and CraftForge.db.profile.plugins.TUJ.enabled and itemID then
 			local value = TUJMarketValue(itemID)
 			if value then
 				value = value * recipe.numMade
@@ -169,12 +169,12 @@ function plugin.RecipeNameSuffix(skill, recipe)
 					end
 				end
 				value = value - matsum
-				if Skillet.db.profile.plugins.TUJ.useShort then
-					text = Skillet:FormatMoneyShort(value, true, Skillet.db.profile.plugins.TUJ.colorCode)
+				if CraftForge.db.profile.plugins.TUJ.useShort then
+					text = CraftForge:FormatMoneyShort(value, true, CraftForge.db.profile.plugins.TUJ.colorCode)
 				else
-					text = Skillet:FormatMoneyFull(value, true, Skillet.db.profile.plugins.TUJ.colorCode)
+					text = CraftForge:FormatMoneyFull(value, true, CraftForge.db.profile.plugins.TUJ.colorCode)
 				end
-				if Skillet.db.profile.plugins.TUJ.onlyPositive and value <= 0 then
+				if CraftForge.db.profile.plugins.TUJ.onlyPositive and value <= 0 then
 					text = nil
 				end
 			end
@@ -184,6 +184,6 @@ function plugin.RecipeNameSuffix(skill, recipe)
 	return text, value
 end
 
-Skillet:RegisterRecipeNamePlugin("TUJPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
+CraftForge:RegisterRecipeNamePlugin("TUJPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
 
-Skillet:RegisterDisplayDetailPlugin("TUJPlugin")	-- we have a GetExtraText function
+CraftForge:RegisterDisplayDetailPlugin("TUJPlugin")	-- we have a GetExtraText function

@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	Skillet: A tradeskill window replacement.
+	CraftForge: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #  Template for all the buttons we use to display items in the optional list
 #
 -->
-	<Frame name="SkilletModifiedListItemTemplate" hidden="false" virtual="true">
+	<Frame name="CraftForgeModifiedListItemTemplate" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="190" y="20"/>
 		</Size>
@@ -96,12 +96,12 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						Skillet:ModifiedItemCount(self, button, 1)
+						CraftForge:ModifiedItemCount(self, button, 1)
 					</OnClick>
 				</Scripts>
-				<NormalTexture file="Interface\Addons\Skillet\Icons\Buttons\NextPage-Up"/>
-				<PushedTexture file="Interface\Addons\Skillet\Icons\Buttons\NextPage-Down"/>
-				<DisabledTexture file="Interface\Addons\Skillet\Icons\Buttons\NextPage-Disabled"/>
+				<NormalTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextPage-Up"/>
+				<PushedTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextPage-Down"/>
+				<DisabledTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextPage-Disabled"/>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 			</Button>
 			<EditBox name="$parentInput" letters="3" historyLines="0" numeric="true" autoFocus="false">
@@ -157,11 +157,11 @@
 					</OnLoad>
 					<OnEnterPressed>
 						self:ClearFocus()
-						Skillet:ModifyItemCount(self, button)
+						CraftForge:ModifyItemCount(self, button)
 					</OnEnterPressed>
 					<OnEscapePressed>
 						self:ClearFocus()
-						Skillet:ResetItemCount(self, button)
+						CraftForge:ResetItemCount(self, button)
 					</OnEscapePressed>
 					<OnEditFocusLost>
 						self:HighlightText(0, 0)
@@ -189,12 +189,12 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						Skillet:ModifiedItemCount(self, button, -1)
+						CraftForge:ModifiedItemCount(self, button, -1)
 					</OnClick>
 				</Scripts>
-				<NormalTexture file="Interface\Addons\Skillet\Icons\Buttons\PrevPage-Up"/>
-				<PushedTexture file="Interface\Addons\Skillet\Icons\Buttons\PrevPage-Down"/>
-				<DisabledTexture file="Interface\Addons\Skillet\Icons\Buttons\PrevPage-Disabled"/>
+				<NormalTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPage-Up"/>
+				<PushedTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPage-Down"/>
+				<DisabledTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPage-Disabled"/>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 			</Button>
 		</Frames>
@@ -203,10 +203,10 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 			</OnLoad>
 			<OnEnter>
-				Skillet:ModifiedButtonOnEnter(self, SkilletFrame.selectedSkill, self:GetID())
+				CraftForge:ModifiedButtonOnEnter(self, CraftForgeFrame.selectedSkill, self:GetID())
 			</OnEnter>
 			<OnLeave>
-				Skillet:ModifiedButtonOnLeave(self, SkilletFrame.selectedSkill, self:GetID())
+				CraftForge:ModifiedButtonOnLeave(self, CraftForgeFrame.selectedSkill, self:GetID())
 			</OnLeave>
 			<OnUpdate>
 				CursorOnUpdate(self)
@@ -214,19 +214,19 @@
 			<OnClick>
 				if ( button == "LeftButton" and IsShiftKeyDown() ) then
 				<!-- Put a link to the *item* in chat into the current chat edit box -->
-					local link = Skillet:GetModifiedItemLink(Skillet.selectedSkill, self:GetID())
+					local link = CraftForge:GetModifiedItemLink(CraftForge.selectedSkill, self:GetID())
 					if not ChatEdit_InsertLink(link) then
-						Skillet:XMLDebugLink("ModifiedItemLink: link= ", link)
+						CraftForge:XMLDebugLink("ModifiedItemLink: link= ", link)
 					end
 				else
 				<!-- generic click action -->
-					Skillet:ModifiedButtonOnClick(self, button, Skillet.selectedSkill, self:GetID())
+					CraftForge:ModifiedButtonOnClick(self, button, CraftForge.selectedSkill, self:GetID())
 				end
 			</OnClick>
 		</Scripts>
 	</Frame>
 
-<CheckButton name="SkilletModifiedListCheckButtonTemplate" virtual="true">
+<CheckButton name="CraftForgeModifiedListCheckButtonTemplate" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -250,7 +250,7 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<CheckButton name="SkilletModifiedListCheckButtonTemplate2" virtual="true">
+<CheckButton name="CraftForgeModifiedListCheckButtonTemplate2" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -274,19 +274,19 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<Frame name="SkilletModifiedList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
+<Frame name="CraftForgeModifiedList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
 	<Size><AbsDimension x="420" y="240"/></Size>
 	<Anchors>
 		<Anchor point="CENTER"/>
 	</Anchors>
 	<Layers>
 		<Layer level="OVERLAY">
-			<FontString name="SkilletModifiedNeeded" inherits="GameFontHighlight" justifyH="RIGHT" justifyV="MIDDLE">
+			<FontString name="CraftForgeModifiedNeeded" inherits="GameFontHighlight" justifyH="RIGHT" justifyV="MIDDLE">
 				<Size>
 					<AbsDimension x="30" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="SkilletModifiedList" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeModifiedList" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="-30" y="10"/>
 						</Offset>
@@ -294,12 +294,12 @@
 				</Anchors>
 				<Color r="1" g="1" b="1" a="1"/>
 			</FontString>
-			<FontString name="SkilletModifiedLabel" inherits="GameFontHighlight" text="Needed:" justifyH="LEFT" justifyV="MIDDLE">
+			<FontString name="CraftForgeModifiedLabel" inherits="GameFontHighlight" text="Needed:" justifyH="LEFT" justifyV="MIDDLE">
 				<Size>
 					<AbsDimension x="60" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="SkilletModifiedNeeded" relativePoint="BOTTOMLEFT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeModifiedNeeded" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -310,9 +310,9 @@
 		</Layer>
 	</Layers>
 	<Frames>
-		<Button name="SkilletModifiedListCloseButton" inherits="UIPanelCloseButton" parent="SkilletModifiedList">
+		<Button name="CraftForgeModifiedListCloseButton" inherits="UIPanelCloseButton" parent="CraftForgeModifiedList">
 			<Anchors>
-				<Anchor point="TOPRIGHT" relativeTo="SkilletModifiedList" relativePoint="TOPRIGHT">
+				<Anchor point="TOPRIGHT" relativeTo="CraftForgeModifiedList" relativePoint="TOPRIGHT">
 					<Offset>
 						<AbsDimension x="-2" y="-2"/>
 					</Offset>
@@ -320,13 +320,13 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					HideUIPanel(SkilletModifiedList)
+					HideUIPanel(CraftForgeModifiedList)
 				</OnClick>
 			</Scripts>
 		</Button>
-		<CheckButton name="SkilletModifiedBestQuality" inherits="SkilletModifiedListCheckButtonTemplate2">
+		<CheckButton name="CraftForgeModifiedBestQuality" inherits="CraftForgeModifiedListCheckButtonTemplate2">
 			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="SkilletModifiedList" relativePoint="BOTTOMLEFT">
+				<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeModifiedList" relativePoint="BOTTOMLEFT">
 					<Offset>
 						<AbsDimension x="10" y="10"/>
 					</Offset>
@@ -334,33 +334,33 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					Skillet:ModifiedListToggleBestQuality()
-					Skillet:UpdateModifiedListWindow()
+					CraftForge:ModifiedListToggleBestQuality()
+					CraftForge:UpdateModifiedListWindow()
 				</OnClick>
 			</Scripts>
 		</CheckButton>
-		<Frame name="SkilletModifiedListParent" parent="SkilletModifiedList">
+		<Frame name="CraftForgeModifiedListParent" parent="CraftForgeModifiedList">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletModifiedList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeModifiedList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-35"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="SkilletModifiedList" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeModifiedList" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-5" y="35"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
 		</Frame>
-		<ScrollFrame name="SkilletModifiedListList" inherits="FauxScrollFrameTemplate" parent="SkilletModifiedListParent">
+		<ScrollFrame name="CraftForgeModifiedListList" inherits="FauxScrollFrameTemplate" parent="CraftForgeModifiedListParent">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletModifiedListParent" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeModifiedListParent" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-5"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="SkilletModifiedListParent" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeModifiedListParent" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-27" y="5"/>
 					</Offset>
@@ -368,13 +368,13 @@
 			</Anchors>
 			<Scripts>
 				<OnVerticalScroll>
-					FauxScrollFrame_OnVerticalScroll(self, offset, SKILLET_MODIFIED_LIST_HEIGHT, Skillet.ModifiedList_OnScroll)
+					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_MODIFIED_LIST_HEIGHT, CraftForge.ModifiedList_OnScroll)
 				</OnVerticalScroll>
 			</Scripts>
 		</ScrollFrame>
-		<Button name="SkilletModifiedListButton1" inherits="SkilletModifiedListItemTemplate">
+		<Button name="CraftForgeModifiedListButton1" inherits="CraftForgeModifiedListItemTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="SkilletModifiedListList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftForgeModifiedListList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
 					</Offset>

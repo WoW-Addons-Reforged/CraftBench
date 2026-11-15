@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-SKILLET_NOTES_ITEM_DISPLAYED = 7
-SKILLET_NOTES_ITEM_HEIGHT	 = SKILLET_TRADE_SKILL_HEIGHT * 3
+CRAFTFORGE_NOTES_ITEM_DISPLAYED = 7
+CRAFTFORGE_NOTES_ITEM_HEIGHT	 = CRAFTFORGE_TRADE_SKILL_HEIGHT * 3
 
-local L = LibStub("AceLocale-3.0"):GetLocale("Skillet")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
 local NO_NOTE = GRAY_FONT_COLOR_CODE .. L["click here to add a note"] .. FONT_COLOR_CODE_CLOSE
 
 local editbox;
@@ -32,19 +32,19 @@ local ControlBackdrop  = {
 }
 
 -- Called when the list of skills is scrolled
-function Skillet:NotesList_OnScroll()
-	Skillet:UpdateNotesWindow()
+function CraftForge:NotesList_OnScroll()
+	CraftForge:UpdateNotesWindow()
 end
 
 -- Shows the recipe notes editor for the current window
-function Skillet:ShowRecipeNotes()
+function CraftForge:ShowRecipeNotes()
 	local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, self.selectedSkill)
 	if not recipe then
 		return
 	end
-	local frame = SkilletRecipeNotesFrame
+	local frame = CraftForgeRecipeNotesFrame
 	if frame then
-		self.recipeNotesFrame = SkilletRecipeNotesFrame
+		self.recipeNotesFrame = CraftForgeRecipeNotesFrame
 	else
 		return
 	end
@@ -71,10 +71,10 @@ local function get_edit_box()
 		local b = self:GetParent()
 		local l = b:GetAttribute("notes_key")
 		local n = _G[b:GetName() .. "Notes"]
-		local skillet = self.obj
-		skillet:SetItemNote(l, self:GetText())
+		local craftforge = self.obj
+		craftforge:SetItemNote(l, self:GetText())
 		n:Show();
-		skillet:UpdateNotesWindow()
+		craftforge:UpdateNotesWindow()
 	end);
 	editbox:SetScript("OnEscapePressed", function(self)
 		self:Hide()
@@ -86,7 +86,7 @@ local function get_edit_box()
 	return editbox
 end
 
-function Skillet:RecipeNote_OnClick(button)
+function CraftForge:RecipeNote_OnClick(button)
 	-- update the window so we know that we are starting from a known good location
 	self:UpdateNotesWindow()
 	local key = button:GetAttribute("notes_key")
@@ -115,7 +115,7 @@ end
 -- any reagents that are needed
 --
 -- XXX: and tools?
-function Skillet:UpdateNotesWindow()
+function CraftForge:UpdateNotesWindow()
 	local recipe, recipeID, itemID = self:GetRecipeDataByTradeIndex(self.currentTrade, self.selectedSkill)
 	if not recipe then
 		return
@@ -123,26 +123,26 @@ function Skillet:UpdateNotesWindow()
 	if editbox then
 		editbox:Hide()
 	end
-	SkilletRecipeNotesFrameLabel:SetText(L["Notes"]);
+	CraftForgeRecipeNotesFrameLabel:SetText(L["Notes"]);
 	local numItems = 1 + #recipe.reagentData
 
 	-- Update the scroll frame
-	FauxScrollFrame_Update(SkilletNotesList,				-- frame
+	FauxScrollFrame_Update(CraftForgeNotesList,				-- frame
 						   numItems,						-- num items
-						   SKILLET_NOTES_ITEM_DISPLAYED,	-- num to display
-						   SKILLET_NOTES_ITEM_HEIGHT)		-- value step (item height)
+						   CRAFTFORGE_NOTES_ITEM_DISPLAYED,	-- num to display
+						   CRAFTFORGE_NOTES_ITEM_HEIGHT)		-- value step (item height)
 	-- Where in the list of skill to start counting.
-	local offset = FauxScrollFrame_GetOffset(SkilletNotesList);
+	local offset = FauxScrollFrame_GetOffset(CraftForgeNotesList);
 	-- now do all that nasty work to fill in the contents of the frame
-	for i=1, SKILLET_NOTES_ITEM_DISPLAYED, 1 do
+	for i=1, CRAFTFORGE_NOTES_ITEM_DISPLAYED, 1 do
 		local index = i + offset
-		local button = _G["SkilletNotesButton"..i]
+		local button = _G["CraftForgeNotesButton"..i]
 		if index <= numItems then
 			local text	 = _G[button:GetName() .. "Text"];
 			local icon	 = _G[button:GetName() .. "Icon"];
 			local notes	 = _G[button:GetName() .. "Notes"];
 			-- set the width based on whether or not the scroll bar is displayed
-			if ( SkilletNotesList:IsShown() ) then
+			if ( CraftForgeNotesList:IsShown() ) then
 				button:SetWidth(170)
 			else
 				button:SetWidth(190)
@@ -185,9 +185,9 @@ function Skillet:UpdateNotesWindow()
 end
 
 --
--- Hide the Skillet notes window, if it was open
+-- Hide the CraftForge notes window, if it was open
 --
-function Skillet:HideNotesWindow()
+function CraftForge:HideNotesWindow()
 	--DA.DEBUG(0,"HideNotesWindow()")
 	local closed
 	if self.recipeNotesFrame and self.recipeNotesFrame:IsVisible() then

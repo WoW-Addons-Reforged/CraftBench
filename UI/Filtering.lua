@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,35 +17,35 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("Skillet")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
 
 --
 -- Called when the new filter drop down is displayed
 --
-function Skillet:FilterDropDown_OnShow()
+function CraftForge:FilterDropDown_OnShow()
 	--DA.DEBUG(0,"FilterDropDown_OnShow()")
-	UIDropDownMenu_Initialize(SkilletFilterDropdown, Skillet.FilterDropDown_Initialize)
-	SkilletFilterDropdown.displayMode = "MENU"  -- changes the pop-up borders to be rounded instead of square
-	if Skillet.unlearnedRecipes and Skillet.learnedRecipes then
-		UIDropDownMenu_SetSelectedID(SkilletFilterDropdown, 3)
-	elseif Skillet.unlearnedRecipes and not Skillet.learnedRecipes then
-		UIDropDownMenu_SetSelectedID(SkilletFilterDropdown, 2)
-	elseif Skillet.learnedRecipes and not Skillet.unlearnedRecipes then
-		UIDropDownMenu_SetSelectedID(SkilletFilterDropdown, 1)
+	UIDropDownMenu_Initialize(CraftForgeFilterDropdown, CraftForge.FilterDropDown_Initialize)
+	CraftForgeFilterDropdown.displayMode = "MENU"  -- changes the pop-up borders to be rounded instead of square
+	if CraftForge.unlearnedRecipes and CraftForge.learnedRecipes then
+		UIDropDownMenu_SetSelectedID(CraftForgeFilterDropdown, 3)
+	elseif CraftForge.unlearnedRecipes and not CraftForge.learnedRecipes then
+		UIDropDownMenu_SetSelectedID(CraftForgeFilterDropdown, 2)
+	elseif CraftForge.learnedRecipes and not CraftForge.unlearnedRecipes then
+		UIDropDownMenu_SetSelectedID(CraftForgeFilterDropdown, 1)
 	end
 end
 
 --
 -- The method we use the initialize the new filter drop down.
 --
-function Skillet:FilterDropDown_Initialize()
+function CraftForge:FilterDropDown_Initialize()
 	--DA.DEBUG(0,"FilterDropDown_Initialize()")
 	local info
 	local i = 1
 
 	info = UIDropDownMenu_CreateInfo()
 	info.text = L["Learned"]
-	info.func = Skillet.FilterDropDown_OnClick
+	info.func = CraftForge.FilterDropDown_OnClick
 	info.value = i
 	if self then
 		info.owner = self:GetParent()
@@ -55,7 +55,7 @@ function Skillet:FilterDropDown_Initialize()
 
 	info = UIDropDownMenu_CreateInfo()
 	info.text = L["Unlearned"]
-	info.func = Skillet.FilterDropDown_OnClick
+	info.func = CraftForge.FilterDropDown_OnClick
 	info.value = i
 	if self then
 		info.owner = self:GetParent()
@@ -65,7 +65,7 @@ function Skillet:FilterDropDown_Initialize()
 
 	info = UIDropDownMenu_CreateInfo()
 	info.text = L["Both"]
-	info.func = Skillet.FilterDropDown_OnClick
+	info.func = CraftForge.FilterDropDown_OnClick
 	info.value = i
 	if self then
 		info.owner = self:GetParent()
@@ -77,34 +77,34 @@ end
 --
 -- Called when the user selects an item in the new filter drop down
 --
-function Skillet:FilterDropDown_OnClick()
+function CraftForge:FilterDropDown_OnClick()
 	--DA.DEBUG(0,"FilterDropDown_OnClick()")
-	UIDropDownMenu_SetSelectedID(SkilletFilterDropdown, self:GetID())
+	UIDropDownMenu_SetSelectedID(CraftForgeFilterDropdown, self:GetID())
 	local index = self:GetID()
 	if index == 1 then
-		Skillet:SetTradeSkillLearned()
+		CraftForge:SetTradeSkillLearned()
 	elseif index == 2 then
-		Skillet:SetTradeSkillUnlearned()
+		CraftForge:SetTradeSkillUnlearned()
 	elseif index == 3 then
-		Skillet:SetTradeSkillBoth()
+		CraftForge:SetTradeSkillBoth()
 	end
-	Skillet.dataScanned = false
-	Skillet:RescanTrade()
-	Skillet:UpdateTradeSkillWindow()
+	CraftForge.dataScanned = false
+	CraftForge:RescanTrade()
+	CraftForge:UpdateTradeSkillWindow()
 end
 
-function Skillet.InitializeFilterDropdown(self, level)
+function CraftForge.InitializeFilterDropdown(self, level)
 	local info = UIDropDownMenu_CreateInfo()
 	if level == 1 then
 		info.text = L["Reset"]
 		info.notCheckable = true
 		info.func = function()
-			Skillet:SetDefaultFilters()
-			Skillet:ResetTradeSkillFilter() -- verify the search filter is blank (so we get all skills)
-			UIDropDownMenu_RefreshAll(SkilletFilterDropMenu, 3)
-			SkilletFilterText:SetText("")
-			Skillet.dataScanned = false
-			Skillet:UpdateTradeSkillWindow()
+			CraftForge:SetDefaultFilters()
+			CraftForge:ResetTradeSkillFilter() -- verify the search filter is blank (so we get all skills)
+			UIDropDownMenu_RefreshAll(CraftForgeFilterDropMenu, 3)
+			CraftForgeFilterText:SetText("")
+			CraftForge.dataScanned = false
+			CraftForge:UpdateTradeSkillWindow()
 		end
 		UIDropDownMenu_AddButton(info, level)
 		info.notCheckable = false
@@ -112,9 +112,9 @@ function Skillet.InitializeFilterDropdown(self, level)
 		info.text = CRAFT_IS_MAKEABLE
 		info.func = function()
 			C_TradeSkillUI.SetOnlyShowMakeableRecipes(not C_TradeSkillUI.GetOnlyShowMakeableRecipes())
-			Skillet:SetTradeSkillOption("hideuncraftable", C_TradeSkillUI.GetOnlyShowMakeableRecipes())
-			Skillet.dataScanned = false
-			Skillet:UpdateTradeSkillWindow()
+			CraftForge:SetTradeSkillOption("hideuncraftable", C_TradeSkillUI.GetOnlyShowMakeableRecipes())
+			CraftForge.dataScanned = false
+			CraftForge:UpdateTradeSkillWindow()
 		end
 		info.keepShownOnClick = true
 		info.checked = C_TradeSkillUI.GetOnlyShowMakeableRecipes()
@@ -124,9 +124,9 @@ function Skillet.InitializeFilterDropdown(self, level)
 		info.text = PROFESSION_RECIPES_IS_FIRST_CRAFT
 		info.func = function()
 			C_TradeSkillUI.SetOnlyShowFirstCraftRecipes(not C_TradeSkillUI.GetOnlyShowFirstCraftRecipes())
-			Skillet:SetTradeSkillOption("isfirstcraft", C_TradeSkillUI.GetOnlyShowFirstCraftRecipes())
-			Skillet.dataScanned = false
-			Skillet:UpdateTradeSkillWindow()
+			CraftForge:SetTradeSkillOption("isfirstcraft", C_TradeSkillUI.GetOnlyShowFirstCraftRecipes())
+			CraftForge.dataScanned = false
+			CraftForge:UpdateTradeSkillWindow()
 		end
 		info.keepShownOnClick = true
 		info.checked = C_TradeSkillUI.GetOnlyShowFirstCraftRecipes()
@@ -138,12 +138,12 @@ function Skillet.InitializeFilterDropdown(self, level)
 			info.func = function()
 				C_TradeSkillUI.SetOnlyShowSkillUpRecipes(not C_TradeSkillUI.GetOnlyShowSkillUpRecipes())
 				if C_TradeSkillUI.GetOnlyShowSkillUpRecipes() then
-					Skillet:SetTradeSkillOption("filterLevel", 2)
+					CraftForge:SetTradeSkillOption("filterLevel", 2)
 				else
-					Skillet:SetTradeSkillOption("filterLevel", 1)
+					CraftForge:SetTradeSkillOption("filterLevel", 1)
 				end
-				Skillet.dataScanned = false
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge.dataScanned = false
+				CraftForge:UpdateTradeSkillWindow()
 			end
 			info.keepShownOnClick = true
 			info.checked = C_TradeSkillUI.GetOnlyShowSkillUpRecipes()
@@ -160,7 +160,7 @@ function Skillet.InitializeFilterDropdown(self, level)
 
 --
 -- Uncomment the block below to enable Inventory Slots, Recipe Sources, and Categories
--- Note that Categories may not be needed as Skillet displays them all by default
+-- Note that Categories may not be needed as CraftForge displays them all by default
 --
 --[[
 		info.text = TRADESKILL_FILTER_SLOTS
@@ -187,19 +187,19 @@ function Skillet.InitializeFilterDropdown(self, level)
 			info.text = CHECK_ALL
 			info.func = function()
 				Professions.SetAllInventorySlotsFiltered(true)
-				UIDropDownMenu_Refresh(SkilletFilterDropMenu, 1, 2)
-				Skillet.dataScanned = false
-				Skillet:UpdateTradeSkillWindow()
+				UIDropDownMenu_Refresh(CraftForgeFilterDropMenu, 1, 2)
+				CraftForge.dataScanned = false
+				CraftForge:UpdateTradeSkillWindow()
 			end
 			UIDropDownMenu_AddButton(info, level)
 
 			info.text = UNCHECK_ALL
 			info.func = function()
 				Professions.SetAllInventorySlotsFiltered(false)
-				Skillet:SetDefaultFilters()
-				UIDropDownMenu_Refresh(SkilletFilterDropMenu, 1, 2)
-				Skillet.dataScanned = false
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge:SetDefaultFilters()
+				UIDropDownMenu_Refresh(CraftForgeFilterDropMenu, 1, 2)
+				CraftForge.dataScanned = false
+				CraftForge:UpdateTradeSkillWindow()
 			end
 			UIDropDownMenu_AddButton(info, level)
 
@@ -207,7 +207,7 @@ function Skillet.InitializeFilterDropdown(self, level)
 			for i, inventorySlot in ipairs(inventorySlots) do
 				info.text = inventorySlot
 				info.func = function()
-					Skillet.SetSlotFilter(i)
+					CraftForge.SetSlotFilter(i)
 				end
 				info.hasArrow = false
 				UIDropDownMenu_AddButton(info, level)
@@ -220,18 +220,18 @@ function Skillet.InitializeFilterDropdown(self, level)
 			info.text = CHECK_ALL
 			info.func = function()
 				C_TradeSkillUI.ClearRecipeSourceTypeFilter()
-				UIDropDownMenu_Refresh(SkilletFilterDropMenu, 3, 2)
-				Skillet.dataScanned = false
-				Skillet:UpdateTradeSkillWindow()
+				UIDropDownMenu_Refresh(CraftForgeFilterDropMenu, 3, 2)
+				CraftForge.dataScanned = false
+				CraftForge:UpdateTradeSkillWindow()
 			end
 			UIDropDownMenu_AddButton(info, level)
 
 			info.text = UNCHECK_ALL
 			info.func = function()
-				Skillet:SetDefaultFilters()
-				UIDropDownMenu_Refresh(SkilletFilterDropMenu, 3, 2)
-				Skillet.dataScanned = false
-				Skillet:UpdateTradeSkillWindow()
+				CraftForge:SetDefaultFilters()
+				UIDropDownMenu_Refresh(CraftForgeFilterDropMenu, 3, 2)
+				CraftForge.dataScanned = false
+				CraftForge:UpdateTradeSkillWindow()
 			end
 			UIDropDownMenu_AddButton(info, level)
 
@@ -241,8 +241,8 @@ function Skillet.InitializeFilterDropdown(self, level)
 					info.text = _G["BATTLE_PET_SOURCE_" .. i]
 					info.func = function(_, _, _, value)
 						C_TradeSkillUI.SetRecipeSourceTypeFilter(i, not value)
-						Skillet.dataScanned = false
-						Skillet:UpdateTradeSkillWindow()
+						CraftForge.dataScanned = false
+						CraftForge:UpdateTradeSkillWindow()
 					end
 					info.checked = function()
 						return not C_TradeSkillUI.IsRecipeSourceTypeFiltered(i)
@@ -256,7 +256,7 @@ function Skillet.InitializeFilterDropdown(self, level)
 				local categoryData = C_TradeSkillUI.GetCategoryInfo(categoryId)
 				info.text = categoryData.name
 				info.func = function()
-					Skillet.SetSlotFilter(nil, categoryId, nil)
+					CraftForge.SetSlotFilter(nil, categoryId, nil)
 				end
 --
 -- Uncomment the line below (and the level 3 code block) to enable subcategories
@@ -280,7 +280,7 @@ function Skillet.InitializeFilterDropdown(self, level)
 			local subCategoryData = C_TradeSkillUI.GetCategoryInfo(subCategoryID)
 			info.text = subCategoryData.name
 			info.func = function()
-				Skillet.SetSlotFilter(nil, categoryID, subCategoryId)
+				CraftForge.SetSlotFilter(nil, categoryID, subCategoryId)
 			end
 			info.notCheckable = false
 			info.keepShownOnClick = true
@@ -291,7 +291,7 @@ function Skillet.InitializeFilterDropdown(self, level)
 	end
 end
 
-function Skillet.SetSlotFilter(inventorySlotIndex, categoryId, subCategoryId)
+function CraftForge.SetSlotFilter(inventorySlotIndex, categoryId, subCategoryId)
 	--DA.DEBUG(0,"SetSlotFilter("..tostring(inventorySlotIndex)..", "..tostring(categoryId)..", "..tostring(subCategoryId)..")")
 	C_TradeSkillUI.ClearInventorySlotFilter()
 	C_TradeSkillUI.ClearRecipeCategoryFilter()
@@ -303,11 +303,11 @@ function Skillet.SetSlotFilter(inventorySlotIndex, categoryId, subCategoryId)
 	if categoryId or subCategoryId then
 		C_TradeSkillUI.SetRecipeCategoryFilter(categoryId, subCategoryId)
 	end
-	Skillet.dataScanned = false
-	Skillet:UpdateTradeSkillWindow()
+	CraftForge.dataScanned = false
+	CraftForge:UpdateTradeSkillWindow()
 end
 
-function Skillet:SetDefaultFilters()
+function CraftForge:SetDefaultFilters()
 	--DA.DEBUG(0,"SetDefaultFilters()")
 	C_TradeSkillUI.SetShowLearned(true)
 	C_TradeSkillUI.SetShowUnlearned(true)
@@ -323,7 +323,7 @@ end
 --
 -- Currently unused
 --
-function Skillet:GetCurrentFilterSet()
+function CraftForge:GetCurrentFilterSet()
 	DA.DEBUG(0,"GetCurrentFilterSet()")
 	local filterSet =
 	{
@@ -346,7 +346,7 @@ end
 --
 -- Currently unused
 --
-function Skillet:ApplyfilterSet(filterSet)
+function CraftForge:ApplyfilterSet(filterSet)
 	DA.DEBUG(0,"ApplyfilterSet("..DA.DUMP1(filterSet)..")")
 	if filterSet then
 		C_TradeSkillUI.SetShowLearned(filterSet.showLearned)

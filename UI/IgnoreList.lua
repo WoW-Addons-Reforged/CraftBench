@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-SKILLET_IGNORE_LIST_HEIGHT = 16
+CRAFTFORGE_IGNORE_LIST_HEIGHT = 16
 
-local L = LibStub("AceLocale-3.0"):GetLocale("Skillet")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
 
 local num_buttons = 0
 
@@ -27,12 +27,12 @@ local num_buttons = 0
 --    Window creation and update methods
 -- ===========================================================================================
 local function get_button(i)
-	local button = _G["SkilletIgnoreListButton"..i]
+	local button = _G["CraftForgeIgnoreListButton"..i]
 	if not button then
-		button = CreateFrame("Button", "SkilletIgnoreListButton"..i, SkilletIgnoreListParent, "SkilletIgnoreListItemButtonTemplate")
-		button:SetParent(SkilletIgnoreListParent)
-		button:SetPoint("TOPLEFT", "SkilletIgnoreListButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(SkilletIgnoreListParent:GetFrameLevel() + 1)
+		button = CreateFrame("Button", "CraftForgeIgnoreListButton"..i, CraftForgeIgnoreListParent, "CraftForgeIgnoreListItemButtonTemplate")
+		button:SetParent(CraftForgeIgnoreListParent)
+		button:SetPoint("TOPLEFT", "CraftForgeIgnoreListButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftForgeIgnoreListParent:GetFrameLevel() + 1)
 	end
 	return button
 end
@@ -53,11 +53,11 @@ local FrameBackdrop = {
 
 local function createIgnoreListFrame(self)
 	--DA.DEBUG(0,"createIgnoreListFrame")
-	local frame = SkilletIgnoreList
+	local frame = CraftForgeIgnoreList
 	if not frame then
 		return nil
 	end
-	if TSM_API and Skillet.db.profile.tsm_compat then
+	if TSM_API and CraftForge.db.profile.tsm_compat then
 		frame:SetFrameStrata("TOOLTIP")
 	else
 		frame:SetFrameStrata("HIGH")
@@ -91,22 +91,22 @@ local function createIgnoreListFrame(self)
 	local title = CreateFrame("Frame",nil,frame)
 	title:SetPoint("TOPLEFT",titlebar,"TOPLEFT",0,0)
 	title:SetPoint("BOTTOMRIGHT",titlebar2,"BOTTOMRIGHT",0,0)
-	local titletext = title:CreateFontString("SkilletShoppingListTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = title:CreateFontString("CraftForgeShoppingListTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT",title,"TOPLEFT",0,0)
 	titletext:SetPoint("TOPRIGHT",title,"TOPRIGHT",0,0)
 	titletext:SetHeight(26)
 	titletext:SetShadowColor(0,0,0)
 	titletext:SetShadowOffset(1,-1)
 	titletext:SetTextColor(1,1,1)
-	titletext:SetText("Skillet: Ignored Materials")
+	titletext:SetText("CraftForge: Ignored Materials")
 --
 -- The frame enclosing the scroll list needs a border and a background .....
 --
-	local backdrop = SkilletIgnoreListParent
+	local backdrop = CraftForgeIgnoreListParent
 	if not backdrop.SetBackdrop then
 		Mixin(backdrop, BackdropTemplateMixin)
 	end
-	if TSM_API and Skillet.db.profile.tsm_compat then
+	if TSM_API and CraftForge.db.profile.tsm_compat then
 		backdrop:SetFrameStrata("HIGH")
 	end
 	backdrop:SetBackdrop(ControlBackdrop)
@@ -127,7 +127,7 @@ local function createIgnoreListFrame(self)
 --
 -- lets play the resize me game!
 --
-	Skillet:EnableResize(frame, 320,150, Skillet.UpdateIgnoreListWindow)
+	CraftForge:EnableResize(frame, 320,150, CraftForge.UpdateIgnoreListWindow)
 --
 -- so hitting [ESC] will close the window
 --
@@ -135,7 +135,7 @@ local function createIgnoreListFrame(self)
 	return frame
 end
 
-function Skillet:GetIgnoreList(player)
+function CraftForge:GetIgnoreList(player)
 	--DA.DEBUG(0,"GetIgnoreList("..tostring(player)..")")
 	local list = {}
 	local playerList
@@ -162,7 +162,7 @@ function Skillet:GetIgnoreList(player)
 	return list
 end
 
-function Skillet:DeleteIgnoreEntry(index, player, id)
+function CraftForge:DeleteIgnoreEntry(index, player, id)
 	--DA.DEBUG(0,"DeleteIgnoreEntry("..tostring(index)..", "..tostring(player)..", "..tostring(id)..")")
 	table.remove(self.cachedIgnoreList,index)
 	self.db.realm.userIgnoredMats[player][id] = nil
@@ -170,7 +170,7 @@ function Skillet:DeleteIgnoreEntry(index, player, id)
 	self:UpdateTradeSkillWindow()
 end
 
-function Skillet:ClearIgnoreList(player)
+function CraftForge:ClearIgnoreList(player)
 	--DA.DEBUG(0,"ClearIgnoreList("..tostring(player)..")")
 	local playerList
 	if player then
@@ -194,21 +194,21 @@ end
 --
 -- Called to add a count to the Ignored List button in the main frame
 --
-function Skillet:UpdateIgnoredMatsButton()
+function CraftForge:UpdateIgnoredMatsButton()
 	--DA.DEBUG(0,"UpdateIgnoredMatsButton()")
 	self.cachedIgnoreList = self:GetIgnoreList()
 	local numItems = #self.cachedIgnoreList
 	if numItems > 0 then
-		SkilletIgnoredMatsButton:SetText(L["Ignored List"].." ("..tostring(numItems)..")")
+		CraftForgeIgnoredMatsButton:SetText(L["Ignored List"].." ("..tostring(numItems)..")")
 	else
-		SkilletIgnoredMatsButton:SetText(L["Ignored List"])
+		CraftForgeIgnoredMatsButton:SetText(L["Ignored List"])
 	end
 end
 
 --
 -- Called to update the ignore list window
 --
-function Skillet:UpdateIgnoreListWindow()
+function CraftForge:UpdateIgnoreListWindow()
 	--DA.DEBUG(0,"UpdateIgnoreListWindow()")
 	self.cachedIgnoreList = self:GetIgnoreList()
 	local numItems = #self.cachedIgnoreList
@@ -217,20 +217,20 @@ function Skillet:UpdateIgnoreListWindow()
 		return
 	end
 	self:UpdateIgnoredMatsButton()
-	local button_count = SkilletIgnoreListList:GetHeight() / SKILLET_IGNORE_LIST_HEIGHT
+	local button_count = CraftForgeIgnoreListList:GetHeight() / CRAFTFORGE_IGNORE_LIST_HEIGHT
 	button_count = math.floor(button_count)
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(SkilletIgnoreListList,			-- frame
+	FauxScrollFrame_Update(CraftForgeIgnoreListList,			-- frame
 							numItems,						-- num items
 							button_count,					-- num to display
-							SKILLET_IGNORE_LIST_HEIGHT)	-- value step (item height)
+							CRAFTFORGE_IGNORE_LIST_HEIGHT)	-- value step (item height)
 --
 -- Where in the list of items to start counting.
 --
-	local itemOffset = FauxScrollFrame_GetOffset(SkilletIgnoreListList)
-	local width = SkilletIgnoreListParent:GetWidth()
+	local itemOffset = FauxScrollFrame_GetOffset(CraftForgeIgnoreListList)
+	local width = CraftForgeIgnoreListParent:GetWidth()
 	for i=1, button_count, 1 do
 		num_buttons = math.max(num_buttons, i)
 		local itemIndex = i + itemOffset
@@ -280,14 +280,14 @@ end
 --
 -- Updates the scrollbar when a scroll event happens
 --
-function Skillet:IgnoreList_OnScroll()
-	Skillet:UpdateIgnoreListWindow()
+function CraftForge:IgnoreList_OnScroll()
+	CraftForge:UpdateIgnoreListWindow()
 end
 
 --
 -- Functions to show and hide the Ignorelist
 --
-function Skillet:DisplayIgnoreList()
+function CraftForge:DisplayIgnoreList()
 	--DA.DEBUG(0,"DisplayIgnoreList()")
 	if not self.ignoreList then
 		self.ignoreList = createIgnoreListFrame(self)
@@ -301,7 +301,7 @@ function Skillet:DisplayIgnoreList()
 	self:UpdateIgnoreListWindow()
 end
 
-function Skillet:HideIgnoreList()
+function CraftForge:HideIgnoreList()
 	--DA.DEBUG(0,"HideIgnoreList()")
 	local closed
 	if self.ignoreList and self.ignoreList:IsVisible() then

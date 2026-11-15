@@ -1,5 +1,5 @@
 --[[
-Skillet: A tradeskill window replacement.
+CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
 --[[
-**** Not all of this documentation has been verified as accurate in Skillet ****
+**** Not all of this documentation has been verified as accurate in CraftForge ****
 
 This file contains functions intended to be used by authors of other mods.
 I will make every effort never to change the names or behaviour of any of the
@@ -28,14 +28,14 @@ means contact me and let me know.
 While I have provided "Hooking" documentation, I do not recommend or support it's use.
 I have left the documentation in this file for historical purposes. 
 In the time since this file was first created, some newer methods of interfacing with
-Skillet have been created. See the Skillet\Plugins folder for some examples.
+CraftForge have been created. See the CraftForge\Plugins folder for some examples.
 
 Hooking a Method Using AceHook
 ------------------------------
 
 To hook this routine with an Ace2 mod, use (for example):
 
-	self:Hook(Skillet, "GetExtraItemDetailText")
+	self:Hook(CraftForge, "GetExtraItemDetailText")
 
 and write your method:
 
@@ -53,8 +53,8 @@ and write your method:
 Hooking a Method Without Using AceHook
 --------------------------------------
 
-local orig_get_extra = Skillet.GetExtraItemDetailText
-Skillet.GetExtraItemDetailText = function(obj, skill, recipe)
+local orig_get_extra = CraftForge.GetExtraItemDetailText
+CraftForge.GetExtraItemDetailText = function(obj, skill, recipe)
 	local before = orig_get_extra(obj, skill, recipe)
 	local myvalue = "samplething"
 	if before then
@@ -64,11 +64,11 @@ Skillet.GetExtraItemDetailText = function(obj, skill, recipe)
 	end
 end
 
-In both methods, the 'obj' passed in will be a copy of the 'Skillet' main object.
+In both methods, the 'obj' passed in will be a copy of the 'CraftForge' main object.
 
 Of course, the action you take with the previous value is entirely dependent
 of what the method does. For methods that return text, you should probably
-concatenetate the values. For something like Skillet:GetMinSkillButtonWidth()
+concatenetate the values. For something like CraftForge:GetMinSkillButtonWidth()
 you should return the maximum of the previous value and you value.
 
 Please remember that there may be multple mods hooking these methods so please
@@ -81,11 +81,11 @@ your own in as sane a fashion as possible.
 --                ******* Start of the public API ********
 --
 -- NOTE: This file documents functions that are defined (and used) in other
---       Skillet source files. The function line is copied here as a comment.
+--       CraftForge source files. The function line is copied here as a comment.
 --=================================================================================
 
 --
---== function Skillet:AddButtonToTradeskillWindow(button) ==
+--== function CraftForge:AddButtonToTradeskillWindow(button) ==
 --
 -- Adds a button to the tradeskill window. The button will be
 -- reparented and placed appropriately in the window.
@@ -96,7 +96,7 @@ your own in as sane a fashion as possible.
 -- returned in case you need to pop up a frame attached to it.
 --
 --
---== function Skillet:AddRecipeSorter(text, sorter) ==
+--== function CraftForge:AddRecipeSorter(text, sorter) ==
 --
 -- Adds a sort method to those used for recipe names.
 --
@@ -124,7 +124,7 @@ your own in as sane a fashion as possible.
 
 --
 -- The following four functions, RecipeNamePrefix, RecipeNameSuffix, Update, and GetExtraText are
--- documented here but are used by plugins written like those in the Skillet\Plugins folder.
+-- documented here but are used by plugins written like those in the CraftForge\Plugins folder.
 --
 --== function plugin.RecipeNamePrefix(skill, recipe) ==
 --
@@ -148,7 +148,7 @@ your own in as sane a fashion as possible.
 --== function plugin.Update() ==
 --
 -- A function called by the UpdateTradeSkillWindow function to do any plugin specific 
--- SkilletFrame updates. 
+-- CraftForgeFrame updates. 
 --
 -- @return is ignored
 --
@@ -166,7 +166,7 @@ your own in as sane a fashion as possible.
 --
 
 --
---== function Skillet:AddPreButtonShowCallback(method) ==
+--== function CraftForge:AddPreButtonShowCallback(method) ==
 --
 -- Adds a method that will be called before a button in the recipe list
 -- is shown. If multiple methods are added, they will be called in the
@@ -195,7 +195,7 @@ your own in as sane a fashion as possible.
 --
 
 --
---== function Skillet:AddPreButtonHideCallback(method) ==
+--== function CraftForge:AddPreButtonHideCallback(method) ==
 --
 -- Adds a method that will be called before a button in the recipe list
 -- is hidden. If multiple methods are added, they will be called in the
@@ -223,7 +223,7 @@ your own in as sane a fashion as possible.
 --
 
 -- =================================================================
---                Skillet Recipe API
+--                CraftForge Recipe API
 -- =================================================================
 
 --[[

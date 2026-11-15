@@ -1,5 +1,5 @@
 --[[
- Skillet: A tradeskill window replacement.
+ CraftForge: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):NewLocale("Skillet", "ptBR")
+local L = LibStub("AceLocale-3.0"):NewLocale("CraftForge", "ptBR")
 if not L then return end
 
 --@localization(locale="ptBR", format="lua_additive_table", same-key-is-true=true, handle-subnamespaces="concat")@
