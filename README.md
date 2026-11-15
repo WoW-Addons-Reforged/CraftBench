@@ -24,7 +24,7 @@
 - **Fishing Tracker, Catch Database & Auto-Lure**: Dedicated Dark-Gold Fishing window (`/craftforge fish`) that logs every catch per zone/subzone (count, drop %, min skill, day/night split, estimated value), tracks session stats & Stranglethorn Derby countdown, and provides secure one-key Fishing cast with automatic best-lure application and Fishing Pole / combat weapon swap keybinds.
 - **Trade Contacts (Vendor & Trainer Memory)**: Automatically records visited recipe/tradegood vendors and profession trainers (with zone, coordinates, prices, and limited stock) and displays known vendor locations on item tooltips.
 - **Recipe Notes, Sources & Ignored Materials**: Attach custom notes to recipes and reagents, inspect recipe acquisition sources in hover tooltips, and exclude materials you do not want tracked or purchased.
-- **Addon Integrations**: Supports **Auctionator**, **TradeSkillMaster (TSM)**, **OribosExchange**, **AuctionDB**, **Baganator / Syndicator**, **BetterBags**, **Bagnon / Combuctor / ArkInventory / ElvUI Bags / AdiBags / LiteBag**, **ElvUI** (toggleable skin), **AllTheThings**, **AckisRecipeList**, **CanIMogIt**, **Overachiever**, **BeanCounter**, **DataStore**, **TomTom**, and **Pawn**.
+- **Addon Integrations**: Supports **Auctionator**, **TradeSkillMaster (TSM)**, **OribosExchange**, **AuctionDB**, **Baganator / Syndicator**, **BetterBags**, **Bagnon / Combuctor / ArkInventory / ElvUI Bags / AdiBags / LiteBag**, **ElvUI** (toggleable skin), **AllTheThings**, **AckisRecipeList**, **CanIMogIt**, **Overachiever**, **AchievementsUtils**, **BeanCounter**, **DataStore**, **TomTom**, and **Pawn**.
 - **One-Click Material Processing, Batch Panel & Auto-Popup**: Hold a configurable modifier key (`Alt` / `Ctrl` / `Shift`) to highlight eligible items with an animated glowing border and click directly in your bags to **Disenchant**, **Prospect**, **Mill**, or **Pick Lock**, use the compact batch processing panel (`/craftforge process`), enable the optional Auto-Process Popup for newly acquired items, and view disenchant/prospect/mill yield tooltips.
 
 ## Supported WoW Versions
@@ -60,6 +60,7 @@ All integrations are **optional** and automatically activate only when the respe
 | **AckisRecipeList (ARL)** | Unlearned recipe source lookup and filtering |
 | **CanIMogIt** | Transmog collection status (`Known` / `Unknown`) prefixes on craftable gear |
 | **Overachiever** | Achievement indicators on profession recipes |
+| **AchievementsUtils** | Uncompleted achievement criteria icons & detail lines on matching recipes/items (`FindByCriteriaName`) |
 | **BeanCounter** | Historical auction purchase/sale cost & profit data |
 | **TomTom** | One-click map waypoints for visited Trade Contacts (vendors & trainers) |
 | **ElvUI** | Optional ElvUI skin toggle (native Dark-Gold UI stays active unless explicitly enabled) |

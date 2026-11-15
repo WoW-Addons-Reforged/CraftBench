@@ -31,7 +31,7 @@
 ## X-Website: https://github.com/gOOvER/CraftForge
 ## SavedVariables: CraftForgeDB
 ## SavedVariablesPerCharacter: CraftForgeWho, CraftForgeDBPC, CraftForgeMemory, CraftForgeProfile
-## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, AckisRecipeList, AuctionDB, Auctionator, Baganator, BeanCounter, CanIMogIt, CraftInfoAnywhere, DataStore, DataStore_Auctions, Journalator, OribosExchange, Overachiever, Syndicator, TradeSkillMaster, tekDebug
+## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, AchievementsUtils, AckisRecipeList, AuctionDB, Auctionator, Baganator, BeanCounter, CanIMogIt, CraftInfoAnywhere, DataStore, DataStore_Auctions, Journalator, OribosExchange, Overachiever, Syndicator, TradeSkillMaster, tekDebug
 ## X-Embeds: Ace3, LibStub, CallbackHandler-1.0, LibWindow-1.1, LibPeriodicTable-3.1
 
 #### List of embedded libraries
@@ -115,6 +115,7 @@ Plugins\Auctionator.lua
 Plugins\Baganator.lua
 Plugins\CanIMogIt.lua
 Plugins\Overachiever.lua
+Plugins\AchievementsUtils.lua
 Plugins\DataStoreAuctions.lua
 Plugins\OribosExchange.lua
 Plugins\AuctionDB.lua
