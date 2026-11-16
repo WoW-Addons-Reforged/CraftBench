@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **Retail 12.x Secret String Guard in Gathering Tooltip (`Core/CraftBenchGathering.lua`)**: Guarded `GameTooltipTextLeft*:GetText()` with `issecretvalue` / `canaccessvalue` / `pcall` and skipped non-world-owned tooltips (such as action bar buttons) to prevent `"attempt to compare local 'text' (a secret string value)"`.
 - **Profession Rank StatusBar Fill (`UI/MainFrame.lua`)**: Set `CraftBenchRankFrame` texture to `WHITE8x8` on `ARTWORK` layer (and `SkillRank` text to `OVERLAY`) so `UIStyle.SkinInset` no longer covers the `BACKGROUND` status bar fill.
 - **Combat Lockdown Guard on Fishing Bar Drag (`UI/FishingFrame.lua`)**: Guarded `CraftBenchFishingBar:StartMoving()` and `StopMovingOrSizing()` with `InCombatLockdown()` so dragging the floating fishing bar (which hosts a `SecureActionButtonTemplate` cast button) during combat never triggers `ADDON_ACTION_BLOCKED`.
 - **Options Plugin Selector Dropdown (`UI/OptionsFrame.lua`)**: Replaced multi-row stacked plugin sub-tabs with a compact single-row bar (`Active Sources`, `Recipe Display`, and a `Plugins (N)` dropdown selector) so any number of installed plugins fits cleanly on one line.

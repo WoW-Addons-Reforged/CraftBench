@@ -100,14 +100,24 @@ function Gathering:GetDifficultyColor(node, rank)
 	return "|cff808080", "grey"
 end
 
+local function isSafeString(val)
+	if type(val) ~= "string" then return false end
+	if _G.issecretvalue and _G.issecretvalue(val) then return false end
+	if _G.canaccessvalue and not _G.canaccessvalue(val) then return false end
+	local ok, nonEmpty = pcall(function() return val ~= "" end)
+	return ok and nonEmpty
+end
+
 local function ColorGatheringNodeTooltip(tooltip)
 	if not tooltip or tooltip ~= GameTooltip then return end
-	if tooltip:GetItem() or tooltip:GetUnit() then return end
+	local owner = tooltip.GetOwner and tooltip:GetOwner()
+	if owner and owner ~= UIParent and owner ~= WorldFrame then return end
+	if (tooltip.GetItem and tooltip:GetItem()) or (tooltip.GetUnit and tooltip:GetUnit()) then return end
 
 	for i = 2, math.min(4, tooltip:NumLines() or 0) do
 		local lineObj = _G["GameTooltipTextLeft" .. i]
-		local text = lineObj and lineObj:GetText()
-		if text and text ~= "" then
+		local okText, text = pcall(function() return lineObj and lineObj:GetText() end)
+		if okText and isSafeString(text) then
 			local req = tonumber(string.match(text, "%((%d+)%)"))
 			local kind
 			if string.find(text, "Herbalism", 1, true) or string.find(text, "Kräuterkunde", 1, true) then
