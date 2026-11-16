@@ -2,146 +2,84 @@
 #
 # SkillLevelsConverter2.py
 #
-# This program takes up to three SkillLineAbility file name arguments on the command line which are
-# .csv tables from https://wago.tools/db2/SkillLineAbility and https://wago.tools/db2/SpellName
-#
-# The output will be .lua tables containing the data.
-# 
-# Skillet-Classic.toc:
-#   SkillLevelData1.lua [AllowLoadGameType vanilla]
-#   SkillLevelData2.lua [AllowLoadGameType tbc]
-#   # SkillLevelData4.lua [AllowLoadGameType cata]
-#   SkillLevelData5.lua [AllowLoadGameType mists]
-#
-# Skillet.toc:
-#   SkillLevelData12.lua [AllowLoadGameType standard]
-#   SkillLevelData1.lua [AllowLoadGameType camelot]
-#
-# There may be some post-processing needed for names that include the double quote character.
-# There may be some post-processing needed for names that include quality icons.
-# (both of these are currently handled in python).
+# Converts SkillLineAbility.<build>.csv and SpellName.<build>.csv from wago.tools
+# into Lua tables for CraftForge (Data/SkillLevelData*.lua).
 #
 
-import sys
-import os
 import csv
+import os
 import re
+import sys
 
-#
-# Open the .csv file and extract the necessary data
-#
+
 def spells_list_read(file_name):
-	f = open(file_name)
-	reader = csv.DictReader(f, delimiter=',')
-	for row in reader:
-		if int(row['TrivialSkillLineRankLow']) + int(row['TrivialSkillLineRankHigh']) > 0:
-			spell_id = int(row['Spell'])
-			skill_line = int(row['SkillLine'])
-			spell_to_skill_line[spell_id] = skill_line
-			min_skill_line_rank[spell_id] = int(row['MinSkillLineRank'])
-			trivial_skill_line_rank_low[spell_id] = int(row['TrivialSkillLineRankLow'])
-			trivial_skill_line_rank_high[spell_id] = int(row['TrivialSkillLineRankHigh'])
-	f.close()
+	spell_to_skill_line = {}
+	min_skill_line_rank = {}
+	trivial_low = {}
+	trivial_high = {}
+	spell_to_name = {}
+
+	with open(file_name, newline='', encoding='utf-8') as f:
+		for row in csv.DictReader(f, delimiter=','):
+			low = int(row['TrivialSkillLineRankLow'])
+			high = int(row['TrivialSkillLineRankHigh'])
+			if low + high > 0:
+				spell_id = int(row['Spell'])
+				spell_to_skill_line[spell_id] = int(row['SkillLine'])
+				min_skill_line_rank[spell_id] = int(row['MinSkillLineRank'])
+				trivial_low[spell_id] = low
+				trivial_high[spell_id] = high
+
 	spellname_file = file_name.replace("SkillLineAbility", "SpellName")
-	with open(spellname_file) as f:
-		reader = csv.DictReader(f, delimiter=',')
-		for row in reader:
+	with open(spellname_file, newline='', encoding='utf-8') as f:
+		for row in csv.DictReader(f, delimiter=','):
 			spell_to_name[int(row['ID'])] = row['Name_lang']
-	f.close()
-	return
 
-#
-# Generate a line of output 
-#
-def spells_list_str(item_id):
-	result = "[" + str(item_id) + "] = '"
-	result = result + str(min_skill_line_rank[item_id]) + "/"
-	result = result + str(trivial_skill_line_rank_low[item_id]) + "/"
-	result = result + str(int((trivial_skill_line_rank_low[item_id]+trivial_skill_line_rank_high[item_id])/2)) + "/"
-	result = result + str(trivial_skill_line_rank_high[item_id])
-	if item_id in spell_to_name:
-		result = result + "',    -- "
-		result = result + str(spell_to_name[item_id])
-		result = re.sub(r' \|A:.*\|a', '', result)
-		result = result + "\n"
+	return spell_to_skill_line, min_skill_line_rank, trivial_low, trivial_high, spell_to_name
+
+
+def spells_list_str(spell_id, min_rank, trivial_low, trivial_high, spell_to_name):
+	mid = int((trivial_low[spell_id] + trivial_high[spell_id]) / 2)
+	line = f"[{spell_id}] = '{min_rank[spell_id]}/{trivial_low[spell_id]}/{mid}/{trivial_high[spell_id]}'"
+	if spell_id in spell_to_name:
+		clean_name = re.sub(r' \|A:.*\|a', '', str(spell_to_name[spell_id]))
+		line += f",    -- {clean_name}\n"
 	else:
-		result = result + "',\n"
-	return result
+		line += ",\n"
+	return line
 
-#
-# Open the .lua file (overwrite existing) and output the data
-#
-def spells_list_write(file_name):
+
+def spells_list_write(file_name, data):
+	spell_to_skill_line, min_rank, trivial_low, trivial_high, spell_to_name = data
 	output_file = os.path.splitext(file_name)[0] + '.lua'
-	dirname, basename = os.path.split(output_file)
-	filename, ext = basename.split('.', 1)
-	o = open(output_file, "w")
+	basename = os.path.basename(output_file)
+	filename = basename.split('.', 1)[0]
+
 	spell_name_output = output_file.replace("SkillLineAbility", "SpellName")
-	dirname2, basename2 = os.path.split(spell_name_output)
-	n = open(spell_name_output, "w")
-	o.write("-- " + basename + "\n")
-	o.write("Skillet.db.global." + filename + " = {\n")
-	n.write("-- " + basename2 + "\n")
-	n.write("Skillet.db.global.NameToSpellID = {\n")
-	for item_id in spell_to_skill_line:
-		o.write(spells_list_str(item_id))
-		if item_id in spell_to_name:
-			name = spell_to_name[item_id].replace('"','\\"')
-			name = re.sub(r' \|A:.*\|a', '', name)
-			result = '["' + name + '"] = '
-			result = result + str(item_id)
-			result = result + ",\n"
-			n.write(result)
-	o.write("}\n")
-	o.close()
-	n.write("}\n")
-	n.close()
+	basename2 = os.path.basename(spell_name_output)
 
-#
-# Initialize the data storage
-#
+	with open(output_file, 'w', encoding='utf-8', newline='\n') as o, \
+		open(spell_name_output, 'w', encoding='utf-8', newline='\n') as n:
+		o.write(f"-- {basename}\n")
+		o.write(f"CraftForge.db.global.{filename} = {{\n")
+		n.write(f"-- {basename2}\n")
+		n.write("CraftForge.db.global.NameToSpellID = {\n")
+
+		for spell_id in spell_to_skill_line:
+			o.write(spells_list_str(spell_id, min_rank, trivial_low, trivial_high, spell_to_name))
+			if spell_id in spell_to_name:
+				name = re.sub(r' \|A:.*\|a', '', spell_to_name[spell_id]).replace('"', '\\"')
+				n.write(f'["{name}"] = {spell_id},\n')
+
+		o.write("}\n")
+		n.write("}\n")
+
+
 if len(sys.argv) < 2:
-	print("Usage:")
-	exit()
+	print("Usage: SkillLevelsConverter2.py <SkillLineAbility.build.csv> [...]")
+	sys.exit(1)
 
-if len(sys.argv) >= 2:
-	spell_to_skill_line = {}
-	min_skill_line_rank = {}
-	trivial_skill_line_rank_low = {}
-	trivial_skill_line_rank_high = {}
-	spell_to_name = {}
-#
-# Read the data from the .csv file
-#
-	spells_list_read(sys.argv[1])
-	print(str(len(spell_to_skill_line))+" records processed in "+sys.argv[1])
-#
-# Change the input file name extension and write the data
-#
-	spells_list_write(sys.argv[1])
-
-#
-# Initialize the data storage again and repeat the process
-#
-if len(sys.argv) >= 3:
-	spell_to_skill_line = {}
-	min_skill_line_rank = {}
-	trivial_skill_line_rank_low = {}
-	trivial_skill_line_rank_high = {}
-	spell_to_name = {}
-
-	spells_list_read(sys.argv[2])
-	print(str(len(spell_to_skill_line))+" records processed in "+sys.argv[2])
-	spells_list_write(sys.argv[2])
-
-if len(sys.argv) >= 4:
-	spell_to_skill_line = {}
-	min_skill_line_rank = {}
-	trivial_skill_line_rank_low = {}
-	trivial_skill_line_rank_high = {}
-	spell_to_name = {}
-
-	spells_list_read(sys.argv[3])
-	print(str(len(spell_to_skill_line))+" records processed in "+sys.argv[3])
-	spells_list_write(sys.argv[3])
-	
+for csv_path in sys.argv[1:]:
+	data = spells_list_read(csv_path)
+	print(f"{len(data[0])} records processed in {csv_path}")
+	spells_list_write(csv_path, data)

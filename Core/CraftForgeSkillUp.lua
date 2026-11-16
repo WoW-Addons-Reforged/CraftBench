@@ -43,6 +43,12 @@ function CraftForge:GetSkillUpThresholds(recipe)
 			return { orange = o, yellow = y, green = g, grey = gr }
 		end
 	end
+	if self.GetTradeSkillLevels then
+		local o, y, g, gr = self:GetTradeSkillLevels(recipe.itemID, recipe.spellID)
+		if o and y and g and gr and gr > 0 then
+			return { orange = o, yellow = y, green = g, grey = gr }
+		end
+	end
 	if CraftForge.SkillThresholds and CraftForge.SkillThresholds[recipe.spellID] then
 		return CraftForge.SkillThresholds[recipe.spellID]
 	end
