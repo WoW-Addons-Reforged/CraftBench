@@ -945,7 +945,7 @@ function OptionsUI:Refresh()
 			local ddLabel = string.format("%s (%d)", L["Plugins"] or "Plugins", #subGroups - 2)
 			for idx = 3, #subGroups do
 				local sub = subGroups[idx]
-				table.insert(pluginItems, { value = sub.key, label = sub.name })
+				table.insert(pluginItems, { key = sub.key, label = sub.name })
 				if sub.key == activeSubKey then
 					selectedInDropdown = true
 					ddLabel = sub.name
