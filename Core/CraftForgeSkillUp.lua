@@ -34,20 +34,41 @@ local function GetCurrentProfessionRank()
 	return nil
 end
 
+local function ParseThresholdString(str)
+	if type(str) ~= "string" then return nil end
+	local o, y, g, gr = string.match(str, "^(%d+)/(%d+)/(%d+)/(%d+)$")
+	if o and y and g and gr then
+		return {
+			orange = tonumber(o),
+			yellow = tonumber(y),
+			green = tonumber(g),
+			grey = tonumber(gr),
+		}
+	end
+	return nil
+end
+
 function CraftForge:GetSkillUpThresholds(recipe)
 	if not recipe or not recipe.spellID then return nil end
 	-- Optional live integration if SkillUpForever is loaded
 	if _G.SkillUpForever and _G.SkillUpForever.GetThresholds then
 		local o, y, g, gr = _G.SkillUpForever:GetThresholds(recipe.spellID)
 		if o and y and g and gr then
-			return { orange = o, yellow = y, green = g, grey = gr }
+			return { orange = tonumber(o), yellow = tonumber(y), green = tonumber(g), grey = tonumber(gr) }
 		end
 	end
 	if self.GetTradeSkillLevels then
 		local o, y, g, gr = self:GetTradeSkillLevels(recipe.itemID, recipe.spellID)
+		o, y, g, gr = tonumber(o), tonumber(y), tonumber(g), tonumber(gr)
 		if o and y and g and gr and gr > 0 then
 			return { orange = o, yellow = y, green = g, grey = gr }
 		end
+	end
+	local globalDB = CraftForge.db and CraftForge.db.global
+	if globalDB then
+		local parsed = (globalDB.SkillLineAbility and ParseThresholdString(globalDB.SkillLineAbility[recipe.spellID]))
+			or (recipe.itemID and globalDB.SkillLevels and ParseThresholdString(globalDB.SkillLevels[recipe.itemID]))
+		if parsed then return parsed end
 	end
 	if CraftForge.SkillThresholds and CraftForge.SkillThresholds[recipe.spellID] then
 		return CraftForge.SkillThresholds[recipe.spellID]
@@ -106,24 +127,17 @@ function CraftForge:GetRecipeCostAndSkillUp(recipe, currentSkill, difficultyOver
 	return matCost, chance, costPerSkillUp, thresholds
 end
 
-function CraftForge:BuildThresholdBarText(thresholds, currentSkill, difficulty)
-	if thresholds then
-		local o = thresholds.orange or 1
-		local y = thresholds.yellow or o
-		local g = thresholds.green or y
-		local gr = thresholds.grey or g
-		local cur = currentSkill and string.format(" |cffffffff[%d]|r", currentSkill) or ""
-		return string.format(
-			"|cffff8040%d|r / |cffffff00%d|r / |cff40bf40%d|r / |cff808080%d|r%s",
-			o, y, g, gr, cur
-		)
-	end
-
-	local oMark = (difficulty == "optimal") and "|cffffffff>|r|cffff8040###|r|cffffffff<|r" or "|cffff8040###|r"
-	local yMark = (difficulty == "medium") and "|cffffffff>|r|cffffff00###|r|cffffffff<|r" or "|cffffff00###|r"
-	local gMark = (difficulty == "easy") and "|cffffffff>|r|cff40bf40###|r|cffffffff<|r" or "|cff40bf40###|r"
-	local grMark = (difficulty == "trivial") and "|cffffffff>|r|cff808080###|r|cffffffff<|r" or "|cff808080###|r"
-	return oMark .. " " .. yMark .. " " .. gMark .. " " .. grMark
+function CraftForge:BuildThresholdBarText(thresholds, currentSkill)
+	if not thresholds then return nil end
+	local o = thresholds.orange or 1
+	local y = thresholds.yellow or o
+	local g = thresholds.green or y
+	local gr = thresholds.grey or g
+	local cur = currentSkill and string.format(" |cffffffff[%d]|r", currentSkill) or ""
+	return string.format(
+		"|cffff8040%d|r / |cffffff00%d|r / |cff40bf40%d|r / |cff808080%d|r%s",
+		o, y, g, gr, cur
+	)
 end
 
 function CraftForge:AddSkillUpTooltipInfo(tip, skill, recipe)

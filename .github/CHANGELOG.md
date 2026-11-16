@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **Threshold Bar Formatting (`Core/CraftForgeSkillUp.lua`)**: Added direct `SkillLineAbility` / `SkillLevels` fallback parsing and removed the placeholder `###` bar when no numeric thresholds are present.
 - **Developer Scripts (`Scripts/generate-scrollData-retail.py`, `Scripts/SkillLevelsConverter2.py`)**: Replaced leftover `Skillet` namespace references with `CraftForge`, added UTF-8 encoding (`encoding="utf-8"`) and context-managed file handles, fixed a stale `spell_name` variable and missing `ItemEffectID` `KeyError` in `generate-scrollData-retail.py`, and replaced duplicated argument blocks in `SkillLevelsConverter2.py` with a loop.
 - **Threshold Lookup in `Core/CraftForgeSkillUp.lua`**: Connected `GetSkillUpThresholds` to `CraftForge:GetTradeSkillLevels(itemID, spellID)` so `SkillLevelData*.lua` thresholds directly power exact skill-up % and threshold bars.
 - **LDB / Minimap Left-Click Queue Toggle (`Core/CraftForgeShare.lua`)**: Fixed LDB/Minimap Left-Click calling `ShowQueueView()` (instead of undefined `ShowStandaloneQueue()`) and ensured `CreateTradeSkillWindow()` initializes `CraftForgeStandaloneQueue` if clicked before opening a profession.
