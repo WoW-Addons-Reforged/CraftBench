@@ -49,25 +49,26 @@
 ## Supported Addons & Integrations
 All integrations are **optional** and automatically activate only when the respective addon is installed:
 
-| Addon | What It Provides |
+| Addon | What CraftForge Takes / Uses From It |
 | :--- | :--- |
-| **Auctionator** | Live buyout values, reagent costs, net profit / profit %, and AH shopping list search |
-| **TradeSkillMaster (TSM)** | Market/crafting cost & profit calculation (`DBMarket`, `DBMinBuyout`, `DBHistorical`, etc.) |
-| **OribosExchange** | Realm & region market pricing, reagent costs, and profit suffixes |
-| **AuctionDB** | Auction house item & reagent pricing and profit calculation |
-| **Altoholic / DataStore** | Alt professions & learned recipes (`DataStore_Crafts`), alt bags/bank/mail counts (`DataStore_Containers`, `DataStore_Mails`), and `DataStore_Auctions` in `/cf find` |
-| **AllTheThings (ATT)** | Recipe acquisition sources in tooltips and collection status prefixes in the recipe list |
-| **AckisRecipeList (ARL)** | Unlearned recipe source lookup and filtering |
-| **CanIMogIt** | Transmog collection status (`Known` / `Unknown`) prefixes on craftable gear |
-| **Overachiever** | Achievement indicators on profession recipes |
-| **AchievementsUtils** | Uncompleted achievement criteria icons & detail lines on matching recipes/items (`FindByCriteriaName`) |
-| **Questie** | Vendor NPCs (with zone), mob drops & quest sources in recipe details (when Questie is loaded) |
-| **AtlasLootClassic** | Recipe scroll & vendor source lookups in recipe details (when AtlasLootClassic is loaded) |
-| **BeanCounter** | Historical auction purchase/sale cost & profit data |
-| **TomTom** | One-click map waypoints for visited Trade Contacts (vendors & trainers) |
-| **ElvUI** | Optional ElvUI skin toggle (native Dark-Gold UI stays active unless explicitly enabled) |
-| **Baganator / Syndicator, BetterBags, Bagnon, Combuctor, ArkInventory, AdiBags, LiteBag** | Bag & bank slot hooks for one-click modifier-key Material Processing (Disenchant, Prospect, Mill, Pick Lock) |
-| **Pawn** | Equipment upgrade value tooltips on craftable items |
+| **Auctionator** | Reads live AH buyout prices (`GetAuctionPriceByItemID`) for crafted items & reagents to compute craft cost, net profit, profit %, recipe sort order, and triggers AH shopping list searches (`StartSearch`) |
+| **TradeSkillMaster (TSM)** | Reads TSM price sources (`DBMarket`, `DBMinBuyout`, `DBHistorical`, `Crafting`, etc.) via `TSM_API.GetCustomPriceValue` for reagent costs, sell value, and profit calculation |
+| **OribosExchange** | Reads realm/region market & buyout prices (`OEMarketInfo`) for craft cost, sell value, and profit suffixes |
+| **AuctionDB** | Reads AuctionDB AH scan prices (`AuctionDB:GetItemInfo` / `AHGetAuctionInfo`) for item values, reagent costs, and profit calculation |
+| **Altoholic / DataStore** | Reads alt learned professions & recipes (`DataStore_Crafts`), bag/bank item counts (`DataStore_Containers`), mailbox item counts (`DataStore_Mails`), and active alt auctions (`DataStore_Auctions`) for `/cf find` and recipe counts |
+| **AllTheThings (ATT)** | Reads recipe acquisition sources (`GetRecipeSource`) for tooltips and collection/completion status icons (`RecipeNamePrefix`) in the recipe list |
+| **AckisRecipeList (ARL)** | Reads unlearned recipe acquisition sources (`GetRecipeSource`) and trainer/vendor/drop metadata for filtering and details |
+| **CanIMogIt** | Reads transmog collection status (`GetIconText` / `PlayerKnowsTransmog`) to show known/unknown appearance prefixes on craftable gear |
+| **Overachiever** | Reads recipe achievement links & icons (`Overachiever.GetIconForRecipe`) to mark recipes needed for achievements |
+| **AchievementsUtils** | Reads indexed uncompleted achievement criteria (`FindByCriteriaName`, `GetAchievement`) for matching recipe/crafted item names and displays achievement icons & criteria details |
+| **Questie** | Reads vendor NPCs + zones (`QueryItemSingle("vendors")`), mob drops (`npcDrops`), and quest sources (`relatedQuests`) from `QuestieDB` for recipe details |
+| **AtlasLootClassic** | Reads recipe scroll item IDs (`Data.Recipe.GetRecipeForSpell`) and vendor prices (`Data.VendorPrice.GetVendorPriceForItem`) for recipe details |
+| **SkillUp Forever** | Reads exact `orange / yellow / green / grey` skill-up thresholds (`GetThresholds`) when installed to refine skill-up chance % and `/cf level` planning |
+| **BeanCounter** | Reads personal historical AH purchase & sale prices (`BeanCounter.API.search`) to show actual paid/earned averages in recipe details |
+| **TomTom** | Creates map waypoints (`TomTom:AddWaypoint`) with a single click from visited Trade Contacts (`/cf contacts`) |
+| **ElvUI** | Optional ElvUI skin toggle (`Plugins/ElvUI.lua`); CraftForge's native Dark-Gold UI stays active unless ElvUI skinning is explicitly enabled |
+| **Baganator / Syndicator, BetterBags, Bagnon, Combuctor, ArkInventory, AdiBags, LiteBag** | Hooks bag & bank item slot frames to enable one-click modifier-key Material Processing (Disenchant, Prospect, Mill, Pick Lock) and reads `Syndicator` cross-character counts when available |
+| **Pawn** | Reads Pawn equipment upgrade scores/scales (`PawnGetItemData`) to display upgrade value info in craftable item tooltips |
 
 ## Attribution & License
 **CraftForge** is based on **Skillet** (by *yossa*, *bsmorgan*, *lilsparky*, *nogudnik*, and *Slartie*) and licensed under the **GNU General Public License v3.0 (GPL-3.0)**. See [LICENSE.txt](LICENSE.txt) for details.

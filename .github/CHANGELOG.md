@@ -24,6 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Native Dark-Gold News Window (`Core/CraftForgeNewsGUI.lua`)**: Replaced the `AceGUI` / `AceConfigDialog` News window (which ElvUI's built-in Ace3 skinning automatically reskinned) with a native `CraftForge.UIStyle` Dark-Gold frame featuring a gold header bar, version sidebar, scrollable changelog content, and `"Show News"` mode buttons.
 - **Material Processing Glow Border (`Core/CraftForgeProcess.lua`)**: Upgraded the `process_glow` overlay on `CraftForgeProcessButton` to a high-visibility animated glowing border (2px additive colored edges, inner additive tint, outer radial glow, pulsing `BOUNCE` animation, and `+20` frame level) so eligible bag items clearly light up when holding the modifier key.
 
+### Changed
+- **Detailed Addon Integration Documentation (`README.md`)**: Expanded the **Supported Addons & Integrations** table to explicitly document what data/APIs CraftForge uses from every supported addon (including `SkillUp Forever` thresholds).
+
 ### Added
 - **Skill-Up Chances, Thresholds, Trainer & Reagent Tooltips (`Core/CraftForgeSkillUp.lua`, `UI/MainFrame.lua`, `Core/CraftForgeLeveling.lua`)**: Added skill-up chance percentage, colored threshold bar, and cost-per-skill-up to recipe tooltips and `/cf level`; added trainer service tooltip annotations (`Skill-Up Chance`, `Craft Cost`, `Cost / Skill-Up`) and reagent item tooltips showing Recipe Watch needs plus `Shift`-hover skill-up recipes.
 - **Buffs-Only Filter & Crafted Gear Overview (`Core/CraftForgeGear.lua`, `UI/GearFrame.lua`, `UI/MainSideDock.lua`, `UI/Sorting.lua`, `Core/RecipeGroups.lua`, `Core/CraftForgeOptions.lua`)**: Added a one-click **Buffs only** filter toggle in the side dock (consumables & enhancements usable at player level) and a Dark-Gold **Crafted Gear** (`/cf gear`) slot-based browser sorted by item level.
