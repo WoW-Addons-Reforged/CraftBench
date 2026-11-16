@@ -172,6 +172,33 @@ function CraftForge:AddSkillUpTooltipInfo(tip, skill, recipe)
 	end
 end
 
+function CraftForge:GetSkillUpDetailText(skill, recipe)
+	if not recipe then return nil end
+	local diff = (skill and skill.difficulty) or (skill and skill.skillData and skill.skillData.difficulty) or recipe.difficulty
+	local curSkill = GetCurrentProfessionRank()
+	local _, chance, costPerSkillUp, thresholds = self:GetRecipeCostAndSkillUp(recipe, curSkill, diff)
+	if not diff and not thresholds then return nil end
+
+	local parts = {}
+	local pct = math.floor((chance or 0) * 100 + 0.5)
+	local pctColor = (pct >= 80 and "|cffff8040") or (pct >= 40 and "|cffffff00") or (pct > 0 and "|cff40bf40") or "|cff808080"
+	parts[#parts + 1] = "|cffffd100" .. (L["Skill-Up Chance"] or "Skill-Up Chance:") .. "|r  " .. pctColor .. pct .. "%|r"
+
+	local barText = self:BuildThresholdBarText(thresholds, curSkill)
+	if barText then
+		parts[#parts + 1] = "|cffffd100" .. (L["Thresholds"] or "Thresholds:") .. "|r  " .. barText
+	end
+
+	if costPerSkillUp then
+		local moneyStr = FormatMoney(costPerSkillUp)
+		if moneyStr then
+			parts[#parts + 1] = "|cffffd100" .. (L["Cost / Skill-Up"] or "Cost / Skill-Up:") .. "|r  " .. moneyStr
+		end
+	end
+
+	return table.concat(parts, "\n")
+end
+
 -- =========================================================
 -- Feature 4: "Buffs only" Recipe Filter
 -- =========================================================

@@ -1035,6 +1035,15 @@ function CraftForge:UpdateTradeSkillWindow()
 -- Set the prefix and name of the recipe
 --
 				text = (pretext and pretext ~= "" and (pretext .. " ") or "") .. (skill.name or "")
+				local diff = skill.difficulty or (skill.skillData and skill.skillData.difficulty)
+				if diff and diff ~= "trivial" and diff ~= "header" and self.GetSkillUpChance then
+					local chance = self:GetSkillUpChance(recipe, nil, diff)
+					if chance and chance > 0 then
+						local pct = math.floor(chance * 100 + 0.5)
+						local pctColor = (pct >= 80 and "|cffff8040") or (pct >= 40 and "|cffffff00") or "|cff40bf40"
+						text = text .. " " .. pctColor .. pct .. "%|r"
+					end
+				end
 --
 -- Prepare the counts (displayed on the right)
 --

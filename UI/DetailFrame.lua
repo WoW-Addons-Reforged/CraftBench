@@ -1010,11 +1010,20 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 -- Generate any extra text 
 --
 	local label, extra_text
+	if CraftForge.GetSkillUpDetailText then
+		label = CraftForge:GetSkillUpDetailText(skill, recipe)
+	end
 --
 --	Do any plugins want to add extra info to the details window?
 --
 	if not CraftForge.db.profile.recipe_source_first then
-		label, extra_text = CraftForge:GetExtraText(skill, recipe)
+		local pl, pe = CraftForge:GetExtraText(skill, recipe)
+		if pl then
+			label = label and (label .. "\n" .. pl) or pl
+		end
+		if pe then
+			extra_text = extra_text and (extra_text .. "\n" .. pe) or pe
+		end
 	end
 --
 -- Is there any source info from the recipe?
