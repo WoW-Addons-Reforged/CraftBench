@@ -313,6 +313,28 @@ CraftForge.pluginsOptions = {
 
 local pluginBaseNames = {}
 
+local PLUGIN_DESCRIPTIONS = {
+	AckisRecipeList = "Uses AckisRecipeList (ARL) recipe source data for unlearned recipe filtering and acquisition details.",
+	AchievementsUtils = "Uses AchievementsUtils (FindByCriteriaName, GetAchievement) "
+		.. "to show achievement icons and uncompleted criteria details on matching recipes/items.",
+	AllTheThings = "Uses AllTheThings (ATT) recipe acquisition sources in tooltips and collection status prefixes in the recipe list.",
+	AtlasLoot = "Uses AtlasLootClassic (Data.Recipe, VendorPrice) to look up recipe scroll items and vendor prices in recipe details.",
+	Auctionator = "Uses Auctionator live AH buyout prices for crafted items & reagents "
+		.. "to compute craft cost, net profit, profit %, and trigger AH shopping searches.",
+	AuctionDB = "Uses AuctionDB AH scan prices for item values, reagent costs, and profit calculation.",
+	Baganator = "Uses Baganator / Syndicator bag & bank slot hooks for Material Processing and cross-character item counts.",
+	BeanCounter = "Uses BeanCounter historical AH purchase & sale records to show personal paid/earned averages in recipe details.",
+	BetterBags = "Uses BetterBags slot hooks for one-click modifier-key Material Processing (Disenchant, Prospect, Mill, Pick Lock).",
+	CanIMogIt = "Uses CanIMogIt transmog collection status (Known / Unknown) prefixes on craftable gear.",
+	DataStoreAuctions = "Uses DataStore_Auctions to show active alt auction counts in recipe prefixes and /cf find.",
+	ElvUI = "Optional ElvUI skin integration (CraftForge's native Dark-Gold UI stays active unless explicitly enabled).",
+	OribosExchange = "Uses OribosExchange realm & region market prices for craft cost, sell value, and profit suffixes.",
+	Overachiever = "Uses Overachiever recipe achievement lookups (GetIconForRecipe) to mark recipes needed for achievements.",
+	Questie = "Uses QuestieDB (vendors, npcDrops, relatedQuests) to show vendor NPCs/zones, drops, and quest sources in recipe details.",
+	TomTom = "Uses TomTom (AddWaypoint) to create one-click map waypoints from visited Trade Contacts (/cf contacts).",
+	TSM = "Uses TradeSkillMaster (TSM_API) price sources (DBMarket, DBMinBuyout, Crafting, etc.) for reagent costs, sell value, and profit calculation.",
+}
+
 function CraftForge:AddPluginOptions(options)
 	if not options or not options.name then return end
 	local baseName = pluginBaseNames[options] or options.name
@@ -323,6 +345,15 @@ function CraftForge:AddPluginOptions(options)
 	local ver = self:GetPluginAddonVersion(baseName)
 	if ver then
 		options.name = baseName .. " |cff888888(" .. ver .. ")|r"
+	end
+	local desc = L["PLUGIN_DESC_" .. baseName] or PLUGIN_DESCRIPTIONS[baseName]
+	if desc and options.args and not options.args._craftforge_desc then
+		options.args._craftforge_desc = {
+			type = "description",
+			name = "|cffffd100" .. desc .. "|r",
+			order = 0,
+			fontSize = "medium",
+		}
 	end
 	options.order = CraftForge.pluginsOrder
 	CraftForge.pluginsOrder = CraftForge.pluginsOrder + 1

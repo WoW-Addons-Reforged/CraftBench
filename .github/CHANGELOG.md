@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Material Processing Glow Border (`Core/CraftForgeProcess.lua`)**: Upgraded the `process_glow` overlay on `CraftForgeProcessButton` to a high-visibility animated glowing border (2px additive colored edges, inner additive tint, outer radial glow, pulsing `BOUNCE` animation, and `+20` frame level) so eligible bag items clearly light up when holding the modifier key.
 
 ### Changed
+- **In-Game Plugin Descriptions (`Core/CraftForgePlugin.lua`, `Locale/Locale-enUS.lua`, `Locale/Locale-deDE.lua`)**: Added localized (`enUS` / `deDE`) descriptions at the top of every plugin's options panel explaining exactly what data and APIs CraftForge uses from that addon.
 - **Detailed Addon Integration Documentation (`README.md`)**: Expanded the **Supported Addons & Integrations** table to explicitly document what data/APIs CraftForge uses from every supported addon (including `SkillUp Forever` thresholds).
 
 ### Added
