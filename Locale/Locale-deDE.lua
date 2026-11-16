@@ -554,3 +554,8 @@ L["PLUGIN_DESC_Overachiever"] = "Übernimmt Rezept-Erfolge aus Overachiever (Get
 L["PLUGIN_DESC_Questie"] = "Übernimmt Händler-NPCs inkl. Zone, Mob-Drops und Quest-Quellen aus QuestieDB in die Rezeptdetails."
 L["PLUGIN_DESC_TomTom"] = "Nutzt TomTom (AddWaypoint) für Ein-Klick-Kartenwegpunkte zu besuchten Handelskontakten (/cf contacts)."
 L["PLUGIN_DESC_TSM"] = "Übernimmt Preisquellen aus TradeSkillMaster (TSM_API: DBMarket, DBMinBuyout, Crafting usw.) für Materialkosten, Verkaufswert und Gewinn."
+L["By Skill-Up Chance"] = "Nach Skill-Up-Chance"
+L["By Cost / Skill-Up"] = "Nach Kosten / Skill-Up"
+L["LVL_FREE_GATHER"] = "Sammel-Mats = 0g"
+L["LVL_RESET_IGNORED"] = "Ausgeschlossene zurücksetzen"
+L["LVL_EXCLUDE_TIP"] = "Dieses Rezept ausschließen und neu berechnen"

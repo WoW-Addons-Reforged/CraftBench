@@ -488,6 +488,32 @@ function CraftForge:InitializeSorting()
 		end
 		return pa > pb
 	end})
+	table.insert(sorters, 8, {["name"]=L["By Skill-Up Chance"] or "By Skill-Up Chance", ["sorter"]=function(tradeskill, a, b)
+		while a.subGroup and #a.subGroup.entries > 0 do a = a.subGroup.entries[1] end
+		while b.subGroup and #b.subGroup.entries > 0 do b = b.subGroup.entries[1] end
+		local ra = a.recipeID and CraftForge:GetRecipe(a.recipeID)
+		local rb = b.recipeID and CraftForge:GetRecipe(b.recipeID)
+		local ca = (CraftForge.GetSkillUpChance and ra) and (CraftForge:GetSkillUpChance(ra, nil, a.difficulty) or 0) or 0
+		local cb = (CraftForge.GetSkillUpChance and rb) and (CraftForge:GetSkillUpChance(rb, nil, b.difficulty) or 0) or 0
+		if ca == cb then
+			return (a.skillIndex or 0) < (b.skillIndex or 0)
+		end
+		return ca > cb
+	end})
+	table.insert(sorters, 9, {["name"]=L["By Cost / Skill-Up"] or "By Cost / Skill-Up", ["sorter"]=function(tradeskill, a, b)
+		while a.subGroup and #a.subGroup.entries > 0 do a = a.subGroup.entries[1] end
+		while b.subGroup and #b.subGroup.entries > 0 do b = b.subGroup.entries[1] end
+		local ra = a.recipeID and CraftForge:GetRecipe(a.recipeID)
+		local rb = b.recipeID and CraftForge:GetRecipe(b.recipeID)
+		local _, _, ca = CraftForge.GetRecipeCostAndSkillUp and ra and CraftForge:GetRecipeCostAndSkillUp(ra, nil, a.difficulty) or nil
+		local _, _, cb = CraftForge.GetRecipeCostAndSkillUp and rb and CraftForge:GetRecipeCostAndSkillUp(rb, nil, b.difficulty) or nil
+		ca = ca or 999999999
+		cb = cb or 999999999
+		if ca == cb then
+			return (a.skillIndex or 0) < (b.skillIndex or 0)
+		end
+		return ca < cb
+	end})
 
 	recipe_sort_method = sort_recipe_by_index
 	CraftForgeSortAscButton:SetScript("OnClick", function()

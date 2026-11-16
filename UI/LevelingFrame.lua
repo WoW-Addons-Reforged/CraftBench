@@ -115,6 +115,32 @@ local function ensureFrame()
 	statusFS:SetTextColor(0.95, 0.82, 0.25)
 	f._statusFS = statusFS
 
+	local freeChk = CreateFrame("CheckButton", nil, body, "UICheckButtonTemplate")
+	freeChk:SetSize(20, 20)
+	freeChk:SetPoint("TOPRIGHT", body, "TOPRIGHT", -155, -4)
+	freeChk:SetChecked(CraftForge.Leveling and CraftForge.Leveling:IsFreeGatheredMats() or false)
+	local freeLbl = freeChk:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+	freeLbl:SetPoint("LEFT", freeChk, "RIGHT", 2, 0)
+	freeLbl:SetText(L["LVL_FREE_GATHER"] or "Gathered = 0g")
+	freeChk:SetScript("OnClick", function(selfBtn)
+		if CraftForge.Leveling then
+			CraftForge.Leveling:SetFreeGatheredMats(selfBtn:GetChecked())
+			LevelingUI:Calculate()
+		end
+	end)
+	f._freeChk = freeChk
+
+	local resetIgnBtn = UIStyle and UIStyle.CreateButton and UIStyle.CreateButton(body, 110, 20, L["LVL_RESET_IGNORED"] or "Reset Excluded", "secondary")
+		or CreateFrame("Button", nil, body, "UIPanelButtonTemplate")
+	resetIgnBtn:SetPoint("TOPRIGHT", body, "TOPRIGHT", -10, -4)
+	resetIgnBtn:SetScript("OnClick", function()
+		if CraftForge.Leveling then
+			CraftForge.Leveling:ClearIgnored()
+			LevelingUI:Calculate()
+		end
+	end)
+	f._resetIgnBtn = resetIgnBtn
+
 	local scroll = CreateFrame("ScrollFrame", "CraftForgeLevelingScroll", body, "UIPanelScrollFrameTemplate")
 	scroll:SetPoint("TOPLEFT", body, "TOPLEFT", 8, -28)
 	scroll:SetPoint("BOTTOMRIGHT", body, "BOTTOMRIGHT", -26, 8)
@@ -151,9 +177,19 @@ function LevelingUI:Calculate()
 	levelFrame._statusFS:SetText(string.format(L["LVL_SUMMARY_FMT"] or "Path %d -> %d  |  Est. Cost: %s",
 		plan.currentSkill, plan.targetSkill, formatMoney(plan.totalCost)))
 
+	local ignCount = CraftForge.Leveling:GetIgnoredCount()
+	if levelFrame._resetIgnBtn then
+		if ignCount > 0 then
+			levelFrame._resetIgnBtn:SetText((L["LVL_RESET_IGNORED"] or "Reset Excluded") .. " (" .. ignCount .. ")")
+			levelFrame._resetIgnBtn:Show()
+		else
+			levelFrame._resetIgnBtn:Hide()
+		end
+	end
+
 	local y = -2
 	local rowIdx = 0
-	local function addRow(leftText, rightText)
+	local function addRow(leftText, rightText, excludeRecipeID)
 		rowIdx = rowIdx + 1
 		local row = levelFrame._rows[rowIdx]
 		if not row then
@@ -168,12 +204,42 @@ function LevelingUI:Calculate()
 			row._right = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
 			row._right:SetPoint("RIGHT", row, "RIGHT", -8, 0)
 			row._right:SetJustifyH("RIGHT")
+
+			local excl = CreateFrame("Button", nil, row, BackdropTemplateMixin and "BackdropTemplate" or nil)
+			excl:SetSize(20, 18)
+			excl:SetPoint("RIGHT", row, "RIGHT", -6, 0)
+			if UIStyle and UIStyle.ApplyBox then
+				UIStyle.ApplyBox(excl, 0.25, 0.08, 0.08, 0.9, 0.55, 0.20, 0.20, 0.9)
+			end
+			local efs = excl:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+			efs:SetAllPoints()
+			efs:SetText("✕")
+			row._excl = excl
+
 			levelFrame._rows[rowIdx] = row
 		end
 		row:ClearAllPoints()
 		row:SetPoint("TOPLEFT", levelFrame._child, "TOPLEFT", 0, y)
 		row._left:SetText(leftText)
 		row._right:SetText(rightText or "")
+		row._right:ClearAllPoints()
+		if excludeRecipeID then
+			row._right:SetPoint("RIGHT", row._excl, "LEFT", -6, 0)
+			row._excl:SetScript("OnClick", function()
+				CraftForge.Leveling:IgnoreRecipe(excludeRecipeID)
+				LevelingUI:Calculate()
+			end)
+			row._excl:SetScript("OnEnter", function(selfBtn)
+				GameTooltip:SetOwner(selfBtn, "ANCHOR_RIGHT")
+				GameTooltip:SetText(L["LVL_EXCLUDE_TIP"] or "Exclude this recipe and replan")
+				GameTooltip:Show()
+			end)
+			row._excl:SetScript("OnLeave", function() GameTooltip:Hide() end)
+			row._excl:Show()
+		else
+			row._right:SetPoint("RIGHT", row, "RIGHT", -8, 0)
+			row._excl:Hide()
+		end
 		row:Show()
 		y = y - 26
 	end
@@ -181,7 +247,7 @@ function LevelingUI:Calculate()
 	addRow("|cffffd100" .. (L["LVL_STEPS_HDR"] or "Crafting Steps") .. "|r", "")
 	for _, s in ipairs(plan.steps) do
 		local c = DIFF_COLORS[s.difficulty] or "|cffffffff"
-		addRow(string.format("%s%s|r  x%d  (%d -> %d)", c, s.name, s.crafts, s.fromSkill, s.toSkill), formatMoney(s.estCost))
+		addRow(string.format("%s%s|r  x%d  (%d -> %d)", c, s.name, s.crafts, s.fromSkill, s.toSkill), formatMoney(s.estCost), s.recipeID)
 	end
 
 	addRow("|cffffd100" .. (L["LVL_SHOPPING_HDR"] or "Required Materials (Shopping List)") .. "|r", "")

@@ -20,22 +20,83 @@ local DIFF_PRIORITY = {
 	easy = 3,
 }
 
+local function ensureLevelingDB()
+	local prof = CraftForge.db and CraftForge.db.profile
+	if not prof then return nil end
+	if not prof.leveling then
+		prof.leveling = {
+			ignoredRecipes = {},
+			freeGatheredMats = false,
+		}
+	end
+	if not prof.leveling.ignoredRecipes then
+		prof.leveling.ignoredRecipes = {}
+	end
+	return prof.leveling
+end
+
+function Leveling:IsFreeGatheredMats()
+	local db = ensureLevelingDB()
+	return db and db.freeGatheredMats == true or false
+end
+
+function Leveling:SetFreeGatheredMats(val)
+	local db = ensureLevelingDB()
+	if db then db.freeGatheredMats = val and true or false end
+end
+
+function Leveling:IgnoreRecipe(recipeID)
+	local db = ensureLevelingDB()
+	if db and recipeID then
+		db.ignoredRecipes[recipeID] = true
+	end
+end
+
+function Leveling:ClearIgnored()
+	local db = ensureLevelingDB()
+	if db then
+		db.ignoredRecipes = {}
+	end
+end
+
+function Leveling:GetIgnoredCount()
+	local db = ensureLevelingDB()
+	if not db then return 0 end
+	local n = 0
+	for _ in pairs(db.ignoredRecipes) do n = n + 1 end
+	return n
+end
+
+local function isGatheredReagent(itemID)
+	local PT = LibStub and LibStub("LibPeriodicTable-3.1", true)
+	if not PT or not itemID then return false end
+	return PT:ItemInSet(itemID, "Tradeskill.Mat.ByProfession.Herbalism")
+		or PT:ItemInSet(itemID, "Tradeskill.Mat.ByProfession.Mining")
+		or PT:ItemInSet(itemID, "Tradeskill.Mat.ByProfession.Skinning")
+		or false
+end
+
 local function estimateRecipeCost(recipe)
 	if not recipe or not recipe.reagentData or #recipe.reagentData == 0 then
 		return 99999999
 	end
+	local freeGathered = Leveling:IsFreeGatheredMats()
 	local total = 0
 	for i = 1, #recipe.reagentData do
 		local r = recipe.reagentData[i]
 		if r and r.reagentID and r.numNeeded then
-			local unitPrice = 0
-			if CraftForge.GetItemMarketOrVendorPrice then
-				unitPrice = CraftForge:GetItemMarketOrVendorPrice(r.reagentID) or 0
+			if freeGathered and isGatheredReagent(r.reagentID) then
+				-- Treated as 0g when player gathers materials themselves
+			else
+				local unitPrice = 0
+				if CraftForge.GetItemMarketOrVendorPrice then
+					unitPrice = CraftForge:GetItemMarketOrVendorPrice(r.reagentID) or 0
+				end
+				if unitPrice <= 0 then
+					unitPrice = 100
+				end
+				total = total + unitPrice * r.numNeeded
 			end
-			if unitPrice <= 0 then
-				unitPrice = 100
-			end
-			total = total + unitPrice * r.numNeeded
 		end
 	end
 	return total
@@ -53,10 +114,12 @@ function Leveling:BuildPlan(currentSkill, targetSkill)
 		return nil, "NO_RECIPES"
 	end
 
+	local db = ensureLevelingDB()
+	local ignored = db and db.ignoredRecipes or {}
 	local candidates = {}
 	for i = 1, n do
 		local skill = CraftForge:GetSkill(player, tradeID, i)
-		if skill and skill.id and skill.id ~= 0 and DIFF_GAIN[skill.difficulty] then
+		if skill and skill.id and skill.id ~= 0 and not ignored[skill.id] and DIFF_GAIN[skill.difficulty] then
 			local recipe = CraftForge:GetRecipe(skill.id)
 			if recipe and recipe.reagentData and #recipe.reagentData > 0 then
 				local cost = estimateRecipeCost(recipe)

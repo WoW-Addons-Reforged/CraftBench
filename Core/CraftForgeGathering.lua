@@ -99,3 +99,43 @@ function Gathering:GetDifficultyColor(node, rank)
 	end
 	return "|cff808080", "grey"
 end
+
+local function ColorGatheringNodeTooltip(tooltip)
+	if not tooltip or tooltip ~= GameTooltip then return end
+	if tooltip:GetItem() or tooltip:GetUnit() then return end
+
+	for i = 2, math.min(4, tooltip:NumLines() or 0) do
+		local lineObj = _G["GameTooltipTextLeft" .. i]
+		local text = lineObj and lineObj:GetText()
+		if text and text ~= "" then
+			local req = tonumber(string.match(text, "%((%d+)%)"))
+			local kind
+			if string.find(text, "Herbalism", 1, true) or string.find(text, "Kräuterkunde", 1, true) then
+				kind = "herbalism"
+			elseif string.find(text, "Mining", 1, true) or string.find(text, "Bergbau", 1, true) then
+				kind = "mining"
+			end
+			if kind and req then
+				local rank = Gathering:GetSkillRank(kind)
+				local r, g, b
+				if rank < req then
+					r, g, b = 1.0, 0.2, 0.2
+				elseif rank < req + 25 then
+					r, g, b = 1.0, 0.5, 0.25
+				elseif rank < req + 50 then
+					r, g, b = 1.0, 1.0, 0.0
+				elseif rank < req + 100 then
+					r, g, b = 0.25, 0.75, 0.25
+				else
+					r, g, b = 0.5, 0.5, 0.5
+				end
+				lineObj:SetTextColor(r, g, b)
+				return
+			end
+		end
+	end
+end
+
+if GameTooltip and GameTooltip.HookScript then
+	GameTooltip:HookScript("OnShow", ColorGatheringNodeTooltip)
+end

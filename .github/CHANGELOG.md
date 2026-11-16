@@ -33,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Detailed Addon Integration Documentation (`README.md`)**: Expanded the **Supported Addons & Integrations** table to explicitly document what data/APIs CraftForge uses from every supported addon (including `SkillUp Forever` thresholds).
 
 ### Added
+- **Skill-Up Sorting, Leveling Exclusions, Free Gathered Toggle & Gathering Node Colors (`UI/Sorting.lua`, `Core/CraftForgeLeveling.lua`, `UI/LevelingFrame.lua`, `Core/CraftForgeGathering.lua`)**:
+  - Added **By Skill-Up Chance** and **By Cost / Skill-Up** sort modes to the recipe list.
+  - Added per-step **Exclude (`✕`)** + **Reset Excluded** and a **Gathered = 0g** toggle in `/cf level` so gathered mats can be priced at 0g and unwanted recipes skipped.
+  - Added skill-difficulty colorization to Herbalism and Mining gathering node tooltips based on current skill rank.
 - **In-Window Skill-Up Chance & Detail Panel Info (`Core/CraftForgeSkillUp.lua`, `UI/MainFrame.lua`, `UI/DetailFrame.lua`)**: Displayed colored skill-up chance percentages directly in the recipe list rows and added Skill-Up Chance, Thresholds, and Cost / Skill-Up to the recipe detail pane.
 - **Skill-Up Chances, Thresholds, Trainer & Reagent Tooltips (`Core/CraftForgeSkillUp.lua`, `UI/MainFrame.lua`, `Core/CraftForgeLeveling.lua`)**: Added skill-up chance percentage, colored threshold bar, and cost-per-skill-up to recipe tooltips and `/cf level`; added trainer service tooltip annotations (`Skill-Up Chance`, `Craft Cost`, `Cost / Skill-Up`) and reagent item tooltips showing Recipe Watch needs plus `Shift`-hover skill-up recipes.
 - **Buffs-Only Filter & Crafted Gear Overview (`Core/CraftForgeGear.lua`, `UI/GearFrame.lua`, `UI/MainSideDock.lua`, `UI/Sorting.lua`, `Core/RecipeGroups.lua`, `Core/CraftForgeOptions.lua`)**: Added a one-click **Buffs only** filter toggle in the side dock (consumables & enhancements usable at player level) and a Dark-Gold **Crafted Gear** (`/cf gear`) slot-based browser sorted by item level.

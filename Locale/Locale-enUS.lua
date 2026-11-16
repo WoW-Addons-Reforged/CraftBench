@@ -554,3 +554,8 @@ L["PLUGIN_DESC_Overachiever"] = "Uses Overachiever recipe achievement lookups (G
 L["PLUGIN_DESC_Questie"] = "Uses QuestieDB (vendors, npcDrops, relatedQuests) to show vendor NPCs/zones, drops, and quest sources in recipe details."
 L["PLUGIN_DESC_TomTom"] = "Uses TomTom (AddWaypoint) to create one-click map waypoints from visited Trade Contacts (/cf contacts)."
 L["PLUGIN_DESC_TSM"] = "Uses TradeSkillMaster (TSM_API) price sources (DBMarket, DBMinBuyout, Crafting, etc.) for reagent costs, sell value, and profit calculation."
+L["By Skill-Up Chance"] = "By Skill-Up Chance"
+L["By Cost / Skill-Up"] = "By Cost / Skill-Up"
+L["LVL_FREE_GATHER"] = "Gathered = 0g"
+L["LVL_RESET_IGNORED"] = "Reset Excluded"
+L["LVL_EXCLUDE_TIP"] = "Exclude this recipe and replan"
