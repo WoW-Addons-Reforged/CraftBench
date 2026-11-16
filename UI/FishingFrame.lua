@@ -359,8 +359,12 @@ function FishingUI:InitializeBar()
 	bar:EnableMouse(true)
 	bar:SetMovable(true)
 	bar:RegisterForDrag("LeftButton")
-	bar:SetScript("OnDragStart", function(f) f:StartMoving() end)
+	bar:SetScript("OnDragStart", function(f)
+		if InCombatLockdown and InCombatLockdown() then return end
+		f:StartMoving()
+	end)
 	bar:SetScript("OnDragStop", function(f)
+		if InCombatLockdown and InCombatLockdown() then return end
 		f:StopMovingOrSizing()
 		if CraftBench.db and CraftBench.db.profile then
 			local point, _, relPoint, x, y = f:GetPoint()
@@ -453,8 +457,12 @@ function FishingUI:InitializeBar()
 	infoBtn:SetPoint("RIGHT", bar, "RIGHT", -6, 0)
 	infoBtn:SetHeight(30)
 	infoBtn:RegisterForDrag("LeftButton")
-	infoBtn:SetScript("OnDragStart", function() bar:StartMoving() end)
+	infoBtn:SetScript("OnDragStart", function()
+		if InCombatLockdown and InCombatLockdown() then return end
+		bar:StartMoving()
+	end)
 	infoBtn:SetScript("OnDragStop", function()
+		if InCombatLockdown and InCombatLockdown() then return end
 		bar:StopMovingOrSizing()
 		if CraftBench.db and CraftBench.db.profile then
 			local point, _, relPoint, x, y = bar:GetPoint()
