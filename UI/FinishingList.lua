@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
 
-function CraftForge:FinishingListToggleHaveItems()
+function CraftBench:FinishingListToggleHaveItems()
 	self.db.profile.hide_unowned = not self.db.profile.hide_unowned
 	self:HideFinishingList()
 end
@@ -29,12 +29,12 @@ end
 -- ===========================================================================================
 local num_buttons = 0
 local function get_button(i)
-	local button = _G["CraftForgeFinishingListButton"..i]
+	local button = _G["CraftBenchFinishingListButton"..i]
 	if not button then
-		button = CreateFrame("Button", "CraftForgeFinishingListButton"..i, CraftForgeFinishingListParent, "CraftForgeFinishingListItemTemplate")
-		button:SetParent(CraftForgeFinishingListParent)
-		button:SetPoint("TOPLEFT", "CraftForgeFinishingListButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(CraftForgeFinishingListParent:GetFrameLevel() + 1)
+		button = CreateFrame("Button", "CraftBenchFinishingListButton"..i, CraftBenchFinishingListParent, "CraftBenchFinishingListItemTemplate")
+		button:SetParent(CraftBenchFinishingListParent)
+		button:SetPoint("TOPLEFT", "CraftBenchFinishingListButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftBenchFinishingListParent:GetFrameLevel() + 1)
 	end
 	return button
 end
@@ -55,41 +55,41 @@ local FrameBackdrop = {
 	insets = { left = 3, right = 3, top = 30, bottom = 3 }
 }
 
-CRAFTFORGE_FINISHING_LIST_HEIGHT = 16
+CRAFTBENCH_FINISHING_LIST_HEIGHT = 16
 local function createFinishingListFrame(self)
 	--DA.DEBUG(0,"createFinishingListFrame")
-	local frame = CraftForgeFinishingList
+	local frame = CraftBenchFinishingList
 	if not frame then
 		return nil
 	end
-	local UIStyle = CraftForge.UIStyle
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local UIStyle = CraftBench.UIStyle
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		frame:SetFrameStrata("TOOLTIP")
 	else
 		frame:SetFrameStrata("HIGH")
 	end
 	UIStyle.SkinFrame(frame, false)
-	local titletext = frame:CreateFontString("CraftForgeFinishingListTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = frame:CreateFontString("CraftBenchFinishingListTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -1)
 	titletext:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -36, -1)
 	titletext:SetHeight(26)
 	titletext:SetJustifyH("CENTER")
-	titletext:SetText("CraftForge: Finishing Reagents")
+	titletext:SetText("CraftBench: Finishing Reagents")
 	UIStyle.StyleHeaderBar(frame, titletext, 1)
-	if CraftForgeFinishingListCloseButton then UIStyle.SkinCloseButton(CraftForgeFinishingListCloseButton) end
+	if CraftBenchFinishingListCloseButton then UIStyle.SkinCloseButton(CraftBenchFinishingListCloseButton) end
 	frame.titletext = titletext
-	CraftForgeFinishingHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
-	CraftForgeFinishingHaveItems:SetChecked(CraftForge.db.profile.hide_unowned)
+	CraftBenchFinishingHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
+	CraftBenchFinishingHaveItems:SetChecked(CraftBench.db.profile.hide_unowned)
 --
 -- The frame enclosing the scroll list needs a border and a background .....
 --
-	local backdrop = CraftForgeFinishingListParent
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local backdrop = CraftBenchFinishingListParent
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		backdrop:SetFrameStrata("HIGH")
 	end
 	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
-	if CraftForgeFinishingList then UIStyle.StyleScrollBar(CraftForgeFinishingList) end
+	if CraftBenchFinishingList then UIStyle.StyleScrollBar(CraftBenchFinishingList) end
 	local FinishingListLocation = {
 		prefix = "FinishingListLocation_"
 	}
@@ -104,7 +104,7 @@ local function createFinishingListFrame(self)
 --
 -- lets play the resize me game!
 --
-	CraftForge:EnableResize(frame, 420, 240, CraftForge.UpdateFinishingListWindow)
+	CraftBench:EnableResize(frame, 420, 240, CraftBench.UpdateFinishingListWindow)
 --
 -- so hitting [ESC] will close the window
 --
@@ -112,14 +112,14 @@ local function createFinishingListFrame(self)
 --
 -- Adjust the button height
 --
-	CRAFTFORGE_FINISHING_LIST_HEIGHT = math.max(CraftForgeFinishingListButton1:GetHeight(), CRAFTFORGE_FINISHING_LIST_HEIGHT)
+	CRAFTBENCH_FINISHING_LIST_HEIGHT = math.max(CraftBenchFinishingListButton1:GetHeight(), CRAFTBENCH_FINISHING_LIST_HEIGHT)
 	return frame
 end
 
 --
 -- Called to update the finishing list window
 --
-function CraftForge:UpdateFinishingListWindow()
+function CraftBench:UpdateFinishingListWindow()
 	--DA.DEBUG(0,"UpdateFinishingListWindow()")
 	self.InProgress.finishing = true
 	local numItems
@@ -130,24 +130,24 @@ function CraftForge:UpdateFinishingListWindow()
 	else
 		return
 	end
-	local height = CraftForgeFinishingListParent:GetHeight()
-	local width = CraftForgeFinishingListParent:GetWidth() - 30 -- Allow for scrollbars
-	--DA.DEBUG(1,"UpdateFinishingListWindow: height= "..tostring(height)..", CRAFTFORGE_FINISHING_LIST_HEIGHT= "..tostring(CRAFTFORGE_FINISHING_LIST_HEIGHT))
-	--DA.DEBUG(1,"UpdateFinishingListWindow: CraftForgeFinishingListParent width= "..tostring(width))
-	local button_count = height / CRAFTFORGE_FINISHING_LIST_HEIGHT
+	local height = CraftBenchFinishingListParent:GetHeight()
+	local width = CraftBenchFinishingListParent:GetWidth() - 30 -- Allow for scrollbars
+	--DA.DEBUG(1,"UpdateFinishingListWindow: height= "..tostring(height)..", CRAFTBENCH_FINISHING_LIST_HEIGHT= "..tostring(CRAFTBENCH_FINISHING_LIST_HEIGHT))
+	--DA.DEBUG(1,"UpdateFinishingListWindow: CraftBenchFinishingListParent width= "..tostring(width))
+	local button_count = height / CRAFTBENCH_FINISHING_LIST_HEIGHT
 	button_count = math.floor(button_count) - 1
 	--DA.DEBUG(1,"UpdateFinishingListWindow: numItems= "..tostring(numItems)..", button_count= "..tostring(button_count))
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(CraftForgeFinishingListList,		-- frame
+	FauxScrollFrame_Update(CraftBenchFinishingListList,		-- frame
 							numItems,						-- num items
 							button_count,					-- num to display
-							CRAFTFORGE_FINISHING_LIST_HEIGHT)	-- value step (item height)
+							CRAFTBENCH_FINISHING_LIST_HEIGHT)	-- value step (item height)
 --
 -- Where in the list of items to start counting.
 --
-	local itemOffset = FauxScrollFrame_GetOffset(CraftForgeFinishingListList)
+	local itemOffset = FauxScrollFrame_GetOffset(CraftBenchFinishingListList)
 	--DA.DEBUG(1,"UpdateFinishingListWindow: itemOffset= "..tostring(itemOffset))
 	for i=1, button_count, 1 do
 		num_buttons = math.max(num_buttons, i)
@@ -164,7 +164,7 @@ function CraftForge:UpdateFinishingListWindow()
 			local freagentName, freagentLink = C_Item.GetItemInfo(freagentID)
 			local freagentQuality
 			if not freagentName then
-				CraftForge.finishingDataNeeded = true
+				CraftBench.finishingDataNeeded = true
 				C_Item.RequestLoadItemDataByID(freagentID)
 				freagentName = "item:"..tostring(freagentID)
 			end
@@ -221,25 +221,25 @@ end
 --
 -- Updates the scrollbar when a scroll event happens
 --
-function CraftForge:FinishingList_OnScroll()
-	CraftForge:UpdateFinishingListWindow()
+function CraftBench:FinishingList_OnScroll()
+	CraftBench:UpdateFinishingListWindow()
 end
 
 --
 -- Functions to show and hide the FinishingList
 --
-function CraftForge:DisplayFinishingList()
+function CraftBench:DisplayFinishingList()
 	--DA.DEBUG(0,"DisplayFinishingList()")
 	if not self.FinishingList then
 		self.FinishingList = createFinishingListFrame(self)
 	end
 	if not self.FinishingList:IsVisible() then
-		self.FinishingList.titletext:SetText("CraftForge: Finishing Reagents")
+		self.FinishingList.titletext:SetText("CraftBench: Finishing Reagents")
 		self.FinishingList:Show()
 	end
 end
 
-function CraftForge:HideFinishingList(clear)
+function CraftBench:HideFinishingList(clear)
 	--DA.DEBUG(0,"HideFinishingList()")
 	if self.FinishingList then
 		self.FinishingList:Hide()
@@ -250,15 +250,15 @@ function CraftForge:HideFinishingList(clear)
 end
 
 --
--- Called when an finishing reagent button in the CraftForge detail frame is clicked.
+-- Called when an finishing reagent button in the CraftBench detail frame is clicked.
 -- This finishing list is used for selecting Finishing reagents.
 -- This has the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function CraftForge:FinishingReagentOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:FinishingReagentOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"FinishingReagentOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
-	CraftForgeFinishingHaveItems:Hide()
+	CraftBenchFinishingHaveItems:Hide()
 	local thisFinishing
 --
 -- Optional reagents are identified with a negative index.
@@ -287,7 +287,7 @@ end
 -- Returns a link for the finishing reagent required to create the specified
 -- item, the index'th reagent required for the item is returned
 --
-function CraftForge:GetFinishingItemLink(skillIndex, index)
+function CraftBench:GetFinishingItemLink(skillIndex, index)
 	--DA.DEBUG(0,"GetFinishingItemLink("..tostring(skillIndex)..", "..tostring(index)..")")
 	if skillIndex and index then
 		local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
@@ -302,17 +302,17 @@ end
 --
 -- Called when then mouse enters a finishing button
 --
-function CraftForge:FinishingButtonOnEnter(button, skillIndex, finishingIndex)
+function CraftBench:FinishingButtonOnEnter(button, skillIndex, finishingIndex)
 	--DA.DEBUG(0,"FinishingButtonOnEnter("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(finishingIndex)..")")
-	local tip = GameTooltip -- CraftForgeTradeskillTooltip
+	local tip = GameTooltip -- CraftBenchTradeskillTooltip
 	tip:SetOwner(button, "ANCHOR_BOTTOMRIGHT")
-	if CraftForge.db.profile.scale_tooltip then
+	if CraftBench.db.profile.scale_tooltip then
 		local uiScale = 1.0;
 		if ( GetCVar("useUiScale") == "1" ) then
 			uiScale = tonumber(GetCVar("uiscale"))
 		end
-		if CraftForge.db.profile.ttscale then
-			uiScale = uiScale * CraftForge.db.profile.ttscale
+		if CraftBench.db.profile.ttscale then
+			uiScale = uiScale * CraftBench.db.profile.ttscale
 		end
 		tip:SetScale(uiScale)
 	end
@@ -325,11 +325,11 @@ end
 --
 -- called then the mouse leaves an finishing button
 --
-function CraftForge:FinishingButtonOnLeave(button, skillIndex, finishingIndex)
+function CraftBench:FinishingButtonOnLeave(button, skillIndex, finishingIndex)
 	--DA.DEBUG(0,"FinishingButtonOnLeave("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(finishingIndex)..")")
-	local tip = GameTooltip -- CraftForgeTradeskillTooltip
-	if CraftForge.db.profile.scale_tooltip then
-		tip:SetScale(CraftForge.gttScale)
+	local tip = GameTooltip -- CraftBenchTradeskillTooltip
+	if CraftBench.db.profile.scale_tooltip then
+		tip:SetScale(CraftBench.gttScale)
 	end
 	tip:Hide()
 	ResetCursor()
@@ -341,7 +341,7 @@ end
 -- These all have the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function CraftForge:FinishingButtonOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:FinishingButtonOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"FinishingButtonOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	--DA.DEBUG(1,"FinishingButtonOnClick: cachedFinishingIndex= "..tostring(self.cachedFinishingIndex)..", cachedFinishingList= "..DA.DUMP(self.cachedFinishingList))
 	local freagentID = self.cachedFinishingList.reagents[reagentIndex].itemID

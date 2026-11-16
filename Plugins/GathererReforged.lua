@@ -1,6 +1,6 @@
 --[[
 
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ]]--
 
-CraftForge.GathererReforgedPlugin = {}
+CraftBench.GathererReforgedPlugin = {}
 
-local plugin = CraftForge.GathererReforgedPlugin
-local L = CraftForge.L
+local plugin = CraftBench.GathererReforgedPlugin
+local L = CraftBench.L
 
 plugin.options = {
 	type = "group",
@@ -31,10 +31,10 @@ plugin.options = {
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.GathererReforged.enabled
+				return CraftBench.db.profile.plugins.GathererReforged.enabled
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.GathererReforged.enabled = value
+				CraftBench.db.profile.plugins.GathererReforged.enabled = value
 			end,
 			width = "double",
 			order = 1,
@@ -48,15 +48,15 @@ local KIND_TO_GATHERER = {
 }
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.GathererReforged then
-		CraftForge.db.profile.plugins.GathererReforged = {}
-		CraftForge.db.profile.plugins.GathererReforged.enabled = true
+	if not CraftBench.db.profile.plugins.GathererReforged then
+		CraftBench.db.profile.plugins.GathererReforged = {}
+		CraftBench.db.profile.plugins.GathererReforged.enabled = true
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 end
 
 function plugin.FindBestZoneAndNode(searchName, gatherKind)
-	if not CraftForge.db.profile.plugins.GathererReforged or not CraftForge.db.profile.plugins.GathererReforged.enabled then
+	if not CraftBench.db.profile.plugins.GathererReforged or not CraftBench.db.profile.plugins.GathererReforged.enabled then
 		return nil
 	end
 	local g = _G.Gatherer

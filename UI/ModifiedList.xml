@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	CraftForge: A tradeskill window replacement.
+	CraftBench: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #  Template for all the buttons we use to display items in the optional list
 #
 -->
-	<Frame name="CraftForgeModifiedListItemTemplate" hidden="false" virtual="true">
+	<Frame name="CraftBenchModifiedListItemTemplate" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="190" y="20"/>
 		</Size>
@@ -96,12 +96,12 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						CraftForge:ModifiedItemCount(self, button, 1)
+						CraftBench:ModifiedItemCount(self, button, 1)
 					</OnClick>
 				</Scripts>
-				<NormalTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextPage-Up"/>
-				<PushedTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextPage-Down"/>
-				<DisabledTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextPage-Disabled"/>
+				<NormalTexture file="Interface\Addons\CraftBench\Icons\Buttons\NextPage-Up"/>
+				<PushedTexture file="Interface\Addons\CraftBench\Icons\Buttons\NextPage-Down"/>
+				<DisabledTexture file="Interface\Addons\CraftBench\Icons\Buttons\NextPage-Disabled"/>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 			</Button>
 			<EditBox name="$parentInput" letters="3" historyLines="0" numeric="true" autoFocus="false">
@@ -157,11 +157,11 @@
 					</OnLoad>
 					<OnEnterPressed>
 						self:ClearFocus()
-						CraftForge:ModifyItemCount(self, button)
+						CraftBench:ModifyItemCount(self, button)
 					</OnEnterPressed>
 					<OnEscapePressed>
 						self:ClearFocus()
-						CraftForge:ResetItemCount(self, button)
+						CraftBench:ResetItemCount(self, button)
 					</OnEscapePressed>
 					<OnEditFocusLost>
 						self:HighlightText(0, 0)
@@ -189,12 +189,12 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						CraftForge:ModifiedItemCount(self, button, -1)
+						CraftBench:ModifiedItemCount(self, button, -1)
 					</OnClick>
 				</Scripts>
-				<NormalTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPage-Up"/>
-				<PushedTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPage-Down"/>
-				<DisabledTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPage-Disabled"/>
+				<NormalTexture file="Interface\Addons\CraftBench\Icons\Buttons\PrevPage-Up"/>
+				<PushedTexture file="Interface\Addons\CraftBench\Icons\Buttons\PrevPage-Down"/>
+				<DisabledTexture file="Interface\Addons\CraftBench\Icons\Buttons\PrevPage-Disabled"/>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 			</Button>
 		</Frames>
@@ -203,10 +203,10 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 			</OnLoad>
 			<OnEnter>
-				CraftForge:ModifiedButtonOnEnter(self, CraftForgeFrame.selectedSkill, self:GetID())
+				CraftBench:ModifiedButtonOnEnter(self, CraftBenchFrame.selectedSkill, self:GetID())
 			</OnEnter>
 			<OnLeave>
-				CraftForge:ModifiedButtonOnLeave(self, CraftForgeFrame.selectedSkill, self:GetID())
+				CraftBench:ModifiedButtonOnLeave(self, CraftBenchFrame.selectedSkill, self:GetID())
 			</OnLeave>
 			<OnUpdate>
 				CursorOnUpdate(self)
@@ -214,19 +214,19 @@
 			<OnClick>
 				if ( button == "LeftButton" and IsShiftKeyDown() ) then
 				<!-- Put a link to the *item* in chat into the current chat edit box -->
-					local link = CraftForge:GetModifiedItemLink(CraftForge.selectedSkill, self:GetID())
+					local link = CraftBench:GetModifiedItemLink(CraftBench.selectedSkill, self:GetID())
 					if not ChatEdit_InsertLink(link) then
-						CraftForge:XMLDebugLink("ModifiedItemLink: link= ", link)
+						CraftBench:XMLDebugLink("ModifiedItemLink: link= ", link)
 					end
 				else
 				<!-- generic click action -->
-					CraftForge:ModifiedButtonOnClick(self, button, CraftForge.selectedSkill, self:GetID())
+					CraftBench:ModifiedButtonOnClick(self, button, CraftBench.selectedSkill, self:GetID())
 				end
 			</OnClick>
 		</Scripts>
 	</Frame>
 
-<CheckButton name="CraftForgeModifiedListCheckButtonTemplate" virtual="true">
+<CheckButton name="CraftBenchModifiedListCheckButtonTemplate" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -250,7 +250,7 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<CheckButton name="CraftForgeModifiedListCheckButtonTemplate2" virtual="true">
+<CheckButton name="CraftBenchModifiedListCheckButtonTemplate2" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -274,19 +274,19 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<Frame name="CraftForgeModifiedList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
+<Frame name="CraftBenchModifiedList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
 	<Size><AbsDimension x="420" y="240"/></Size>
 	<Anchors>
 		<Anchor point="CENTER"/>
 	</Anchors>
 	<Layers>
 		<Layer level="OVERLAY">
-			<FontString name="CraftForgeModifiedNeeded" inherits="GameFontHighlight" justifyH="RIGHT" justifyV="MIDDLE">
+			<FontString name="CraftBenchModifiedNeeded" inherits="GameFontHighlight" justifyH="RIGHT" justifyV="MIDDLE">
 				<Size>
 					<AbsDimension x="30" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeModifiedList" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchModifiedList" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="-30" y="10"/>
 						</Offset>
@@ -294,12 +294,12 @@
 				</Anchors>
 				<Color r="1" g="1" b="1" a="1"/>
 			</FontString>
-			<FontString name="CraftForgeModifiedLabel" inherits="GameFontHighlight" text="Needed:" justifyH="LEFT" justifyV="MIDDLE">
+			<FontString name="CraftBenchModifiedLabel" inherits="GameFontHighlight" text="Needed:" justifyH="LEFT" justifyV="MIDDLE">
 				<Size>
 					<AbsDimension x="60" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeModifiedNeeded" relativePoint="BOTTOMLEFT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchModifiedNeeded" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -310,9 +310,9 @@
 		</Layer>
 	</Layers>
 	<Frames>
-		<Button name="CraftForgeModifiedListCloseButton" inherits="UIPanelCloseButton" parent="CraftForgeModifiedList">
+		<Button name="CraftBenchModifiedListCloseButton" inherits="UIPanelCloseButton" parent="CraftBenchModifiedList">
 			<Anchors>
-				<Anchor point="TOPRIGHT" relativeTo="CraftForgeModifiedList" relativePoint="TOPRIGHT">
+				<Anchor point="TOPRIGHT" relativeTo="CraftBenchModifiedList" relativePoint="TOPRIGHT">
 					<Offset>
 						<AbsDimension x="-2" y="-2"/>
 					</Offset>
@@ -320,13 +320,13 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					HideUIPanel(CraftForgeModifiedList)
+					HideUIPanel(CraftBenchModifiedList)
 				</OnClick>
 			</Scripts>
 		</Button>
-		<CheckButton name="CraftForgeModifiedBestQuality" inherits="CraftForgeModifiedListCheckButtonTemplate2">
+		<CheckButton name="CraftBenchModifiedBestQuality" inherits="CraftBenchModifiedListCheckButtonTemplate2">
 			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeModifiedList" relativePoint="BOTTOMLEFT">
+				<Anchor point="BOTTOMLEFT" relativeTo="CraftBenchModifiedList" relativePoint="BOTTOMLEFT">
 					<Offset>
 						<AbsDimension x="10" y="10"/>
 					</Offset>
@@ -334,33 +334,33 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					CraftForge:ModifiedListToggleBestQuality()
-					CraftForge:UpdateModifiedListWindow()
+					CraftBench:ModifiedListToggleBestQuality()
+					CraftBench:UpdateModifiedListWindow()
 				</OnClick>
 			</Scripts>
 		</CheckButton>
-		<Frame name="CraftForgeModifiedListParent" parent="CraftForgeModifiedList">
+		<Frame name="CraftBenchModifiedListParent" parent="CraftBenchModifiedList">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeModifiedList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchModifiedList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-35"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeModifiedList" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchModifiedList" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-5" y="35"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
 		</Frame>
-		<ScrollFrame name="CraftForgeModifiedListList" inherits="FauxScrollFrameTemplate" parent="CraftForgeModifiedListParent">
+		<ScrollFrame name="CraftBenchModifiedListList" inherits="FauxScrollFrameTemplate" parent="CraftBenchModifiedListParent">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeModifiedListParent" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchModifiedListParent" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-5"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeModifiedListParent" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchModifiedListParent" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-27" y="5"/>
 					</Offset>
@@ -368,13 +368,13 @@
 			</Anchors>
 			<Scripts>
 				<OnVerticalScroll>
-					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_MODIFIED_LIST_HEIGHT, CraftForge.ModifiedList_OnScroll)
+					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTBENCH_MODIFIED_LIST_HEIGHT, CraftBench.ModifiedList_OnScroll)
 				</OnVerticalScroll>
 			</Scripts>
 		</ScrollFrame>
-		<Button name="CraftForgeModifiedListButton1" inherits="CraftForgeModifiedListItemTemplate">
+		<Button name="CraftBenchModifiedListButton1" inherits="CraftBenchModifiedListItemTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeModifiedListList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchModifiedListList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
 					</Offset>

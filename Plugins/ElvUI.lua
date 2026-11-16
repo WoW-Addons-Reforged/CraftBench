@@ -1,7 +1,7 @@
 local addonName, addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-CraftForge.ElvUIPlugin = {}
+CraftBench.ElvUIPlugin = {}
 
-local plugin = CraftForge.ElvUIPlugin
-local L = CraftForge.L
+local plugin = CraftBench.ElvUIPlugin
+local L = CraftBench.L
 local skinned = false
 
 plugin.options = {
@@ -32,11 +32,11 @@ plugin.options = {
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.ElvUI.enabled
+				return CraftBench.db.profile.plugins.ElvUI.enabled
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.ElvUI.enabled = value
-				if value and CraftForge.db.profile.plugins.ElvUI.skinEnabled then
+				CraftBench.db.profile.plugins.ElvUI.enabled = value
+				if value and CraftBench.db.profile.plugins.ElvUI.skinEnabled then
 					plugin:ApplySkin()
 				elseif not value then
 					DA.MARK3(L["ELVUI_SKIN_RELOAD"])
@@ -50,10 +50,10 @@ plugin.options = {
 			name = L["ELVUI_SKIN_ENABLED"],
 			desc = L["ELVUI_SKIN_ENABLED_DESC"],
 			get = function()
-				return CraftForge.db.profile.plugins.ElvUI.skinEnabled
+				return CraftBench.db.profile.plugins.ElvUI.skinEnabled
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.ElvUI.skinEnabled = value
+				CraftBench.db.profile.plugins.ElvUI.skinEnabled = value
 				if value then
 					plugin:ApplySkin()
 				else
@@ -68,7 +68,7 @@ plugin.options = {
 
 function plugin:ApplySkin()
 	if skinned then return end
-	local profile = CraftForge.db and CraftForge.db.profile
+	local profile = CraftBench.db and CraftBench.db.profile
 	local cfg = profile and profile.plugins and profile.plugins.ElvUI
 	if not cfg or not cfg.enabled or not cfg.skinEnabled then
 		return
@@ -78,44 +78,44 @@ function plugin:ApplySkin()
 	if not E or not E.GetModule then return end
 	local S = E:GetModule("Skins", true)
 	if not S then return end
-	if not CraftForgeFrame then return end
+	if not CraftBenchFrame then return end
 
 	skinned = true
 	if S.HandleFrame then
-		S:HandleFrame(CraftForgeFrame, true)
+		S:HandleFrame(CraftBenchFrame, true)
 	end
-	if S.HandleCloseButton and CraftForgeFrameCloseButton then
-		S:HandleCloseButton(CraftForgeFrameCloseButton)
+	if S.HandleCloseButton and CraftBenchFrameCloseButton then
+		S:HandleCloseButton(CraftBenchFrameCloseButton)
 	end
 	local buttons = {
-		CraftForgeQueueButton,
-		CraftForgeCreateButton,
-		CraftForgeCreateAllButton,
-		CraftForgeQueueAllButton,
-		CraftForgeEmptyQueueButton,
-		CraftForgeShoppingListButton,
-		CraftForgeQueueLoadButton,
-		CraftForgeQueueSaveButton,
-		CraftForgeQueueDeleteButton,
-		CraftForgeRecipeNotesButton,
-		CraftForgeIgnoreListButton,
-		CraftForgeQueueManagementButton,
+		CraftBenchQueueButton,
+		CraftBenchCreateButton,
+		CraftBenchCreateAllButton,
+		CraftBenchQueueAllButton,
+		CraftBenchEmptyQueueButton,
+		CraftBenchShoppingListButton,
+		CraftBenchQueueLoadButton,
+		CraftBenchQueueSaveButton,
+		CraftBenchQueueDeleteButton,
+		CraftBenchRecipeNotesButton,
+		CraftBenchIgnoreListButton,
+		CraftBenchQueueManagementButton,
 	}
 	for _, btn in ipairs(buttons) do
 		if btn and S.HandleButton then
 			S:HandleButton(btn)
 		end
 	end
-	if S.HandleEditBox and CraftForgeSearchBox then
-		S:HandleEditBox(CraftForgeSearchBox)
+	if S.HandleEditBox and CraftBenchSearchBox then
+		S:HandleEditBox(CraftBenchSearchBox)
 	end
-	if S.HandleEditBox and CraftForgeItemCountInputBox then
-		S:HandleEditBox(CraftForgeItemCountInputBox)
+	if S.HandleEditBox and CraftBenchItemCountInputBox then
+		S:HandleEditBox(CraftBenchItemCountInputBox)
 	end
 	local dropdowns = {
-		CraftForgeGroupDropdown,
-		CraftForgeSortDropdown,
-		CraftForgeFilterDropdown,
+		CraftBenchGroupDropdown,
+		CraftBenchSortDropdown,
+		CraftBenchFilterDropdown,
 	}
 	for _, dd in ipairs(dropdowns) do
 		if dd and S.HandleDropDownBox then
@@ -125,17 +125,17 @@ function plugin:ApplySkin()
 end
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.ElvUI then
-		CraftForge.db.profile.plugins.ElvUI = {
+	if not CraftBench.db.profile.plugins.ElvUI then
+		CraftBench.db.profile.plugins.ElvUI = {
 			enabled = true,
 			skinEnabled = false,
 		}
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 end
 
 function plugin.Update()
 	plugin:ApplySkin()
 end
 
-CraftForge:RegisterUpdatePlugin("ElvUIPlugin")
+CraftBench:RegisterUpdatePlugin("ElvUIPlugin")

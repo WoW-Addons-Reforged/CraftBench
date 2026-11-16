@@ -1,10 +1,10 @@
 ----------------------------------------------------------
--- CraftForge - Skill-Up Chances, Thresholds & Tooltips --
+-- CraftBench - Skill-Up Chances, Thresholds & Tooltips --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-local L = CraftForge.L
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+local L = CraftBench.L
 
 local DIFF_CHANCE = {
 	optimal = 1.0,
@@ -16,8 +16,8 @@ local DIFF_CHANCE = {
 local function FormatMoney(copper)
 	if not copper or copper <= 0 then return nil end
 	local absC = math.floor(math.abs(copper))
-	if CraftForge.FormatMoneyFull then
-		return CraftForge:FormatMoneyFull(absC, true)
+	if CraftBench.FormatMoneyFull then
+		return CraftBench:FormatMoneyFull(absC, true)
 	elseif GetCoinTextureString then
 		return GetCoinTextureString(absC)
 	end
@@ -25,8 +25,8 @@ local function FormatMoney(copper)
 end
 
 local function GetCurrentProfessionRank()
-	if CraftForge.GetTradeSkillLine then
-		local _, rank = CraftForge:GetTradeSkillLine()
+	if CraftBench.GetTradeSkillLine then
+		local _, rank = CraftBench:GetTradeSkillLine()
 		if type(rank) == "number" and rank > 0 then
 			return rank
 		end
@@ -48,7 +48,7 @@ local function ParseThresholdString(str)
 	return nil
 end
 
-function CraftForge:GetSkillUpThresholds(recipe)
+function CraftBench:GetSkillUpThresholds(recipe)
 	if not recipe or not recipe.spellID then return nil end
 	-- Optional live integration if SkillUpForever is loaded
 	if _G.SkillUpForever and _G.SkillUpForever.GetThresholds then
@@ -64,19 +64,19 @@ function CraftForge:GetSkillUpThresholds(recipe)
 			return { orange = o, yellow = y, green = g, grey = gr }
 		end
 	end
-	local globalDB = CraftForge.db and CraftForge.db.global
+	local globalDB = CraftBench.db and CraftBench.db.global
 	if globalDB then
 		local parsed = (globalDB.SkillLineAbility and ParseThresholdString(globalDB.SkillLineAbility[recipe.spellID]))
 			or (recipe.itemID and globalDB.SkillLevels and ParseThresholdString(globalDB.SkillLevels[recipe.itemID]))
 		if parsed then return parsed end
 	end
-	if CraftForge.SkillThresholds and CraftForge.SkillThresholds[recipe.spellID] then
-		return CraftForge.SkillThresholds[recipe.spellID]
+	if CraftBench.SkillThresholds and CraftBench.SkillThresholds[recipe.spellID] then
+		return CraftBench.SkillThresholds[recipe.spellID]
 	end
 	return nil
 end
 
-function CraftForge:GetSkillUpChance(recipe, currentSkill, difficultyOverride)
+function CraftBench:GetSkillUpChance(recipe, currentSkill, difficultyOverride)
 	if not recipe then return 0, nil end
 	local diff = difficultyOverride or recipe.difficulty
 	local thresholds = self:GetSkillUpThresholds(recipe)
@@ -97,7 +97,7 @@ function CraftForge:GetSkillUpChance(recipe, currentSkill, difficultyOverride)
 	return DIFF_CHANCE[diff] or 0, thresholds
 end
 
-function CraftForge:EstimateRecipeMaterialCost(recipe)
+function CraftBench:EstimateRecipeMaterialCost(recipe)
 	if not recipe or not recipe.reagentData or #recipe.reagentData == 0 then
 		return nil
 	end
@@ -117,7 +117,7 @@ function CraftForge:EstimateRecipeMaterialCost(recipe)
 	return total
 end
 
-function CraftForge:GetRecipeCostAndSkillUp(recipe, currentSkill, difficultyOverride)
+function CraftBench:GetRecipeCostAndSkillUp(recipe, currentSkill, difficultyOverride)
 	local chance, thresholds = self:GetSkillUpChance(recipe, currentSkill, difficultyOverride)
 	local matCost = self:EstimateRecipeMaterialCost(recipe)
 	local costPerSkillUp
@@ -127,7 +127,7 @@ function CraftForge:GetRecipeCostAndSkillUp(recipe, currentSkill, difficultyOver
 	return matCost, chance, costPerSkillUp, thresholds
 end
 
-function CraftForge:BuildThresholdBarText(thresholds, currentSkill)
+function CraftBench:BuildThresholdBarText(thresholds, currentSkill)
 	if not thresholds then return nil end
 	local o = thresholds.orange or 1
 	local y = thresholds.yellow or o
@@ -140,7 +140,7 @@ function CraftForge:BuildThresholdBarText(thresholds, currentSkill)
 	)
 end
 
-function CraftForge:AddSkillUpTooltipInfo(tip, skill, recipe)
+function CraftBench:AddSkillUpTooltipInfo(tip, skill, recipe)
 	if not tip or not recipe then return end
 	local diff = (skill and skill.difficulty) or recipe.difficulty
 	local curSkill = GetCurrentProfessionRank()
@@ -172,7 +172,7 @@ function CraftForge:AddSkillUpTooltipInfo(tip, skill, recipe)
 	end
 end
 
-function CraftForge:GetSkillUpDetailText(skill, recipe)
+function CraftBench:GetSkillUpDetailText(skill, recipe)
 	if not recipe then return nil end
 	local diff = (skill and skill.difficulty) or (skill and skill.skillData and skill.skillData.difficulty) or recipe.difficulty
 	local curSkill = GetCurrentProfessionRank()
@@ -209,7 +209,7 @@ local BUFF_NAME_PATTERNS = {
 	"zauberöl", "manaöl", "rüstungsset", "zielfernrohr", "festmahl", "buff",
 }
 
-function CraftForge:IsBuffRecipe(recipe)
+function CraftBench:IsBuffRecipe(recipe)
 	if not recipe then return false end
 	local itemID = recipe.itemID
 	if not itemID or itemID <= 0 then
@@ -255,11 +255,11 @@ end
 -- Feature 3a: Trainer Tooltip Annotations
 -- =========================================================
 local function FindRecipeByName(serviceName)
-	if not serviceName or serviceName == "" or not CraftForge.data or not CraftForge.data.recipeDB then
+	if not serviceName or serviceName == "" or not CraftBench.data or not CraftBench.data.recipeDB then
 		return nil
 	end
 	local lower = string.lower(serviceName)
-	for _, recipe in pairs(CraftForge.data.recipeDB) do
+	for _, recipe in pairs(CraftBench.data.recipeDB) do
 		if type(recipe) == "table" and recipe.name and string.lower(recipe.name) == lower then
 			return recipe
 		end
@@ -277,10 +277,10 @@ local function AnnotateTrainerTooltip(tooltip, index)
 
 	local reqSkill = GetTrainerServiceSkillReq and select(2, GetTrainerServiceSkillReq(index))
 	local curSkill = GetCurrentProfessionRank()
-	local matCost, chance, costPerSkillUp = CraftForge:GetRecipeCostAndSkillUp(recipe, curSkill, "optimal")
+	local matCost, chance, costPerSkillUp = CraftBench:GetRecipeCostAndSkillUp(recipe, curSkill, "optimal")
 
 	tooltip:AddLine(" ")
-	tooltip:AddLine("|cffffd100CraftForge|r", 1, 0.82, 0)
+	tooltip:AddLine("|cffffd100CraftBench|r", 1, 0.82, 0)
 	if chance then
 		tooltip:AddDoubleLine(L["Skill-Up Chance"] or "Skill-Up Chance:", math.floor(chance * 100 + 0.5) .. "%", 0.8, 0.8, 0.8, 0.25, 0.9, 0.25)
 	end
@@ -327,10 +327,10 @@ end
 
 local function CollectWatchNeedForItem(itemID)
 	local totalNeed = 0
-	local watch = CraftForge.db and CraftForge.db.profile and CraftForge.db.profile.watch
-	if watch and watch.pinned and CraftForge.GetRecipe then
+	local watch = CraftBench.db and CraftBench.db.profile and CraftBench.db.profile.watch
+	if watch and watch.pinned and CraftBench.GetRecipe then
 		for recipeID, count in pairs(watch.pinned) do
-			local recipe = CraftForge:GetRecipe(recipeID)
+			local recipe = CraftBench:GetRecipe(recipeID)
 			if recipe and recipe.reagentData then
 				for _, r in ipairs(recipe.reagentData) do
 					if r.reagentID == itemID and r.numNeeded then
@@ -345,16 +345,16 @@ end
 
 local function CollectSkillUpRecipesUsingItem(itemID, maxResults)
 	local matches = {}
-	local player = CraftForge.currentPlayer or (CraftForge.unitName and CraftForge:unitName("player"))
-	local tradeID = CraftForge.currentTrade
-	if not player or not tradeID or not CraftForge.GetNumSkills then
+	local player = CraftBench.currentPlayer or (CraftBench.unitName and CraftBench:unitName("player"))
+	local tradeID = CraftBench.currentTrade
+	if not player or not tradeID or not CraftBench.GetNumSkills then
 		return matches
 	end
-	local n = CraftForge:GetNumSkills(player, tradeID) or 0
+	local n = CraftBench:GetNumSkills(player, tradeID) or 0
 	for i = 1, n do
-		local skill = CraftForge:GetSkill(player, tradeID, i)
+		local skill = CraftBench:GetSkill(player, tradeID, i)
 		if skill and skill.id and skill.id ~= 0 and skill.difficulty and skill.difficulty ~= "trivial" then
-			local recipe = CraftForge:GetRecipe(skill.id)
+			local recipe = CraftBench:GetRecipe(skill.id)
 			if recipe and recipe.reagentData then
 				for _, r in ipairs(recipe.reagentData) do
 					if r.reagentID == itemID then
@@ -383,8 +383,8 @@ local function AddReagentTooltipLines(tooltip)
 	local watchNeed = CollectWatchNeedForItem(itemID)
 	if watchNeed > 0 then
 		local have = 0
-		if CraftForge.GetItemCount then
-			have = CraftForge:GetItemCount(itemID, false, false, false) or 0
+		if CraftBench.GetItemCount then
+			have = CraftBench:GetItemCount(itemID, false, false, false) or 0
 		elseif C_Item and C_Item.GetItemCount then
 			have = C_Item.GetItemCount(itemID, false) or 0
 		elseif GetItemCount then
@@ -393,7 +393,7 @@ local function AddReagentTooltipLines(tooltip)
 		tooltip:AddLine(" ")
 		local doneColor = (have >= watchNeed) and "|cff40ff40" or "|cffffd100"
 		tooltip:AddDoubleLine(
-			"|cffffd100CraftForge Watch:|r",
+			"|cffffd100CraftBench Watch:|r",
 			doneColor .. have .. " / " .. watchNeed .. "|r",
 			1, 0.82, 0, 1, 1, 1
 		)
@@ -403,7 +403,7 @@ local function AddReagentTooltipLines(tooltip)
 		local recipes = CollectSkillUpRecipesUsingItem(itemID, 6)
 		if #recipes > 0 then
 			if watchNeed == 0 then tooltip:AddLine(" ") end
-			tooltip:AddLine("|cffffd100" .. (L["REAGENT_SKILLUP_RECIPES"] or "CraftForge Skill-Up Recipes:") .. "|r")
+			tooltip:AddLine("|cffffd100" .. (L["REAGENT_SKILLUP_RECIPES"] or "CraftBench Skill-Up Recipes:") .. "|r")
 			for _, m in ipairs(recipes) do
 				local c = "|cff40bf40"
 				if m.difficulty == "optimal" then c = "|cffff8040"

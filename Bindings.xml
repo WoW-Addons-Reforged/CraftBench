@@ -1,23 +1,23 @@
 <Bindings>
-	<Binding name="CRAFTFORGEPROFESSION1" category="CraftForge">
-		CraftForge:ShowProfession(1);
+	<Binding name="CRAFTBENCHPROFESSION1" category="CraftBench">
+		CraftBench:ShowProfession(1);
 	</Binding>
-	<Binding name="CRAFTFORGEPROFESSION2" category="CraftForge">
-		CraftForge:ShowProfession(2);
+	<Binding name="CRAFTBENCHPROFESSION2" category="CraftBench">
+		CraftBench:ShowProfession(2);
 	</Binding>
-	<Binding name="CRAFTFORGEPROFESSION3" category="CraftForge">
-		CraftForge:ShowProfession(3);
+	<Binding name="CRAFTBENCHPROFESSION3" category="CraftBench">
+		CraftBench:ShowProfession(3);
 	</Binding>
-	<Binding name="CRAFTFORGEPROFESSION4" category="CraftForge">
-		CraftForge:ShowProfession(4);
+	<Binding name="CRAFTBENCHPROFESSION4" category="CraftBench">
+		CraftBench:ShowProfession(4);
 	</Binding>
-	<Binding name="CRAFTFORGEPROFESSION5" category="CraftForge">
-		CraftForge:ShowProfession(5);
+	<Binding name="CRAFTBENCHPROFESSION5" category="CraftBench">
+		CraftBench:ShowProfession(5);
 	</Binding>
-	<Binding name="CRAFTFORGEPROFESSION6" category="CraftForge">
-		CraftForge:ShowProfession(6);
+	<Binding name="CRAFTBENCHPROFESSION6" category="CraftBench">
+		CraftBench:ShowProfession(6);
 	</Binding>
-	<Binding name="CRAFTFORGEPROFESSION7" category="CraftForge">
-		CraftForge:ShowProfession(7);
+	<Binding name="CRAFTBENCHPROFESSION7" category="CraftBench">
+		CraftBench:ShowProfession(7);
 	</Binding>
 </Bindings>

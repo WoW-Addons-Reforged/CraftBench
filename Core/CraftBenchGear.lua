@@ -1,12 +1,12 @@
 ----------------------------------------------------------
--- CraftForge - Crafted Gear Scanner & Slot Index       --
+-- CraftBench - Crafted Gear Scanner & Slot Index       --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
 
-CraftForge.Gear = CraftForge.Gear or {}
-local Gear = CraftForge.Gear
+CraftBench.Gear = CraftBench.Gear or {}
+local Gear = CraftBench.Gear
 
 local ARMOR_SLOTS = {
 	INVTYPE_HEAD = true,
@@ -62,17 +62,17 @@ end
 
 function Gear:CollectCraftableGear(category)
 	local results = {}
-	local player = CraftForge.currentPlayer or (CraftForge.unitName and CraftForge:unitName("player"))
-	local tradeID = CraftForge.currentTrade
-	if not player or not tradeID or not CraftForge.GetNumSkills then
+	local player = CraftBench.currentPlayer or (CraftBench.unitName and CraftBench:unitName("player"))
+	local tradeID = CraftBench.currentTrade
+	if not player or not tradeID or not CraftBench.GetNumSkills then
 		return results
 	end
 
-	local n = CraftForge:GetNumSkills(player, tradeID) or 0
+	local n = CraftBench:GetNumSkills(player, tradeID) or 0
 	for i = 1, n do
-		local skill = CraftForge:GetSkill(player, tradeID, i)
+		local skill = CraftBench:GetSkill(player, tradeID, i)
 		if skill and skill.id and skill.id ~= 0 then
-			local recipe = CraftForge:GetRecipe(skill.id)
+			local recipe = CraftBench:GetRecipe(skill.id)
 			if recipe and recipe.itemID and recipe.itemID > 0 then
 				local itemName, itemLink, quality, itemLevel, reqLevel, _, _, _, equipLoc, icon = GetItemDetails(recipe.itemID)
 				if MatchesCategory(equipLoc, category) then

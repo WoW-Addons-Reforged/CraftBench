@@ -5,7 +5,7 @@ max_line_length = 160
 
 globals = {
     "LibStub",
-    "CraftForge",
+    "CraftBench",
 }
 
 ignore = {

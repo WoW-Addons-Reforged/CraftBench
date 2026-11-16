@@ -1,6 +1,6 @@
 --[[
 
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ]]--
 
-CraftForge.GatherMate2Plugin = {}
+CraftBench.GatherMate2Plugin = {}
 
-local plugin = CraftForge.GatherMate2Plugin
-local L = CraftForge.L
+local plugin = CraftBench.GatherMate2Plugin
+local L = CraftBench.L
 
 plugin.options = {
 	type = "group",
@@ -31,10 +31,10 @@ plugin.options = {
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.GatherMate2.enabled
+				return CraftBench.db.profile.plugins.GatherMate2.enabled
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.GatherMate2.enabled = value
+				CraftBench.db.profile.plugins.GatherMate2.enabled = value
 			end,
 			width = "double",
 			order = 1,
@@ -57,15 +57,15 @@ local function GetGatherMate()
 end
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.GatherMate2 then
-		CraftForge.db.profile.plugins.GatherMate2 = {}
-		CraftForge.db.profile.plugins.GatherMate2.enabled = true
+	if not CraftBench.db.profile.plugins.GatherMate2 then
+		CraftBench.db.profile.plugins.GatherMate2 = {}
+		CraftBench.db.profile.plugins.GatherMate2.enabled = true
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 end
 
 function plugin.FindBestZoneAndNode(searchName, gatherKind)
-	if not CraftForge.db.profile.plugins.GatherMate2 or not CraftForge.db.profile.plugins.GatherMate2.enabled then
+	if not CraftBench.db.profile.plugins.GatherMate2 or not CraftBench.db.profile.plugins.GatherMate2.enabled then
 		return nil
 	end
 	local gm = GetGatherMate()

@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = CraftForge.L
+local L = CraftBench.L
 
 local function tcopy(t)
 	local u = {}
@@ -31,11 +31,11 @@ end
 --
 -- Iterates through a list of reagentIDs and recalculates craftability
 --
-function CraftForge:AdjustInventory()
+function CraftBench:AdjustInventory()
 	--DA.DEBUG(0,"AdjustInventory()")
 	-- update queue for faster response time
-	CraftForge:ScanQueuedReagents()
-	CraftForge:InventoryScan()
+	CraftBench:ScanQueuedReagents()
+	CraftBench:InventoryScan()
 	self:CalculateCraftableCounts()
 	-- update whole window to show craft counts
 	self:UpdateTradeSkillWindow()
@@ -44,7 +44,7 @@ end
 --
 -- This is the simplest command:  iterate recipeID x count
 --
-function CraftForge:QueueCommandIterate(recipeID, count)
+function CraftBench:QueueCommandIterate(recipeID, count)
 	local recipe = self:GetRecipe(recipeID)
 	--DA.DEBUG(0,"QueueCommandIterate("..tostring(recipeID)..", "..tostring(count).."), name= "..tostring(recipe.name))
 	--DA.DEBUG(0,"QueueCommandIterate: recipe= "..DA.DUMP1(recipe))
@@ -104,8 +104,8 @@ end
 local function queueAppendReagent(command, reagentID, need, queueCraftables, mreagent)
 	local reagentName = C_Item.GetItemInfo(reagentID)
 	--DA.DEBUG(0,"queueAppendReagent("..tostring(reagentID)..", "..tostring(need)..", "..tostring(queueCraftables).."), name= "..tostring(reagentName))
-	local reagentsInQueue = CraftForge.db.realm.reagentsInQueue[CraftForge.currentPlayer]
-	local skillIndexLookup = CraftForge.data.skillIndexLookup
+	local reagentsInQueue = CraftBench.db.realm.reagentsInQueue[CraftBench.currentPlayer]
+	local skillIndexLookup = CraftBench.data.skillIndexLookup
 	local have = 0
 	if not mreagent then
 		local numInBoth = C_Item.GetItemCount(reagentID,true,false,true,true)
@@ -113,10 +113,10 @@ local function queueAppendReagent(command, reagentID, need, queueCraftables, mre
 		local numInBank =  numInBoth - numInBags
 		local numInQueue = reagentsInQueue[reagentID] or 0
 		--DA.DEBUG(1,"queueAppendReagent: numInBoth= "..tostring(numInBoth)..", numInBags="..tostring(numInBags)..", numInBank="..tostring(numInBank)..", numInQueue="..tostring(numInQueue))
-		if CraftForge.db.profile.ignore_queued_reagents then
+		if CraftBench.db.profile.ignore_queued_reagents then
 			numInQueue = 0
 		end
-		if CraftForge.isForever or CraftForge.db.profile.ignore_banked_reagents then
+		if CraftBench.isForever or CraftBench.db.profile.ignore_banked_reagents then
 			have = numInBags + numInQueue
 		else
 			have = numInBoth + numInQueue
@@ -134,7 +134,7 @@ local function queueAppendReagent(command, reagentID, need, queueCraftables, mre
 	reagentsInQueue[reagentID] = (reagentsInQueue[reagentID] or 0) - need
 	--DA.DEBUG(1,"queueAppendReagent: queueCraftables= "..tostring(queueCraftables)..", need= "..tostring(need)..", have= "..tostring(have))
 	if queueCraftables and need > have then
-		local recipeSource = CraftForge.db.global.itemRecipeSource[reagentID]
+		local recipeSource = CraftBench.db.global.itemRecipeSource[reagentID]
 		--DA.DEBUG(2,"queueAppendReagent: recipeSource= "..DA.DUMP1(recipeSource))
 		if recipeSource then
 			for recipeSourceID in pairs(recipeSource) do
@@ -145,16 +145,16 @@ local function queueAppendReagent(command, reagentID, need, queueCraftables, mre
 -- Identify that this queue has craftable reagent requirements
 --
 					command.complex = true
-					local recipeSource = CraftForge:GetRecipe(recipeSourceID)
+					local recipeSource = CraftBench:GetRecipe(recipeSourceID)
 					local newCount = math.ceil((need - have)/recipeSource.numMade)
-					local newCommand = CraftForge:QueueCommandIterate(recipeSourceID, newCount)
+					local newCommand = CraftBench:QueueCommandIterate(recipeSourceID, newCount)
 					newCommand.level = (command.level or 0) + 1
 --
 -- Do not add IgnoredMats as it would cause loops
 --
-					if not CraftForge.TradeSkillIgnoredMats[recipeSourceID] and
-					  not CraftForge.db.realm.userIgnoredMats[CraftForge.currentPlayer][recipeSourceID] then
-						CraftForge:QueueAppendCommand(newCommand, queueCraftables)
+					if not CraftBench.TradeSkillIgnoredMats[recipeSourceID] and
+					  not CraftBench.db.realm.userIgnoredMats[CraftBench.currentPlayer][recipeSourceID] then
+						CraftBench:QueueAppendCommand(newCommand, queueCraftables)
 						break
 					else
 						DA.DEBUG(0,"queueAppendReagent: Did Not Queue "..tostring(recipeSourceID).." ("..tostring(recipeSource.name)..")")
@@ -168,16 +168,16 @@ end
 --
 -- Queue up the command and reserve reagents
 --
-function CraftForge:QueueAppendCommand(command, queueCraftables, first)
+function CraftBench:QueueAppendCommand(command, queueCraftables, first)
 	DA.DEBUG(0,"QueueAppendCommand("..DA.DUMP(command)..", "..tostring(queueCraftables).."), visited=  "..tostring(self.visited[command.recipeID]))
 	local recipe = self:GetRecipe(command.recipeID)
 	--DA.DEBUG(0,"QueueAppendCommand: recipe= "..DA.DUMP(recipe))
 	if recipe and not self.visited[command.recipeID] then
 		self.visited[command.recipeID] = true
-		local reagentsInQueue = self.db.realm.reagentsInQueue[CraftForge.currentPlayer]
-		local modifiedInQueue = self.db.realm.modifiedInQueue[CraftForge.currentPlayer]
+		local reagentsInQueue = self.db.realm.reagentsInQueue[CraftBench.currentPlayer]
+		local modifiedInQueue = self.db.realm.modifiedInQueue[CraftBench.currentPlayer]
 		local skillIndexLookup = self.data.skillIndexLookup
-		local queueGlyph = CraftForge.db.profile.queue_glyph_reagents or not recipe.name:match(CraftForge.L["Glyph "])
+		local queueGlyph = CraftBench.db.profile.queue_glyph_reagents or not recipe.name:match(CraftBench.L["Glyph "])
 		for i=1,#recipe.reagentData do
 			local reagent = recipe.reagentData[i]
 			if command.recipeLevel and command.recipeLevel > 0 then
@@ -185,7 +185,7 @@ function CraftForge:QueueAppendCommand(command, queueCraftables, first)
 				local reagentName, reagentTexture, reagentCount, playerReagentCount = C_TradeSkillUI.GetRecipeReagentInfo(command.recipeID, i, command.recipeLevel)
 				--DA.DEBUG(2,"QueueAppendCommand: reagentName= "..tostring(reagentName)..", reagentCount= "..tostring(reagentCount))
 				local reagentLink = C_TradeSkillUI.GetRecipeReagentItemLink(command.recipeID, i)
-				local reagentID = CraftForge:GetItemIDFromLink(reagentLink)
+				local reagentID = CraftBench:GetItemIDFromLink(reagentLink)
 				if reagent.reagentID == reagentID then
 					reagent.numNeeded = reagentCount
 				else
@@ -277,11 +277,11 @@ end
 -- we can't just increase the # of the first command if it happens to be the same recipe without making sure
 -- the additional queue entry doesn't require some additional craftable reagents
 --
-function CraftForge:AddToQueue(command, first)
+function CraftBench:AddToQueue(command, first)
 	--DA.DEBUG(0,"AddToQueue("..DA.DUMP1(command)..", "..tostring(first)..")")
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	local added
-	if CraftForge.isForever and command.recipeType == Enum.TradeskillRecipeType.Enchant then
+	if CraftBench.isForever and command.recipeType == Enum.TradeskillRecipeType.Enchant then
 		added = false
 	elseif (not command.complex) then
 --
@@ -323,11 +323,11 @@ function CraftForge:AddToQueue(command, first)
 	end
 end
 
-function CraftForge:RemoveFromQueue(index)
+function CraftBench:RemoveFromQueue(index)
 	--DA.DEBUG(0,"RemoveFromQueue("..tostring(index)..")")
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	local command = queue[index]
-	local reagentsInQueue = self.db.realm.reagentsInQueue[CraftForge.currentPlayer]
+	local reagentsInQueue = self.db.realm.reagentsInQueue[CraftBench.currentPlayer]
 	if command.op == "iterate" then
 		local recipe = self:GetRecipe(command.recipeID)
 		if not command.count then
@@ -340,7 +340,7 @@ function CraftForge:RemoveFromQueue(index)
 	return #queue or 0
 end
 
-function CraftForge:ClearQueue()
+function CraftBench:ClearQueue()
 	--DA.DEBUG(0,"ClearQueue()")
 	if #self.db.realm.queueData[self.currentPlayer] > 0 then
 		if self.db.profile.confirm_queue_clear and not IsAltKeyDown() then
@@ -356,7 +356,7 @@ end
 --
 -- Prints a list of saved queues
 --
-function CraftForge:PrintSaved()
+function CraftBench:PrintSaved()
 	--DA.DEBUG(0,"PrintSaved()");
 	local saved = self.db.profile.SavedQueues
 	if saved then
@@ -373,7 +373,7 @@ end
 --
 -- Prints the contents of the queue name or the current queue
 --
-function CraftForge:PrintQueue(name, player)
+function CraftBench:PrintQueue(name, player)
 	--DA.DEBUG(0,"PrintQueue("..tostring(name)..", "..tostring(player)..")")
 	local queue
 	if name then
@@ -391,7 +391,7 @@ function CraftForge:PrintQueue(name, player)
 	end
 end
 
-function CraftForge:PrintAllQueues()
+function CraftBench:PrintAllQueues()
 	--DA.DEBUG(0,"PrintAllQueues()")
 	for player,queue in pairs(self.db.realm.queueData) do
 		if #queue > 0 then
@@ -404,10 +404,10 @@ end
 --
 -- Prints the list of reagentsInQueue
 --
-function CraftForge:PrintRIQ()
+function CraftBench:PrintRIQ()
 	--DA.DEBUG(0,"PrintRIQ()");
-	local reagentsInQueue = self.db.realm.reagentsInQueue[CraftForge.currentPlayer]
-	local modifiedInQueue = self.db.realm.modifiedInQueue[CraftForge.currentPlayer]
+	local reagentsInQueue = self.db.realm.reagentsInQueue[CraftBench.currentPlayer]
+	local modifiedInQueue = self.db.realm.modifiedInQueue[CraftBench.currentPlayer]
 	if reagentsInQueue then
 		for id,count in pairs(reagentsInQueue) do
 			local name = C_Item.GetItemInfo(id)
@@ -460,7 +460,7 @@ local function ApplyAllocations(transaction, requiredReagents, modifiedReagents,
 	end
 end
 
-function CraftForge:ProcessQueue(altMode)
+function CraftBench:ProcessQueue(altMode)
 	--DA.DEBUG(0,"ProcessQueue("..tostring(altMode)..")");
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	--DA.DEBUG(1,"queue= "..DA.DUMP1(queue))
@@ -468,7 +468,7 @@ function CraftForge:ProcessQueue(altMode)
 	self.processingPosition = nil
 	self.processingCommand = nil
 	self.processingCount = nil
-	if self.currentPlayer ~= (CraftForge:unitName("player")) then
+	if self.currentPlayer ~= (CraftBench:unitName("player")) then
 		DA.DEBUG(0,"trying to process from an alt!")
 		return
 	end
@@ -504,7 +504,7 @@ function CraftForge:ProcessQueue(altMode)
 							local reagentName, reagentTexture, reagentCount, playerReagentCount = C_TradeSkillUI.GetRecipeReagentInfo(command.recipeID, i, command.recipeLevel)
 							--DA.DEBUG(2,"ProcessQueue: reagentName= "..tostring(reagentName)..", reagentCount= "..tostring(reagentCount))
 							local reagentLink = C_TradeSkillUI.GetRecipeReagentItemLink(command.recipeID, i)
-							local reagentID = CraftForge:GetItemIDFromLink(reagentLink)
+							local reagentID = CraftBench:GetItemIDFromLink(reagentLink)
 							if reagent.reagentID == reagentID then
 								reagent.numNeeded = reagentCount
 							else
@@ -655,7 +655,7 @@ function CraftForge:ProcessQueue(altMode)
 -- If alt down/right click - auto use items / like vellums
 --
 					if altMode then
-						local itemID = CraftForge:GetAutoTargetItem(command.tradeID)
+						local itemID = CraftBench:GetAutoTargetItem(command.tradeID)
 						if itemID then
 							self.processingCount = 1
 							DA.DEBUG(1,"altMode Crafting: "..tostring(self.processingSpell).." ("..tostring(command.recipeID)..") and using "..tostring(itemID))
@@ -706,18 +706,18 @@ function CraftForge:ProcessQueue(altMode)
 							DA.DEBUG(1,"ProcessQueue(I): recipeID= "..tostring(command.recipeID))
 							C_TradeSkillUI.CraftRecipe(command.recipeID, command.count, reagentInfoTbl, recipeLevel, nil, self.db.profile.use_concentration)
 						elseif command.recipeType == Enum.TradeskillRecipeType.Enchant then
-							local targetLoc = CraftForge.enchantTargetLocation
+							local targetLoc = CraftBench.enchantTargetLocation
 							if not targetLoc and C_TradeSkillUI.CraftEnchant then
-								local itemID = CraftForge:GetAutoTargetItem(command.tradeID)
+								local itemID = CraftBench:GetAutoTargetItem(command.tradeID)
 								if itemID then
 									targetLoc = self:GetItemLocationFromItemID(itemID)
 								end
 							end
-							if C_TradeSkillUI.CraftEnchant and targetLoc and (command.count > 1 or CraftForge.enchantTargetLocation) then
+							if C_TradeSkillUI.CraftEnchant and targetLoc and (command.count > 1 or CraftBench.enchantTargetLocation) then
 								self.itemLocation = targetLoc
 								DA.DEBUG(1,"ProcessQueue(E): recipeID= "..tostring(command.recipeID))
 								C_TradeSkillUI.CraftEnchant(command.recipeID, command.count, reagentInfoTbl, targetLoc, self.db.profile.use_concentration)
-							elseif CraftForge.isForever and command.count > 1 and not targetLoc then
+							elseif CraftBench.isForever and command.count > 1 and not targetLoc then
 								DA.MARK3(L["Insufficient Materials available"])
 							else
 --								C_TradeSkillUI.CraftRecipe(recipeSpellID [, numCasts [, craftingReagents [, recipeLevel [, orderID [, applyConcentration]]]]])
@@ -777,7 +777,7 @@ end
 --
 -- Adds the currently selected number of items to the queue
 --
-function CraftForge:QueueItems(button, count)
+function CraftBench:QueueItems(button, count)
 	--DA.DEBUG(0,"QueueItems("..tostring(button)..", "..tostring(count)..")")
 	if self.currentTrade and self.selectedSkill then
 		local skill = self:GetSkill(self.currentPlayer, self.currentTrade, self.selectedSkill)
@@ -810,21 +810,21 @@ function CraftForge:QueueItems(button, count)
 		self.visited = {}
 		if count > 0 then
 			if recipe then
-				local first = CraftForge.db.profile.queue_insert_first or false
+				local first = CraftBench.db.profile.queue_insert_first or false
 				if button == "RightButton" then
 					first = not first
 				end
 				local queueCommand = self:QueueCommandIterate(recipe.spellID, count)
 				if (self.db.profile.queue_one_at_a_time and queueCommand.modified) or
-				   (CraftForge.isForever and queueCommand.recipeType == Enum.TradeskillRecipeType.Enchant and queueCommand.count > 1) then
+				   (CraftBench.isForever and queueCommand.recipeType == Enum.TradeskillRecipeType.Enchant and queueCommand.count > 1) then
 					DA.DEBUG(2,"QueueItems: One at a time")
 					queueCommand.count = 1
 					for i=1, count, 1 do
 						local c = tcopy(queueCommand)
-						self:QueueAppendCommand(c, CraftForge.db.profile.queue_craftable_reagents, first)
+						self:QueueAppendCommand(c, CraftBench.db.profile.queue_craftable_reagents, first)
 					end
 				else
-					self:QueueAppendCommand(queueCommand, CraftForge.db.profile.queue_craftable_reagents, first)
+					self:QueueAppendCommand(queueCommand, CraftBench.db.profile.queue_craftable_reagents, first)
 				end
 				self.requiredSelected = {}
 				self.optionalSelected = {}
@@ -843,7 +843,7 @@ end
 --
 -- Queue the max number of craftable items for the currently selected skill
 --
-function CraftForge:QueueAllItems(button)
+function CraftBench:QueueAllItems(button)
 	--DA.DEBUG(0,"QueueAllItems("..tostring(button)..")");
 	local count = self:QueueItems(button)
 	return count
@@ -852,7 +852,7 @@ end
 --
 -- Adds the currently selected number of items to the queue and then starts the queue
 --
-function CraftForge:CreateItems(button, count)
+function CraftBench:CreateItems(button, count)
 	--DA.DEBUG(0,"CreateItems("..tostring(button)..", "..tostring(count)..")")
 	if self:QueueItems(button, count) > 0 then
 		self:ProcessQueue(button == "RightButton" or IsAltKeyDown())
@@ -862,7 +862,7 @@ end
 --
 -- Queue and create the max number of craftable items for the currently selected skill
 --
-function CraftForge:CreateAllItems(button)
+function CraftBench:CreateAllItems(button)
 	--DA.DEBUG(0,"CreateAllItems("..tostring(button)..")")
 	if self:QueueAllItems(button) > 0 then
 		self:ProcessQueue(button == "RightButton" or IsAltKeyDown())
@@ -872,21 +872,21 @@ end
 --
 -- Events associated with crafting spells
 --
-function CraftForge:UNIT_SPELLCAST_SENT(event, unit, target, castGUID, spellID)
+function CraftBench:UNIT_SPELLCAST_SENT(event, unit, target, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_SENT(", unit, target, castGUID, spellID, ")")
 	if unit == "player" then
 		self:IgnoreCast(spellID)
 	end
 end
 
-function CraftForge:UNIT_SPELLCAST_START(event, unitTarget, castGUID, spellID)
+function CraftBench:UNIT_SPELLCAST_START(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_START(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		self:IgnoreCast(spellID)
 	end
 end
 
-function CraftForge:UNIT_SPELLCAST_SUCCEEDED(event, unitTarget, castGUID, spellID)
+function CraftBench:UNIT_SPELLCAST_SUCCEEDED(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_SUCCEEDED(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		if self.processingLevel and self.processingLevel ~= 0 and self.processingSpellID then
@@ -901,7 +901,7 @@ function CraftForge:UNIT_SPELLCAST_SUCCEEDED(event, unitTarget, castGUID, spellI
 	end
 end
 
-function CraftForge:UNIT_SPELLCAST_FAILED(event, unitTarget, castGUID, spellID)
+function CraftBench:UNIT_SPELLCAST_FAILED(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_FAILED(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		if self.processingLevel and self.processingLevel ~= 0 and self.processingSpellID then
@@ -916,7 +916,7 @@ function CraftForge:UNIT_SPELLCAST_FAILED(event, unitTarget, castGUID, spellID)
 	end
 end
 
-function CraftForge:UNIT_SPELLCAST_FAILED_QUIET(event, unitTarget, castGUID, spellID)
+function CraftBench:UNIT_SPELLCAST_FAILED_QUIET(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_FAILED_QUIET(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		if self.processingLevel and self.processingLevel ~= 0 and self.processingSpellID then
@@ -931,7 +931,7 @@ function CraftForge:UNIT_SPELLCAST_FAILED_QUIET(event, unitTarget, castGUID, spe
 	end
 end
 
-function CraftForge:UNIT_SPELLCAST_INTERRUPTED(event, unitTarget, castGUID, spellID)
+function CraftBench:UNIT_SPELLCAST_INTERRUPTED(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_INTERRUPTED(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		if self.processingLevel and self.processingLevel ~= 0 and self.processingSpellID then
@@ -946,29 +946,29 @@ function CraftForge:UNIT_SPELLCAST_INTERRUPTED(event, unitTarget, castGUID, spel
 	end
 end
 
-function CraftForge:UNIT_SPELLCAST_DELAYED(event, unitTarget, castGUID, spellID)
+function CraftBench:UNIT_SPELLCAST_DELAYED(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_DELAYED(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		self:IgnoreCast(spellID)
 	end
 end
 
-function CraftForge:UNIT_SPELLCAST_STOP(event, unitTarget, castGUID, spellID)
+function CraftBench:UNIT_SPELLCAST_STOP(event, unitTarget, castGUID, spellID)
 	DA.TRACE("UNIT_SPELLCAST_STOP(", unitTarget, castGUID, spellID, ")")
 	if unitTarget == "player" then
 		self:IgnoreCast(spellID)
 	end
 end
 
-function CraftForge:UPDATE_TRADESKILL_CAST_COMPLETE(event, isScrapping)
+function CraftBench:UPDATE_TRADESKILL_CAST_COMPLETE(event, isScrapping)
 	DA.TRACE("UPDATE_TRADESKILL_CAST_COMPLETE(", isScrapping, ")")
 end
 
-function CraftForge:UPDATE_TRADESKILL_RECAST(event)
+function CraftBench:UPDATE_TRADESKILL_RECAST(event)
 	DA.TRACE("UPDATE_TRADESKILL_RECAST")
 end
 
-function CraftForge:ITEM_COUNT_CHANGED(event,itemID)
+function CraftBench:ITEM_COUNT_CHANGED(event,itemID)
 	DA.TRACE3("ITEM_COUNT_CHANGED(", itemID, ")")
 --[[
 	if itemID == self.salvageItem then
@@ -980,7 +980,7 @@ function CraftForge:ITEM_COUNT_CHANGED(event,itemID)
 --]]
 end
 
-function CraftForge:TRADE_SKILL_ITEM_CRAFTED_RESULT(event, CraftingItemResultData)
+function CraftBench:TRADE_SKILL_ITEM_CRAFTED_RESULT(event, CraftingItemResultData)
 	DA.TRACE("TRADE_SKILL_ITEM_CRAFTED_RESULT("..DA.DUMP(CraftingItemResultData)..")")
 end
 
@@ -988,12 +988,12 @@ end
 -- Continue a trade skill currently in progress. Called from UNIT_SPELLCAST_SUCCEEDED when that event applies to us
 -- Counts down each successful completion of the current command and does finish processing when the count reaches zero
 --
-function CraftForge:ContinueCast(spellID)
+function CraftBench:ContinueCast(spellID)
 	if self.enabledState then
 		local name = C_Spell.GetSpellName(spellID)
 		DA.DEBUG(0,"ContinueCast("..tostring(spellID).."), "..tostring(name))
 		if spellID == self.processingSpellID then
-			DA.DEBUG(1,"ContinueCast: processingCount= "..tostring(CraftForge.processingCount))
+			DA.DEBUG(1,"ContinueCast: processingCount= "..tostring(CraftBench.processingCount))
 			local queue = self.db.realm.queueData[self.currentPlayer]
 			local qpos = self.processingPosition
 			if queue[qpos] and queue[qpos] == self.processingCommand then
@@ -1021,8 +1021,8 @@ function CraftForge:ContinueCast(spellID)
 			else
 				DA.DEBUG(1,"ContinueCast: queued command and processingCommand don't match")
 			end
-			CraftForge.processingCount = CraftForge.processingCount - 1
-			if CraftForge.processingCount == 0 then
+			CraftBench.processingCount = CraftBench.processingCount - 1
+			if CraftBench.processingCount == 0 then
 				self.queuecasting = false
 				self.processingSpell = nil
 				self.processingSpellID = nil
@@ -1042,7 +1042,7 @@ end
 --
 -- Stop a trade skill currently in progress. Called from UNIT_SPELLCAST_* events that indicate failure
 --
-function CraftForge:StopCast(spellID)
+function CraftBench:StopCast(spellID)
 	if self.enabledState then
 		local name = C_Spell.GetSpellName(spellID)
 		--DA.DEBUG(0,"StopCast("..tostring(spellID).."), "..tostring(name))
@@ -1062,7 +1062,7 @@ end
 -- Ignore a trade skill event directed at the player. Called from UNIT_SPELLCAST_* events that 
 -- don't meet expected criteria
 --
-function CraftForge:IgnoreCast(spellID)
+function CraftBench:IgnoreCast(spellID)
 	if self.enabledState then
 		local name = C_Spell.GetSpellName(spellID)
 		DA.DEBUG(4,"IgnoreCast("..tostring(spellID).."), "..tostring(name))
@@ -1074,7 +1074,7 @@ end
 -- item as that requires a "SpellStopCasting" call which can only be
 -- made from secure code. All this does is stop repeating after the current item
 --
-function CraftForge:CancelCast()
+function CraftBench:CancelCast()
 	if self.enabledState then
 		DA.DEBUG(0,"CancelCast()")
 --		C_TradeSkillUI.StopRecipeRepeat()
@@ -1084,7 +1084,7 @@ end
 --
 -- Removes an item from the queue
 --
-function CraftForge:RemoveQueuedCommand(queueIndex)
+function CraftBench:RemoveQueuedCommand(queueIndex)
 	--DA.DEBUG(0,"RemoveQueuedCommand("..tostring(queueIndex)..")")
 	self:RemoveFromQueue(queueIndex)
 	self:UpdateTradeSkillWindow()
@@ -1093,7 +1093,7 @@ end
 --
 -- Rebuilds reagentsInQueue list
 --
-function CraftForge:ScanQueuedReagents()
+function CraftBench:ScanQueuedReagents()
 	--DA.DEBUG(0,"ScanQueuedReagents()")
 	if self.linkedSkill or self.isGuild then
 		return
@@ -1122,7 +1122,7 @@ function CraftForge:ScanQueuedReagents()
 					local reagentName, reagentTexture, reagentCount, playerReagentCount = C_TradeSkillUI.GetRecipeReagentInfo(command.recipeID, i, command.recipeLevel)
 					--DA.DEBUG(2,"ScanQueuedReagents: reagentName= "..tostring(reagentName)..", reagentCount= "..tostring(reagentCount))
 					local reagentLink = C_TradeSkillUI.GetRecipeReagentItemLink(command.recipeID, i)
-					local reagentID = CraftForge:GetItemIDFromLink(reagentLink)
+					local reagentID = CraftBench:GetItemIDFromLink(reagentLink)
 					if reagent.reagentID == reagentID then
 						reagent.numNeeded = reagentCount
 					else
@@ -1166,7 +1166,7 @@ function CraftForge:ScanQueuedReagents()
 	self.db.realm.modifiedInQueue[self.currentPlayer] = modifiedInQueue
 end
 
-function CraftForge:QueueMoveToTop(index)
+function CraftBench:QueueMoveToTop(index)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if index > 1 and index <= #queue then
 		table.insert(queue, 1, queue[index])
@@ -1175,7 +1175,7 @@ function CraftForge:QueueMoveToTop(index)
 	self:UpdateTradeSkillWindow()
 end
 
-function CraftForge:QueueMoveUp(index)
+function CraftBench:QueueMoveUp(index)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if index > 1 and index <= #queue then
 		table.insert(queue, index-1, queue[index])
@@ -1184,7 +1184,7 @@ function CraftForge:QueueMoveUp(index)
 	self:UpdateTradeSkillWindow()
 end
 
-function CraftForge:QueueMoveDown(index)
+function CraftBench:QueueMoveDown(index)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if index > 0 and index <# queue then
 		table.insert(queue, index+2, queue[index])
@@ -1193,7 +1193,7 @@ function CraftForge:QueueMoveDown(index)
 	self:UpdateTradeSkillWindow()
 end
 
-function CraftForge:QueueMoveToBottom(index)
+function CraftBench:QueueMoveToBottom(index)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if index > 0 and index < #queue then
 		table.insert(queue, queue[index])
@@ -1202,18 +1202,18 @@ function CraftForge:QueueMoveToBottom(index)
 	self:UpdateTradeSkillWindow()
 end
 
-function CraftForge:SaveQueue(name, overwrite)
+function CraftBench:SaveQueue(name, overwrite)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	local reagents = self.db.realm.reagentsInQueue[self.currentPlayer]
 	local reagents = self.db.realm.modifiedInQueue[self.currentPlayer]
 	if not name or name == "" then return end
 	if not queue or #queue == 0 then
-		CraftForge:MessageBox(L["Queue is empty"])
+		CraftBench:MessageBox(L["Queue is empty"])
 		return
 	end
 	if self.db.profile.SavedQueues[name] and not overwrite then
-		CraftForge:AskFor(L["Queue with this name already exsists. Overwrite?"],
-			function() CraftForge:SaveQueue(name, true)  end
+		CraftBench:AskFor(L["Queue with this name already exsists. Overwrite?"],
+			function() CraftBench:SaveQueue(name, true)  end
 			)
 		return
 	end
@@ -1221,45 +1221,45 @@ function CraftForge:SaveQueue(name, overwrite)
 	self.db.profile.SavedQueues[name].queue = tcopy(queue)
 	self.db.profile.SavedQueues[name].reagents = tcopy(reagents)
 	self.db.profile.SavedQueues[name].modified = tcopy(modified)
-	CraftForge.selectedQueueName = name
-	CraftForge:QueueLoadDropdown_OnShow()
-	CraftForgeQueueSaveEditBox:SetText("")
+	CraftBench.selectedQueueName = name
+	CraftBench:QueueLoadDropdown_OnShow()
+	CraftBenchQueueSaveEditBox:SetText("")
 end
 
-function CraftForge:LoadQueue(name, overwrite)
+function CraftBench:LoadQueue(name, overwrite)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if not name or name == "" then return end
 	if not self.db.profile.SavedQueues[name] then
-		CraftForge:MessageBox(L["No such queue saved"])
+		CraftBench:MessageBox(L["No such queue saved"])
 		return
 	end
 	if queue and #queue > 0 and not overwrite then
-		CraftForge:AskFor(L["Queue is not empty. Overwrite?"],
-			function() CraftForge:LoadQueue(name, true)  end
+		CraftBench:AskFor(L["Queue is not empty. Overwrite?"],
+			function() CraftBench:LoadQueue(name, true)  end
 			)
 		return
 	end
 	self.db.realm.queueData[self.currentPlayer] = tcopy(self.db.profile.SavedQueues[name].queue)
 	self.db.realm.reagentsInQueue[self.currentPlayer] = tcopy(self.db.profile.SavedQueues[name].reagents)
 	self.db.realm.modifiedInQueue[self.currentPlayer] = tcopy(self.db.profile.SavedQueues[name].modified)
-	CraftForge:UpdateTradeSkillWindow()
+	CraftBench:UpdateTradeSkillWindow()
 end
 
-function CraftForge:DeleteQueue(name, overwrite)
+function CraftBench:DeleteQueue(name, overwrite)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if not name or name == "" then return end
 	if not self.db.profile.SavedQueues[name] then
-		CraftForge:MessageBox(L["No such queue saved"])
+		CraftBench:MessageBox(L["No such queue saved"])
 		return
 	end
 	if not overwrite then
-		CraftForge:AskFor(L["Really delete this queue?"],
-			function() CraftForge:DeleteQueue(name, true)  end
+		CraftBench:AskFor(L["Really delete this queue?"],
+			function() CraftBench:DeleteQueue(name, true)  end
 			)
 		return
 	end
 	self.db.profile.SavedQueues[name] = nil
-	CraftForge.selectedQueueName = ""
-	CraftForge:QueueLoadDropdown_OnShow()
-	CraftForge:UpdateTradeSkillWindow()
+	CraftBench.selectedQueueName = ""
+	CraftBench:QueueLoadDropdown_OnShow()
+	CraftBench:UpdateTradeSkillWindow()
 end

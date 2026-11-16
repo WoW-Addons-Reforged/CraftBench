@@ -3,7 +3,7 @@
 # SkillLevelsConverter2.py
 #
 # Converts SkillLineAbility.<build>.csv and SpellName.<build>.csv from wago.tools
-# into Lua tables for CraftForge (Data/SkillLevelData*.lua).
+# into Lua tables for CraftBench (Data/SkillLevelData*.lua).
 #
 
 import csv
@@ -61,9 +61,9 @@ def spells_list_write(file_name, data):
 	with open(output_file, 'w', encoding='utf-8', newline='\n') as o, \
 		open(spell_name_output, 'w', encoding='utf-8', newline='\n') as n:
 		o.write(f"-- {basename}\n")
-		o.write(f"CraftForge.db.global.{filename} = {{\n")
+		o.write(f"CraftBench.db.global.{filename} = {{\n")
 		n.write(f"-- {basename2}\n")
-		n.write("CraftForge.db.global.NameToSpellID = {\n")
+		n.write("CraftBench.db.global.NameToSpellID = {\n")
 
 		for spell_id in spell_to_skill_line:
 			o.write(spells_list_str(spell_id, min_rank, trivial_low, trivial_high, spell_to_name))

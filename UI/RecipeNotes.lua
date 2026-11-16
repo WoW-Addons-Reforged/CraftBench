@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-CRAFTFORGE_NOTES_ITEM_DISPLAYED = 7
-CRAFTFORGE_NOTES_ITEM_HEIGHT	 = CRAFTFORGE_TRADE_SKILL_HEIGHT * 3
+CRAFTBENCH_NOTES_ITEM_DISPLAYED = 7
+CRAFTBENCH_NOTES_ITEM_HEIGHT	 = CRAFTBENCH_TRADE_SKILL_HEIGHT * 3
 
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
 local NO_NOTE = GRAY_FONT_COLOR_CODE .. L["click here to add a note"] .. FONT_COLOR_CODE_CLOSE
 
 local editbox;
@@ -32,19 +32,19 @@ local ControlBackdrop  = {
 }
 
 -- Called when the list of skills is scrolled
-function CraftForge:NotesList_OnScroll()
-	CraftForge:UpdateNotesWindow()
+function CraftBench:NotesList_OnScroll()
+	CraftBench:UpdateNotesWindow()
 end
 
 -- Shows the recipe notes editor for the current window
-function CraftForge:ShowRecipeNotes()
+function CraftBench:ShowRecipeNotes()
 	local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, self.selectedSkill)
 	if not recipe then
 		return
 	end
-	local frame = CraftForgeRecipeNotesFrame
+	local frame = CraftBenchRecipeNotesFrame
 	if frame then
-		self.recipeNotesFrame = CraftForgeRecipeNotesFrame
+		self.recipeNotesFrame = CraftBenchRecipeNotesFrame
 	else
 		return
 	end
@@ -64,16 +64,16 @@ local function get_edit_box()
 	editbox:SetAutoFocus(true)
 	editbox:SetMultiLine(false)
 	editbox:SetFontObject(ChatFontNormal)
-	CraftForge.UIStyle.SkinEditBox(editbox)
+	CraftBench.UIStyle.SkinEditBox(editbox)
 	editbox:SetScript("OnEnterPressed", function(self)
 		self:Hide()
 		local b = self:GetParent()
 		local l = b:GetAttribute("notes_key")
 		local n = _G[b:GetName() .. "Notes"]
-		local craftforge = self.obj
-		craftforge:SetItemNote(l, self:GetText())
+		local craftbench = self.obj
+		craftbench:SetItemNote(l, self:GetText())
 		n:Show();
-		craftforge:UpdateNotesWindow()
+		craftbench:UpdateNotesWindow()
 	end);
 	editbox:SetScript("OnEscapePressed", function(self)
 		self:Hide()
@@ -85,7 +85,7 @@ local function get_edit_box()
 	return editbox
 end
 
-function CraftForge:RecipeNote_OnClick(button)
+function CraftBench:RecipeNote_OnClick(button)
 	-- update the window so we know that we are starting from a known good location
 	self:UpdateNotesWindow()
 	local key = button:GetAttribute("notes_key")
@@ -114,7 +114,7 @@ end
 -- any reagents that are needed
 --
 -- XXX: and tools?
-function CraftForge:UpdateNotesWindow()
+function CraftBench:UpdateNotesWindow()
 	local recipe, recipeID, itemID = self:GetRecipeDataByTradeIndex(self.currentTrade, self.selectedSkill)
 	if not recipe then
 		return
@@ -122,26 +122,26 @@ function CraftForge:UpdateNotesWindow()
 	if editbox then
 		editbox:Hide()
 	end
-	CraftForgeRecipeNotesFrameLabel:SetText(L["Notes"]);
+	CraftBenchRecipeNotesFrameLabel:SetText(L["Notes"]);
 	local numItems = 1 + #recipe.reagentData
 
 	-- Update the scroll frame
-	FauxScrollFrame_Update(CraftForgeNotesList,				-- frame
+	FauxScrollFrame_Update(CraftBenchNotesList,				-- frame
 						   numItems,						-- num items
-						   CRAFTFORGE_NOTES_ITEM_DISPLAYED,	-- num to display
-						   CRAFTFORGE_NOTES_ITEM_HEIGHT)		-- value step (item height)
+						   CRAFTBENCH_NOTES_ITEM_DISPLAYED,	-- num to display
+						   CRAFTBENCH_NOTES_ITEM_HEIGHT)		-- value step (item height)
 	-- Where in the list of skill to start counting.
-	local offset = FauxScrollFrame_GetOffset(CraftForgeNotesList);
+	local offset = FauxScrollFrame_GetOffset(CraftBenchNotesList);
 	-- now do all that nasty work to fill in the contents of the frame
-	for i=1, CRAFTFORGE_NOTES_ITEM_DISPLAYED, 1 do
+	for i=1, CRAFTBENCH_NOTES_ITEM_DISPLAYED, 1 do
 		local index = i + offset
-		local button = _G["CraftForgeNotesButton"..i]
+		local button = _G["CraftBenchNotesButton"..i]
 		if index <= numItems then
 			local text	 = _G[button:GetName() .. "Text"];
 			local icon	 = _G[button:GetName() .. "Icon"];
 			local notes	 = _G[button:GetName() .. "Notes"];
 			-- set the width based on whether or not the scroll bar is displayed
-			if ( CraftForgeNotesList:IsShown() ) then
+			if ( CraftBenchNotesList:IsShown() ) then
 				button:SetWidth(170)
 			else
 				button:SetWidth(190)
@@ -184,9 +184,9 @@ function CraftForge:UpdateNotesWindow()
 end
 
 --
--- Hide the CraftForge notes window, if it was open
+-- Hide the CraftBench notes window, if it was open
 --
-function CraftForge:HideNotesWindow()
+function CraftBench:HideNotesWindow()
 	--DA.DEBUG(0,"HideNotesWindow()")
 	local closed
 	if self.recipeNotesFrame and self.recipeNotesFrame:IsVisible() then

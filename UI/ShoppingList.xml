@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	CraftForge: A tradeskill window replacement.
+	CraftBench: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #  Template for all the buttons we use to display items in the shopping list
 #
 -->
-<Frame name="CraftForgeShoppingListItemButtonTemplate_Count" hidden="false" virtual="true">
+<Frame name="CraftBenchShoppingListItemButtonTemplate_Count" hidden="false" virtual="true">
 	<Size>
 		<AbsDimension x="30" y="16"/>
 	</Size>
@@ -42,7 +42,7 @@
 	</Layers>
 </Frame>
 
-<Frame name="CraftForgeShoppingListItemButtonTemplate_Name" hidden="false" virtual="true">
+<Frame name="CraftBenchShoppingListItemButtonTemplate_Name" hidden="false" virtual="true">
 	<Size>
 		<AbsDimension x="230" y="16"/>
 	</Size>
@@ -61,7 +61,7 @@
 	</Layers>
 </Frame>
 
-<Frame name="CraftForgeShoppingListItemButtonTemplate_Player" hidden="false" virtual="true">
+<Frame name="CraftBenchShoppingListItemButtonTemplate_Player" hidden="false" virtual="true">
 	<Size>
 		<AbsDimension x="50" y="16"/>
 	</Size>
@@ -80,17 +80,17 @@
 	</Layers>
 </Frame>
 
-<Frame name="CraftForgeShoppingListItemButtonTemplate" hidden="true" virtual="true">
+<Frame name="CraftBenchShoppingListItemButtonTemplate" hidden="true" virtual="true">
 	<Size>
 		<AbsDimension x="330" y="16"/>
 	</Size>
 	<Frames>
-		<Frame name="$parentCount" inherits="CraftForgeShoppingListItemButtonTemplate_Count">
+		<Frame name="$parentCount" inherits="CraftBenchShoppingListItemButtonTemplate_Count">
 			<Anchors>
 				<Anchor point="LEFT"/>
 			</Anchors>
 		</Frame>
-		<Frame name="$parentName" inherits="CraftForgeShoppingListItemButtonTemplate_Name">
+		<Frame name="$parentName" inherits="CraftBenchShoppingListItemButtonTemplate_Name">
 			<Anchors>
 				<Anchor point="LEFT">
 					<Offset>
@@ -99,7 +99,7 @@
 				</Anchor>
 			</Anchors>
 		</Frame>
-		<Frame name="$parentPlayer" inherits="CraftForgeShoppingListItemButtonTemplate_Player">
+		<Frame name="$parentPlayer" inherits="CraftBenchShoppingListItemButtonTemplate_Player">
 			<Anchors>
 				<Anchor point="LEFT" relativeTo="$parent" relativePoint="LEFT">
 					<Offset>
@@ -118,20 +118,20 @@
 			if button == "LeftButton" and IsShiftKeyDown() then
 				local name,link = C_Item.GetItemInfo(self.id)
 				if not ChatEdit_InsertLink(self.count .. "x" .. link) then
-					CraftForge:XMLDebugLink("ShoppingListItemLink: link= ", link)
+					CraftBench:XMLDebugLink("ShoppingListItemLink: link= ", link)
 				end
 			end
 			<!-- control clicking will remove this player's entries. -->
 			if button == "LeftButton" and IsControlKeyDown() then
-				CraftForge:ClearShoppingList(self.player)
+				CraftBench:ClearShoppingList(self.player)
 			end
 			<!-- right clicking will remove this player's entries. -->
 			if button == "RightButton" then
-				CraftForge:ClearShoppingList(self.player)
+				CraftBench:ClearShoppingList(self.player)
 			end
 		</OnClick>
 		<OnEnter>
-			CraftForge:ShoppingListButton_OnEnter(self)
+			CraftBench:ShoppingListButton_OnEnter(self)
 		</OnEnter>
 		<OnLeave>
 			GameTooltip:Hide()
@@ -144,7 +144,7 @@
 	# Template used when creating checkboxes
 	#
 	-->
-<CheckButton name="CraftForgeShoppingListCheckButtonTemplate" virtual="true">
+<CheckButton name="CraftBenchShoppingListCheckButtonTemplate" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -168,7 +168,7 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<CheckButton name="CraftForgeShoppingListCheckButtonTemplate2" virtual="true">
+<CheckButton name="CraftBenchShoppingListCheckButtonTemplate2" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -197,7 +197,7 @@
  #  The shopping list window ....
  #
 -->
-<Frame name="CraftForgeShoppingList" toplevel="true" movable="true" clampedToScreen="true" resizable="true" parent="UIParent" enableMouse="true" hidden="true" inherits="BackdropTemplate">
+<Frame name="CraftBenchShoppingList" toplevel="true" movable="true" clampedToScreen="true" resizable="true" parent="UIParent" enableMouse="true" hidden="true" inherits="BackdropTemplate">
 	<Size>
 		<AbsDimension x="385" y="240"/>
 	</Size>
@@ -209,9 +209,9 @@
 		# A button on the top right to close the window
 		#
 		-->
-		<Button name="CraftForgeShoppingListCloseButton" inherits="UIPanelCloseButton" parent="CraftForgeShoppingList">
+		<Button name="CraftBenchShoppingListCloseButton" inherits="UIPanelCloseButton" parent="CraftBenchShoppingList">
 			<Anchors>
-				<Anchor point="TOPRIGHT" relativeTo="CraftForgeShoppingList" relativePoint="TOPRIGHT">
+				<Anchor point="TOPRIGHT" relativeTo="CraftBenchShoppingList" relativePoint="TOPRIGHT">
 					<Offset>
 						<AbsDimension x="-2" y="-2"/>
 					</Offset>
@@ -219,7 +219,7 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					HideUIPanel(CraftForgeShoppingList)
+					HideUIPanel(CraftBenchShoppingList)
 				</OnClick>
 			</Scripts>
 		</Button>
@@ -229,12 +229,12 @@
 		# A button to retrieve all the mats from the bank
 		#
 		-->
-		<Button name="CraftForgeShoppingListRetrieveButton" inherits="UIPanelButtonTemplate" text="Retrieve" parent="CraftForgeShoppingList">
+		<Button name="CraftBenchShoppingListRetrieveButton" inherits="UIPanelButtonTemplate" text="Retrieve" parent="CraftBenchShoppingList">
 			<Size>
 				<AbsDimension x="70" y="22"/>
 			</Size>
 			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeShoppingList" relativePoint="BOTTOMLEFT">
+				<Anchor point="BOTTOMLEFT" relativeTo="CraftBenchShoppingList" relativePoint="BOTTOMLEFT">
 					<Offset>
 						<AbsDimension x="170" y="50"/> <!--  x="5" is the edge -->
 					</Offset>
@@ -242,19 +242,19 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					CraftForge:GetReagentsFromBanks()
+					CraftBench:GetReagentsFromBanks()
 				</OnClick>
 			</Scripts>
 		</Button>
 		<!--
 		# Shopping List Auctionator button
 		-->
-		<Button name="CraftForgeSLAuctionatorButton" inherits="UIPanelButtonTemplate" text="Auctionator" parent="CraftForgeShoppingList">
+		<Button name="CraftBenchSLAuctionatorButton" inherits="UIPanelButtonTemplate" text="Auctionator" parent="CraftBenchShoppingList">
 			<Size>
 				<AbsDimension x="85" y="22"/>
 			</Size>
 			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeShoppingList" relativePoint="BOTTOMLEFT">
+				<Anchor point="BOTTOMLEFT" relativeTo="CraftBenchShoppingList" relativePoint="BOTTOMLEFT">
 					<Offset>
 						<AbsDimension x="170" y="50"/> <!--  x="5" is the edge -->
 					</Offset>
@@ -262,7 +262,7 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					CraftForge:AuctionatorSearch(true)
+					CraftBench:AuctionatorSearch(true)
 				</OnClick>
 			</Scripts>
 		</Button>
@@ -272,9 +272,9 @@
 		# Check boxes for various recipe filtering options.
 		#
 		-->
-		<CheckButton name="CraftForgeShowQueuesFromAllAlts" inherits="CraftForgeShoppingListCheckButtonTemplate">
+		<CheckButton name="CraftBenchShowQueuesFromAllAlts" inherits="CraftBenchShoppingListCheckButtonTemplate">
 			<Anchors>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeShoppingList" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchShoppingList" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-10" y="50"/> <!-- 50 is the next row up -->
 					</Offset>
@@ -282,15 +282,15 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					CraftForge:ShoppingListToggleShowAlts()
-					CraftForge:UpdateShoppingListWindow(false)
+					CraftBench:ShoppingListToggleShowAlts()
+					CraftBench:UpdateShoppingListWindow(false)
 				</OnClick>
 			</Scripts>
 		</CheckButton>
 
-		<CheckButton name="CraftForgeShowQueuesFromSameFaction" inherits="CraftForgeShoppingListCheckButtonTemplate">
+		<CheckButton name="CraftBenchShowQueuesFromSameFaction" inherits="CraftBenchShoppingListCheckButtonTemplate">
 			<Anchors>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeShoppingList" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchShoppingList" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-10" y="30"/> <!-- 50 is the next row up -->
 					</Offset>
@@ -298,15 +298,15 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					CraftForge:ShoppingListToggleSameFaction()
-					CraftForge:UpdateShoppingListWindow(false)
+					CraftBench:ShoppingListToggleSameFaction()
+					CraftBench:UpdateShoppingListWindow(false)
 				</OnClick>
 			</Scripts>
 		</CheckButton>
 
-		<CheckButton name="CraftForgeShowQueuesIncludeGuild" inherits="CraftForgeShoppingListCheckButtonTemplate">
+		<CheckButton name="CraftBenchShowQueuesIncludeGuild" inherits="CraftBenchShoppingListCheckButtonTemplate">
 			<Anchors>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeShoppingList" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchShoppingList" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-10" y="10"/>
 					</Offset>
@@ -314,15 +314,15 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					CraftForge:ShoppingListToggleIncludeGuild()
-					CraftForge:UpdateShoppingListWindow(false)
+					CraftBench:ShoppingListToggleIncludeGuild()
+					CraftBench:UpdateShoppingListWindow(false)
 				</OnClick>
 			</Scripts>
 		</CheckButton>
 
-		<CheckButton name="CraftForgeShowQueuesIgnoreOnHand" inherits="CraftForgeShoppingListCheckButtonTemplate2">
+		<CheckButton name="CraftBenchShowQueuesIgnoreOnHand" inherits="CraftBenchShoppingListCheckButtonTemplate2">
 			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeShoppingList" relativePoint="BOTTOMLEFT">
+				<Anchor point="BOTTOMLEFT" relativeTo="CraftBenchShoppingList" relativePoint="BOTTOMLEFT">
 					<Offset>
 						<AbsDimension x="10" y="50"/>
 					</Offset>
@@ -330,15 +330,15 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					CraftForge:ShoppingListToggleIgnoreOnHand()
-					CraftForge:UpdateShoppingListWindow(false)
+					CraftBench:ShoppingListToggleIgnoreOnHand()
+					CraftBench:UpdateShoppingListWindow(false)
 				</OnClick>
 			</Scripts>
 		</CheckButton>
 
-		<CheckButton name="CraftForgeShowQueuesInItemOrder" inherits="CraftForgeShoppingListCheckButtonTemplate2">
+		<CheckButton name="CraftBenchShowQueuesInItemOrder" inherits="CraftBenchShoppingListCheckButtonTemplate2">
 			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeShoppingList" relativePoint="BOTTOMLEFT">
+				<Anchor point="BOTTOMLEFT" relativeTo="CraftBenchShoppingList" relativePoint="BOTTOMLEFT">
 					<Offset>
 						<AbsDimension x="10" y="30"/>
 					</Offset>
@@ -346,15 +346,15 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					CraftForge:ShoppingListToggleItemOrder()
-					CraftForge:UpdateShoppingListWindow(false)
+					CraftBench:ShoppingListToggleItemOrder()
+					CraftBench:UpdateShoppingListWindow(false)
 				</OnClick>
 			</Scripts>
 		</CheckButton>
 
-		<CheckButton name="CraftForgeShowQueuesMergeItems" inherits="CraftForgeShoppingListCheckButtonTemplate2">
+		<CheckButton name="CraftBenchShowQueuesMergeItems" inherits="CraftBenchShoppingListCheckButtonTemplate2">
 			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeShoppingList" relativePoint="BOTTOMLEFT">
+				<Anchor point="BOTTOMLEFT" relativeTo="CraftBenchShoppingList" relativePoint="BOTTOMLEFT">
 					<Offset>
 						<AbsDimension x="10" y="10"/>
 					</Offset>
@@ -362,8 +362,8 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					CraftForge:ShoppingListToggleMergeItems()
-					CraftForge:UpdateShoppingListWindow(false)
+					CraftBench:ShoppingListToggleMergeItems()
+					CraftBench:UpdateShoppingListWindow(false)
 				</OnClick>
 			</Scripts>
 		</CheckButton>
@@ -373,28 +373,28 @@
 		# The list of known recipes on the left hand side
 		#
 		-->
-		<Frame name="CraftForgeShoppingListParent" parent="CraftForgeShoppingList">
+		<Frame name="CraftBenchShoppingListParent" parent="CraftBenchShoppingList">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeShoppingList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchShoppingList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-35"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeShoppingList" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchShoppingList" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-5" y="70"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
 		</Frame>
-		<ScrollFrame name="CraftForgeShoppingListList" inherits="FauxScrollFrameTemplate" parent="CraftForgeShoppingListParent">
+		<ScrollFrame name="CraftBenchShoppingListList" inherits="FauxScrollFrameTemplate" parent="CraftBenchShoppingListParent">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeShoppingListParent" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchShoppingListParent" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-5"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeShoppingListParent" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchShoppingListParent" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-27" y="5"/>
 					</Offset>
@@ -402,20 +402,20 @@
 			</Anchors>
 			<Scripts>
 				<OnVerticalScroll>
-					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_SHOPPING_LIST_HEIGHT, CraftForge.ShoppingList_OnScroll)
+					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTBENCH_SHOPPING_LIST_HEIGHT, CraftBench.ShoppingList_OnScroll)
 				</OnVerticalScroll>
 			</Scripts>
 		</ScrollFrame>
-		<Button name="CraftForgeShoppingListButton1" inherits="CraftForgeShoppingListItemButtonTemplate">
+		<Button name="CraftBenchShoppingListButton1" inherits="CraftBenchShoppingListItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeShoppingListList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchShoppingListList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="2" y="0"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
 		</Button>
-		<!-- buttons 2 ... whatever are created dynamically in the CraftForge:UpdateShoppingListWindow() function-->
+		<!-- buttons 2 ... whatever are created dynamically in the CraftBench:UpdateShoppingListWindow() function-->
 	</Frames>
 </Frame>
 

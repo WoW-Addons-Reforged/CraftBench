@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	CraftForge: A tradeskill window replacement.
+	CraftBench: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,10 +25,10 @@
 	-->
 	<!--
 	#
-	#   Template for trade buttons in craftforge frame for Main
+	#   Template for trade buttons in craftbench frame for Main
 	#
 	-->
-	<CheckButton name="CraftForgeTradeButtonTemplate" virtual="true" hidden="true">
+	<CheckButton name="CraftBenchTradeButtonTemplate" virtual="true" hidden="true">
 		<Size>
 			<AbsDimension x="25" y="25"/>
 		</Size>
@@ -39,21 +39,21 @@
 		</Layers>
 		<Scripts>
 			<OnEnter>
-				CraftForge:TradeButton_OnEnter(self)
+				CraftBench:TradeButton_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide()
 			</OnLeave>
 			<OnClick>
-				CraftForge:InventoryFilterButtons_Hide()
-				CraftForge:TradeButton_OnClick(self,button)
+				CraftBench:InventoryFilterButtons_Hide()
+				CraftBench:TradeButton_OnClick(self,button)
 			</OnClick>
 		</Scripts>
 		<PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
 		<HighlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square"/>
 		<CheckedTexture alphaMode="ADD" file="Interface\Buttons\CheckButtonHilight"/>
 	</CheckButton>
-	<Button name="CraftForgeTradeButtonAdditionalTemplate" inherits="SecureActionButtonTemplate" virtual="true" hidden="true">
+	<Button name="CraftBenchTradeButtonAdditionalTemplate" inherits="SecureActionButtonTemplate" virtual="true" hidden="true">
 		<Size>
 			<AbsDimension x="25" y="25"/>
 		</Size>
@@ -67,7 +67,7 @@
 				self:RegisterForClicks("AnyUp", "AnyDown")
 			</OnLoad>
 			<OnEnter>
-				CraftForge:TradeButtonAdditional_OnEnter(self)
+				CraftBench:TradeButtonAdditional_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide()
@@ -75,7 +75,7 @@
 		</Scripts>
 		<HighlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square"/>
 	</Button>
-	<CheckButton name="CraftForgeBlizzardUITemplate" virtual="true" hidden="true">
+	<CheckButton name="CraftBenchBlizzardUITemplate" virtual="true" hidden="true">
 		<Size>
 			<AbsDimension x="25" y="25"/>
 		</Size>
@@ -86,20 +86,20 @@
 		</Layers>
 		<Scripts>
 			<OnEnter>
-				CraftForge:BlizzardUIButton_OnEnter(self)
+				CraftBench:BlizzardUIButton_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide()
 			</OnLeave>
 			<OnClick>
-				CraftForge:BlizzardUIButton_OnClick(self,button)
+				CraftBench:BlizzardUIButton_OnClick(self,button)
 			</OnClick>
 		</Scripts>
 		<PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
 		<HighlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square"/>
 		<CheckedTexture alphaMode="ADD" file="Interface\Buttons\CheckButtonHilight"/>
 	</CheckButton>
-	<StatusBar name="CraftForgeRankFrameTemplate" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="0" virtual="true">
+	<StatusBar name="CraftBenchRankFrameTemplate" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="0" virtual="true">
 		<Size>
 			<AbsDimension x="297" y="5"/>
 		</Size>
@@ -115,40 +115,40 @@
 		</BarTexture>
 		<Scripts>
 			<OnEnter>
-				CraftForge:RankFrame_OnEnter(self)
+				CraftBench:RankFrame_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
-				CraftForge:RankFrame_OnLeave(self)
+				CraftBench:RankFrame_OnLeave(self)
 			</OnLeave>
 			<OnMouseUp>
-				CraftForge:RankFrame_OnMouseUp(self)
+				CraftBench:RankFrame_OnMouseUp(self)
 			</OnMouseUp>
 			<OnMouseDown>
-				CraftForge:RankFrame_OnMouseDown(self)
+				CraftBench:RankFrame_OnMouseDown(self)
 			</OnMouseDown>
 		</Scripts>
 	</StatusBar>
-	<CheckButton name="CraftForgeInvFilterButtonTemplate" virtual="true">
+	<CheckButton name="CraftBenchInvFilterButtonTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="20" y="20"/>
 		</Size>
-		<CheckedTexture name="$parentChecked" alphaMode="ADD" file="Interface\Addons\CraftForge\Icons\highlight.tga"/>
+		<CheckedTexture name="$parentChecked" alphaMode="ADD" file="Interface\Addons\CraftBench\Icons\highlight.tga"/>
 		<HighlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square"/>
 		<Scripts>
 			<OnLoad>
 				self:SetFrameLevel(self:GetFrameLevel()+5)
 			</OnLoad>
 			<OnLeave>
-				CraftForge:InventoryFilterButton_OnLeave(self)
+				CraftBench:InventoryFilterButton_OnLeave(self)
 			</OnLeave>
 			<OnEnter>
-				CraftForge:InventoryFilterButton_OnEnter(self)
+				CraftBench:InventoryFilterButton_OnEnter(self)
 			</OnEnter>
 			<OnClick>
-				CraftForge:InventoryFilterButton_OnClick(self)
+				CraftBench:InventoryFilterButton_OnClick(self)
 			</OnClick>
 			<OnShow>
-				CraftForge:InventoryFilterButton_OnShow(self)
+				CraftBench:InventoryFilterButton_OnShow(self)
 			</OnShow>
 		</Scripts>
 	</CheckButton>
@@ -157,7 +157,7 @@
 	#   Template for all the buttons used in the list of known skills
 	#
 	-->
-	<Button name="CraftForgeHeaderExpandButtonTemplate" hidden="true" virtual="true">
+	<Button name="CraftBenchHeaderExpandButtonTemplate" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="16" y="16" />
 		</Size>
@@ -199,12 +199,12 @@
 		</DisabledTexture>
 		<Scripts>
 			<OnClick>
-				CraftForge:InventoryFilterButtons_Hide()
-				CraftForge:SkillExpandButton_OnClick(self,button)
+				CraftBench:InventoryFilterButtons_Hide()
+				CraftBench:SkillExpandButton_OnClick(self,button)
 			</OnClick>
 		</Scripts>
 	</Button>
-	<Button name="CraftForgeFavoriteButtonTemplate" hidden="true" virtual="true">
+	<Button name="CraftBenchFavoriteButtonTemplate" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="16" y="16" />
 		</Size>
@@ -234,11 +234,11 @@
 		</HighlightTexture>
 		<Scripts>
 			<OnClick>
-				CraftForge:FavoriteButton_OnClick(self,button)
+				CraftBench:FavoriteButton_OnClick(self,button)
 			</OnClick>
 			<OnEnter>
 				GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-				GameTooltip:SetText(CraftForge.L["Click to toggle favorite"], nil, nil, nil, nil, true)
+				GameTooltip:SetText(CraftBench.L["Click to toggle favorite"], nil, nil, nil, nil, true)
 				GameTooltip:Show()
 			</OnEnter>
 			<OnLeave>
@@ -246,7 +246,7 @@
 			</OnLeave>
 		</Scripts>
 	</Button>
-	<Button name="CraftForgeEmptySpaceTemplate" virtual="true">
+	<Button name="CraftBenchEmptySpaceTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
@@ -254,51 +254,51 @@
 				if not InCombatLockdown() then self:EnableKeyboard(false) end
 			</OnLoad>
 			<OnClick>
-				CraftForge:InventoryFilterButtons_Hide()
-				CraftForge:SkillButton_OnClick(self,button)
+				CraftBench:InventoryFilterButtons_Hide()
+				CraftBench:SkillButton_OnClick(self,button)
 			</OnClick>
 			<OnDragStart>
-				CraftForge.mouseOver = self
-				CraftForge:SkillButton_OnDragStart(self, button)
+				CraftBench.mouseOver = self
+				CraftBench:SkillButton_OnDragStart(self, button)
 			</OnDragStart>
 			<OnReceiveDrag>
-				CraftForge.mouseOver = self
-				CraftForge:SkillButton_OnReceiveDrag(self, button)
+				CraftBench.mouseOver = self
+				CraftBench:SkillButton_OnReceiveDrag(self, button)
 			</OnReceiveDrag>
 			<OnDragStop>
-				CraftForge:SkillButton_OnDragStop(self, button)
+				CraftBench:SkillButton_OnDragStop(self, button)
 			</OnDragStop>
 			<OnEnter>
 				self:RegisterEvent("MODIFIER_STATE_CHANGED")
-				CraftForge.mouseOver = self
+				CraftBench.mouseOver = self
 			</OnEnter>
 			<OnHide>
-				if self == CraftForge.mouseOver then
-					if not InCombatLockdown() then CraftForgeFrame:EnableKeyboard(false) end
-					CraftForge.mouseOver = nil
+				if self == CraftBench.mouseOver then
+					if not InCombatLockdown() then CraftBenchFrame:EnableKeyboard(false) end
+					CraftBench.mouseOver = nil
 				end
 			</OnHide>
 			<OnLeave>
 				self:UnregisterEvent("MODIFIER_STATE_CHANGED")
-				CraftForge.mouseOver = nil
+				CraftBench.mouseOver = nil
 			</OnLeave>
 			<OnEvent>
 				if event == "MODIFIER_STATE_CHANGED" then
-					if self == CraftForge.mouseOver then
---						CraftForge:SkillButton_OnEnter(CraftForge.mouseOver)
+					if self == CraftBench.mouseOver then
+--						CraftBench:SkillButton_OnEnter(CraftBench.mouseOver)
 					end
 					if not InCombatLockdown() then
 						if IsControlKeyDown() then
-							CraftForgeFrame:EnableKeyboard(true)
+							CraftBenchFrame:EnableKeyboard(true)
 						else
-							CraftForgeFrame:EnableKeyboard(false)
+							CraftBenchFrame:EnableKeyboard(false)
 						end
 					end
 				end
 			</OnEvent>
 		</Scripts>
 	</Button>
-	<Button name="CraftForgeSkillButtonTemplate" hidden="true" virtual="true">
+	<Button name="CraftBenchSkillButtonTemplate" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="293" y="20" />
 		</Size>
@@ -351,7 +351,7 @@
 			Textures for the +/- buttons on headers
 		-->
 		<Frames>
-			<Button name="$parentExpand" inherits="CraftForgeHeaderExpandButtonTemplate">
+			<Button name="$parentExpand" inherits="CraftBenchHeaderExpandButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
 						<Offset>
@@ -360,7 +360,7 @@
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="$parentFavorite" inherits="CraftForgeFavoriteButtonTemplate">
+			<Button name="$parentFavorite" inherits="CraftBenchFavoriteButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
 						<Offset>
@@ -410,10 +410,10 @@
 		</Frames>
 		<Scripts>
 			<OnMouseUp>
-				CraftForge:SkillButton_OnMouseUp(self)
+				CraftBench:SkillButton_OnMouseUp(self)
 			</OnMouseUp>
 			<OnMouseDown>
-				CraftForge:SkillButton_OnMouseDown(self)
+				CraftBench:SkillButton_OnMouseDown(self)
 			</OnMouseDown>
 			<OnLoad>
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
@@ -421,30 +421,30 @@
 				if not InCombatLockdown() then self:EnableKeyboard(false) end
 			</OnLoad>
 			<OnClick>
-				CraftForge:InventoryFilterButtons_Hide()
-				CraftForge:SkillButton_OnClick(self,button)
+				CraftBench:InventoryFilterButtons_Hide()
+				CraftBench:SkillButton_OnClick(self,button)
 			</OnClick>
 			<OnDragStart>
-				CraftForge.mouseOver = self
-				CraftForge:SkillButton_OnDragStart(self, button)
+				CraftBench.mouseOver = self
+				CraftBench:SkillButton_OnDragStart(self, button)
 			</OnDragStart>
 			<OnReceiveDrag>
-				CraftForge.mouseOver = self
-				CraftForge:SkillButton_OnReceiveDrag(self, button)
+				CraftBench.mouseOver = self
+				CraftBench:SkillButton_OnReceiveDrag(self, button)
 			</OnReceiveDrag>
 			<OnDragStop>
-				CraftForge:SkillButton_OnDragStop(self, button)
+				CraftBench:SkillButton_OnDragStop(self, button)
 			</OnDragStop>
 			<OnEnter>
 				self:RegisterEvent("MODIFIER_STATE_CHANGED")
-				CraftForge.mouseOver = self
-				CraftForge:SkillButton_OnEnter(self)
+				CraftBench.mouseOver = self
+				CraftBench:SkillButton_OnEnter(self)
 			</OnEnter>
 			<OnHide>
-				if self == CraftForge.mouseOver then
-					if not InCombatLockdown() then CraftForgeFrame:EnableKeyboard(false) end
-					CraftForge.mouseOver = nil
-					if CraftForge.gttScale then GameTooltip:SetScale(CraftForge.gttScale) end
+				if self == CraftBench.mouseOver then
+					if not InCombatLockdown() then CraftBenchFrame:EnableKeyboard(false) end
+					CraftBench.mouseOver = nil
+					if CraftBench.gttScale then GameTooltip:SetScale(CraftBench.gttScale) end
 					GameTooltip:Hide()
 				end
 			</OnHide>
@@ -453,20 +453,20 @@
 				local ct = _G[self:GetName().."Counts"]
 				local r,g,b = ct:GetTextColor()
 				_G[self:GetName().."Name"]:SetTextColor(r, g, b)
-				CraftForge.mouseOver = nil
-				if CraftForge.gttScale then GameTooltip:SetScale(CraftForge.gttScale) end
+				CraftBench.mouseOver = nil
+				if CraftBench.gttScale then GameTooltip:SetScale(CraftBench.gttScale) end
 				GameTooltip:Hide()
 			</OnLeave>
 			<OnEvent>
 				if event == "MODIFIER_STATE_CHANGED" then
-					if self == CraftForge.mouseOver then
-						CraftForge:SkillButton_OnEnter(CraftForge.mouseOver)
+					if self == CraftBench.mouseOver then
+						CraftBench:SkillButton_OnEnter(CraftBench.mouseOver)
 					end
 					if not InCombatLockdown() then
 						if IsControlKeyDown() then
-							CraftForgeFrame:EnableKeyboard(true)
+							CraftBenchFrame:EnableKeyboard(true)
 						else
-							CraftForgeFrame:EnableKeyboard(false)
+							CraftBenchFrame:EnableKeyboard(false)
 						end
 					end
 				end
@@ -476,7 +476,7 @@
 	<!--
 		simplified skill button template for dragging
 	-->
-	<Frame name="CraftForgeSkillButtonDragTemplate" hidden="true" virtual="true">
+	<Frame name="CraftBenchSkillButtonDragTemplate" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="293" y="1" />
 		</Size>
@@ -515,7 +515,7 @@
 			Textures for the +/- buttons on headers
 		-->
 		<Frames>
-			<Button name="$parentExpand" inherits="CraftForgeHeaderExpandButtonTemplate">
+			<Button name="$parentExpand" inherits="CraftBenchHeaderExpandButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
 						<Offset>
@@ -545,10 +545,10 @@
 		</FontString>
 		<Scripts>
 			<OnTabPressed>
-				CraftForge:NameEditSave()
+				CraftBench:NameEditSave()
 			</OnTabPressed>
 			<OnEnterPressed>
-				CraftForge:NameEditSave()
+				CraftBench:NameEditSave()
 			</OnEnterPressed>
 			<OnEscapePressed>
 				self:ClearFocus()
@@ -560,7 +560,7 @@
 				if (self.originalButton) then
 					self.originalButton:Show()
 					self.originalButton = nil
-					CraftForge:UpdateTradeSkillWindow()
+					CraftBench:UpdateTradeSkillWindow()
 				end
 			</OnEditFocusLost>
 			<OnEditFocusGained>
@@ -587,10 +587,10 @@
 		</FontString>
 		<Scripts>
 			<OnTabPressed>
-				CraftForge:GroupNameEditSave()
+				CraftBench:GroupNameEditSave()
 			</OnTabPressed>
 			<OnEnterPressed>
-				CraftForge:GroupNameEditSave()
+				CraftBench:GroupNameEditSave()
 			</OnEnterPressed>
 			<OnEscapePressed>
 				self:ClearFocus()
@@ -599,8 +599,8 @@
 			</OnTextChanged>
 			<OnEditFocusLost>
 				self:Hide()
-				CraftForgeRecipeGroupDropdownButton:Show()
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBenchRecipeGroupDropdownButton:Show()
+				CraftBench:UpdateTradeSkillWindow()
 			</OnEditFocusLost>
 			<OnEditFocusGained>
 				self:HighlightText()
@@ -612,7 +612,7 @@
 	#  Template for all the buttons used in the list of queued items
 	#
 	-->
-	<Frame name="CraftForgeQueueItemButtonTemplate_Count" hidden="false" virtual="true">
+	<Frame name="CraftBenchQueueItemButtonTemplate_Count" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="36" y="16"/>
 		</Size>
@@ -631,7 +631,7 @@
 			</Layer>
 		</Layers>
 	</Frame>
-	<Frame name="CraftForgeQueueItemButtonTemplate_Name" hidden="false" virtual="true">
+	<Frame name="CraftBenchQueueItemButtonTemplate_Name" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="274" y="16"/>
 		</Size>
@@ -650,12 +650,12 @@
 			</Layer>
 		</Layers>
 	</Frame>
-	<Frame name="CraftForgeQueueItemButtonTemplate" hidden="true" virtual="true">
+	<Frame name="CraftBenchQueueItemButtonTemplate" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="290" y="16"/>
 		</Size>
 		<Frames>
-			<Frame name="$parentCount" inherits="CraftForgeQueueItemButtonTemplate_Count">
+			<Frame name="$parentCount" inherits="CraftBenchQueueItemButtonTemplate_Count">
 				<Anchors>
 					<Anchor point="LEFT">
 						<Offset>
@@ -664,7 +664,7 @@
 					</Anchor>
 				</Anchors>
 			</Frame>
-			<Button name="$parentName" inherits="CraftForgeQueueItemButtonTemplate_Name">
+			<Button name="$parentName" inherits="CraftBenchQueueItemButtonTemplate_Name">
 				<Anchors>
 					<Anchor point="LEFT">
 						<Offset>
@@ -683,8 +683,8 @@
 						_G[self:GetName().."Text"]:SetTextColor(1,1,0)
 					</OnLeave>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:QueueItemButton_OnClick(self, button)
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:QueueItemButton_OnClick(self, button)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -701,8 +701,8 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:RemoveQueuedCommand(self:GetID())
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:RemoveQueuedCommand(self:GetID())
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -713,7 +713,7 @@
 	# Template for all buttons used to display the reagents needed
 	#
 	-->
-	<Frame name="CraftForgeReagentTemplate" hidden="false" virtual="true">
+	<Frame name="CraftBenchReagentTemplate" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="210" y="20"/>
 		</Size>
@@ -784,29 +784,29 @@
 				self:Disable()
 			</OnLoad>
 			<OnEnter>
-				CraftForge:ReagentButtonOnEnter(self, CraftForgeFrame.selectedSkill, self:GetID())
+				CraftBench:ReagentButtonOnEnter(self, CraftBenchFrame.selectedSkill, self:GetID())
 			</OnEnter>
 			<OnLeave>
-				CraftForge:ReagentButtonOnLeave(self, CraftForgeFrame.selectedSkill, self:GetID())
+				CraftBench:ReagentButtonOnLeave(self, CraftBenchFrame.selectedSkill, self:GetID())
 			</OnLeave>
 			<OnUpdate>
 				CursorOnUpdate(self)
 			</OnUpdate>
 			<OnClick>
-				CraftForge:InventoryFilterButtons_Hide()
+				CraftBench:InventoryFilterButtons_Hide()
 				if ( button == "LeftButton" and IsControlKeyDown() ) then
 				<!-- This opens up the dressing room window and display the character
 					 wearing the item (if that is possible) -->
-					CraftForge:ReagentButtonControlClick(self, button, CraftForge.selectedSkill, self:GetID())
+					CraftBench:ReagentButtonControlClick(self, button, CraftBench.selectedSkill, self:GetID())
 				elseif ( button == "LeftButton" and IsShiftKeyDown() ) then
 				<!-- This put a link to the *item* that can be created with this trade skill
 					 into the current chat edit box -->
-					CraftForge:ReagentButtonShiftClick(self, button, CraftForge.selectedSkill, self:GetID())
+					CraftBench:ReagentButtonShiftClick(self, button, CraftBench.selectedSkill, self:GetID())
 				elseif ( button == "RightButton" ) then
-					CraftForge:ReagentButtonRightClick(self, button, CraftForge.selectedSkill, self:GetID())
+					CraftBench:ReagentButtonRightClick(self, button, CraftBench.selectedSkill, self:GetID())
 				else
 				<!-- generic click action -->
-					CraftForge:ReagentButtonOnClick(self, button, CraftForge.selectedSkill, self:GetID())
+					CraftBench:ReagentButtonOnClick(self, button, CraftBench.selectedSkill, self:GetID())
 				end
 			</OnClick>
 		</Scripts>
@@ -816,7 +816,7 @@
 	# Template used when creating checkboxes
 	#
 	-->
-	<CheckButton name="CraftForgeCheckButtonTemplate" virtual="true">
+	<CheckButton name="CraftBenchCheckButtonTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="20" y="20"/>
 		</Size>
@@ -839,7 +839,7 @@
 		<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
 		<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 	</CheckButton>
-	<Frame name="CraftForgeDetailsStarTemplate" parentArray="Stars" virtual="true">
+	<Frame name="CraftBenchDetailsStarTemplate" parentArray="Stars" virtual="true">
 		<Size x="16" y="15"/>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -854,9 +854,9 @@
 	#
 	#   Frames
 	#
-	# Don't change the name 'CraftForgeFrame' as other addons may depend on it
+	# Don't change the name 'CraftBenchFrame' as other addons may depend on it
 	-->
-	<Frame name="CraftForgeFrame" toplevel="true" movable="true" clampedToScreen="true" resizable="false" parent="UIParent" enableMouse="true" hidden="true" inherits="BackdropTemplate">
+	<Frame name="CraftBenchFrame" toplevel="true" movable="true" clampedToScreen="true" resizable="false" parent="UIParent" enableMouse="true" hidden="true" inherits="BackdropTemplate">
 		<Size>
 			<AbsDimension x="900" y="620"/>
 		</Size>
@@ -869,12 +869,12 @@
 			# A button that shows plugin buttons
 			#
 			-->
-			<Button name="CraftForgePluginButton" inherits="UIPanelButtonTemplate" text="Plugins" parent="CraftForgeFrame">
+			<Button name="CraftBenchPluginButton" inherits="UIPanelButtonTemplate" text="Plugins" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="80" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeFrame" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchFrame" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="5" y="-5"/>
 						</Offset>
@@ -882,8 +882,8 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:PluginButton_OnClick(self)
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:PluginButton_OnClick(self)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -892,9 +892,9 @@
 			# A button on the top right to close the window
 			#
 			-->
-			<Button name="CraftForgeFrameCloseButton" inherits="UIPanelCloseButton">
+			<Button name="CraftBenchFrameCloseButton" inherits="UIPanelCloseButton">
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="CraftForgeFrame" relativePoint="TOPRIGHT">
+					<Anchor point="TOPRIGHT" relativeTo="CraftBenchFrame" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="-3" y="-3"/>
 						</Offset>
@@ -902,9 +902,9 @@
 				</Anchors>
 				<Scripts>
 					<OnHide>
-						if CraftForge.fullView then
-							CraftForge:InventoryFilterButtons_Hide()
-							CraftForge:CraftForgeFrameForceClose()
+						if CraftBench.fullView then
+							CraftBench:InventoryFilterButtons_Hide()
+							CraftBench:CraftBenchFrameForceClose()
 						end
 					</OnHide>
 				</Scripts>
@@ -914,12 +914,12 @@
 			# A button that displays the options dialog
 			#
 			-->
-			<Button name="CraftForgeShowOptionsButton">
+			<Button name="CraftBenchShowOptionsButton">
 				<Size>
 					<AbsDimension x="16" y="32"/>
 				</Size>
 				<Anchors>
-					<Anchor point="RIGHT" relativeTo="CraftForgeFrameCloseButton" relativePoint="LEFT">
+					<Anchor point="RIGHT" relativeTo="CraftBenchFrameCloseButton" relativePoint="LEFT">
 						<Offset>
 							<AbsDimension x="0" y="6"/>
 						</Offset>
@@ -927,8 +927,8 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:ShowOptions()
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:ShowOptions()
 					</OnClick>
 				</Scripts>
 				<NormalTexture file="Interface\Buttons\UI-MicroButton-Help-Up"/>
@@ -940,9 +940,9 @@
 			# Drop down where users can select the grouping method they want to use
 			#
 			-->
-			<Frame name="CraftForgeRecipeGroupDropdown" inherits="UIDropDownMenuTemplate">
+			<Frame name="CraftBenchRecipeGroupDropdown" inherits="UIDropDownMenuTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeFrame" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchFrame" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="88" y="-34"/>
 						</Offset>
@@ -950,7 +950,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="CraftForgeGroupLabel" inherits="GameFontNormal" text="Grouping">
+						<FontString name="CraftBenchGroupLabel" inherits="GameFontNormal" text="Grouping">
 							<Anchors>
 								<Anchor point="RIGHT" relativeTo="$parent" relativePoint="LEFT">
 									<Offset>
@@ -963,12 +963,12 @@
 					</Layer>
 				</Layers>
 			</Frame>
-			<Button name="CraftForgeRecipeGroupOperations">
+			<Button name="CraftBenchRecipeGroupOperations">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="CraftForgeRecipeGroupDropdownButton" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftBenchRecipeGroupDropdownButton" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="5" y="0"/>
 						</Offset>
@@ -979,8 +979,8 @@
 				<HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
 				<Scripts>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:RecipeGroupOperations_OnClick(self)
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:RecipeGroupOperations_OnClick(self)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -989,9 +989,9 @@
 			# Drop down where users can select the sorting method they want to use
 			#
 			-->
-			<Frame name="CraftForgeSortDropdown" inherits="UIDropDownMenuTemplate">
+			<Frame name="CraftBenchSortDropdown" inherits="UIDropDownMenuTemplate">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="CraftForgeRecipeGroupOperations" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftBenchRecipeGroupOperations" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="54" y="-2"/>
 						</Offset>
@@ -999,7 +999,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="CraftForgeSortLabel" inherits="GameFontNormal" text="Sorting">
+						<FontString name="CraftBenchSortLabel" inherits="GameFontNormal" text="Sorting">
 							<Anchors>
 								<Anchor point="RIGHT" relativeTo="$parent" relativePoint="LEFT">
 									<Offset>
@@ -1017,9 +1017,9 @@
 			# Button to display an arrow for sorting in ascending mode
 			#
 			-->
-			<Button name="CraftForgeSortAscButton" inherits="UIPanelScrollUpButtonTemplate" hidden="false">
+			<Button name="CraftBenchSortAscButton" inherits="UIPanelScrollUpButtonTemplate" hidden="false">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="CraftForgeSortDropdownButton" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftBenchSortDropdownButton" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="5" y="0"/>
 						</Offset>
@@ -1031,9 +1031,9 @@
 			# Button to display an arrow for sorting in descending mode
 			#
 			-->
-			<Button name="CraftForgeSortDescButton" inherits="UIPanelScrollDownButtonTemplate" hidden="true">
+			<Button name="CraftBenchSortDescButton" inherits="UIPanelScrollDownButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="CraftForgeSortDropdownButton" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftBenchSortDropdownButton" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="5" y="0"/>
 						</Offset>
@@ -1046,9 +1046,9 @@
 			# Drop down where users can select the new filter they want to use
 			#
 			-->
-			<Frame name="CraftForgeFilterDropdown" inherits="UIDropDownMenuTemplate">
+			<Frame name="CraftBenchFilterDropdown" inherits="UIDropDownMenuTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeRecipeGroupDropdown" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchRecipeGroupDropdown" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="-2"/>
 						</Offset>
@@ -1056,7 +1056,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="CraftForgeFilterLabel" inherits="GameFontNormal" text="Filter">
+						<FontString name="CraftBenchFilterLabel" inherits="GameFontNormal" text="Filter">
 							<Anchors>
 								<Anchor point="RIGHT" relativeTo="$parent" relativePoint="LEFT">
 									<Offset>
@@ -1069,12 +1069,12 @@
 					</Layer>
 				</Layers>
 			</Frame>
-			<Button name="CraftForgeFilterOperations">
+			<Button name="CraftBenchFilterOperations">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="CraftForgeFilterDropdownButton" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftBenchFilterDropdownButton" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="5" y="0"/>
 						</Offset>
@@ -1082,7 +1082,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="CraftForgeFilterText" inherits="GameFontNormalSmall" wordwrap="false" justifyH="LEFT">
+						<FontString name="CraftBenchFilterText" inherits="GameFontNormalSmall" wordwrap="false" justifyH="LEFT">
 							<Anchors>
 								<Anchor point="LEFT" relativeTo="$parent" relativePoint="RIGHT">
 									<Offset>
@@ -1099,25 +1099,25 @@
 				<HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
 				<Scripts>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						UIDropDownMenu_Initialize(CraftForgeFilterDropMenu, CraftForge.InitializeFilterDropdown, "MENU")
-						ToggleDropDownMenu(1, nil, CraftForgeFilterDropMenu, self, self:GetWidth(), 0)
+						CraftBench:InventoryFilterButtons_Hide()
+						UIDropDownMenu_Initialize(CraftBenchFilterDropMenu, CraftBench.InitializeFilterDropdown, "MENU")
+						ToggleDropDownMenu(1, nil, CraftBenchFilterDropMenu, self, self:GetWidth(), 0)
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Frame name="CraftForgeFilterDropMenu" inherits="UIDropDownMenuTemplate">
+			<Frame name="CraftBenchFilterDropMenu" inherits="UIDropDownMenuTemplate">
 			</Frame>
 			<!--
 			#
 			# An edit box where users can type in search text
 			#
 			-->
-			<EditBox name="CraftForgeSearchBox" letters="50" historyLines="0" autoFocus="false">
+			<EditBox name="CraftBenchSearchBox" letters="50" historyLines="0" autoFocus="false">
 				<Size>
 					<AbsDimension x="152" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeSortDropdown" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchSortDropdown" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="18" y="-4"/>
 						</Offset>
@@ -1163,7 +1163,7 @@
 						</Texture>
 					</Layer>
 					<Layer level="ARTWORK">
-						<FontString name="CraftForgeSearchLabel" inherits="GameFontNormal" text="Search">
+						<FontString name="CraftBenchSearchLabel" inherits="GameFontNormal" text="Search">
 							<Anchors>
 								<Anchor point="RIGHT" relativeTo="$parent" relativePoint="LEFT">
 									<Offset>
@@ -1183,7 +1183,7 @@
 						self:ClearFocus()
 					</OnEscapePressed>
 					<OnTextChanged>
-						CraftForge:UpdateSearch(self:GetText())
+						CraftBench:UpdateSearch(self:GetText())
 					</OnTextChanged>
 					<OnEditFocusLost>
 						self:HighlightText(0, 0)
@@ -1198,12 +1198,12 @@
 				</Scripts>
 				<FontString inherits="ChatFontNormal"/>
 			</EditBox>
-			<Button name="CraftForgeSearchClear">
+			<Button name="CraftBenchSearchClear">
 				<Size>
 					<AbsDimension x="32" y="32"/>
 				</Size>
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="CraftForgeSearchBox" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftBenchSearchBox" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="-8" y="-2"/>
 						</Offset>
@@ -1214,9 +1214,9 @@
 				<HighlightTexture file="Interface\Buttons\CancelButton-Highlight" alphaMode="ADD"/>
 				<Scripts>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForgeSearchBox:SetText("")
-						CraftForgeSearchBox:ClearFocus()
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBenchSearchBox:SetText("")
+						CraftBenchSearchBox:ClearFocus()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -1225,7 +1225,7 @@
 			# A status bar to show how much skill you have in this trade
 			#
 			-->
-			<StatusBar name="CraftForgeRankFrame" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="0">
+			<StatusBar name="CraftBenchRankFrame" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="0">
 				<Size>
 					<AbsDimension x="360" y="18"/>
 				</Size>
@@ -1240,7 +1240,7 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentSkillRank" inherits="GameFontHighlightSmall" justifyH="CENTER">
 							<Anchors>
-								<Anchor point="TOP" relativeTo="CraftForgeRankFrame">
+								<Anchor point="TOP" relativeTo="CraftBenchRankFrame">
 									<Offset>
 										<AbsDimension x="0" y="-2"/>
 									</Offset>
@@ -1249,7 +1249,7 @@
 						</FontString>
 						<FontString name="$parentSkillChance" inherits="GameFontHighlightSmall" justifyH="CENTER">
 							<Anchors>
-								<Anchor point="TOP" relativeTo="CraftForgeRankFrame">
+								<Anchor point="TOP" relativeTo="CraftBenchRankFrame">
 									<Offset>
 										<AbsDimension x="0" y="-20"/>
 									</Offset>
@@ -1289,17 +1289,17 @@
 			# The list of known recipes on the left hand side
 			#
 			-->
-			<Frame name="CraftForgeSkillListParent" parent="CraftForgeFrame" inherits="BackdropTemplate">
+			<Frame name="CraftBenchSkillListParent" parent="CraftBenchFrame" inherits="BackdropTemplate">
 				<Size>
 					<AbsDimension x="360" y="446"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeFrame" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchFrame" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="10" y="-114"/>
 						</Offset>
 					</Anchor>
-					<Anchor point="BOTTOM" relativeTo="CraftForgeFrame" relativePoint="BOTTOM">
+					<Anchor point="BOTTOM" relativeTo="CraftBenchFrame" relativePoint="BOTTOM">
 						<Offset>
 							<AbsDimension x="0" y="5"/>
 						</Offset>
@@ -1308,14 +1308,14 @@
 				<Scripts>
 				</Scripts>
 			</Frame>
-			<ScrollFrame name="CraftForgeSkillList" inherits="FauxScrollFrameTemplate" parent="CraftForgeSkillListParent">
+			<ScrollFrame name="CraftBenchSkillList" inherits="FauxScrollFrameTemplate" parent="CraftBenchSkillListParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeSkillListParent" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchSkillListParent" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="5" y="-5"/>
 						</Offset>
 					</Anchor>
-					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeSkillListParent" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchSkillListParent" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="-27" y="5"/>
 						</Offset>
@@ -1323,11 +1323,11 @@
 				</Anchors>
 				<Scripts>
 					<OnVerticalScroll>
-						CraftForge:InventoryFilterButtons_Hide()
-						FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_TRADE_SKILL_HEIGHT, CraftForge.SkillList_OnScroll)
+						CraftBench:InventoryFilterButtons_Hide()
+						FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTBENCH_TRADE_SKILL_HEIGHT, CraftBench.SkillList_OnScroll)
 						-- re-apply the text highlight and tooltip (if any) when the button changes under the mouse on scroll event
-						if CraftForge.mouseOver then
-							CraftForge:SkillButton_OnEnter(CraftForge.mouseOver)
+						if CraftBench.mouseOver then
+							CraftBench:SkillButton_OnEnter(CraftBench.mouseOver)
 						end
 					</OnVerticalScroll>
 					<OnLoad>
@@ -1341,9 +1341,9 @@
 			# Check boxes for various recipe filtering options.
 			#
 			-->
-			<CheckButton name="CraftForgeHideUncraftableRecipes" hidden="false">
+			<CheckButton name="CraftBenchHideUncraftableRecipes" hidden="false">
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeSkillListParent" relativePoint="TOPRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchSkillListParent" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="-5" y="0"/>
 						</Offset>
@@ -1352,14 +1352,14 @@
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
-				<NormalTexture file="Interface\Addons\CraftForge\Icons\bag.tga"/>
-				<PushedTexture file="Interface\Addons\CraftForge\Icons\bag.tga"/>
+				<NormalTexture file="Interface\Addons\CraftBench\Icons\bag.tga"/>
+				<PushedTexture file="Interface\Addons\CraftBench\Icons\bag.tga"/>
 				<CheckedTexture alphaMode="ADD" file="Interface\Buttons\CheckButtonHilight"/>
 				<HighlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square"/>
-				<DisabledCheckedTexture file="Interface\Addons\CraftForge\Icons\bag.tga"/>
+				<DisabledCheckedTexture file="Interface\Addons\CraftBench\Icons\bag.tga"/>
 				<Scripts>
 					<OnShow>
-						local hideUncraftable = CraftForge:GetTradeSkillOption("hideuncraftable")
+						local hideUncraftable = CraftBench:GetTradeSkillOption("hideuncraftable")
 						C_TradeSkillUI.SetOnlyShowMakeableRecipes(hideUncraftable)
 						if hideUncraftable then
 							self:SetChecked(true)
@@ -1372,24 +1372,24 @@
 					</OnLoad>
 					<OnClick>
 						if button=="LeftButton" then
-							CraftForge:InventoryFilterButtons_Hide()
+							CraftBench:InventoryFilterButtons_Hide()
 							if self:GetChecked() then
 								PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON) -- "igMainMenuOptionCheckBoxOn"
 							end
-							local before = CraftForge:GetTradeSkillOption("hideuncraftable")
-							CraftForge:SetTradeSkillOption("hideuncraftable", not before)
+							local before = CraftBench:GetTradeSkillOption("hideuncraftable")
+							CraftBench:SetTradeSkillOption("hideuncraftable", not before)
 							C_TradeSkillUI.SetOnlyShowMakeableRecipes(not before)
-							CraftForge:PrintTradeSkillFilter()
-							CraftForge.dataScanned = false
-							CraftForge:SortAndFilterRecipes()
-							CraftForge:UpdateTradeSkillWindow()
+							CraftBench:PrintTradeSkillFilter()
+							CraftBench.dataScanned = false
+							CraftBench:SortAndFilterRecipes()
+							CraftBench:UpdateTradeSkillWindow()
 						else
-							if CraftForgeInventoryFilterBag:IsVisible() then
-								CraftForge:InventoryFilterButtons_Hide()
+							if CraftBenchInventoryFilterBag:IsVisible() then
+								CraftBench:InventoryFilterButtons_Hide()
 							else
-								CraftForge:InventoryFilterButtons_Show()
+								CraftBench:InventoryFilterButtons_Show()
 							end
-							if CraftForge:GetTradeSkillOption("hideuncraftable") then
+							if CraftBench:GetTradeSkillOption("hideuncraftable") then
 								self:SetChecked(true)
 							else
 								self:SetChecked(false)
@@ -1399,8 +1399,8 @@
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
 						GameTooltip:SetText(CRAFT_IS_MAKEABLE_TOOLTIP, nil, nil, nil, nil, true)
-						GameTooltip:AddLine(CraftForge.L["Left-Click to toggle"], .7, .7, .7)
-						GameTooltip:AddLine(CraftForge.L["Right-Click for filtering options"], .7, .7, .7)
+						GameTooltip:AddLine(CraftBench.L["Left-Click to toggle"], .7, .7, .7)
+						GameTooltip:AddLine(CraftBench.L["Right-Click for filtering options"], .7, .7, .7)
 						GameTooltip:Show()
 					</OnEnter>
 					<OnLeave>
@@ -1413,9 +1413,9 @@
 			# inventory filter selector
 			#
 			-->
-			<CheckButton name="CraftForgeUseHighestQuality" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftBenchUseHighestQuality" inherits="CraftBenchInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeHideUncraftableRecipes" relativePoint="TOPLEFT">
+					<Anchor point="BOTTOMLEFT" relativeTo="CraftBenchHideUncraftableRecipes" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -1428,8 +1428,8 @@
 						self:SetFrameLevel(self:GetFrameLevel()+5)
 					</OnLoad>
 					<OnClick>
-						CraftForge:ModifiedListToggleBestQuality()
-						CraftForge:UpdateDetailWindow(CraftForge.selectedSkill)
+						CraftBench:ModifiedListToggleBestQuality()
+						CraftBench:UpdateDetailWindow(CraftBench.selectedSkill)
 					</OnClick>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
@@ -1446,9 +1446,9 @@
 			# See: ProfessionsConcentrateToggleButtonMixin:OnEnter() in Blizzard_ProfessionsTemplates.lua
 			#
 			-->
-			<CheckButton name="CraftForgeUseConcentration" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftBenchUseConcentration" inherits="CraftBenchInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeUseHighestQuality" relativePoint="TOPRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchUseHighestQuality" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -1461,8 +1461,8 @@
 						self:SetFrameLevel(self:GetFrameLevel()+5)
 					</OnLoad>
 					<OnClick>
-						CraftForge:ToggleUseConcentration()
-						CraftForge:UpdateDetailWindow(CraftForge.selectedSkill)
+						CraftBench:ToggleUseConcentration()
+						CraftBench:UpdateDetailWindow(CraftBench.selectedSkill)
 					</OnClick>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
@@ -1474,9 +1474,9 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="CraftForgeInventoryFilterOwned" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftBenchInventoryFilterOwned" inherits="CraftBenchInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeHideUncraftableRecipes" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchHideUncraftableRecipes" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="-30" y="0"/>
 						</Offset>
@@ -1490,15 +1490,15 @@
 					</OnLoad>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="CraftForgeInventoryFilterBag" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftBenchInventoryFilterBag" inherits="CraftBenchInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="CraftForgeInventoryFilterOwned" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftBenchInventoryFilterOwned" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftForge\Icons\backpack_icon.tga"/>
+				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftBench\Icons\backpack_icon.tga"/>
 				<Scripts>
 					<OnLoad>
 						self:SetFrameLevel(self:GetFrameLevel()+5)
@@ -1506,15 +1506,15 @@
 					</OnLoad>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="CraftForgeInventoryFilterCraft" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftBenchInventoryFilterCraft" inherits="CraftBenchInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="CraftForgeInventoryFilterBag" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftBenchInventoryFilterBag" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftForge\Icons\crafted.tga"/>
+				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftBench\Icons\crafted.tga"/>
 				<Scripts>
 					<OnLoad>
 						self:SetFrameLevel(self:GetFrameLevel()+5)
@@ -1522,15 +1522,15 @@
 					</OnLoad>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="CraftForgeInventoryFilterVendor" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftBenchInventoryFilterVendor" inherits="CraftBenchInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="CraftForgeInventoryFilterCraft" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftBenchInventoryFilterCraft" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftForge\Icons\vendor_icon.tga"/>
+				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftBench\Icons\vendor_icon.tga"/>
 				<Scripts>
 					<OnLoad>
 						self:SetFrameLevel(self:GetFrameLevel()+5)
@@ -1538,15 +1538,15 @@
 					</OnLoad>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="CraftForgeInventoryFilterAlts" inherits="CraftForgeInvFilterButtonTemplate" hidden="true">
+			<CheckButton name="CraftBenchInventoryFilterAlts" inherits="CraftBenchInvFilterButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="CraftForgeInventoryFilterVendor" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftBenchInventoryFilterVendor" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftForge\Icons\alts_icon.tga"/>
+				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftBench\Icons\alts_icon.tga"/>
 				<Scripts>
 					<OnLoad>
 						self:SetFrameLevel(self:GetFrameLevel()+5)
@@ -1554,14 +1554,14 @@
 					</OnLoad>
 				</Scripts>
 			</CheckButton>
-			<Button name="CraftForgeRecipeDifficultyButton">
+			<Button name="CraftBenchRecipeDifficultyButton">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
-				<NormalTexture name="CraftForgeRecipeDifficultyButtonTexture" file="Interface\Addons\CraftForge\Icons\skill_colors.tga"/>
+				<NormalTexture name="CraftBenchRecipeDifficultyButtonTexture" file="Interface\Addons\CraftBench\Icons\skill_colors.tga"/>
 				<HighlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square"/>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeHideUncraftableRecipes" relativePoint="BOTTOMLEFT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchHideUncraftableRecipes" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="-5" y="0"/>
 						</Offset>
@@ -1569,17 +1569,17 @@
 				</Anchors>
 				<Scripts>
 					<OnShow>
-						CraftForge:RecipeDifficultyButton_OnShow()
+						CraftBench:RecipeDifficultyButton_OnShow()
 					</OnShow>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
+						CraftBench:InventoryFilterButtons_Hide()
 						PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON) -- "igMainMenuOptionCheckBoxOn"
-						CraftForgeRecipeDifficultySelector:Show()
+						CraftBenchRecipeDifficultySelector:Show()
 						self:Hide()
 					</OnClick>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-						GameTooltip:SetText(CraftForge.L["Select skill difficulty threshold"], nil, nil, nil, nil, true)
+						GameTooltip:SetText(CraftBench.L["Select skill difficulty threshold"], nil, nil, nil, nil, true)
 						GameTooltip:Show()
 					</OnEnter>
 					<OnLeave>
@@ -1587,56 +1587,56 @@
 					</OnLeave>
 				</Scripts>
 			</Button>
-			<Button name="CraftForgeRecipeDifficultySelector" hidden="true">
+			<Button name="CraftBenchRecipeDifficultySelector" hidden="true">
 				<Size>
 					<AbsDimension x="20" y="80"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeRecipeDifficultyButton" relativePoint="BOTTOMLEFT">
+					<Anchor point="BOTTOMLEFT" relativeTo="CraftBenchRecipeDifficultyButton" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<NormalTexture file="Interface\Addons\CraftForge\Icons\skill_colors.tga"/>
+				<NormalTexture file="Interface\Addons\CraftBench\Icons\skill_colors.tga"/>
 				<Scripts>
 					<OnLoad>
 						self:SetFrameLevel(self:GetFrameLevel()+2)
 					</OnLoad>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
+						CraftBench:InventoryFilterButtons_Hide()
 						PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON) -- "igMainMenuOptionCheckBoxOn"
 						local bottom = self:GetBottom()
 						local top = self:GetTop()
 						local x,y = GetCursorPosition()
-						local scale = CraftForgeFrame:GetEffectiveScale()
+						local scale = CraftBenchFrame:GetEffectiveScale()
 						local newLevel = math.floor(4*(y/scale-bottom)/(top-bottom+1)+1)
-						CraftForge:SetTradeSkillOption("filterLevel", newLevel)
+						CraftBench:SetTradeSkillOption("filterLevel", newLevel)
 						if newLevel > 1 then
 							C_TradeSkillUI.SetOnlyShowSkillUpRecipes(true)
 						else
 							C_TradeSkillUI.SetOnlyShowSkillUpRecipes(false)
 						end
-						CraftForge:PrintTradeSkillFilter()
+						CraftBench:PrintTradeSkillFilter()
 						self:Hide()
-						CraftForgeRecipeDifficultyButton:Show()
-						CraftForge.dataScanned = false
-						CraftForge:SortAndFilterRecipes()
-						CraftForge:UpdateTradeSkillWindow()
+						CraftBenchRecipeDifficultyButton:Show()
+						CraftBench.dataScanned = false
+						CraftBench:SortAndFilterRecipes()
+						CraftBench:UpdateTradeSkillWindow()
 					</OnClick>
 					<OnLeave>
 						self:Hide()
-						CraftForgeRecipeDifficultyButton:Show()
+						CraftBenchRecipeDifficultyButton:Show()
 					</OnLeave>
 				</Scripts>
 			</Button>
-			<Button name="CraftForgeCollapseAllButton">
+			<Button name="CraftBenchCollapseAllButton">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
-				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftForge\Icons\collapse_icon.tga"/>
+				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftBench\Icons\collapse_icon.tga"/>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeRecipeDifficultyButton" relativePoint="BOTTOMLEFT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchRecipeDifficultyButton" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="-5" y="0"/>
 						</Offset>
@@ -1644,11 +1644,11 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CraftForge:CollapseAll()
+						CraftBench:CollapseAll()
 					</OnClick>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-						GameTooltip:SetText(CraftForge.L["Collapse all groups"], nil, nil, nil, nil, true)
+						GameTooltip:SetText(CraftBench.L["Collapse all groups"], nil, nil, nil, nil, true)
 						GameTooltip:Show()
 					</OnEnter>
 					<OnLeave>
@@ -1656,13 +1656,13 @@
 					</OnLeave>
 				</Scripts>
 			</Button>
-			<Button name="CraftForgeExpandAllButton">
+			<Button name="CraftBenchExpandAllButton">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
-				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftForge\Icons\expand_icon.tga"/>
+				<NormalTexture name="$parentIcon" file="Interface\Addons\CraftBench\Icons\expand_icon.tga"/>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeCollapseAllButton" relativePoint="BOTTOMLEFT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchCollapseAllButton" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="-5" y="0"/>
 						</Offset>
@@ -1670,11 +1670,11 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CraftForge:ExpandAll()
+						CraftBench:ExpandAll()
 					</OnClick>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-						GameTooltip:SetText(CraftForge.L["Expand all groups"], nil, nil, nil, nil, true)
+						GameTooltip:SetText(CraftBench.L["Expand all groups"], nil, nil, nil, nil, true)
 						GameTooltip:Show()
 					</OnEnter>
 					<OnLeave>
@@ -1682,14 +1682,14 @@
 					</OnLeave>
 				</Scripts>
 			</Button>
-			<Button name="CraftForgeFavoritesOnlyButton">
+			<Button name="CraftBenchFavoritesOnlyButton">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<NormalTexture name="$parentIcon" atlas="tradeskills-star-off" alpha="0.5"/>
 				<HighlightTexture name="$parentIcon" atlas="tradeskills-star"/>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeExpandAllButton" relativePoint="BOTTOMLEFT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchExpandAllButton" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="-5" y="0"/>
 						</Offset>
@@ -1697,17 +1697,17 @@
 				</Anchors>
 				<Scripts>
 					<OnShow>
-						CraftForge:FavoritesOnlyRefresh()
+						CraftBench:FavoritesOnlyRefresh()
 					</OnShow>
 					<OnClick>
-						CraftForge:SetTradeSkillOption("favoritesOnly", not CraftForge:GetTradeSkillOption("favoritesOnly"))
-						CraftForge:FavoritesOnlyRefresh()
-						CraftForge:SortAndFilterRecipes()
-  						CraftForge:UpdateTradeSkillWindow()
+						CraftBench:SetTradeSkillOption("favoritesOnly", not CraftBench:GetTradeSkillOption("favoritesOnly"))
+						CraftBench:FavoritesOnlyRefresh()
+						CraftBench:SortAndFilterRecipes()
+  						CraftBench:UpdateTradeSkillWindow()
 					</OnClick>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-						GameTooltip:SetText(CraftForge.L["Show favorite recipes only. Click on a star on the left side of a recipe to set favorite."], nil, nil, nil, nil, true)
+						GameTooltip:SetText(CraftBench.L["Show favorite recipes only. Click on a star on the left side of a recipe to set favorite."], nil, nil, nil, nil, true)
 						GameTooltip:Show()
 					</OnEnter>
 					<OnLeave>
@@ -1720,7 +1720,7 @@
 			# A highlight frame for the currently selected recipe
 			#
 			-->
-			<Frame name="CraftForgeHighlightFrame" hidden="true">
+			<Frame name="CraftBenchHighlightFrame" hidden="true">
 				<Size>
 					<AbsDimension x="290" y="16"/>
 				</Size>
@@ -1729,7 +1729,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<Texture name="CraftForgeHighlight" file="Interface\Buttons\UI-Listbox-Highlight2"/>
+						<Texture name="CraftBenchHighlight" file="Interface\Buttons\UI-Listbox-Highlight2"/>
 					</Layer>
 				</Layers>
 			</Frame>
@@ -1738,9 +1738,9 @@
 			# And the list of buttons that are in the scrollable area
 			#
 			-->
-			<Button name="CraftForgeScrollButton1" inherits="CraftForgeSkillButtonTemplate">
+			<Button name="CraftBenchScrollButton1" inherits="CraftBenchSkillButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeSkillList" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchSkillList" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -1754,12 +1754,12 @@
 			# A frame to hold the reagent list and associated details on the right hand side
 			#
 			-->
-			<Frame name="CraftForgeReagentParent" parent="CraftForgeFrame" inherits="BackdropTemplate">
+			<Frame name="CraftBenchReagentParent" parent="CraftBenchFrame" inherits="BackdropTemplate">
 				<Size>
 					<AbsDimension x="360" y="316"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="CraftForgeFrame" relativePoint="TOPRIGHT">
+					<Anchor point="TOPRIGHT" relativeTo="CraftBenchFrame" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="-10" y="-114"/>
 						</Offset>
@@ -1767,24 +1767,24 @@
 				</Anchors>
 				<Layers>
 					<Layer level="OVERLAY">
-						<FontString name="CraftForgeSkillName" inherits="GameFontNormal" text="Skill Name" justifyH="LEFT">
+						<FontString name="CraftBenchSkillName" inherits="GameFontNormal" text="Skill Name" justifyH="LEFT">
 							<Size>
 								<AbsDimension x="244" y="0"/>
 							</Size>
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentParent" relativePoint="TOPLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftBenchReagentParent" relativePoint="TOPLEFT">
 									<Offset>
 										<AbsDimension x="47" y="-10"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<FontString name="CraftForgeDescriptionText" inherits="GameFontHighlightSmall" wordwrap="true" justifyH="LEFT">
+						<FontString name="CraftBenchDescriptionText" inherits="GameFontHighlightSmall" wordwrap="true" justifyH="LEFT">
 							<Size>
 								<AbsDimension x="244" y="0"/>
 							</Size>
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="CraftForgeSkillName" relativePoint="BOTTOMLEFT" >
+								<Anchor point="TOPLEFT" relativeTo="CraftBenchSkillName" relativePoint="BOTTOMLEFT" >
 									<Offset>
 										<AbsDimension x="4" y="-3"/>
 									</Offset>
@@ -1792,18 +1792,18 @@
 							</Anchors>
 						</FontString>
 						<!-- If the skill is a first craft, this is the display for it -->
-						<FontString name="CraftForgeFirstCraft" inherits="GameFontHighlightSmall" text="PROFESSIONS_FIRST_CRAFT">
+						<FontString name="CraftBenchFirstCraft" inherits="GameFontHighlightSmall" text="PROFESSIONS_FIRST_CRAFT">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="CraftForgeDescriptionText" relativePoint="BOTTOMLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftBenchDescriptionText" relativePoint="BOTTOMLEFT">
 									<Offset>
 										<AbsDimension x="0" y="0"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<FontString name="CraftForgeSkillCooldown" inherits="GameFontRedSmall" wordwrap="true" justifyH="LEFT" justifyV="TOP">
+						<FontString name="CraftBenchSkillCooldown" inherits="GameFontRedSmall" wordwrap="true" justifyH="LEFT" justifyV="TOP">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="CraftForgeFirstCraft" relativePoint="BOTTOMLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftBenchFirstCraft" relativePoint="BOTTOMLEFT">
 									<Offset>
 										<AbsDimension x="0" y="0"/>
 									</Offset>
@@ -1811,9 +1811,9 @@
 							</Anchors>
 						</FontString>
 						<!-- If the skill requires a special tool, this is the "Requires: " label for it -->
-						<FontString name="CraftForgeRequirementLabel" inherits="GameFontHighlightSmall" text="REQUIRES_LABEL">
+						<FontString name="CraftBenchRequirementLabel" inherits="GameFontHighlightSmall" text="REQUIRES_LABEL">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="CraftForgeSkillCooldown" relativePoint="BOTTOMLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftBenchSkillCooldown" relativePoint="BOTTOMLEFT">
 									<Offset>
 										<AbsDimension x="0" y="0"/>
 									</Offset>
@@ -1821,39 +1821,39 @@
 							</Anchors>
 						</FontString>
 						<!-- If the skill requires a special tool, this is the place where that tools name is printed -->
-						<FontString name="CraftForgeRequirementText" inherits="GameFontHighlightSmall" justifyV="TOP" justifyH="LEFT">
+						<FontString name="CraftBenchRequirementText" inherits="GameFontHighlightSmall" justifyV="TOP" justifyH="LEFT">
 							<Size>
 								<AbsDimension x="244" y="0"/>
 							</Size>
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="CraftForgeRequirementLabel" relativePoint="TOPRIGHT" >
+								<Anchor point="TOPLEFT" relativeTo="CraftBenchRequirementLabel" relativePoint="TOPRIGHT" >
 									<Offset>
 										<AbsDimension x="4" y="0"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<FontString name="CraftForgeReagentLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="SPELL_REAGENTS">
+						<FontString name="CraftBenchReagentLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="SPELL_REAGENTS">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="CraftForgeRequirementLabel" relativePoint="BOTTOMLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftBenchRequirementLabel" relativePoint="BOTTOMLEFT">
 									<Offset>
 										<AbsDimension x="-47" y="-20"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<FontString name="CraftForgeOptionalLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="SPELL_REAGENTS_OPTIONAL">
+						<FontString name="CraftBenchOptionalLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="SPELL_REAGENTS_OPTIONAL">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="CraftForgeRequirementLabel" relativePoint="BOTTOMLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftBenchRequirementLabel" relativePoint="BOTTOMLEFT">
 									<Offset>
 										<AbsDimension x="-47" y="-20"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<FontString name="CraftForgeFinishingLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="PROFESSIONS_CRAFTING_FINISHING_HEADER">
+						<FontString name="CraftBenchFinishingLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="PROFESSIONS_CRAFTING_FINISHING_HEADER">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="CraftForgeOptionalLabel" relativePoint="BOTTOMLEFT">
+								<Anchor point="TOPLEFT" relativeTo="CraftBenchOptionalLabel" relativePoint="BOTTOMLEFT">
 									<Offset>
 										<AbsDimension x="-47" y="-20"/>
 									</Offset>
@@ -1862,28 +1862,28 @@
 						</FontString>
 						<!-- If there is extra info about a recipe that a mod wants to print, this is where they would
 							 put the text -->
-						<FontString name="CraftForgeExtraDetailTextLeft" inherits="GameFontHighlightSmall" justifyV="TOP" justifyH="LEFT">
+						<FontString name="CraftBenchExtraDetailTextLeft" inherits="GameFontHighlightSmall" justifyV="TOP" justifyH="LEFT">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentParent" relativePoint="BOTTOMLEFT" >
+								<Anchor point="TOPLEFT" relativeTo="CraftBenchReagentParent" relativePoint="BOTTOMLEFT" >
 									<Offset>
 										<AbsDimension x="5" y="30"/>
 									</Offset>
 								</Anchor>
-								<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeReagentParent" relativePoint="BOTTOMRIGHT" >
+								<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchReagentParent" relativePoint="BOTTOMRIGHT" >
 									<Offset>
 										<AbsDimension x="-5" y="5"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<FontString name="CraftForgeExtraDetailTextRight" inherits="GameFontHighlightSmall" justifyV="TOP" justifyH="RIGHT">
+						<FontString name="CraftBenchExtraDetailTextRight" inherits="GameFontHighlightSmall" justifyV="TOP" justifyH="RIGHT">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentParent" relativePoint="BOTTOMLEFT" >
+								<Anchor point="TOPLEFT" relativeTo="CraftBenchReagentParent" relativePoint="BOTTOMLEFT" >
 									<Offset>
 										<AbsDimension x="5" y="30"/>
 									</Offset>
 								</Anchor>
-								<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeReagentParent" relativePoint="BOTTOMRIGHT" >
+								<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchReagentParent" relativePoint="BOTTOMRIGHT" >
 									<Offset>
 										<AbsDimension x="-5" y="5"/>
 									</Offset>
@@ -1893,23 +1893,23 @@
 					</Layer> <!-- OVERLAY -->
 				</Layers>
 			</Frame>
-			<Frame parentKey="StarsFrame" parent="CraftForgeReagentParent" enableMouse="true">
+			<Frame parentKey="StarsFrame" parent="CraftBenchReagentParent" enableMouse="true">
 				<Size x="45" y="16"/>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="CraftForgeReagentParent" relativePoint="TOPRIGHT" x="-15" y="-7"/>
+					<Anchor point="TOPRIGHT" relativeTo="CraftBenchReagentParent" relativePoint="TOPRIGHT" x="-15" y="-7"/>
 				</Anchors>
 				<Frames>
-					<Frame parentKey="Star1" inherits="CraftForgeDetailsStarTemplate">
+					<Frame parentKey="Star1" inherits="CraftBenchDetailsStarTemplate">
 						<Anchors>
 							<Anchor point="LEFT" />
 						</Anchors>
 					</Frame>
-					<Frame parentKey="Star2" inherits="CraftForgeDetailsStarTemplate">
+					<Frame parentKey="Star2" inherits="CraftBenchDetailsStarTemplate">
 						<Anchors>
 							<Anchor point="LEFT" relativeKey="$parent.Star1" relativePoint="RIGHT" x="2" y="0"/>
 						</Anchors>
 					</Frame>
-					<Frame parentKey="Star3" inherits="CraftForgeDetailsStarTemplate">
+					<Frame parentKey="Star3" inherits="CraftBenchDetailsStarTemplate">
 						<Anchors>
 							<Anchor point="LEFT" relativeKey="$parent.Star2" relativePoint="RIGHT" x="2" y="0"/>
 						</Anchors>
@@ -1917,27 +1917,27 @@
 				</Frames>
 				<Scripts>
 					<OnEnter>
-						CraftForge:ReagentStarsFrame_OnMouseEnter(self)
+						CraftBench:ReagentStarsFrame_OnMouseEnter(self)
 					</OnEnter>
 					<OnLeave function="GameTooltip_Hide" />
 				</Scripts>
 			</Frame>
-			<Frame name="CraftForgeRecipeRankFrame" parent="CraftForgeReagentParent" enableMouse="true">
+			<Frame name="CraftBenchRecipeRankFrame" parent="CraftBenchReagentParent" enableMouse="true">
 				<Size x="80" y="20"/>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="CraftForgeReagentParent" relativePoint="TOPRIGHT" x="-5" y="-6"/>
+					<Anchor point="TOPRIGHT" relativeTo="CraftBenchReagentParent" relativePoint="TOPRIGHT" x="-5" y="-6"/>
 				</Anchors>
 				<Frames>
-					<Button name="CraftForgeRecipeRankSelector">
+					<Button name="CraftBenchRecipeRankSelector">
 						<Size>
 							<AbsDimension x="20" y="20"/>
 						</Size>
 						<Anchors>
-							<Anchor point="TOPRIGHT" relativeTo="CraftForgeRecipeRankFrame" relativePoint="TOPRIGHT" x="0" y="0"/>
+							<Anchor point="TOPRIGHT" relativeTo="CraftBenchRecipeRankFrame" relativePoint="TOPRIGHT" x="0" y="0"/>
 						</Anchors>
 						<Layers>
 							<Layer level="ARTWORK">
-								<FontString name="CraftForgeRecipeRankLabel" inherits="GameFontNormal" text="Rank 1">
+								<FontString name="CraftBenchRecipeRankLabel" inherits="GameFontNormal" text="Rank 1">
 									<Anchors>
 										<Anchor point="RIGHT" relativeTo="$parent" relativePoint="LEFT">
 											<Offset>
@@ -1954,14 +1954,14 @@
 						<HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
 						<Scripts>
 							<OnClick>
-								CraftForge:RecipeRankSelector_OnClick(self)
+								CraftBench:RecipeRankSelector_OnClick(self)
 							</OnClick>
 						</Scripts>
 					</Button>
-					<StatusBar name="CraftForgeRecipeRankSkill" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="1">
+					<StatusBar name="CraftBenchRecipeRankSkill" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="1">
 					<Size x="60" y="16"/>
 					<Anchors>
-						<Anchor point="TOPRIGHT" relativeTo="CraftForgeRecipeRankSelector" relativePoint="TOPLEFT" x="-50" y="-2"/>
+						<Anchor point="TOPRIGHT" relativeTo="CraftBenchRecipeRankSelector" relativePoint="TOPLEFT" x="-50" y="-2"/>
 					</Anchors>
 					<Layers>
 						<Layer level="ARTWORK">
@@ -1999,14 +1999,14 @@
 				</Frames>
 				<Scripts>
 					<OnEnter>
-						CraftForge:RecipeRankOnEnter(self)
+						CraftBench:RecipeRankOnEnter(self)
 					</OnEnter>
 					<OnLeave>
-						CraftForge:RecipeRankOnLeave(self)
+						CraftBench:RecipeRankOnLeave(self)
 					</OnLeave>
 				</Scripts>
 			</Frame>
-			<Frame name="CraftForgeRecipeRankDropMenu" inherits="UIDropDownMenuTemplate">
+			<Frame name="CraftBenchRecipeRankDropMenu" inherits="UIDropDownMenuTemplate">
 			</Frame>
 
 			<!--
@@ -2014,28 +2014,28 @@
 			# A frame to hold the Queue
 			#
 			-->
-			<Frame name="CraftForgeQueueManagementParent" parent="CraftForgeFrame" hidden="true" inherits="BackdropTemplate">
+			<Frame name="CraftBenchQueueManagementParent" parent="CraftBenchFrame" hidden="true" inherits="BackdropTemplate">
 				<Size>
 					<AbsDimension x="360" y="260"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="CraftForgeFrame" relativePoint="TOPRIGHT">
+					<Anchor point="TOPRIGHT" relativeTo="CraftBenchFrame" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="-10" y="-130"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 				<Frames>
-					<Frame name="CraftForgeQueueLoadDropdown" inherits="UIDropDownMenuTemplate">
+					<Frame name="CraftBenchQueueLoadDropdown" inherits="UIDropDownMenuTemplate">
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueManagementParent" relativePoint="TOPLEFT">
+							<Anchor point="TOPLEFT" relativeTo="CraftBenchQueueManagementParent" relativePoint="TOPLEFT">
 								<Offset>
 									<AbsDimension x="5" y="-20"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
 						<Frames>
-							<Button name="CraftForgeQueueLoadButton" inherits="UIPanelButtonTemplate" text="Load">
+							<Button name="CraftBenchQueueLoadButton" inherits="UIPanelButtonTemplate" text="Load">
 								<Size>
 									<AbsDimension x="60" y="20"/>
 								</Size>
@@ -2048,16 +2048,16 @@
 								</Anchors>
 								<Scripts>
 									<OnClick>
-										CraftForge:LoadQueue(CraftForge.selectedQueueName)
+										CraftBench:LoadQueue(CraftBench.selectedQueueName)
 									</OnClick>
 								</Scripts>
 							</Button>
-							<Button name="CraftForgeQueueDeleteButton" inherits="UIPanelButtonTemplate" text="Delete">
+							<Button name="CraftBenchQueueDeleteButton" inherits="UIPanelButtonTemplate" text="Delete">
 								<Size>
 									<AbsDimension x="60" y="20"/>
 								</Size>
 								<Anchors>
-									<Anchor point="LEFT" relativeTo="CraftForgeQueueLoadButton" relativePoint="RIGHT">
+									<Anchor point="LEFT" relativeTo="CraftBenchQueueLoadButton" relativePoint="RIGHT">
 										<Offset>
 											<AbsDimension x="0" y="0"/>
 										</Offset>
@@ -2065,23 +2065,23 @@
 								</Anchors>
 								<Scripts>
 									<OnClick>
-										CraftForge:DeleteQueue(CraftForge.selectedQueueName)
+										CraftBench:DeleteQueue(CraftBench.selectedQueueName)
 									</OnClick>
 								</Scripts>
 							</Button>
 						</Frames>
 						<Scripts>
 							<OnShow>
-								CraftForge:QueueLoadDropdown_OnShow()
+								CraftBench:QueueLoadDropdown_OnShow()
 							</OnShow>
 						</Scripts>
 					</Frame>
-					<EditBox name="CraftForgeQueueSaveEditBox" letters="50" historyLines="0" autoFocus="false">
+					<EditBox name="CraftBenchQueueSaveEditBox" letters="50" historyLines="0" autoFocus="false">
 						<Size>
 							<AbsDimension x="126" y="20"/>
 						</Size>
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueLoadDropdown" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOPLEFT" relativeTo="CraftBenchQueueLoadDropdown" relativePoint="BOTTOMLEFT">
 								<Offset>
 									<AbsDimension x="22" y="-2"/>
 								</Offset>
@@ -2128,7 +2128,7 @@
 							</Layer>
 						</Layers>
 						<Frames>
-							<Button name="CraftForgeQueueSaveButton" inherits="UIPanelButtonTemplate" text="Save">
+							<Button name="CraftBenchQueueSaveButton" inherits="UIPanelButtonTemplate" text="Save">
 								<Size>
 									<AbsDimension x="60" y="20"/>
 								</Size>
@@ -2141,8 +2141,8 @@
 								</Anchors>
 								<Scripts>
 									<OnClick>
-										CraftForgeQueueSaveEditBox:ClearFocus()
-										CraftForge:SaveQueue(CraftForgeQueueSaveEditBox:GetText())
+										CraftBenchQueueSaveEditBox:ClearFocus()
+										CraftBench:SaveQueue(CraftBenchQueueSaveEditBox:GetText())
 									</OnClick>
 								</Scripts>
 							</Button>
@@ -2150,7 +2150,7 @@
 						<Scripts>
 							<OnEnterPressed>
 								self:ClearFocus()
-								CraftForge:SaveQueue(CraftForgeQueueSaveEditBox:GetText())
+								CraftBench:SaveQueue(CraftBenchQueueSaveEditBox:GetText())
 							</OnEnterPressed>
 							<OnEscapePressed>
 								self:ClearFocus()
@@ -2171,12 +2171,12 @@
 			# A button that pops up the notes for this recipe/list of reagents
 			#
 			-->
-			<Button name="CraftForgeRecipeNotesButton" inherits="UIPanelButtonTemplate" parent="CraftForgeFrame">
+			<Button name="CraftBenchRecipeNotesButton" inherits="UIPanelButtonTemplate" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="82" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeReagentParent" relativePoint="TOPRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchReagentParent" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2184,17 +2184,17 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:ShowRecipeNotes()
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:ShowRecipeNotes()
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="CraftForgeQueueManagementButton" inherits="UIPanelButtonTemplate" parent="CraftForgeFrame">
+			<Button name="CraftBenchQueueManagementButton" inherits="UIPanelButtonTemplate" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="115" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="RIGHT" relativeTo="CraftForgeRecipeNotesButton" relativePoint="LEFT">
+					<Anchor point="RIGHT" relativeTo="CraftBenchRecipeNotesButton" relativePoint="LEFT">
 						<Offset>
 							<AbsDimension x="-3" y="0"/>
 						</Offset>
@@ -2202,16 +2202,16 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CraftForge:QueueManagementToggle()
+						CraftBench:QueueManagementToggle()
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="CraftForgeIgnoredMatsButton" inherits="UIPanelButtonTemplate" parent="CraftForgeFrame">
+			<Button name="CraftBenchIgnoredMatsButton" inherits="UIPanelButtonTemplate" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="115" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="RIGHT" relativeTo="CraftForgeQueueManagementButton" relativePoint="LEFT">
+					<Anchor point="RIGHT" relativeTo="CraftBenchQueueManagementButton" relativePoint="LEFT">
 						<Offset>
 							<AbsDimension x="-3" y="0"/>
 						</Offset>
@@ -2219,20 +2219,20 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:DisplayIgnoreList()
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:DisplayIgnoreList()
 					</OnClick>
 				</Scripts>
 			</Button>
 			<!--
 			# Auctionator button
 			-->
-			<Button name="CraftForgeAuctionatorButton" inherits="UIPanelButtonTemplate" text="Auctionator" parent="CraftForgeFrame">
+			<Button name="CraftBenchAuctionatorButton" inherits="UIPanelButtonTemplate" text="Auctionator" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="90" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="RIGHT" relativeTo="CraftForgeIgnoredMatsButton" relativePoint="LEFT">
+					<Anchor point="RIGHT" relativeTo="CraftBenchIgnoredMatsButton" relativePoint="LEFT">
 						<Offset>
 							<AbsDimension x="-3" y="0"/>
 						</Offset>
@@ -2240,7 +2240,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CraftForge:AuctionatorSearch()
+						CraftBench:AuctionatorSearch()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2249,12 +2249,12 @@
 			# A button that takes you back to the previous recipe
 			#
 			-->
-			<Button name="CraftForgePreviousItemButton" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchPreviousItemButton" parent="CraftBenchReagentParent">
 				<Size>
 					<AbsDimension x="28" y="28"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeReagentParent" relativePoint="TOPLEFT">
+					<Anchor point="BOTTOMLEFT" relativeTo="CraftBenchReagentParent" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="5" y="-4"/>
 						</Offset>
@@ -2265,8 +2265,8 @@
 				<HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
 				<Scripts>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:GoToPreviousSkill()
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:GoToPreviousSkill()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2276,12 +2276,12 @@
 			# selected skill.
 			#
 			-->
-			<Button name="CraftForgeSkillIcon" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchSkillIcon" parent="CraftBenchReagentParent">
 				<Size>
 					<AbsDimension x="37" y="37"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentParent" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagentParent" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="10" y="-10"/>
 						</Offset>
@@ -2289,7 +2289,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="CraftForgeSkillIconCount" inherits="NumberFontNormal" justifyH="RIGHT" hidden="false">
+						<FontString name="CraftBenchSkillIconCount" inherits="NumberFontNormal" justifyH="RIGHT" hidden="false">
 							<Anchors>
 								<Anchor point="BOTTOMRIGHT">
 									<Offset>
@@ -2306,8 +2306,8 @@
 						self:RegisterForClicks("LeftButtonUp","RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						local link = CraftForge:GetRecipeItemLink(CraftForge.selectedSkill)
+						CraftBench:InventoryFilterButtons_Hide()
+						local link = CraftBench:GetRecipeItemLink(CraftBench.selectedSkill)
 						if ( button == "LeftButton" and IsControlKeyDown() ) then
 							<!-- This opens up the dressing room window and display the character
 								 wearing the item (if that is possible) -->
@@ -2316,38 +2316,38 @@
 							<!-- This put a link to the *item* that can be created with this trade skill
 								 into the current chat  box -->
 							if not ChatEdit_InsertLink(link) then
-								CraftForge:XMLDebugLink("CraftForgeSkillIcon: link= ", link)
+								CraftBench:XMLDebugLink("CraftBenchSkillIcon: link= ", link)
 							end
 						elseif ( button == "LeftButton" and IsAltKeyDown() ) then
 						<!-- This will put a link to the *reagents* required by this *item*
 							 into the current chat edit box -->
-							CraftForge:ReagentsLinkOnClick(self, CraftForge.selectedSkill, self:GetID(), IsControlKeyDown())
+							CraftBench:ReagentsLinkOnClick(self, CraftBench.selectedSkill, self:GetID(), IsControlKeyDown())
 						elseif ( button == "RightButton" ) then
 							<!-- right clicking allow adjusting numCreated -->
 							if ( IsShiftKeyDown() ) then
-								CraftForge:AdjustNumberMade(CraftForge.selectedSkill,-1)
+								CraftBench:AdjustNumberMade(CraftBench.selectedSkill,-1)
 							else
-								CraftForge:AdjustNumberMade(CraftForge.selectedSkill,1)
+								CraftBench:AdjustNumberMade(CraftBench.selectedSkill,1)
 							end
 						end
 					</OnClick>
 					<OnEnter>
-						if ( CraftForge.selectedSkill ~= -1 ) then
+						if ( CraftBench.selectedSkill ~= -1 ) then
 							GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-							CraftForge:SetTradeSkillToolTip(CraftForgeFrame.selectedSkill)
+							CraftBench:SetTradeSkillToolTip(CraftBenchFrame.selectedSkill)
 						end
 					</OnEnter>
 					<OnLeave>
-						CraftForge:ClearTradeSkillToolTip(CraftForgeFrame.selectedSkill)
+						CraftBench:ClearTradeSkillToolTip(CraftBenchFrame.selectedSkill)
 					</OnLeave>
 					<OnUpdate>
 						CursorOnUpdate(self)
 					</OnUpdate>
 					<OnEvent>
 						if GameTooltip:IsVisible() and GameTooltip:IsOwned(self) then
-							if ( CraftForge.selectedSkill ~= -1 ) then
+							if ( CraftBench.selectedSkill ~= -1 ) then
 								GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-								CraftForge:SetTradeSkillToolTip(CraftForgeFrame.selectedSkill)
+								CraftBench:SetTradeSkillToolTip(CraftBenchFrame.selectedSkill)
 							end
 						end
 					</OnEvent>
@@ -2358,126 +2358,126 @@
 			# And of course, buttons for the reagents ...
 			#
 			-->
-			<Button name="CraftForgeReagent1" inherits="CraftForgeReagentTemplate" id="1" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent1" inherits="CraftBenchReagentTemplate" id="1" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentLabel" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagentLabel" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="-2"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CraftForgeReagent2" inherits="CraftForgeReagentTemplate" id="2" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent2" inherits="CraftBenchReagentTemplate" id="2" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent1" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent1" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CraftForgeReagent3" inherits="CraftForgeReagentTemplate" id="3" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent3" inherits="CraftBenchReagentTemplate" id="3" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent2" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent2" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CraftForgeReagent4" inherits="CraftForgeReagentTemplate" id="4" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent4" inherits="CraftBenchReagentTemplate" id="4" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent3" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent3" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CraftForgeReagent5" inherits="CraftForgeReagentTemplate" id="5" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent5" inherits="CraftBenchReagentTemplate" id="5" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent4" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent4" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CraftForgeReagent6" inherits="CraftForgeReagentTemplate" id="6" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent6" inherits="CraftBenchReagentTemplate" id="6" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent5" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent5" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CraftForgeReagent7" inherits="CraftForgeReagentTemplate" id="7" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent7" inherits="CraftBenchReagentTemplate" id="7" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent6" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent6" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CraftForgeReagent8" inherits="CraftForgeReagentTemplate" id="8" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent8" inherits="CraftBenchReagentTemplate" id="8" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent7" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent7" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CraftForgeReagent9" inherits="CraftForgeReagentTemplate" id="9" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent9" inherits="CraftBenchReagentTemplate" id="9" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent8" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent8" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CraftForgeReagent10" inherits="CraftForgeReagentTemplate" id="10" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent10" inherits="CraftBenchReagentTemplate" id="10" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent9" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent9" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CraftForgeReagent11" inherits="CraftForgeReagentTemplate" id="11" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent11" inherits="CraftBenchReagentTemplate" id="11" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent10" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent10" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CraftForgeReagent12" inherits="CraftForgeReagentTemplate" id="12" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent12" inherits="CraftBenchReagentTemplate" id="12" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent11" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent11" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CraftForgeReagent13" inherits="CraftForgeReagentTemplate" id="13" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent13" inherits="CraftBenchReagentTemplate" id="13" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent12" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent12" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CraftForgeReagent14" inherits="CraftForgeReagentTemplate" id="14" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent14" inherits="CraftBenchReagentTemplate" id="14" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent13" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent13" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2485,9 +2485,9 @@
 				</Anchors>
 			</Button>
 			<!-- Define one more just in case the recipe has 14 reagents -->
-			<Button name="CraftForgeReagent15" inherits="CraftForgeReagentTemplate" id="0" parent="CraftForgeReagentParent">
+			<Button name="CraftBenchReagent15" inherits="CraftBenchReagentTemplate" id="0" parent="CraftBenchReagentParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagent14" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagent14" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2499,12 +2499,12 @@
 			# Buttons to queue or create items
 			#
 			-->
-			<Button name="CraftForgeQueueAllButton" inherits="UIPanelButtonTemplate" text="Queue All" parent="CraftForgeFrame">
+			<Button name="CraftBenchQueueAllButton" inherits="UIPanelButtonTemplate" text="Queue All" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="105" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentParent" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagentParent" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="-2"/>
 						</Offset>
@@ -2516,17 +2516,17 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:QueueAllItems(button)
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:QueueAllItems(button)
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="CraftForgeEnchantButton" inherits="UIPanelButtonTemplate" text="Enchant" parent="CraftForgeFrame">
+			<Button name="CraftBenchEnchantButton" inherits="UIPanelButtonTemplate" text="Enchant" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="105" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeReagentParent" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchReagentParent" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="-2"/>
 						</Offset>
@@ -2537,17 +2537,17 @@
 						self:SetFrameLevel(self:GetFrameLevel()+2)
 					</OnLoad>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:EnchantItem(button)
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:EnchantItem(button)
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="CraftForgeCreateAllButton" inherits="UIPanelButtonTemplate" text="Create All" parent="CraftForgeFrame">
+			<Button name="CraftBenchCreateAllButton" inherits="UIPanelButtonTemplate" text="Create All" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="105" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueAllButton" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchQueueAllButton" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="-1"/>
 						</Offset>
@@ -2559,8 +2559,8 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:CreateAllItems(button)
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:CreateAllItems(button)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2569,12 +2569,12 @@
 			# The text box where they can enter the number of items to craft.
 			#
 			-->
-			<EditBox name="CraftForgeItemCountInputBox" letters="4" historyLines="0" numeric="true" autoFocus="false">
+			<EditBox name="CraftBenchItemCountInputBox" letters="4" historyLines="0" numeric="true" autoFocus="false">
 				<Size>
 					<AbsDimension x="44" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueAllButton" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchQueueAllButton" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="22" y="-1"/>
 						</Offset>
@@ -2644,12 +2644,12 @@
 				</Scripts>
 				<FontString inherits="ChatFontNormal"/>
 			</EditBox>
-			<Button name="CraftForgeClearNumButton" parent="CraftForgeFrame">
+			<Button name="CraftBenchClearNumButton" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="22" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="CraftForgeItemCountInputBox" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="CraftBenchItemCountInputBox" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="2" y="0"/>
 						</Offset>
@@ -2660,19 +2660,19 @@
 						self:SetFrameLevel(self:GetFrameLevel()+2)
 					</OnLoad>
 					<OnClick>
-						CraftForgeItemCountInputBox:SetText(1)
+						CraftBenchItemCountInputBox:SetText(1)
 					</OnClick>
 				</Scripts>
 				<NormalTexture file="Interface\Buttons\CancelButton-Up"/>
 				<PushedTexture file="Interface\Buttons\CancelButton-Down"/>
 				<HighlightTexture file="Interface\Buttons\CancelButton-Highlight" alphaMode="ADD"/>
 			</Button>
-			<Button name="CraftForgeSub10Button" parent="CraftForgeFrame">
+			<Button name="CraftBenchSub10Button" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="31" y="23"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeCreateAllButton" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchCreateAllButton" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="2" y="0"/>
 						</Offset>
@@ -2684,26 +2684,26 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						CraftForge:ChangeItemCount(self, button, -10)
+						CraftBench:ChangeItemCount(self, button, -10)
 					</OnClick>
 				</Scripts>
-				<NormalTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPrevPage-Up">
+				<NormalTexture file="Interface\Addons\CraftBench\Icons\Buttons\PrevPrevPage-Up">
 					<TexCoords left="0" right="0.640625" top="0" bottom="0.5"/>
 				</NormalTexture>
-				<PushedTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPrevPage-Down">
+				<PushedTexture file="Interface\Addons\CraftBench\Icons\Buttons\PrevPrevPage-Down">
 					<TexCoords left="0" right="0.640625" top="0" bottom="0.5"/>
 				</PushedTexture>
-				<DisabledTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPrevPage-Disabled">
+				<DisabledTexture file="Interface\Addons\CraftBench\Icons\Buttons\PrevPrevPage-Disabled">
 					<TexCoords left="0" right="0.640625" top="0" bottom="0.5"/>
 				</DisabledTexture>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 			</Button>
-			<Button name="CraftForgeSub1Button" parent="CraftForgeFrame">
+			<Button name="CraftBenchSub1Button" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="22" y="23"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeSub10Button" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchSub10Button" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2715,20 +2715,20 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						CraftForge:ChangeItemCount(self, button, -1)
+						CraftBench:ChangeItemCount(self, button, -1)
 					</OnClick>
 				</Scripts>
-				<NormalTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPage-Up"/>
-				<PushedTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPage-Down"/>
-				<DisabledTexture file="Interface\Addons\CraftForge\Icons\Buttons\PrevPage-Disabled"/>
+				<NormalTexture file="Interface\Addons\CraftBench\Icons\Buttons\PrevPage-Up"/>
+				<PushedTexture file="Interface\Addons\CraftBench\Icons\Buttons\PrevPage-Down"/>
+				<DisabledTexture file="Interface\Addons\CraftBench\Icons\Buttons\PrevPage-Disabled"/>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 			</Button>
-			<Button name="CraftForgeAdd1Button" parent="CraftForgeFrame">
+			<Button name="CraftBenchAdd1Button" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="22" y="23"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeSub1Button" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchSub1Button" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2740,20 +2740,20 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						CraftForge:ChangeItemCount(self, button, 1)
+						CraftBench:ChangeItemCount(self, button, 1)
 					</OnClick>
 				</Scripts>
-				<NormalTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextPage-Up"/>
-				<PushedTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextPage-Down"/>
-				<DisabledTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextPage-Disabled"/>
+				<NormalTexture file="Interface\Addons\CraftBench\Icons\Buttons\NextPage-Up"/>
+				<PushedTexture file="Interface\Addons\CraftBench\Icons\Buttons\NextPage-Down"/>
+				<DisabledTexture file="Interface\Addons\CraftBench\Icons\Buttons\NextPage-Disabled"/>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 			</Button>
-			<Button name="CraftForgeAdd10Button" parent="CraftForgeFrame">
+			<Button name="CraftBenchAdd10Button" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="31" y="23"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeAdd1Button" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchAdd1Button" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -2765,16 +2765,16 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						CraftForge:ChangeItemCount(self, button, 10)
+						CraftBench:ChangeItemCount(self, button, 10)
 					</OnClick>
 				</Scripts>
-				<NormalTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextNextPage-Up">
+				<NormalTexture file="Interface\Addons\CraftBench\Icons\Buttons\NextNextPage-Up">
 					<TexCoords left="0" right="0.640625" top="0" bottom="0.5"/>
 				</NormalTexture>
-				<PushedTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextNextPage-Down">
+				<PushedTexture file="Interface\Addons\CraftBench\Icons\Buttons\NextNextPage-Down">
 					<TexCoords left="0" right="0.640625" top="0" bottom="0.5"/>
 				</PushedTexture>
-				<DisabledTexture file="Interface\Addons\CraftForge\Icons\Buttons\NextNextPage-Disabled">
+				<DisabledTexture file="Interface\Addons\CraftBench\Icons\Buttons\NextNextPage-Disabled">
 					<TexCoords left="0" right="0.640625" top="0" bottom="0.5"/>
 				</DisabledTexture>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
@@ -2784,12 +2784,12 @@
 			# A button to queue a specific number of items
 			#
 			-->
-			<Button name="CraftForgeQueueButton" inherits="UIPanelButtonTemplate" text="Queue" parent="CraftForgeFrame">
+			<Button name="CraftBenchQueueButton" inherits="UIPanelButtonTemplate" text="Queue" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="105" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeClearNumButton" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchClearNumButton" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="22" y="-4"/>
 						</Offset>
@@ -2801,8 +2801,8 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:QueueItems(button, CraftForgeItemCountInputBox:GetNumber())
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:QueueItems(button, CraftBenchItemCountInputBox:GetNumber())
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2811,12 +2811,12 @@
 			# A button to create a specific number of items
 			#
 			-->
-			<Button name="CraftForgeCreateButton" inherits="UIPanelButtonTemplate" text="Create" parent="CraftForgeFrame">
+			<Button name="CraftBenchCreateButton" inherits="UIPanelButtonTemplate" text="Create" parent="CraftBenchFrame">
 				<Size>
 					<AbsDimension x="105" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="CraftForgeQueueButton" relativePoint="BOTTOMRIGHT">
+					<Anchor point="TOPRIGHT" relativeTo="CraftBenchQueueButton" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="-1"/>
 						</Offset>
@@ -2828,8 +2828,8 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:CreateItems(button, CraftForgeItemCountInputBox:GetNumber())
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:CreateItems(button, CraftBenchItemCountInputBox:GetNumber())
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2838,14 +2838,14 @@
 			# A frame to hold the queue and buttons
 			#
 			-->
-			<Frame name="CraftForgeQueueParentBase" parent="CraftForgeFrame" inherits="BackdropTemplate">
+			<Frame name="CraftBenchQueueParentBase" parent="CraftBenchFrame" inherits="BackdropTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeCreateAllButton" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchCreateAllButton" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="-3"/>
 						</Offset>
 					</Anchor>
-					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeFrame" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchFrame" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="-10" y="32"/>
 						</Offset>
@@ -2857,28 +2857,28 @@
 			# A frame to hold the queue of recipes in line to be crafted
 			#
 			-->
-			<Frame name="CraftForgeQueueParent" parent="CraftForgeQueueParentBase">
+			<Frame name="CraftBenchQueueParent" parent="CraftBenchQueueParentBase">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueParentBase" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchQueueParentBase" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
-					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeQueueParentBase" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchQueueParentBase" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Frame>
-			<ScrollFrame name="CraftForgeQueueList" inherits="FauxScrollFrameTemplate" parent="CraftForgeQueueParent">
+			<ScrollFrame name="CraftBenchQueueList" inherits="FauxScrollFrameTemplate" parent="CraftBenchQueueParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueParent" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchQueueParent" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="5" y="-5"/>
 						</Offset>
 					</Anchor>
-					<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeQueueParent" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchQueueParent" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="-27" y="5"/>
 						</Offset>
@@ -2886,13 +2886,13 @@
 				</Anchors>
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_TRADE_SKILL_HEIGHT, CraftForge.QueueList_OnScroll)
+						FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTBENCH_TRADE_SKILL_HEIGHT, CraftBench.QueueList_OnScroll)
 					</OnVerticalScroll>
 				</Scripts>
 			</ScrollFrame>
-			<Button name="CraftForgeQueueButton1" inherits="CraftForgeQueueItemButtonTemplate" parent="CraftForgeQueueParent">
+			<Button name="CraftBenchQueueButton1" inherits="CraftBenchQueueItemButtonTemplate" parent="CraftBenchQueueParent">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueList" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchQueueList" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="1" y="-1"/>
 						</Offset>
@@ -2905,12 +2905,12 @@
 			# A button that starts or continues the queue
 			#
 			-->
-			<Button name="CraftForgeStartQueueButton" inherits="UIPanelButtonTemplate" text="Start" parent="CraftForgeQueueParentBase">
+			<Button name="CraftBenchStartQueueButton" inherits="UIPanelButtonTemplate" text="Start" parent="CraftBenchQueueParentBase">
 				<Size>
 					<AbsDimension x="90" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueParent" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchQueueParent" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="0" y="-1"/>
 						</Offset>
@@ -2921,8 +2921,8 @@
 						self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 					</OnLoad>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:StartQueue_OnClick(self, button)
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:StartQueue_OnClick(self, button)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2931,12 +2931,12 @@
 			# A button that clears the current queue
 			#
 			-->
-			<Button name="CraftForgeEmptyQueueButton" inherits="UIPanelButtonTemplate" text="Clear" parent="CraftForgeQueueParentBase">
+			<Button name="CraftBenchEmptyQueueButton" inherits="UIPanelButtonTemplate" text="Clear" parent="CraftBenchQueueParentBase">
 				<Size>
 					<AbsDimension x="90" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeStartQueueButton" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchStartQueueButton" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="5" y=""/>
 						</Offset>
@@ -2944,9 +2944,9 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						CraftForge:ClearQueue()
-						CraftForge:UpdateTradeSkillWindow()
+						CraftBench:InventoryFilterButtons_Hide()
+						CraftBench:ClearQueue()
+						CraftBench:UpdateTradeSkillWindow()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2955,12 +2955,12 @@
 			# A button to switch queue only view
 			#
 			-->
-			<Button name="CraftForgeQueueOnlyButton" inherits="UIPanelButtonTemplate" text="-" parent="CraftForgeQueueParentBase">
+			<Button name="CraftBenchQueueOnlyButton" inherits="UIPanelButtonTemplate" text="-" parent="CraftBenchQueueParentBase">
 				<Size>
 					<AbsDimension x="15" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeEmptyQueueButton" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchEmptyQueueButton" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="5" y=""/>
 						</Offset>
@@ -2968,7 +2968,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CraftForge:QueueOnlyViewToggle()
+						CraftBench:QueueOnlyViewToggle()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -2977,12 +2977,12 @@
 			# Button to display the shopping list window
 			#
 			-->
-			<Button name="CraftForgeShoppingListButton" inherits="UIPanelButtonTemplate" text="Shopping List" parent="CraftForgeQueueParentBase">
+			<Button name="CraftBenchShoppingListButton" inherits="UIPanelButtonTemplate" text="Shopping List" parent="CraftBenchQueueParentBase">
 				<Size>
 					<AbsDimension x="110" y="22"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeQueueOnlyButton" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchQueueOnlyButton" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="5" y=""/>
 						</Offset>
@@ -2990,11 +2990,11 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CraftForge:InventoryFilterButtons_Hide()
-						if CraftForge:IsShoppingListVisible() then
-							CraftForge:HideShoppingList()
+						CraftBench:InventoryFilterButtons_Hide()
+						if CraftBench:IsShoppingListVisible() then
+							CraftBench:HideShoppingList()
 						else
-							CraftForge:DisplayShoppingList(false)
+							CraftBench:DisplayShoppingList(false)
 						end
 					</OnClick>
 				</Scripts>
@@ -3002,7 +3002,7 @@
 		</Frames>
 		<Scripts>
 			<OnKeyDown>
-				CraftForge:SkillButton_OnKeyDown(self, key)
+				CraftBench:SkillButton_OnKeyDown(self, key)
 			</OnKeyDown>
 			<OnShow>
 				PlaySound(SOUNDKIT.IG_BACKPACK_OPEN) -- "igBackPackOpen"
@@ -3014,13 +3014,13 @@
 				GameTooltip:Hide()
 			</OnHide>
 			<OnUpdate>
-				if CraftForge.dragEngaged then
-					CraftForge:SkillButton_DragUpdate()
+				if CraftBench.dragEngaged then
+					CraftBench:SkillButton_DragUpdate()
 				end
 			</OnUpdate>
 		</Scripts>
 	</Frame> <!-- main trade skill frame -->
-	<Frame name="CraftForgeStandaloneQueue" toplevel="true" movable="true" clampedToScreen="true" resizable="true" parent="UIParent" enableMouse="true" hidden="true" inherits="BackdropTemplate">
+	<Frame name="CraftBenchStandaloneQueue" toplevel="true" movable="true" clampedToScreen="true" resizable="true" parent="UIParent" enableMouse="true" hidden="true" inherits="BackdropTemplate">
 		<Size>
 			<AbsDimension x="385" y="170"/>
 		</Size>
@@ -3030,9 +3030,9 @@
 			# A button on the top right to close the window
 			#
 			-->
-			<Button name="CraftForgeStandaloneQueueCloseButton" inherits="UIPanelCloseButton" parent="CraftForgeStandaloneQueue">
+			<Button name="CraftBenchStandaloneQueueCloseButton" inherits="UIPanelCloseButton" parent="CraftBenchStandaloneQueue">
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="CraftForgeStandaloneQueue" relativePoint="TOPRIGHT">
+					<Anchor point="TOPRIGHT" relativeTo="CraftBenchStandaloneQueue" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="-2" y="-2"/>
 						</Offset>
@@ -3040,7 +3040,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CraftForge:StandaloneQueueClose()
+						CraftBench:StandaloneQueueClose()
 					</OnClick>
 				</Scripts>
 			</Button>

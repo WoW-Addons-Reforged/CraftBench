@@ -1,13 +1,13 @@
 ----------------------------------------------------------
--- CraftForge - Native Dark-Gold Fishing Window        --
+-- CraftBench - Native Dark-Gold Fishing Window        --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-local L = CraftForge.L
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+local L = CraftBench.L
 
-CraftForge.FishingUI = CraftForge.FishingUI or {}
-local FishingUI = CraftForge.FishingUI
+CraftBench.FishingUI = CraftBench.FishingUI or {}
+local FishingUI = CraftBench.FishingUI
 
 local fishingFrame
 local selectedZoneKey = nil
@@ -15,8 +15,8 @@ local selectedZoneKey = nil
 local function formatMoneyShort(copper)
 	copper = math.floor(tonumber(copper) or 0)
 	if copper <= 0 then return "|cff888888-|r" end
-	if CraftForge.FormatMoneyFull then
-		return CraftForge:FormatMoneyFull(copper, true)
+	if CraftBench.FormatMoneyFull then
+		return CraftBench:FormatMoneyFull(copper, true)
 	end
 	local g = math.floor(copper / 10000)
 	local s = math.floor((copper % 10000) / 100)
@@ -44,8 +44,8 @@ end
 
 local function ensureFishingFrame()
 	if fishingFrame then return fishingFrame end
-	local UIStyle = CraftForge.UIStyle
-	local f = CreateFrame("Frame", "CraftForgeFishingWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local UIStyle = CraftBench.UIStyle
+	local f = CreateFrame("Frame", "CraftBenchFishingWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	f:SetSize(760, 520)
 	f:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	f:SetFrameStrata("DIALOG")
@@ -56,11 +56,11 @@ local function ensureFishingFrame()
 	f:RegisterForDrag("LeftButton")
 	f:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-	tinsert(UISpecialFrames, "CraftForgeFishingWindow")
+	tinsert(UISpecialFrames, "CraftBenchFishingWindow")
 
 	if UIStyle then
 		UIStyle.SkinFrame(f, false)
-		UIStyle.CreateHeader(f, "CraftForge — " .. (L["Fishing"] or "Fishing"), 136245, function()
+		UIStyle.CreateHeader(f, "CraftBench — " .. (L["Fishing"] or "Fishing"), 136245, function()
 			f:Hide()
 		end)
 	end
@@ -100,8 +100,8 @@ local function ensureFishingFrame()
 	end
 	swapBtn:SetPoint("TOPRIGHT", topBar, "TOPRIGHT", -10, -8)
 	swapBtn:SetScript("OnClick", function()
-		if CraftForge.Fishing and CraftForge.Fishing.TriggerSwap then
-			CraftForge.Fishing:TriggerSwap()
+		if CraftBench.Fishing and CraftBench.Fishing.TriggerSwap then
+			CraftBench.Fishing:TriggerSwap()
 		end
 	end)
 
@@ -115,7 +115,7 @@ local function ensureFishingFrame()
 	end
 	lureBtn:SetPoint("RIGHT", swapBtn, "LEFT", -6, 0)
 	lureBtn:SetScript("OnClick", function()
-		local gdb = CraftForge.Fishing and CraftForge.Fishing:GetDB()
+		local gdb = CraftBench.Fishing and CraftBench.Fishing:GetDB()
 		if gdb and gdb.settings then
 			gdb.settings.autoLure = (gdb.settings.autoLure == false) and true or false
 			FishingUI:Refresh()
@@ -130,7 +130,7 @@ local function ensureFishingFrame()
 	zoneBox:SetWidth(210)
 	if UIStyle then UIStyle.SkinInset(zoneBox) end
 
-	local zoneScroll = CreateFrame("ScrollFrame", "CraftForgeFishingZoneScroll", zoneBox, "UIPanelScrollFrameTemplate")
+	local zoneScroll = CreateFrame("ScrollFrame", "CraftBenchFishingZoneScroll", zoneBox, "UIPanelScrollFrameTemplate")
 	zoneScroll:SetPoint("TOPLEFT", zoneBox, "TOPLEFT", 6, -8)
 	zoneScroll:SetPoint("BOTTOMRIGHT", zoneBox, "BOTTOMRIGHT", -24, 8)
 	if UIStyle and UIStyle.StyleScrollBar then UIStyle.StyleScrollBar(zoneScroll) end
@@ -153,7 +153,7 @@ local function ensureFishingFrame()
 	if UIStyle then UIStyle.ApplyFont(zoneHeader, 0) end
 	f._zoneHeader = zoneHeader
 
-	local itemScroll = CreateFrame("ScrollFrame", "CraftForgeFishingItemScroll", itemBox, "UIPanelScrollFrameTemplate")
+	local itemScroll = CreateFrame("ScrollFrame", "CraftBenchFishingItemScroll", itemBox, "UIPanelScrollFrameTemplate")
 	itemScroll:SetPoint("TOPLEFT", itemBox, "TOPLEFT", 8, -30)
 	itemScroll:SetPoint("BOTTOMRIGHT", itemBox, "BOTTOMRIGHT", -26, 8)
 	if UIStyle and UIStyle.StyleScrollBar then UIStyle.StyleScrollBar(itemScroll) end
@@ -170,9 +170,9 @@ end
 
 function FishingUI:Refresh()
 	if not fishingFrame or not fishingFrame:IsShown() then return end
-	local Fishing = CraftForge.Fishing
+	local Fishing = CraftBench.Fishing
 	if not Fishing then return end
-	local UIStyle = CraftForge.UIStyle
+	local UIStyle = CraftBench.UIStyle
 	local gdb = Fishing:GetDB()
 	if not gdb then return end
 
@@ -197,7 +197,7 @@ function FishingUI:Refresh()
 		fishingFrame._derbyFS:SetText((L["FISH_DERBY_LIVE"] or "|cff40ff40Stranglethorn Derby LIVE!|r Ends in ") .. formatClock(derbyLeft))
 	else
 		fishingFrame._derbyFS:SetText((L["FISH_DERBY_NEXT"] or "|cff9d9d9dStranglethorn Derby:|r in ") .. formatClock(derbyLeft)
-			.. "   |cff777777(" .. (L["FISH_DERBY_HINT"] or "Keybind: Esc -> Key Bindings -> AddOns -> CraftForge") .. ")|r")
+			.. "   |cff777777(" .. (L["FISH_DERBY_HINT"] or "Keybind: Esc -> Key Bindings -> AddOns -> CraftBench") .. ")|r")
 	end
 
 	local autoOn = gdb.settings and gdb.settings.autoLure ~= false
@@ -327,7 +327,7 @@ function FishingUI:Refresh()
 		row._name:SetText(hex .. (it.name or ("Item #" .. it.id)) .. "|r")
 
 		local pct = math.floor(((it.hauls or 1) / totalCatches) * 100 + 0.5)
-		local val = CraftForge.GetItemMarketOrVendorPrice and CraftForge:GetItemMarketOrVendorPrice(it.id) or 0
+		local val = CraftBench.GetItemMarketOrVendorPrice and CraftBench:GetItemMarketOrVendorPrice(it.id) or 0
 		row._stats:SetText(string.format(L["FISH_ITEM_STATS_FMT"] or "x%d  |cff9d9d9d(%d%%)|r  •  Skill %s  •  D:%d/N:%d  •  %s",
 			it.count or 1, pct, tostring(it.minSkill or "?"), it.day or 0, it.night or 0, formatMoneyShort(val)))
 		row:Show()
@@ -336,7 +336,7 @@ function FishingUI:Refresh()
 	fishingFrame._itemChild:SetHeight(math.max(100, -iy + 10))
 end
 
-function CraftForge:ShowFishing()
+function CraftBench:ShowFishing()
 	local f = ensureFishingFrame()
 	f:Show()
 	FishingUI:Refresh()
@@ -348,11 +348,11 @@ function FishingUI:InitializeBar()
 		self:RefreshBar()
 		return
 	end
-	local UIStyle = CraftForge.UIStyle
-	local Fishing = CraftForge.Fishing
+	local UIStyle = CraftBench.UIStyle
+	local Fishing = CraftBench.Fishing
 	if not Fishing then return end
 
-	local bar = CreateFrame("Frame", "CraftForgeFishingBar", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local bar = CreateFrame("Frame", "CraftBenchFishingBar", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	bar:SetSize(230, 40)
 	bar:SetFrameStrata("MEDIUM")
 	bar:SetClampedToScreen(true)
@@ -362,13 +362,13 @@ function FishingUI:InitializeBar()
 	bar:SetScript("OnDragStart", function(f) f:StartMoving() end)
 	bar:SetScript("OnDragStop", function(f)
 		f:StopMovingOrSizing()
-		if CraftForge.db and CraftForge.db.profile then
+		if CraftBench.db and CraftBench.db.profile then
 			local point, _, relPoint, x, y = f:GetPoint()
-			CraftForge.db.profile.fishingBarPos = { point = point, relPoint = relPoint, x = x, y = y }
+			CraftBench.db.profile.fishingBarPos = { point = point, relPoint = relPoint, x = x, y = y }
 		end
 	end)
 
-	local pos = CraftForge.db and CraftForge.db.profile and CraftForge.db.profile.fishingBarPos
+	local pos = CraftBench.db and CraftBench.db.profile and CraftBench.db.profile.fishingBarPos
 	if pos and pos.point then
 		bar:SetPoint(pos.point, UIParent, pos.relPoint or pos.point, pos.x or 0, pos.y or 0)
 	else
@@ -381,7 +381,7 @@ function FishingUI:InitializeBar()
 
 	-- 1. Secure Cast / Auto-Lure Button
 	local useDown = GetCVarBool and GetCVarBool("ActionButtonUseKeyDown")
-	local castBtn = CreateFrame("Button", "CraftForgeFishingBarCastButton", bar, "SecureActionButtonTemplate,BackdropTemplate")
+	local castBtn = CreateFrame("Button", "CraftBenchFishingBarCastButton", bar, "SecureActionButtonTemplate,BackdropTemplate")
 	castBtn:SetSize(28, 28)
 	castBtn:SetPoint("LEFT", bar, "LEFT", 6, 0)
 	castBtn:RegisterForClicks(useDown and "LeftButtonDown" or "LeftButtonUp")
@@ -405,7 +405,7 @@ function FishingUI:InitializeBar()
 	castBtn:SetScript("OnEnter", function(btn)
 		if GameTooltip then
 			GameTooltip:SetOwner(btn, "ANCHOR_TOP")
-			GameTooltip:AddLine(L["FISH_BAR_CAST_TITLE"] or "|cffffd100CraftForge: Cast Fishing|r")
+			GameTooltip:AddLine(L["FISH_BAR_CAST_TITLE"] or "|cffffd100CraftBench: Cast Fishing|r")
 			GameTooltip:AddLine(L["FISH_BAR_CAST_TIP"] or "Left-Click: Apply best lure (if needed) & cast Fishing", 0.9, 0.9, 0.9, true)
 			GameTooltip:Show()
 		end
@@ -416,7 +416,7 @@ function FishingUI:InitializeBar()
 	FishingUI._barCastBtn = castBtn
 
 	-- 2. Swap Pole / Weapons Button
-	local swapBtn = CreateFrame("Button", "CraftForgeFishingBarSwapButton", bar, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local swapBtn = CreateFrame("Button", "CraftBenchFishingBarSwapButton", bar, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	swapBtn:SetSize(28, 28)
 	swapBtn:SetPoint("LEFT", castBtn, "RIGHT", 4, 0)
 	if UIStyle and UIStyle.ApplyBox then
@@ -456,19 +456,19 @@ function FishingUI:InitializeBar()
 	infoBtn:SetScript("OnDragStart", function() bar:StartMoving() end)
 	infoBtn:SetScript("OnDragStop", function()
 		bar:StopMovingOrSizing()
-		if CraftForge.db and CraftForge.db.profile then
+		if CraftBench.db and CraftBench.db.profile then
 			local point, _, relPoint, x, y = bar:GetPoint()
-			CraftForge.db.profile.fishingBarPos = { point = point, relPoint = relPoint, x = x, y = y }
+			CraftBench.db.profile.fishingBarPos = { point = point, relPoint = relPoint, x = x, y = y }
 		end
 	end)
 	infoBtn:SetScript("OnClick", function()
-		if CraftForge.ShowFishing then CraftForge:ShowFishing() end
+		if CraftBench.ShowFishing then CraftBench:ShowFishing() end
 	end)
 	infoBtn:SetScript("OnEnter", function(btn)
 		if GameTooltip then
 			GameTooltip:SetOwner(btn, "ANCHOR_TOP")
-			GameTooltip:AddLine(L["FISH_BAR_TITLE"] or "|cffffd100CraftForge Fishing|r")
-			GameTooltip:AddLine(L["FISH_BAR_OPEN_TIP"] or "Click: Open Fishing Window (/cf fish)", 0.9, 0.9, 0.9)
+			GameTooltip:AddLine(L["FISH_BAR_TITLE"] or "|cffffd100CraftBench Fishing|r")
+			GameTooltip:AddLine(L["FISH_BAR_OPEN_TIP"] or "Click: Open Fishing Window (/cb fish)", 0.9, 0.9, 0.9)
 			GameTooltip:AddLine(L["FISH_BAR_DRAG_TIP"] or "Drag: Move Bar", 0.75, 0.75, 0.75)
 			GameTooltip:Show()
 		end
@@ -517,13 +517,13 @@ end
 
 function FishingUI:RefreshBar()
 	if not fishingBar or not fishingBar:IsShown() then return end
-	local Fishing = CraftForge.Fishing
+	local Fishing = CraftBench.Fishing
 	if not Fishing then return end
 
 	local poleEquipped = Fishing:IsPoleEquipped()
 	if fishingBar._swapBtn then
 		local getIcon = (C_Item and C_Item.GetItemIconByID) or GetItemIcon
-		local charWeapons = CraftForge.db and CraftForge.db.char and CraftForge.db.char.fishingWeapons
+		local charWeapons = CraftBench.db and CraftBench.db.char and CraftBench.db.char.fishingWeapons
 		if poleEquipped then
 			local mhID = charWeapons and charWeapons.mh
 			local mhTex = mhID and getIcon and getIcon(mhID)

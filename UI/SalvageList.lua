@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
 
-function CraftForge:SalvageListToggleHaveItems()
+function CraftBench:SalvageListToggleHaveItems()
 	self.db.profile.hide_unowned = not self.db.profile.hide_unowned
 	self:HideSalvageList()
 end
@@ -29,12 +29,12 @@ end
 -- ===========================================================================================
 local num_buttons = 0
 local function get_button(i)
-	local button = _G["CraftForgeSalvageListButton"..i]
+	local button = _G["CraftBenchSalvageListButton"..i]
 	if not button then
-		button = CreateFrame("Button", "CraftForgeSalvageListButton"..i, CraftForgeSalvageListParent, "CraftForgeSalvageListItemTemplate")
-		button:SetParent(CraftForgeSalvageListParent)
-		button:SetPoint("TOPLEFT", "CraftForgeSalvageListButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(CraftForgeSalvageListParent:GetFrameLevel() + 1)
+		button = CreateFrame("Button", "CraftBenchSalvageListButton"..i, CraftBenchSalvageListParent, "CraftBenchSalvageListItemTemplate")
+		button:SetParent(CraftBenchSalvageListParent)
+		button:SetPoint("TOPLEFT", "CraftBenchSalvageListButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftBenchSalvageListParent:GetFrameLevel() + 1)
 	end
 	return button
 end
@@ -55,41 +55,41 @@ local FrameBackdrop = {
 	insets = { left = 3, right = 3, top = 30, bottom = 3 }
 }
 
-CRAFTFORGE_SALVAGE_LIST_HEIGHT = 16
+CRAFTBENCH_SALVAGE_LIST_HEIGHT = 16
 local function createSalvageListFrame(self)
 	--DA.DEBUG(0,"createSalvageListFrame")
-	local frame = CraftForgeSalvageList
+	local frame = CraftBenchSalvageList
 	if not frame then
 		return nil
 	end
-	local UIStyle = CraftForge.UIStyle
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local UIStyle = CraftBench.UIStyle
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		frame:SetFrameStrata("TOOLTIP")
 	else
 		frame:SetFrameStrata("HIGH")
 	end
 	UIStyle.SkinFrame(frame, false)
-	local titletext = frame:CreateFontString("CraftForgeSalvageListTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = frame:CreateFontString("CraftBenchSalvageListTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -1)
 	titletext:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -36, -1)
 	titletext:SetHeight(26)
 	titletext:SetJustifyH("CENTER")
-	titletext:SetText("CraftForge: Salvage Reagents")
+	titletext:SetText("CraftBench: Salvage Reagents")
 	UIStyle.StyleHeaderBar(frame, titletext, 1)
-	if CraftForgeSalvageListCloseButton then UIStyle.SkinCloseButton(CraftForgeSalvageListCloseButton) end
+	if CraftBenchSalvageListCloseButton then UIStyle.SkinCloseButton(CraftBenchSalvageListCloseButton) end
 	frame.titletext = titletext
-	CraftForgeSalvageHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
-	CraftForgeSalvageHaveItems:SetChecked(CraftForge.db.profile.hide_unowned)
+	CraftBenchSalvageHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
+	CraftBenchSalvageHaveItems:SetChecked(CraftBench.db.profile.hide_unowned)
 --
 -- The frame enclosing the scroll list needs a border and a background .....
 --
-	local backdrop = CraftForgeSalvageListParent
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local backdrop = CraftBenchSalvageListParent
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		backdrop:SetFrameStrata("HIGH")
 	end
 	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
-	if CraftForgeSalvageList then UIStyle.StyleScrollBar(CraftForgeSalvageList) end
+	if CraftBenchSalvageList then UIStyle.StyleScrollBar(CraftBenchSalvageList) end
 	local SalvageListLocation = {
 		prefix = "SalvageListLocation_"
 	}
@@ -104,7 +104,7 @@ local function createSalvageListFrame(self)
 --
 -- lets play the resize me game!
 --
-	CraftForge:EnableResize(frame, 420, 240, CraftForge.UpdateSalvageListWindow)
+	CraftBench:EnableResize(frame, 420, 240, CraftBench.UpdateSalvageListWindow)
 --
 -- so hitting [ESC] will close the window
 --
@@ -112,14 +112,14 @@ local function createSalvageListFrame(self)
 --
 -- Adjust the button height
 --
-	CRAFTFORGE_SALVAGE_LIST_HEIGHT = math.max(CraftForgeModifiedListButton1:GetHeight(), CRAFTFORGE_SALVAGE_LIST_HEIGHT)
+	CRAFTBENCH_SALVAGE_LIST_HEIGHT = math.max(CraftBenchModifiedListButton1:GetHeight(), CRAFTBENCH_SALVAGE_LIST_HEIGHT)
 	return frame
 end
 
 --
 -- Called to update the salvage list window
 --
-function CraftForge:UpdateSalvageListWindow()
+function CraftBench:UpdateSalvageListWindow()
 	DA.DEBUG(0,"UpdateSalvageListWindow()")
 	self.InProgress.salvage = true
 	local numItems
@@ -134,24 +134,24 @@ function CraftForge:UpdateSalvageListWindow()
 	else
 		return
 	end
-	local height = CraftForgeSalvageListParent:GetHeight()	local buttonH = CraftForgeOptionalListButton1:GetHeight()
-	local width = CraftForgeSalvageListParent:GetWidth() - 30 -- Allow for scrollbars
-	--DA.DEBUG(1,"UpdateSalvageListWindow: height= "..tostring(height)..", CRAFTFORGE_SALVAGE_LIST_HEIGHT= "..tostring(CRAFTFORGE_SALVAGE_LIST_HEIGHT))
-	--DA.DEBUG(1,"UpdateSalvageListWindow: CraftForgeSalvageListParent width= "..tostring(width))
-	local button_count = height / CRAFTFORGE_SALVAGE_LIST_HEIGHT
+	local height = CraftBenchSalvageListParent:GetHeight()	local buttonH = CraftBenchOptionalListButton1:GetHeight()
+	local width = CraftBenchSalvageListParent:GetWidth() - 30 -- Allow for scrollbars
+	--DA.DEBUG(1,"UpdateSalvageListWindow: height= "..tostring(height)..", CRAFTBENCH_SALVAGE_LIST_HEIGHT= "..tostring(CRAFTBENCH_SALVAGE_LIST_HEIGHT))
+	--DA.DEBUG(1,"UpdateSalvageListWindow: CraftBenchSalvageListParent width= "..tostring(width))
+	local button_count = height / CRAFTBENCH_SALVAGE_LIST_HEIGHT
 	button_count = math.floor(button_count) - 1
 	--DA.DEBUG(1,"UpdateSalvageListWindow: numItems= "..tostring(numItems)..", button_count= "..tostring(button_count)..", num_buttons= "..tostring(num_buttons))
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(CraftForgeSalvageListList,			-- frame
+	FauxScrollFrame_Update(CraftBenchSalvageListList,			-- frame
 							numItems,						-- num items
 							button_count,					-- num to display
-							CRAFTFORGE_SALVAGE_LIST_HEIGHT)	-- value step (item height)
+							CRAFTBENCH_SALVAGE_LIST_HEIGHT)	-- value step (item height)
 --
 -- Where in the list of items to start counting.
 --
-	local itemOffset = FauxScrollFrame_GetOffset(CraftForgeSalvageListList)
+	local itemOffset = FauxScrollFrame_GetOffset(CraftBenchSalvageListList)
 	--DA.DEBUG(1,"UpdateSalvageListWindow: itemOffset= "..tostring(itemOffset))
 	for i=1, button_count, 1 do
 		num_buttons = math.max(num_buttons, i)
@@ -168,7 +168,7 @@ function CraftForge:UpdateSalvageListWindow()
 			local sreagentName, sreagentLink = C_Item.GetItemInfo(sreagentID)
 			local sreagentQuality
 			if not sreagentName then
-				CraftForge.salvageDataNeeded = true
+				CraftBench.salvageDataNeeded = true
 				C_Item.RequestLoadItemDataByID(sreagentID)
 				sreagentName = "item:"..tostring(sreagentID)
 			end
@@ -225,25 +225,25 @@ end
 --
 -- Updates the scrollbar when a scroll event happens
 --
-function CraftForge:SalvageList_OnScroll()
-	CraftForge:UpdateSalvageListWindow()
+function CraftBench:SalvageList_OnScroll()
+	CraftBench:UpdateSalvageListWindow()
 end
 
 --
 -- Functions to show and hide the SalvageList
 --
-function CraftForge:DisplaySalvageList()
+function CraftBench:DisplaySalvageList()
 	--DA.DEBUG(0,"DisplaySalvageList()")
 	if not self.SalvageList then
 		self.SalvageList = createSalvageListFrame(self)
 	end
 	if not self.SalvageList:IsVisible() then
-		self.SalvageList.titletext:SetText("CraftForge: Salvage Reagents")
+		self.SalvageList.titletext:SetText("CraftBench: Salvage Reagents")
 		self.SalvageList:Show()
 	end
 end
 
-function CraftForge:HideSalvageList(clear)
+function CraftBench:HideSalvageList(clear)
 	--DA.DEBUG(0,"HideSalvageList()")
 	if self.SalvageList then
 		self.SalvageList:Hide()
@@ -254,15 +254,15 @@ function CraftForge:HideSalvageList(clear)
 end
 
 --
--- Called when an salvage reagent button in the CraftForge detail frame is clicked.
+-- Called when an salvage reagent button in the CraftBench detail frame is clicked.
 -- This salvage list is used for selecting Salvage, Salvage, and Finishing reagents.
 -- These all have the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function CraftForge:SalvageReagentOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:SalvageReagentOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"SalvageReagentOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
-	CraftForgeSalvageHaveItems:Show()
+	CraftBenchSalvageHaveItems:Show()
 	self.cachedSalvageList = {}
 	--DA.DEBUG(1,"SalvageReagentOnClick: salvage= "..DA.DUMP1(recipe.salvage))
 	local j = 1
@@ -298,7 +298,7 @@ end
 -- Returns a link for the salvage reagent required to create the specified
 -- item, the index'th reagent required for the item is returned
 --
-function CraftForge:GetSalvageItemLink(skillIndex, index)
+function CraftBench:GetSalvageItemLink(skillIndex, index)
 	--DA.DEBUG(0,"GetSalvageItemLink("..tostring(skillIndex)..", "..tostring(index)..")")
 	if skillIndex and index then
 		local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
@@ -313,17 +313,17 @@ end
 --
 -- Called when then mouse enters a salvage button
 --
-function CraftForge:SalvageButtonOnEnter(button, skillIndex, salvageIndex)
+function CraftBench:SalvageButtonOnEnter(button, skillIndex, salvageIndex)
 	--DA.DEBUG(0,"SalvageButtonOnEnter("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(salvageIndex)..")")
-	local tip = GameTooltip -- CraftForgeTradeskillTooltip
+	local tip = GameTooltip -- CraftBenchTradeskillTooltip
 	tip:SetOwner(button, "ANCHOR_BOTTOMRIGHT")
-	if CraftForge.db.profile.scale_tooltip then
+	if CraftBench.db.profile.scale_tooltip then
 		local uiScale = 1.0;
 		if ( GetCVar("useUiScale") == "1" ) then
 			uiScale = tonumber(GetCVar("uiscale"))
 		end
-		if CraftForge.db.profile.ttscale then
-			uiScale = uiScale * CraftForge.db.profile.ttscale
+		if CraftBench.db.profile.ttscale then
+			uiScale = uiScale * CraftBench.db.profile.ttscale
 		end
 		tip:SetScale(uiScale)
 	end
@@ -336,11 +336,11 @@ end
 --
 -- called then the mouse leaves an salvage button
 --
-function CraftForge:SalvageButtonOnLeave(button, skillIndex, salvageIndex)
+function CraftBench:SalvageButtonOnLeave(button, skillIndex, salvageIndex)
 	--DA.DEBUG(0,"SalvageButtonOnLeave("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(salvageIndex)..")")
-	local tip = GameTooltip -- CraftForgeTradeskillTooltip
-	if CraftForge.db.profile.scale_tooltip then
-		tip:SetScale(CraftForge.gttScale)
+	local tip = GameTooltip -- CraftBenchTradeskillTooltip
+	if CraftBench.db.profile.scale_tooltip then
+		tip:SetScale(CraftBench.gttScale)
 	end
 	tip:Hide()
 	ResetCursor()
@@ -352,7 +352,7 @@ end
 -- These all have the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function CraftForge:SalvageButtonOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:SalvageButtonOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"SalvageButtonOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	--DA.DEBUG(1,"SalvageButtonOnClick: cachedSalvageIndex= "..tostring(self.cachedSalvageIndex)..", cachedSalvageList= "..DA.DUMP(self.cachedSalvageList))
 	local sreagentID = self.cachedSalvageList[reagentIndex].itemID

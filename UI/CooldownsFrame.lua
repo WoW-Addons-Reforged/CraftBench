@@ -1,13 +1,13 @@
 ----------------------------------------------------------
--- CraftForge - Native Dark-Gold Cooldowns Window       --
+-- CraftBench - Native Dark-Gold Cooldowns Window       --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-local L = CraftForge.L
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+local L = CraftBench.L
 
-CraftForge.CooldownsUI = CraftForge.CooldownsUI or {}
-local CooldownsUI = CraftForge.CooldownsUI
+CraftBench.CooldownsUI = CraftBench.CooldownsUI or {}
+local CooldownsUI = CraftBench.CooldownsUI
 
 local cdFrame
 local onlyReady = false
@@ -30,8 +30,8 @@ end
 
 local function ensureFrame()
 	if cdFrame then return cdFrame end
-	local UIStyle = CraftForge.UIStyle
-	local f = CreateFrame("Frame", "CraftForgeCooldownsWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local UIStyle = CraftBench.UIStyle
+	local f = CreateFrame("Frame", "CraftBenchCooldownsWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	f:SetSize(640, 440)
 	f:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	f:SetFrameStrata("DIALOG")
@@ -42,11 +42,11 @@ local function ensureFrame()
 	f:RegisterForDrag("LeftButton")
 	f:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-	tinsert(UISpecialFrames, "CraftForgeCooldownsWindow")
+	tinsert(UISpecialFrames, "CraftBenchCooldownsWindow")
 
 	if UIStyle then
 		UIStyle.SkinFrame(f, false)
-		UIStyle.CreateHeader(f, "CraftForge — " .. (L["CD_TITLE"] or "Crafting Cooldowns"), 136243, function()
+		UIStyle.CreateHeader(f, "CraftBench — " .. (L["CD_TITLE"] or "Crafting Cooldowns"), 136243, function()
 			f:Hide()
 		end)
 	end
@@ -71,8 +71,8 @@ local function ensureFrame()
 		or CreateFrame("Button", nil, topBar, "UIPanelButtonTemplate")
 	clearBtn:SetPoint("RIGHT", topBar, "RIGHT", -8, 0)
 	clearBtn:SetScript("OnClick", function()
-		if CraftForge.Cooldowns then
-			CraftForge.Cooldowns:ClearExpired()
+		if CraftBench.Cooldowns then
+			CraftBench.Cooldowns:ClearExpired()
 		end
 		CooldownsUI:Refresh()
 	end)
@@ -82,7 +82,7 @@ local function ensureFrame()
 	body:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -10, 10)
 	if UIStyle then UIStyle.SkinInset(body) end
 
-	local scroll = CreateFrame("ScrollFrame", "CraftForgeCooldownsScroll", body, "UIPanelScrollFrameTemplate")
+	local scroll = CreateFrame("ScrollFrame", "CraftBenchCooldownsScroll", body, "UIPanelScrollFrameTemplate")
 	scroll:SetPoint("TOPLEFT", body, "TOPLEFT", 8, -8)
 	scroll:SetPoint("BOTTOMRIGHT", body, "BOTTOMRIGHT", -26, 8)
 	if UIStyle and UIStyle.StyleScrollBar then UIStyle.StyleScrollBar(scroll) end
@@ -105,9 +105,9 @@ end
 
 function CooldownsUI:Refresh()
 	if not cdFrame or not cdFrame:IsShown() then return end
-	local Cooldowns = CraftForge.Cooldowns
+	local Cooldowns = CraftBench.Cooldowns
 	if not Cooldowns then return end
-	local UIStyle = CraftForge.UIStyle
+	local UIStyle = CraftBench.UIStyle
 	local entries = Cooldowns:GetAllEntries(onlyReady)
 
 	for _, row in ipairs(cdFrame._rows) do row:Hide() end
@@ -154,10 +154,10 @@ function CooldownsUI:Refresh()
 	cdFrame._child:SetHeight(math.max(100, -y + 10))
 end
 
-function CraftForge:ShowCooldowns()
+function CraftBench:ShowCooldowns()
 	local f = ensureFrame()
-	if CraftForge.Cooldowns and CraftForge.Cooldowns.ScanCurrentProfession then
-		CraftForge.Cooldowns:ScanCurrentProfession()
+	if CraftBench.Cooldowns and CraftBench.Cooldowns.ScanCurrentProfession then
+		CraftBench.Cooldowns:ScanCurrentProfession()
 	end
 	f:Show()
 	CooldownsUI:Refresh()

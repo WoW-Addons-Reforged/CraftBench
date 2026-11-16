@@ -1,8 +1,8 @@
 local addonName, addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
 
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ]]--
 
-CraftForge.ATTPlugin = {}
+CraftBench.ATTPlugin = {}
 
-local plugin = CraftForge.ATTPlugin
-local L = CraftForge.L
+local plugin = CraftBench.ATTPlugin
+local L = CraftBench.L
 
 plugin.options = {
 	type = "group",
@@ -33,11 +33,11 @@ plugin.options = {
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.ATT.enabled
+				return CraftBench.db.profile.plugins.ATT.enabled
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.ATT.enabled = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.ATT.enabled = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1,
@@ -46,11 +46,11 @@ plugin.options = {
 			type = "toggle",
 			name = L["Show item collection status"],
 			get = function()
-				return CraftForge.db.profile.plugins.ATT.showItemStatus
+				return CraftBench.db.profile.plugins.ATT.showItemStatus
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.ATT.showItemStatus = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.ATT.showItemStatus = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 2,
@@ -59,11 +59,11 @@ plugin.options = {
 			type = "toggle",
 			name = L["Show recipe collection status"],
 			get = function()
-				return CraftForge.db.profile.plugins.ATT.showRecipeStatus
+				return CraftBench.db.profile.plugins.ATT.showRecipeStatus
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.ATT.showRecipeStatus = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.ATT.showRecipeStatus = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 3,
@@ -72,14 +72,14 @@ plugin.options = {
 }
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.ATT then
-		CraftForge.db.profile.plugins.ATT = {
+	if not CraftBench.db.profile.plugins.ATT then
+		CraftBench.db.profile.plugins.ATT = {
 			enabled = true,
 			showItemStatus = true,
 			showRecipeStatus = true,
 		}
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 end
 
 local function queryATTIcon(att, field, id, fallbackCreate)
@@ -115,7 +115,7 @@ end
 function plugin.RecipeNamePrefix(skill, recipe)
 	if not skill or not recipe then return end
 	local att = _G.AllTheThings
-	local cfg = CraftForge.db and CraftForge.db.profile and CraftForge.db.profile.plugins and CraftForge.db.profile.plugins.ATT
+	local cfg = CraftBench.db and CraftBench.db.profile and CraftBench.db.profile.plugins and CraftBench.db.profile.plugins.ATT
 	if not att or not cfg or not cfg.enabled then return end
 	if cfg.showItemStatus and recipe.itemID then
 		local icon = queryATTIcon(att, "itemID", recipe.itemID, att.CreateItem)
@@ -149,7 +149,7 @@ end
 function plugin.GetRecipeSource(skill, recipe)
 	if not skill and not recipe then return nil end
 	local att = _G.AllTheThings
-	local cfg = CraftForge.db and CraftForge.db.profile and CraftForge.db.profile.plugins and CraftForge.db.profile.plugins.ATT
+	local cfg = CraftBench.db and CraftBench.db.profile and CraftBench.db.profile.plugins and CraftBench.db.profile.plugins.ATT
 	if not att or not cfg or not cfg.enabled or not att.SearchForField then return nil end
 
 	local candidates
@@ -192,7 +192,7 @@ end
 function plugin.GetExtraText(skill, recipe)
 	if not skill or not recipe then return end
 	local att = _G.AllTheThings
-	local cfg = CraftForge.db and CraftForge.db.profile and CraftForge.db.profile.plugins and CraftForge.db.profile.plugins.ATT
+	local cfg = CraftBench.db and CraftBench.db.profile and CraftBench.db.profile.plugins and CraftBench.db.profile.plugins.ATT
 	if not att or not cfg or not cfg.enabled then return end
 	local parts = {}
 	if cfg.showItemStatus and recipe.itemID then
@@ -207,7 +207,7 @@ function plugin.GetExtraText(skill, recipe)
 			table.insert(parts, L["Recipe"] .. ": " .. icon)
 		end
 	end
-	local showSource = CraftForge.db.profile.show_recipe_source_for_learned
+	local showSource = CraftBench.db.profile.show_recipe_source_for_learned
 	if not showSource then
 		local rInfo = C_TradeSkillUI and C_TradeSkillUI.GetRecipeInfo and (recipe.spellID or skill.id) and C_TradeSkillUI.GetRecipeInfo(recipe.spellID or skill.id)
 		if rInfo and rInfo.learned then
@@ -227,5 +227,5 @@ function plugin.GetExtraText(skill, recipe)
 	end
 end
 
-CraftForge:RegisterRecipeNamePlugin("ATTPlugin")
-CraftForge:RegisterDisplayDetailPlugin("ATTPlugin")
+CraftBench:RegisterRecipeNamePlugin("ATTPlugin")
+CraftBench:RegisterDisplayDetailPlugin("ATTPlugin")

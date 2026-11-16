@@ -1,6 +1,6 @@
 --[[
 
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ]]--
 
-CraftForge.AUPlugin = {}
+CraftBench.AUPlugin = {}
 
-local plugin = CraftForge.AUPlugin
-local L = CraftForge.L
+local plugin = CraftBench.AUPlugin
+local L = CraftBench.L
 
 local DEFAULT_ACH_ICON = "Interface\\AchievementFrame\\UI-Achievement-TinyShield"
 
@@ -33,11 +33,11 @@ plugin.options = {
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.AU.enabled
+				return CraftBench.db.profile.plugins.AU.enabled
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.AU.enabled = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.AU.enabled = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1,
@@ -110,16 +110,16 @@ local function CollectAchievementsForRecipe(recipe)
 end
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.AU then
-		CraftForge.db.profile.plugins.AU = {}
-		CraftForge.db.profile.plugins.AU.enabled = true
+	if not CraftBench.db.profile.plugins.AU then
+		CraftBench.db.profile.plugins.AU = {}
+		CraftBench.db.profile.plugins.AU.enabled = true
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 end
 
 function plugin.RecipeNamePrefix(skill, recipe)
 	if not skill or not recipe then return end
-	if not CraftForge.db.profile.plugins.AU or not CraftForge.db.profile.plugins.AU.enabled then return end
+	if not CraftBench.db.profile.plugins.AU or not CraftBench.db.profile.plugins.AU.enabled then return end
 	if not _G.AchievementsUtils then return end
 
 	local list = CollectAchievementsForRecipe(recipe)
@@ -134,7 +134,7 @@ end
 
 function plugin.GetExtraText(skill, recipe)
 	if not skill or not recipe then return end
-	if not CraftForge.db.profile.plugins.AU or not CraftForge.db.profile.plugins.AU.enabled then return end
+	if not CraftBench.db.profile.plugins.AU or not CraftBench.db.profile.plugins.AU.enabled then return end
 	if not _G.AchievementsUtils then return end
 
 	local list = CollectAchievementsForRecipe(recipe)
@@ -148,5 +148,5 @@ function plugin.GetExtraText(skill, recipe)
 	return "|rAchievementsUtils:", table.concat(parts, "\n")
 end
 
-CraftForge:RegisterRecipeNamePlugin("AUPlugin")
-CraftForge:RegisterDisplayDetailPlugin("AUPlugin")
+CraftBench:RegisterRecipeNamePlugin("AUPlugin")
+CraftBench:RegisterDisplayDetailPlugin("AUPlugin")

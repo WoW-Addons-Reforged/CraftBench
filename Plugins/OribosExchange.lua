@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -50,10 +50,10 @@ Prices are returned in copper, but accurate to the last *silver* (with coppers a
 	https://undermine.exchange/
 ]]--
 
-CraftForge.OEPlugin = {}
+CraftBench.OEPlugin = {}
 
-local plugin = CraftForge.OEPlugin
-local L = CraftForge.L
+local plugin = CraftBench.OEPlugin
+local L = CraftBench.L
 
 plugin.options =
 {
@@ -65,11 +65,11 @@ plugin.options =
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.OE.enabled
+				return CraftBench.db.profile.plugins.OE.enabled
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.OE.enabled = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.OE.enabled = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1
@@ -77,14 +77,14 @@ plugin.options =
 		useShort = {
 			type = "toggle",
 			name = "useShort",
-			desc = CraftForge.L["Use Short money format"] or "Use Short money format",
+			desc = CraftBench.L["Use Short money format"] or "Use Short money format",
 			get = function()
-				return CraftForge.db.profile.plugins.OE.useShort
+				return CraftBench.db.profile.plugins.OE.useShort
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.OE.useShort = value
+				CraftBench.db.profile.plugins.OE.useShort = value
 				if value then
-					CraftForge.db.profile.plugins.OE.useShort = value
+					CraftBench.db.profile.plugins.OE.useShort = value
 				end
 			end,
 			order = 2
@@ -92,14 +92,14 @@ plugin.options =
 		onlyPositive = {
 			type = "toggle",
 			name = "onlyPositive",
-			desc = CraftForge.L["Only show positive values"] or "Only show positive values",
+			desc = CraftBench.L["Only show positive values"] or "Only show positive values",
 			get = function()
-				return CraftForge.db.profile.plugins.OE.onlyPositive
+				return CraftBench.db.profile.plugins.OE.onlyPositive
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.OE.onlyPositive = value
+				CraftBench.db.profile.plugins.OE.onlyPositive = value
 				if value then
-					CraftForge.db.profile.plugins.OE.onlyPositive = value
+					CraftBench.db.profile.plugins.OE.onlyPositive = value
 				end
 			end,
 			order = 3
@@ -107,14 +107,14 @@ plugin.options =
 		colorCode = {
 			type = "toggle",
 			name = "colorCode",
-			desc = CraftForge.L["Add color to the results"] or "Add color to the results",
+			desc = CraftBench.L["Add color to the results"] or "Add color to the results",
 			get = function()
-				return CraftForge.db.profile.plugins.OE.colorCode
+				return CraftBench.db.profile.plugins.OE.colorCode
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.OE.colorCode = value
+				CraftBench.db.profile.plugins.OE.colorCode = value
 				if value then
-					CraftForge.db.profile.plugins.OE.colorCode = value
+					CraftBench.db.profile.plugins.OE.colorCode = value
 				end
 			end,
 			order = 4
@@ -123,11 +123,11 @@ plugin.options =
 }
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.OE then
-		CraftForge.db.profile.plugins.OE = {}
-		CraftForge.db.profile.plugins.OE.enabled = true
+	if not CraftBench.db.profile.plugins.OE then
+		CraftBench.db.profile.plugins.OE = {}
+		CraftBench.db.profile.plugins.OE.enabled = true
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 end
 
 local function OEMarketValue(itemID)
@@ -142,10 +142,10 @@ function plugin.GetExtraText(skill, recipe)
 	local bop
 	if not skill or not recipe then return end
 	local itemID = recipe.itemID
-	if OEMarketInfo and CraftForge.db.profile.plugins.OE.enabled and itemID then
+	if OEMarketInfo and CraftBench.db.profile.plugins.OE.enabled and itemID then
 		local value = OEMarketValue(itemID)
 		if value then
-			extra_text = CraftForge:FormatMoneyFull(value, true);
+			extra_text = CraftBench:FormatMoneyFull(value, true);
 			label = "|r"..L["OEMarket"]..":"
 		end
 	end
@@ -159,14 +159,14 @@ function plugin.RecipeNameSuffix(skill, recipe)
 	local text, value
 	if recipe then
 		local itemID = recipe.itemID
-		if OEMarketInfo and CraftForge.db.profile.plugins.OE.enabled and itemID then
+		if OEMarketInfo and CraftBench.db.profile.plugins.OE.enabled and itemID then
 			value = OEMarketValue(itemID)
 			if value then
 				value = value * (recipe.numMade or 1)
 				local matsum = 0
 				if recipe.reagentData then
 					for _, v in pairs(recipe.reagentData) do
-						local rid = (CraftForge.isRetail or CraftForge.isForever) and v.reagentID or v.id
+						local rid = (CraftBench.isRetail or CraftBench.isForever) and v.reagentID or v.id
 						local iprice = rid and OEMarketValue(rid)
 						if iprice then
 							matsum = matsum + (v.numNeeded or 0) * iprice
@@ -174,12 +174,12 @@ function plugin.RecipeNameSuffix(skill, recipe)
 					end
 				end
 				value = value - matsum
-				if CraftForge.db.profile.plugins.OE.useShort then
-					text = CraftForge:FormatMoneyShort(value, true, CraftForge.db.profile.plugins.OE.colorCode)
+				if CraftBench.db.profile.plugins.OE.useShort then
+					text = CraftBench:FormatMoneyShort(value, true, CraftBench.db.profile.plugins.OE.colorCode)
 				else
-					text = CraftForge:FormatMoneyFull(value, true, CraftForge.db.profile.plugins.OE.colorCode)
+					text = CraftBench:FormatMoneyFull(value, true, CraftBench.db.profile.plugins.OE.colorCode)
 				end
-				if CraftForge.db.profile.plugins.OE.onlyPositive and value <= 0 then
+				if CraftBench.db.profile.plugins.OE.onlyPositive and value <= 0 then
 					text = nil
 				end
 			end
@@ -189,6 +189,6 @@ function plugin.RecipeNameSuffix(skill, recipe)
 	return text, value
 end
 
-CraftForge:RegisterRecipeNamePlugin("OEPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
+CraftBench:RegisterRecipeNamePlugin("OEPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
 
-CraftForge:RegisterDisplayDetailPlugin("OEPlugin")	-- we have a GetExtraText function
+CraftBench:RegisterDisplayDetailPlugin("OEPlugin")	-- we have a GetExtraText function

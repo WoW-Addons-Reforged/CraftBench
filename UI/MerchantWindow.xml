@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	CraftForge: A tradeskill window replacement.
+	CraftBench: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,12 +25,12 @@
  # for currently queued recipes.
  #
 -->
-<Frame name="CraftForgeMerchantBuyFrame" parent="UIParent" hidden="true" inherits="BackdropTemplate">
+<Frame name="CraftBenchMerchantBuyFrame" parent="UIParent" hidden="true" inherits="BackdropTemplate">
 	<Size>
 		<AbsDimension x="120" y="50"/>
 	</Size>
 	<Frames>
-		<Button name="$parentButton" inherits="GameMenuButtonTemplate" parent="CraftForgeMerchantBuyFrame" text="Reagents">
+		<Button name="$parentButton" inherits="GameMenuButtonTemplate" parent="CraftBenchMerchantBuyFrame" text="Reagents">
 		  <Size>
 			<AbsDimension x="100" y="18"/>
 		  </Size>
@@ -43,13 +43,13 @@
 		  </Anchors>
 		  <Scripts>
 		  	<OnEnter>
-				CraftForge:MerchantBuyButton_OnEnter(self)
+				CraftBench:MerchantBuyButton_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
-				CraftForge:MerchantBuyButton_OnLeave(self)
+				CraftBench:MerchantBuyButton_OnLeave(self)
 			</OnLeave>
 			<OnClick>
-				CraftForge:BuyRequiredReagents()
+				CraftBench:BuyRequiredReagents()
 			</OnClick>
 		  </Scripts>
 		</Button>

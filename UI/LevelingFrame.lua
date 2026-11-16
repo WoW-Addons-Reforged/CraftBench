@@ -1,13 +1,13 @@
 ----------------------------------------------------------
--- CraftForge - Native Dark-Gold Leveling Planner UI    --
+-- CraftBench - Native Dark-Gold Leveling Planner UI    --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-local L = CraftForge.L
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+local L = CraftBench.L
 
-CraftForge.LevelingUI = CraftForge.LevelingUI or {}
-local LevelingUI = CraftForge.LevelingUI
+CraftBench.LevelingUI = CraftBench.LevelingUI or {}
+local LevelingUI = CraftBench.LevelingUI
 
 local levelFrame
 local currentPlan
@@ -21,8 +21,8 @@ local DIFF_COLORS = {
 local function formatMoney(copper)
 	copper = math.floor(tonumber(copper) or 0)
 	if copper <= 0 then return "|cff888888-|r" end
-	if CraftForge.FormatMoneyFull then
-		return CraftForge:FormatMoneyFull(copper, true)
+	if CraftBench.FormatMoneyFull then
+		return CraftBench:FormatMoneyFull(copper, true)
 	end
 	local g = math.floor(copper / 10000)
 	local s = math.floor((copper % 10000) / 100)
@@ -31,8 +31,8 @@ end
 
 local function ensureFrame()
 	if levelFrame then return levelFrame end
-	local UIStyle = CraftForge.UIStyle
-	local f = CreateFrame("Frame", "CraftForgeLevelingWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local UIStyle = CraftBench.UIStyle
+	local f = CreateFrame("Frame", "CraftBenchLevelingWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	f:SetSize(680, 480)
 	f:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	f:SetFrameStrata("DIALOG")
@@ -43,11 +43,11 @@ local function ensureFrame()
 	f:RegisterForDrag("LeftButton")
 	f:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-	tinsert(UISpecialFrames, "CraftForgeLevelingWindow")
+	tinsert(UISpecialFrames, "CraftBenchLevelingWindow")
 
 	if UIStyle then
 		UIStyle.SkinFrame(f, false)
-		UIStyle.CreateHeader(f, "CraftForge — " .. (L["LVL_TITLE"] or "Leveling Planner"), 136249, function()
+		UIStyle.CreateHeader(f, "CraftBench — " .. (L["LVL_TITLE"] or "Leveling Planner"), 136249, function()
 			f:Hide()
 		end)
 	end
@@ -97,10 +97,10 @@ local function ensureFrame()
 		or CreateFrame("Button", nil, topBar, "UIPanelButtonTemplate")
 	queueBtn:SetPoint("RIGHT", topBar, "RIGHT", -10, 0)
 	queueBtn:SetScript("OnClick", function()
-		if currentPlan and CraftForge.Leveling then
-			local n = CraftForge.Leveling:QueuePlan(currentPlan)
+		if currentPlan and CraftBench.Leveling then
+			local n = CraftBench.Leveling:QueuePlan(currentPlan)
 			if n > 0 then
-				CraftForge:Print(string.format(L["LVL_QUEUED_FMT"] or "Added %d leveling step(s) to queue.", n))
+				CraftBench:Print(string.format(L["LVL_QUEUED_FMT"] or "Added %d leveling step(s) to queue.", n))
 			end
 		end
 	end)
@@ -118,13 +118,13 @@ local function ensureFrame()
 	local freeChk = CreateFrame("CheckButton", nil, body, "UICheckButtonTemplate")
 	freeChk:SetSize(20, 20)
 	freeChk:SetPoint("TOPRIGHT", body, "TOPRIGHT", -155, -4)
-	freeChk:SetChecked(CraftForge.Leveling and CraftForge.Leveling:IsFreeGatheredMats() or false)
+	freeChk:SetChecked(CraftBench.Leveling and CraftBench.Leveling:IsFreeGatheredMats() or false)
 	local freeLbl = freeChk:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
 	freeLbl:SetPoint("LEFT", freeChk, "RIGHT", 2, 0)
 	freeLbl:SetText(L["LVL_FREE_GATHER"] or "Gathered = 0g")
 	freeChk:SetScript("OnClick", function(selfBtn)
-		if CraftForge.Leveling then
-			CraftForge.Leveling:SetFreeGatheredMats(selfBtn:GetChecked())
+		if CraftBench.Leveling then
+			CraftBench.Leveling:SetFreeGatheredMats(selfBtn:GetChecked())
 			LevelingUI:Calculate()
 		end
 	end)
@@ -134,14 +134,14 @@ local function ensureFrame()
 		or CreateFrame("Button", nil, body, "UIPanelButtonTemplate")
 	resetIgnBtn:SetPoint("TOPRIGHT", body, "TOPRIGHT", -10, -4)
 	resetIgnBtn:SetScript("OnClick", function()
-		if CraftForge.Leveling then
-			CraftForge.Leveling:ClearIgnored()
+		if CraftBench.Leveling then
+			CraftBench.Leveling:ClearIgnored()
 			LevelingUI:Calculate()
 		end
 	end)
 	f._resetIgnBtn = resetIgnBtn
 
-	local scroll = CreateFrame("ScrollFrame", "CraftForgeLevelingScroll", body, "UIPanelScrollFrameTemplate")
+	local scroll = CreateFrame("ScrollFrame", "CraftBenchLevelingScroll", body, "UIPanelScrollFrameTemplate")
 	scroll:SetPoint("TOPLEFT", body, "TOPLEFT", 8, -28)
 	scroll:SetPoint("BOTTOMRIGHT", body, "BOTTOMRIGHT", -26, 8)
 	if UIStyle and UIStyle.StyleScrollBar then UIStyle.StyleScrollBar(scroll) end
@@ -157,17 +157,17 @@ local function ensureFrame()
 end
 
 function LevelingUI:Calculate()
-	if not levelFrame or not CraftForge.Leveling then return end
-	local UIStyle = CraftForge.UIStyle
+	if not levelFrame or not CraftBench.Leveling then return end
+	local UIStyle = CraftBench.UIStyle
 	local cur = tonumber(levelFrame._curBox:GetText()) or 1
 	local tgt = tonumber(levelFrame._tgtBox:GetText()) or (cur + 25)
-	local plan, err = CraftForge.Leveling:BuildPlan(cur, tgt)
+	local plan, err = CraftBench.Leveling:BuildPlan(cur, tgt)
 	currentPlan = plan
 
 	for _, r in ipairs(levelFrame._rows) do r:Hide() end
 	if not plan then
 		local msg = (err == "NO_PROFESSION" or err == "NO_RECIPES")
-			and (L["LVL_OPEN_PROF"] or "Open a crafting profession first so CraftForge can scan your recipes.")
+			and (L["LVL_OPEN_PROF"] or "Open a crafting profession first so CraftBench can scan your recipes.")
 			or (L["LVL_NO_UPGRADES"] or "No orange, yellow, or green recipes found for leveling.")
 		levelFrame._statusFS:SetText("|cffff6666" .. msg .. "|r")
 		levelFrame._child:SetHeight(60)
@@ -177,7 +177,7 @@ function LevelingUI:Calculate()
 	levelFrame._statusFS:SetText(string.format(L["LVL_SUMMARY_FMT"] or "Path %d -> %d  |  Est. Cost: %s",
 		plan.currentSkill, plan.targetSkill, formatMoney(plan.totalCost)))
 
-	local ignCount = CraftForge.Leveling:GetIgnoredCount()
+	local ignCount = CraftBench.Leveling:GetIgnoredCount()
 	if levelFrame._resetIgnBtn then
 		if ignCount > 0 then
 			levelFrame._resetIgnBtn:SetText((L["LVL_RESET_IGNORED"] or "Reset Excluded") .. " (" .. ignCount .. ")")
@@ -226,7 +226,7 @@ function LevelingUI:Calculate()
 		if excludeRecipeID then
 			row._right:SetPoint("RIGHT", row._excl, "LEFT", -6, 0)
 			row._excl:SetScript("OnClick", function()
-				CraftForge.Leveling:IgnoreRecipe(excludeRecipeID)
+				CraftBench.Leveling:IgnoreRecipe(excludeRecipeID)
 				LevelingUI:Calculate()
 			end)
 			row._excl:SetScript("OnEnter", function(selfBtn)
@@ -260,7 +260,7 @@ function LevelingUI:Calculate()
 	levelFrame._child:SetHeight(math.max(100, -y + 10))
 end
 
-function CraftForge:ShowLeveling()
+function CraftBench:ShowLeveling()
 	local f = ensureFrame()
 	local rank, maxRank = 1, 300
 	if self.currentPlayer and self.currentTrade and self.GetSkillRanks then

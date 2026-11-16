@@ -1,12 +1,12 @@
 ----------------------------------------------------------
--- CraftForge - WoW Forever Camping System              --
+-- CraftBench - WoW Forever Camping System              --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
 
-CraftForge.Camping = CraftForge.Camping or {}
-local Camping = CraftForge.Camping
+CraftBench.Camping = CraftBench.Camping or {}
+local Camping = CraftBench.Camping
 
 local SKILL_NAMES = { "Camping", "Lagerbau" }
 

@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
 -- Localization
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
 local PT = LibStub("LibPeriodicTable-3.1")
 
 local merchant_inventory = {}
@@ -40,10 +40,10 @@ end
 
 local function get_shopping_list()
 	local name = nil
-	if not CraftForge.db.profile.include_alts then
-		name = CraftForge.currentPlayer
+	if not CraftBench.db.profile.include_alts then
+		name = CraftBench.currentPlayer
 	end
-	return CraftForge:GetShoppingList(name, CraftForge.db.profile.same_faction, CraftForge.db.profile.include_guild)
+	return CraftBench:GetShoppingList(name, CraftBench.db.profile.same_faction, CraftBench.db.profile.include_guild)
 end
 
 --
@@ -98,7 +98,7 @@ local function update_merchant_inventory()
 			local link = GetMerchantItemLink(i)
 			if link then
 				local itemCount, itemTexture, itemValue, itemLink, currencyName, currencyID
-				local id = CraftForge:GetItemIDFromLink(link)
+				local id = CraftBench:GetItemIDFromLink(link)
 				local name, texture, price, quantity, numAvailable, isPurchasable, isUsable, extendedCost, currencyID, spellID = GetMerchantItemInfo(i)
 				if extendedCost then
 					itemCount = GetMerchantItemCostInfo(i)
@@ -110,10 +110,10 @@ local function update_merchant_inventory()
 						for j=itemCount, 1, -1 do
 							itemTexture, itemValue, itemLink, currencyName = GetMerchantItemCostItem(i, j)
 							if currencyName then
-								currencyID = -1 * tonumber(CraftForge.currencyIDsByName[currencyName] or 0)
+								currencyID = -1 * tonumber(CraftBench.currencyIDsByName[currencyName] or 0)
 							elseif itemLink then
 								currencyName = C_Item.GetItemInfo(itemLink)
-								currencyID = CraftForge:GetItemIDFromLink(itemLink)
+								currencyID = CraftBench:GetItemIDFromLink(itemLink)
 							end
 							DA.DEBUG(2,"  ["..tostring(j).."]: itemValue= "..tostring(itemValue)..", itemLink= "..tostring(itemLink)..", currencyName= "..tostring(currencyName).." ("..tostring(currencyID)..")")
 						end
@@ -126,39 +126,39 @@ local function update_merchant_inventory()
 					merchant_inventory[id] = {}
 					merchant_inventory[id].price = price
 					merchant_inventory[id].quantity = quantity
-					if CraftForge.db.global.itemRecipeUsedIn[id] or CraftForge.MissAll then		-- if this item is used in any recipes we know about
-						if not CraftForge:VendorSellsReagent(id) then		-- if its not a known vendor item
-							if CraftForge.db.global.MissingVendorItems[id] then
+					if CraftBench.db.global.itemRecipeUsedIn[id] or CraftBench.MissAll then		-- if this item is used in any recipes we know about
+						if not CraftBench:VendorSellsReagent(id) then		-- if its not a known vendor item
+							if CraftBench.db.global.MissingVendorItems[id] then
 								DA.DEBUG(1,"updating "..tostring(name).." ("..tostring(id)..")")
 							else
 								DA.DEBUG(1,"adding "..tostring(name).." ("..tostring(id)..")")
 							end
 							if itemCount and itemCount > 0 then
---								CraftForge.db.global.MissingVendorItems[id] = {name or true, quantity, currencyName, currencyID, itemValue}		-- add it to our table
-								CraftForge.db.global.MissingVendorItems[id] = {name or true, quantity or 0, currencyName or "", currencyID or 0, itemValue or 0, 
+--								CraftBench.db.global.MissingVendorItems[id] = {name or true, quantity, currencyName, currencyID, itemValue}		-- add it to our table
+								CraftBench.db.global.MissingVendorItems[id] = {name or true, quantity or 0, currencyName or "", currencyID or 0, itemValue or 0, 
 									vendorName or "", mapID or 0, mapX or 0, mapY or 0}		-- convert it
 							else
-								CraftForge.db.global.MissingVendorItems[id] = name or true		-- add it to our table
+								CraftBench.db.global.MissingVendorItems[id] = name or true		-- add it to our table
 							end
 						else
 							DA.DEBUG(1,"known "..tostring(name).." ("..tostring(id)..")")
-							if type(CraftForge.db.global.MissingVendorItems[id]) == "table" then
-								local size = #CraftForge.db.global.MissingVendorItems[id]
+							if type(CraftBench.db.global.MissingVendorItems[id]) == "table" then
+								local size = #CraftBench.db.global.MissingVendorItems[id]
 								if not (size == 5 or size == 9) then
-									CraftForge.db.global.MissingVendorItems[id] = "Fix Me"
+									CraftBench.db.global.MissingVendorItems[id] = "Fix Me"
 								end
 							end
 						end
-						if CraftForge.db.global.MissingVendorItems[id] then
-							if itemCount and itemCount > 0 and type(CraftForge.db.global.MissingVendorItems[id]) ~= "table" then
+						if CraftBench.db.global.MissingVendorItems[id] then
+							if itemCount and itemCount > 0 and type(CraftBench.db.global.MissingVendorItems[id]) ~= "table" then
 								DA.DEBUG(1,"converting "..tostring(name).." ("..tostring(id)..")")
---								CraftForge.db.global.MissingVendorItems[id] = {name or true, quantity, currencyName, currencyID, itemValue}		-- convert it
-								CraftForge.db.global.MissingVendorItems[id] = {name or true, quantity or 0, currencyName or "", currencyID or 0, itemValue or 0, 
+--								CraftBench.db.global.MissingVendorItems[id] = {name or true, quantity, currencyName, currencyID, itemValue}		-- convert it
+								CraftBench.db.global.MissingVendorItems[id] = {name or true, quantity or 0, currencyName or "", currencyID or 0, itemValue or 0, 
 									vendorName or "", mapID or 0, mapX or 0, mapY or 0}		-- convert it
 							elseif PT then
 								if id~=0 and PT:ItemInSet(id,"Tradeskill.Mat.BySource.Vendor") then
 									DA.DEBUG(1,"removing "..tostring(name).." ("..tostring(id)..")")
-									CraftForge.db.global.MissingVendorItems[id] = nil		-- remove it from our table
+									CraftBench.db.global.MissingVendorItems[id] = nil		-- remove it from our table
 								end
 							end
 						end
@@ -181,34 +181,34 @@ end
 --
 local function update_merchant_buy_button()
 	--DA.DEBUG(0,"update_merchant_buy_button()")
-	CraftForge:InventoryScan()
+	CraftBench:InventoryScan()
 	local list = get_shopping_list()
 	if not list or #list == 0 then
 		--DA.DEBUG(1,"ShoppingList is empty")
-		CraftForgeMerchantBuyFrame:Hide()
+		CraftBenchMerchantBuyFrame:Hide()
 		return false
 	elseif does_merchant_sell_required_items(list) == false then
 		--DA.DEBUG(1,"Merchant does not sell required items")
-		CraftForgeMerchantBuyFrame:Hide()
+		CraftBenchMerchantBuyFrame:Hide()
 		return false
 	end
-	if CraftForge.db.profile.display_shopping_list_at_merchant then
+	if CraftBench.db.profile.display_shopping_list_at_merchant then
 		--DA.DEBUG(1,"Shopping List should be displayed")
-		CraftForge:DisplayShoppingList(false)
+		CraftBench:DisplayShoppingList(false)
 	end
-	if CraftForgeMerchantBuyFrame:IsVisible() then
+	if CraftBenchMerchantBuyFrame:IsVisible() then
 		--DA.DEBUG(1,"Merchant Buy Button should already be there")
 		return true		-- already inserted the button
 	end
 	--DA.DEBUG(1,"Create and show the Merchant Buy Button")
-	CraftForgeMerchantBuyFrameButton:SetText(L["Reagents"])
-	if CraftForge.isForever then
-		CraftForgeMerchantBuyFrame:SetPoint("TOPLEFT", "MerchantFrame", "TOPLEFT" , 80, -5) -- May need to be adjusted for each WoW build
+	CraftBenchMerchantBuyFrameButton:SetText(L["Reagents"])
+	if CraftBench.isForever then
+		CraftBenchMerchantBuyFrame:SetPoint("TOPLEFT", "MerchantFrame", "TOPLEFT" , 80, -5) -- May need to be adjusted for each WoW build
 	else
-		CraftForgeMerchantBuyFrame:SetPoint("TOPLEFT", "MerchantFrame", "TOPLEFT" , 45, 22) -- May need to be adjusted for each WoW build
+		CraftBenchMerchantBuyFrame:SetPoint("TOPLEFT", "MerchantFrame", "TOPLEFT" , 45, 22) -- May need to be adjusted for each WoW build
 	end
-	CraftForgeMerchantBuyFrame:SetFrameStrata("HIGH")
-	CraftForgeMerchantBuyFrame:Show()
+	CraftBenchMerchantBuyFrame:SetFrameStrata("HIGH")
+	CraftBenchMerchantBuyFrame:Show()
 	return true
 end
 
@@ -216,30 +216,30 @@ end
 -- Removes the merchant buy button
 --
 local function remove_merchant_buy_button()
-	CraftForgeMerchantBuyFrame:Hide()
+	CraftBenchMerchantBuyFrame:Hide()
 end
 
 --
 -- Updates the merchant frame, if it is visible, this method can be called
 -- many times
 --
-function CraftForge:UpdateMerchantFrame()
-	CraftForge:MerchantShow()
+function CraftBench:UpdateMerchantFrame()
+	CraftBench:MerchantShow()
 end
 
 --
 -- Merchant window opened
 --
-function CraftForge:MERCHANT_SHOW()
+function CraftBench:MERCHANT_SHOW()
 	DA.TRACE("MERCHANT_SHOW()")
 end
 
 --
 -- Merchant window updated
 --
-function CraftForge:MERCHANT_UPDATE()
+function CraftBench:MERCHANT_UPDATE()
 	DA.TRACE("MERCHANT_UPDATE()")
-	if CraftForge.db.profile.vendor_buy_button or CraftForge.db.profile.vendor_auto_buy then
+	if CraftBench.db.profile.vendor_buy_button or CraftBench.db.profile.vendor_auto_buy then
 		update_merchant_inventory()
 	end
 end
@@ -247,7 +247,7 @@ end
 --
 -- Merchant window closed
 --
-function CraftForge:MERCHANT_CLOSED()
+function CraftBench:MERCHANT_CLOSED()
 	DA.TRACE("MERCHANT_CLOSED()")
 	remove_merchant_buy_button()
 	merchant_inventory = {}
@@ -260,24 +260,24 @@ end
 -- times if needed, and it can be called even if a merchant window
 -- is not open.
 --
-function CraftForge:MerchantShow()
+function CraftBench:MerchantShow()
 	--DA.DEBUG(0,"MerchantShow()")
 	if MerchantFrame and not MerchantFrame:IsVisible() then
 		DA.DEBUG(1,"MerchantFrame= "..tostring(MerchantFrame)..", IsVisible= "..tostring(MerchantFrame:IsVisible()))
 		return
 	end
 	merchant_inventory = {}
-	if CraftForge.db.profile.vendor_buy_button or CraftForge.db.profile.vendor_auto_buy then
+	if CraftBench.db.profile.vendor_buy_button or CraftBench.db.profile.vendor_auto_buy then
 		update_merchant_inventory()
 	end
-	if CraftForge.db.profile.vendor_auto_buy then
+	if CraftBench.db.profile.vendor_auto_buy then
 		if not self.autoPurchaseComplete then
 			self.autoPurchaseComplete = true		-- annoying lag causes multiple purchases because merchant frame shows again before our bags update
 			self:BuyRequiredReagents()
 		else
 			update_merchant_buy_button()
 		end
-	elseif CraftForge.db.profile.vendor_buy_button then
+	elseif CraftBench.db.profile.vendor_buy_button then
 		update_merchant_buy_button()
 	end
 end
@@ -286,7 +286,7 @@ end
 -- If at a vendor with the window open, buy anything that they
 -- sell that is required by any queued recipe.
 --
-function CraftForge:BuyRequiredReagents()
+function CraftBench:BuyRequiredReagents()
 	--DA.DEBUG(0,"BuyRequiredReagents()")
 	local list = get_shopping_list()
 	if #list == 0 then
@@ -346,7 +346,7 @@ function CraftForge:BuyRequiredReagents()
 						end -- while
 						local itemspent = price * purchased / quantity -- spent on this type of item
 						totalspent = totalspent + itemspent  -- spent on all items from this merchant
-						cash = CraftForge:FormatMoneyFull(itemspent, true);
+						cash = CraftBench:FormatMoneyFull(itemspent, true);
 						message = L["Purchased"]..": "..tostring(purchased).." x "..link.." ("..cash..")"
 						DA.MARK2(message)
 					else
@@ -357,7 +357,7 @@ function CraftForge:BuyRequiredReagents()
 		end
 	end
 	if totalspent > 0 and purchased > 1 then
-		cash = CraftForge:FormatMoneyFull(totalspent, true)
+		cash = CraftBench:FormatMoneyFull(totalspent, true)
 		message = L["Total spent"]..": "..cash
 		DA.MARK2(message)
 	end
@@ -365,7 +365,7 @@ function CraftForge:BuyRequiredReagents()
 	update_merchant_buy_button()
 end
 
-function CraftForge:MerchantBuyButton_OnEnter(button)
+function CraftBench:MerchantBuyButton_OnEnter(button)
 	--DA.DEBUG(0,"BuyRequiredReagents("..tostring(button)..")")
 	GameTooltip:SetOwner(button, "ANCHOR_BOTTOMRIGHT")
 	GameTooltip:ClearLines()
@@ -377,16 +377,16 @@ function CraftForge:MerchantBuyButton_OnEnter(button)
 		if merchant_inventory[itemID] then
 			local cost = merchant_inventory[itemID].price * math.ceil(needList[i].count / merchant_inventory[itemID].quantity)
 			totalCost = totalCost + cost
-			GameTooltip:AddDoubleLine((C_Item.GetItemInfo(itemID) or ("Item #" .. itemID)).." x "..needList[i].count, CraftForge:FormatMoneyFull(cost, true),1,1,0)
+			GameTooltip:AddDoubleLine((C_Item.GetItemInfo(itemID) or ("Item #" .. itemID)).." x "..needList[i].count, CraftBench:FormatMoneyFull(cost, true),1,1,0)
 		end
 	end
 	if #needList > 1 then
-		GameTooltip:AddDoubleLine(L["Total Cost:"], CraftForge:FormatMoneyFull(totalCost, true),0,1,0)
+		GameTooltip:AddDoubleLine(L["Total Cost:"], CraftBench:FormatMoneyFull(totalCost, true),0,1,0)
 	end
 	GameTooltip:Show()
 end
 
-function CraftForge:MerchantBuyButton_OnLeave(button)
+function CraftBench:MerchantBuyButton_OnLeave(button)
 	--DA.DEBUG(0,"TradeButtonAdditional_OnEnter("..tostring(button)..")")
 	--DA.DEBUG(0,"MerchantBuyButton_OnLeave("..tostring(button)..")")
 	GameTooltip:Hide()

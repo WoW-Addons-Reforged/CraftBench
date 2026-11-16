@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 local GetItemInfo = C_Item and C_Item.GetItemInfo or GetItemInfo
 
-CraftForge.DSAPlugin = {}
+CraftBench.DSAPlugin = {}
 
-local plugin = CraftForge.DSAPlugin
-local L = CraftForge.L
+local plugin = CraftBench.DSAPlugin
+local L = CraftBench.L
 
 plugin.options =
 {
@@ -34,11 +34,11 @@ plugin.options =
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.DSA.enabled
+				return CraftBench.db.profile.plugins.DSA.enabled
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.DSA.enabled = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.DSA.enabled = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1
@@ -48,22 +48,22 @@ plugin.options =
 
 function plugin.OnInitialize()
 	--DA.DEBUG(0,"DSA:OnInitialize()")
-	if not CraftForge.db.profile.plugins.DSA then
-		CraftForge.db.profile.plugins.DSA = {}
-		CraftForge.db.profile.plugins.DSA.enabled = true
+	if not CraftBench.db.profile.plugins.DSA then
+		CraftBench.db.profile.plugins.DSA = {}
+		CraftBench.db.profile.plugins.DSA.enabled = true
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 	if DataStore then
 		local player
-		if CraftForge.unitName then
-			player = CraftForge:unitName("player")
+		if CraftBench.unitName then
+			player = CraftBench:unitName("player")
 		else
 			player = UnitName("player")
 		end
 		for characterName, character in pairs(DataStore:GetCharacters()) do
 			--DA.DEBUG(0,"DSA:OnInitialize: characterName= "..tostring(characterName)..", character= "..tostring(character))
 			if characterName == player then
-				CraftForge.DSAPlayer = character
+				CraftBench.DSAPlayer = character
 			end
 		end
 	end
@@ -72,7 +72,7 @@ end
 function plugin.RecipeNamePrefix(skill, recipe)
 	local prefix, itemID, itemName, itemCount
 	if not recipe then return end
-	if CraftForge.db.profile.plugins.DSA.enabled and DataStore then
+	if CraftBench.db.profile.plugins.DSA.enabled and DataStore then
 		itemID = recipe.itemID
 		if itemID and itemID ~= 0 then
 			itemName = GetItemInfo(itemID)
@@ -81,15 +81,15 @@ function plugin.RecipeNamePrefix(skill, recipe)
 --
 -- Check for Enchanting. 
 --
-		if not CraftForge.isCraft and recipe.tradeID == 7411 and itemID == 0 then
+		if not CraftBench.isCraft and recipe.tradeID == 7411 and itemID == 0 then
 			itemID = recipe.scrollID
 			if itemID and itemID ~= 0 then
 				itemName = GetItemInfo(itemID)
 			end
 			--DA.DEBUG(0,"RecipeNamePrefix: scrollID = "..tostring(itemID).." ("..tostring(itemName)..")")
 		end
-		if itemID and CraftForge.DSAPlayer then
-			itemCount = DataStore:GetAuctionHouseItemCount(CraftForge.DSAPlayer, itemID)
+		if itemID and CraftBench.DSAPlayer then
+			itemCount = DataStore:GetAuctionHouseItemCount(CraftBench.DSAPlayer, itemID)
 			--DA.DEBUG(0,"RecipeNamePrefix: itemCount = "..tostring(itemCount))
 			prefix = "   "
 			if itemCount and itemCount > 0 then
@@ -107,4 +107,4 @@ function plugin.RecipeNamePrefix(skill, recipe)
 	return prefix
 end
 
-CraftForge:RegisterRecipeNamePlugin("DSAPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
+CraftBench:RegisterRecipeNamePlugin("DSAPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function

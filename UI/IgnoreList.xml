@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	CraftForge: A tradeskill window replacement.
+	CraftBench: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #  Template for all the buttons we use to display items in the ignore list
 #
 -->
-<Frame name="CraftForgeIgnoreListItemButtonTemplate_Player" hidden="false" virtual="true">
+<Frame name="CraftBenchIgnoreListItemButtonTemplate_Player" hidden="false" virtual="true">
 	<Size>
 		<AbsDimension x="90" y="16"/>
 	</Size>
@@ -42,7 +42,7 @@
 	</Layers>
 </Frame>
 
-<Frame name="CraftForgeIgnoreListItemButtonTemplate_RecipeLink" hidden="false" virtual="true">
+<Frame name="CraftBenchIgnoreListItemButtonTemplate_RecipeLink" hidden="false" virtual="true">
 	<Size>
 		<AbsDimension x="90" y="16"/>
 	</Size>
@@ -61,7 +61,7 @@
 	</Layers>
 </Frame>
 
-<Frame name="CraftForgeIgnoreListItemButtonTemplate_RecipeID" hidden="false" virtual="true">
+<Frame name="CraftBenchIgnoreListItemButtonTemplate_RecipeID" hidden="false" virtual="true">
 	<Size>
 		<AbsDimension x="30" y="16"/>
 	</Size>
@@ -80,12 +80,12 @@
 	</Layers>
 </Frame>
 
-<Frame name="CraftForgeIgnoreListItemButtonTemplate" hidden="true" virtual="true">
+<Frame name="CraftBenchIgnoreListItemButtonTemplate" hidden="true" virtual="true">
 	<Size>
 		<AbsDimension x="140" y="18"/>
 	</Size>
 	<Frames>
-		<Frame name="$parentPlayer" inherits="CraftForgeIgnoreListItemButtonTemplate_Player">
+		<Frame name="$parentPlayer" inherits="CraftBenchIgnoreListItemButtonTemplate_Player">
 			<Anchors>
 				<Anchor point="LEFT" >
 					<Offset>
@@ -94,7 +94,7 @@
 				</Anchor>
 			</Anchors>
 		</Frame>
-		 <Frame name="$parentRecipeID" inherits="CraftForgeIgnoreListItemButtonTemplate_RecipeID">
+		 <Frame name="$parentRecipeID" inherits="CraftBenchIgnoreListItemButtonTemplate_RecipeID">
 			<Anchors>
 				<Anchor point="LEFT" relativeTo="$parentPlayer" relativePoint="RIGHT">
 					<Offset>
@@ -103,7 +103,7 @@
 				</Anchor>
 			</Anchors>
 		</Frame>
-		 <Frame name="$parentRecipeLink" inherits="CraftForgeIgnoreListItemButtonTemplate_RecipeLink">
+		 <Frame name="$parentRecipeLink" inherits="CraftBenchIgnoreListItemButtonTemplate_RecipeLink">
 			<Anchors>
 				<Anchor point="LEFT" relativeTo="$parentRecipeID" relativePoint="RIGHT">
 					<Offset>
@@ -120,21 +120,21 @@
 		<OnClick>
 			<!-- right clicking will remove this entry. -->
 			if button == "RightButton" then
-				CraftForge:DeleteIgnoreEntry(self.index, self.player, self.id)
+				CraftBench:DeleteIgnoreEntry(self.index, self.player, self.id)
 			end
 		</OnClick>
 	</Scripts>
 </Frame>
 
-<Frame name="CraftForgeIgnoreList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" inherits="BackdropTemplate">
+<Frame name="CraftBenchIgnoreList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" inherits="BackdropTemplate">
 	<Size><AbsDimension x="320" y="150"/></Size>
 	<Anchors>
 		<Anchor point="CENTER"/>
 	</Anchors>
 	<Frames>
-		<Button name="CraftForgeIgnoreListCloseButton" inherits="UIPanelCloseButton" parent="CraftForgeIgnoreList">
+		<Button name="CraftBenchIgnoreListCloseButton" inherits="UIPanelCloseButton" parent="CraftBenchIgnoreList">
 			<Anchors>
-				<Anchor point="TOPRIGHT" relativeTo="CraftForgeIgnoreList" relativePoint="TOPRIGHT">
+				<Anchor point="TOPRIGHT" relativeTo="CraftBenchIgnoreList" relativePoint="TOPRIGHT">
 					<Offset>
 						<AbsDimension x="-2" y="-2"/>
 					</Offset>
@@ -142,32 +142,32 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					HideUIPanel(CraftForgeIgnoreList)
+					HideUIPanel(CraftBenchIgnoreList)
 				</OnClick>
 			</Scripts>
 		</Button>
-		<Frame name="CraftForgeIgnoreListParent" parent="CraftForgeIgnoreList">
+		<Frame name="CraftBenchIgnoreListParent" parent="CraftBenchIgnoreList">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeIgnoreList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchIgnoreList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-35"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeIgnoreList" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchIgnoreList" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-5" y="30"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
 		</Frame>
-		<ScrollFrame name="CraftForgeIgnoreListList" inherits="FauxScrollFrameTemplate" parent="CraftForgeIgnoreListParent">
+		<ScrollFrame name="CraftBenchIgnoreListList" inherits="FauxScrollFrameTemplate" parent="CraftBenchIgnoreListParent">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeIgnoreListParent" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchIgnoreListParent" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-5"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeIgnoreListParent" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchIgnoreListParent" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-27" y="5"/>
 					</Offset>
@@ -175,13 +175,13 @@
 			</Anchors>
 			<Scripts>
 				<OnVerticalScroll>
-					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_IGNORE_LIST_HEIGHT, CraftForge.IgnoreList_OnScroll)
+					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTBENCH_IGNORE_LIST_HEIGHT, CraftBench.IgnoreList_OnScroll)
 				</OnVerticalScroll>
 			</Scripts>
 		</ScrollFrame>
-		<Button name="CraftForgeIgnoreListButton1" inherits="CraftForgeIgnoreListItemButtonTemplate">
+		<Button name="CraftBenchIgnoreListButton1" inherits="CraftBenchIgnoreListItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeIgnoreListList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchIgnoreListList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
 					</Offset>

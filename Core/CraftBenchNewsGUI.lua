@@ -1,7 +1,7 @@
 local addonName, addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = CraftForge.L
+local L = CraftBench.L
 
 local SHOW_NEWS_MODES = {
 	{ id = 1, label = L["NEWS_MODE_ALWAYS"] or "Always" },
@@ -32,10 +32,10 @@ local function capitalize(str)
 end
 
 local function InitializeDB(self)
-	if not CraftForge.db.global.NewsDB then
-		CraftForge.db.global.NewsDB = {}
+	if not CraftBench.db.global.NewsDB then
+		CraftBench.db.global.NewsDB = {}
 	end
-	self.db = CraftForge.db.global.NewsDB
+	self.db = CraftBench.db.global.NewsDB
 	if not self.db.show_news then
 		self.db.show_news = 1
 	end
@@ -45,8 +45,8 @@ local function InitializeDB(self)
 end
 
 local function Create(self)
-	local UIStyle = CraftForge.UIStyle
-	local frame = CreateFrame("Frame", "CraftForgeNewsWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local UIStyle = CraftBench.UIStyle
+	local frame = CreateFrame("Frame", "CraftBenchNewsWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	frame:SetSize(720, 500)
 	frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	frame:SetFrameStrata("DIALOG")
@@ -57,13 +57,13 @@ local function Create(self)
 	frame:RegisterForDrag("LeftButton")
 	frame:SetScript("OnDragStart", function(f) f:StartMoving() end)
 	frame:SetScript("OnDragStop", function(f) f:StopMovingOrSizing() end)
-	tinsert(UISpecialFrames, "CraftForgeNewsWindow")
+	tinsert(UISpecialFrames, "CraftBenchNewsWindow")
 
 	if UIStyle then
 		UIStyle.SkinFrame(frame, false)
 	end
 
-	local title = "CraftForge " .. tostring(CraftForge.version or "") .. " — " .. (L["News"] or "News")
+	local title = "CraftBench " .. tostring(CraftBench.version or "") .. " — " .. (L["News"] or "News")
 	if UIStyle and UIStyle.CreateHeader then
 		UIStyle.CreateHeader(frame, title, "Interface\\Icons\\Trade_BlackSmithing", function()
 			frame:Hide()
@@ -151,7 +151,7 @@ local function Create(self)
 		UIStyle.SkinInset(contentBox)
 	end
 
-	local scroll = CreateFrame("ScrollFrame", "CraftForgeNewsScrollFrame", contentBox, "UIPanelScrollFrameTemplate")
+	local scroll = CreateFrame("ScrollFrame", "CraftBenchNewsScrollFrame", contentBox, "UIPanelScrollFrameTemplate")
 	scroll:SetPoint("TOPLEFT", contentBox, "TOPLEFT", 10, -10)
 	scroll:SetPoint("BOTTOMRIGHT", contentBox, "BOTTOMRIGHT", -28, 10)
 	if UIStyle and UIStyle.StyleScrollBar then
@@ -280,7 +280,7 @@ local function Create(self)
 		end
 	end
 
-	local newsList = CraftForge.NewsData or {}
+	local newsList = CraftBench.NewsData or {}
 	for idx, versionData in ipairs(newsList) do
 		local btn
 		if UIStyle and UIStyle.CreateButton then
@@ -306,7 +306,7 @@ local function Create(self)
 		renderVersion(newsList[1])
 	end
 
-	CraftForge.NewsFrame = frame
+	CraftBench.NewsFrame = frame
 	return frame
 end
 
@@ -322,8 +322,8 @@ function NewsGUI:Create()
 	DA.DEBUG(0, "NewsGUI:Create()")
 	local f = Create(self)
 	self.top = f
-	local player = CraftForge:unitName("player")
-	local version = CraftForge.version
+	local player = CraftBench:unitName("player")
+	local version = CraftBench.version
 	if self.db.show_news == 4 or
 	  (self.db.show_news == 3 and self.db.lastVersion[player] and self.db.lastVersion[player] == version) or
 	  (self.db.show_news == 2 and self.db.lastVersionA and self.db.lastVersionA == version) then
@@ -349,4 +349,4 @@ function NewsGUI:Reset()
 	self.top:SetPoint("CENTER", 0, 0)
 end
 
-CraftForge.NewsGUI = NewsGUI
+CraftBench.NewsGUI = NewsGUI

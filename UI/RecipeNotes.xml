@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	CraftForge: A tradeskill window replacement.
+	CraftBench: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
  #  Template for all the buttons used in the list of notes for the recipe
  #
 -->
-<Frame name="CraftForgeNoteItemButtonTemplate" hidden="false" virtual="true">
+<Frame name="CraftBenchNoteItemButtonTemplate" hidden="false" virtual="true">
 	<Size>
 		<AbsDimension x="190" y="48"/>
 	</Size>
@@ -77,7 +77,7 @@
     </Attributes>
 	<Scripts>
 		<OnClick>
-			CraftForge:RecipeNote_OnClick(self)
+			CraftBench:RecipeNote_OnClick(self)
 		</OnClick>
 	</Scripts>
 </Frame>
@@ -87,12 +87,12 @@
  # A frame for displaying the recipe notes
  #
 -->
-<Frame name="CraftForgeRecipeNotesFrame" parent="CraftForgeFrame" inherits="BackdropTemplate">
+<Frame name="CraftBenchRecipeNotesFrame" parent="CraftBenchFrame" inherits="BackdropTemplate">
 	<Size>
 		<AbsDimension x="200" y="380"/>
 	</Size>
 	<Anchors>
-		<Anchor point="TOPLEFT" relativeTo="CraftForgeFrame" relativePoint="TOPRIGHT">
+		<Anchor point="TOPLEFT" relativeTo="CraftBenchFrame" relativePoint="TOPRIGHT">
 			<Offset>
 				<AbsDimension x="-1" y="-75"/>
 			</Offset>
@@ -105,7 +105,7 @@
 					<AbsDimension x="100" y="0"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CraftForgeRecipeNotesFrame" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="CraftBenchRecipeNotesFrame" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="6" y="-6"/>
 						</Offset>
@@ -121,9 +121,9 @@
 	    # A button on the top right to close the window
 	    #
 	    -->
-		<Button name="CraftForgeNotesCloseButton" inherits="UIPanelCloseButton">
+		<Button name="CraftBenchNotesCloseButton" inherits="UIPanelCloseButton">
             <Anchors>
-                <Anchor point="TOPRIGHT" relativeTo="CraftForgeRecipeNotesFrame" relativePoint="TOPRIGHT">
+                <Anchor point="TOPRIGHT" relativeTo="CraftBenchRecipeNotesFrame" relativePoint="TOPRIGHT">
                     <Offset>
                         <AbsDimension x="-1" y="-1"/>
                     </Offset>
@@ -131,17 +131,17 @@
             </Anchors>
 			<Scripts>
 				<OnClick>
-					HideUIPanel(CraftForgeRecipeNotesFrame);
+					HideUIPanel(CraftBenchRecipeNotesFrame);
 				</OnClick>
 			</Scripts>
         </Button>
 
-        <ScrollFrame name="CraftForgeNotesList" inherits="FauxScrollFrameTemplate" parent="CraftForgeRecipeNotesFrame">
+        <ScrollFrame name="CraftBenchNotesList" inherits="FauxScrollFrameTemplate" parent="CraftBenchRecipeNotesFrame">
 			<Size>
 				<AbsDimension x="170" y="345"/>
 			</Size>
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeRecipeNotesFrame" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchRecipeNotesFrame" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="2" y="-30"/>
 					</Offset>
@@ -149,47 +149,47 @@
 			</Anchors>
 		    <Scripts>
 				<OnVerticalScroll>
-				    FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_NOTES_ITEM_HEIGHT, CraftForge.NotesList_OnScroll);
+				    FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTBENCH_NOTES_ITEM_HEIGHT, CraftBench.NotesList_OnScroll);
 				</OnVerticalScroll>
 			</Scripts>
 		</ScrollFrame>
-		<Button name="CraftForgeNotesButton1" inherits="CraftForgeNoteItemButtonTemplate">
+		<Button name="CraftBenchNotesButton1" inherits="CraftBenchNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchNotesList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="3" y="0"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
 		</Button>
-		<Button name="CraftForgeNotesButton2" inherits="CraftForgeNoteItemButtonTemplate">
+		<Button name="CraftBenchNotesButton2" inherits="CraftBenchNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesButton1" relativePoint="BOTTOMLEFT"/>
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchNotesButton1" relativePoint="BOTTOMLEFT"/>
 			</Anchors>
 		</Button>
-		<Button name="CraftForgeNotesButton3" inherits="CraftForgeNoteItemButtonTemplate">
+		<Button name="CraftBenchNotesButton3" inherits="CraftBenchNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesButton2" relativePoint="BOTTOMLEFT"/>
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchNotesButton2" relativePoint="BOTTOMLEFT"/>
 			</Anchors>
 		</Button>
-		<Button name="CraftForgeNotesButton4" inherits="CraftForgeNoteItemButtonTemplate">
+		<Button name="CraftBenchNotesButton4" inherits="CraftBenchNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesButton3" relativePoint="BOTTOMLEFT"/>
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchNotesButton3" relativePoint="BOTTOMLEFT"/>
 			</Anchors>
 		</Button>
-		<Button name="CraftForgeNotesButton5" inherits="CraftForgeNoteItemButtonTemplate">
+		<Button name="CraftBenchNotesButton5" inherits="CraftBenchNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesButton4" relativePoint="BOTTOMLEFT"/>
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchNotesButton4" relativePoint="BOTTOMLEFT"/>
 			</Anchors>
 		</Button>
-		<Button name="CraftForgeNotesButton6" inherits="CraftForgeNoteItemButtonTemplate">
+		<Button name="CraftBenchNotesButton6" inherits="CraftBenchNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesButton5" relativePoint="BOTTOMLEFT"/>
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchNotesButton5" relativePoint="BOTTOMLEFT"/>
 			</Anchors>
 		</Button>
-		<Button name="CraftForgeNotesButton7" inherits="CraftForgeNoteItemButtonTemplate">
+		<Button name="CraftBenchNotesButton7" inherits="CraftBenchNoteItemButtonTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeNotesButton6" relativePoint="BOTTOMLEFT"/>
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchNotesButton6" relativePoint="BOTTOMLEFT"/>
 			</Anchors>
 		</Button>
     </Frames>

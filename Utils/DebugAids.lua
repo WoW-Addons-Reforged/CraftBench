@@ -1,6 +1,6 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
-local tek = tekDebug and tekDebug:GetFrame("CraftForge")
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
+local tek = tekDebug and tekDebug:GetFrame("CraftBench")
 --
 -- Chat and Debugging Aids
 --

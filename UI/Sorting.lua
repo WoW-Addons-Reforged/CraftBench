@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
 
-function CraftForge:GetItemMarketOrVendorPrice(itemID)
+function CraftBench:GetItemMarketOrVendorPrice(itemID)
 	if not itemID or itemID == 0 then return 0, false end
 	local pref = self.db and self.db.profile and self.db.profile.plugins and self.db.profile.plugins.preferredAHAddon or "Auto"
 	local function queryAuctionator()
 		if _G.Auctionator and _G.Auctionator.API and _G.Auctionator.API.v1 and _G.Auctionator.API.v1.GetAuctionPriceByItemID then
-			local ok, price = pcall(_G.Auctionator.API.v1.GetAuctionPriceByItemID, "CraftForge", itemID)
+			local ok, price = pcall(_G.Auctionator.API.v1.GetAuctionPriceByItemID, "CraftBench", itemID)
 			if ok and type(price) == "number" and price > 0 then return price end
 		end
 	end
@@ -61,7 +61,7 @@ function CraftForge:GetItemMarketOrVendorPrice(itemID)
 	return 0, false
 end
 
-function CraftForge:GetRecipeCostAndProfit(recipe)
+function CraftBench:GetRecipeCostAndProfit(recipe)
 	if not recipe then return nil, nil, nil end
 	local cost = 0
 	if recipe.reagentData then
@@ -88,9 +88,9 @@ function CraftForge:GetRecipeCostAndProfit(recipe)
 	return cost, value, (value - cost)
 end
 --
--- Table of difficulty colors defined in CraftForgeData.lua
+-- Table of difficulty colors defined in CraftBenchData.lua
 --
-local skill_style_type = CraftForge.skill_style_type
+local skill_style_type = CraftBench.skill_style_type
 --
 -- List of possible sorting methods
 --
@@ -125,8 +125,8 @@ local function sort_recipe_by_skill_level(tradeskill, a, b)
 		rightDifficulty = skill_style_type[b.skillData.difficulty].level
 	end
 	if leftDifficulty == rightDifficulty then
-		local left = CraftForge:GetTradeSkillLevels(a.spellID)
-		local right = CraftForge:GetTradeSkillLevels(b.spellID)
+		local left = CraftBench:GetTradeSkillLevels(a.spellID)
+		local right = CraftBench:GetTradeSkillLevels(b.spellID)
 		if left == right then
 			if a.subGroup and b.subGroup then
 				return #a.subGroup.entries < #b.subGroup.entries
@@ -148,10 +148,10 @@ local function sort_recipe_by_item_level(tradeskill, a, b)
 	while b.subGroup and #b.subGroup.entries>0 do
 		b = b.subGroup.entries[1]
 	end
-	local left_r = CraftForge:GetRecipe(a.recipeID)
-	local right_r = CraftForge:GetRecipe(b.recipeID)
-	local left  = CraftForge:GetLevelRequiredToUse(left_r.itemID)
-	local right = CraftForge:GetLevelRequiredToUse(right_r.itemID)
+	local left_r = CraftBench:GetRecipe(a.recipeID)
+	local right_r = CraftBench:GetRecipe(b.recipeID)
+	local left  = CraftBench:GetLevelRequiredToUse(left_r.itemID)
+	local right = CraftBench:GetLevelRequiredToUse(right_r.itemID)
 	if not left  then  left = 0 end
 	if not right then right = 0 end
 	if left == right then
@@ -180,8 +180,8 @@ local function sort_recipe_by_item_quality(tradeskill, a, b)
 	while b.subGroup and #b.subGroup.entries>0 do
 		b = b.subGroup.entries[1]
 	end
-	local left_r = CraftForge:GetRecipe(a.recipeID)
-	local right_r = CraftForge:GetRecipe(b.recipeID)
+	local left_r = CraftBench:GetRecipe(a.recipeID)
+	local right_r = CraftBench:GetRecipe(b.recipeID)
 	local _,_, left = C_Item.GetItemInfo(left_r.itemID)
 	local _,_, right = C_Item.GetItemInfo(right_r.itemID)
 	if not left  then  left = 0 end
@@ -220,8 +220,8 @@ local function get_suffix(tradeskill, recipe, first)
 		ret = recipe.recipeData.suffix
 	end
 	if first and ret == nil and recipe.recipeID then
-		local actualRecipe = CraftForge:GetRecipe(recipe.recipeID)
-		CraftForge:RecipeNameSuffix(tradeskill, actualRecipe)
+		local actualRecipe = CraftBench:GetRecipe(recipe.recipeID)
+		CraftBench:RecipeNameSuffix(tradeskill, actualRecipe)
 		ret = get_suffix(tradeskill, actualRecipe, false)
 	end
 	return ret
@@ -242,9 +242,9 @@ end
 
 local function SkillIsFilteredOut(skillIndex)
 	--DA.DEBUG(0,"SkillIsFilteredOut("..tostring(skillIndex)..")")
-	local skill = CraftForge:GetSkill(CraftForge.currentPlayer, CraftForge.currentTrade, skillIndex)
+	local skill = CraftBench:GetSkill(CraftBench.currentPlayer, CraftBench.currentTrade, skillIndex)
 	--DA.DEBUG(1,"SkillIsFilteredOut: skill = "..DA.DUMP1(skill,1))
-	local recipe = CraftForge:GetRecipe(skill.id)
+	local recipe = CraftBench:GetRecipe(skill.id)
 	--DA.DEBUG(1,"SkillIsFilteredOut: recipe = "..DA.DUMP1(recipe,1))
 	local recipeID = recipe.spellID or 0
 	if recipeID == 0 then
@@ -254,44 +254,44 @@ local function SkillIsFilteredOut(skillIndex)
 		return false
 	end
 
-	local recipeInfo = CraftForge.data.recipeInfo[CraftForge.currentTrade][recipeID]
+	local recipeInfo = CraftBench.data.recipeInfo[CraftBench.currentTrade][recipeID]
 	if recipeInfo then
-		--DA.DEBUG(1,"SkillIsFilteredOut: unlearnedRecipes= "..tostring(CraftForge.unlearnedRecipes)..", recipeInfo = "..DA.DUMP1(recipeInfo,1))
-		if CraftForge.unlearnedRecipes and recipeInfo.learned then
+		--DA.DEBUG(1,"SkillIsFilteredOut: unlearnedRecipes= "..tostring(CraftBench.unlearnedRecipes)..", recipeInfo = "..DA.DUMP1(recipeInfo,1))
+		if CraftBench.unlearnedRecipes and recipeInfo.learned then
 			return true
 		end
-		if CraftForge.learnedRecipes and not recipeInfo.learned then
+		if CraftBench.learnedRecipes and not recipeInfo.learned then
 			return true
 		end
 	end
 
-	if CraftForge:IsUpgradeHidden(recipeID) then
+	if CraftBench:IsUpgradeHidden(recipeID) then
 		return true
 	end
 
-	if CraftForge:GetTradeSkillOption("favoritesOnly") and not CraftForge:IsFavorite(recipeID) then
+	if CraftBench:GetTradeSkillOption("favoritesOnly") and not CraftBench:IsFavorite(recipeID) then
 		return true
 	end
 
-	if CraftForge:GetTradeSkillOption("buffsOnly") and CraftForge.IsBuffRecipe and not CraftForge:IsBuffRecipe(recipe) then
+	if CraftBench:GetTradeSkillOption("buffsOnly") and CraftBench.IsBuffRecipe and not CraftBench:IsBuffRecipe(recipe) then
 		return true
 	end
 
-	if CraftForge:GetTradeSkillOption("isfirstcraft") and not CraftForge:IsFirstCraft(recipeID) then
+	if CraftBench:GetTradeSkillOption("isfirstcraft") and not CraftBench:IsFirstCraft(recipeID) then
 		return true
 	end
 
-	if CraftForge:GetTradeSkillOption("onlyProfitable") then
-		local _, _, profit = CraftForge:GetRecipeCostAndProfit(recipe)
+	if CraftBench:GetTradeSkillOption("onlyProfitable") then
+		local _, _, profit = CraftBench:GetRecipeCostAndProfit(recipe)
 		if not profit or profit <= 0 then
 			return true
 		end
 	end
 
-	if CraftForge:GetTradeSkillOption("hasSourceOnly") then
+	if CraftBench:GetTradeSkillOption("hasSourceOnly") then
 		local src = C_TradeSkillUI and C_TradeSkillUI.GetRecipeSourceText and skill.id and C_TradeSkillUI.GetRecipeSourceText(skill.id)
-		if (not src or src == "") and CraftForge.ATTPlugin and CraftForge.ATTPlugin.GetRecipeSource then
-			src = CraftForge.ATTPlugin.GetRecipeSource(skill, recipe)
+		if (not src or src == "") and CraftBench.ATTPlugin and CraftBench.ATTPlugin.GetRecipeSource then
+			src = CraftBench.ATTPlugin.GetRecipeSource(skill, recipe)
 		end
 		if not src or src == "" then
 			return true
@@ -302,23 +302,23 @@ local function SkillIsFilteredOut(skillIndex)
 -- Are we hiding anything that is trivial (has no chance of giving a skill point)
 --
 	if skill_style_type[skill.difficulty] then
-		if skill_style_type[skill.difficulty].level < (CraftForge:GetTradeSkillOption("filterLevel") or 4) then
+		if skill_style_type[skill.difficulty].level < (CraftBench:GetTradeSkillOption("filterLevel") or 4) then
 			return true
 		end
 	end
 --
 -- Are we hiding anything that can't be created with the mats on this character?
 --
-	if CraftForge:GetTradeSkillOption("hideuncraftable") then
-		if not (skill.numCraftable > 0 and CraftForge:GetTradeSkillOption("filterInventory-bag")) and
-		   not (skill.numRecursive > 0 and CraftForge:GetTradeSkillOption("filterInventory-crafted")) and
-		   not (skill.numCraftableVendor > 0 and CraftForge:GetTradeSkillOption("filterInventory-vendor")) and
-		   not (skill.numCraftableAlts > 0 and CraftForge:GetTradeSkillOption("filterInventory-alts")) then
+	if CraftBench:GetTradeSkillOption("hideuncraftable") then
+		if not (skill.numCraftable > 0 and CraftBench:GetTradeSkillOption("filterInventory-bag")) and
+		   not (skill.numRecursive > 0 and CraftBench:GetTradeSkillOption("filterInventory-crafted")) and
+		   not (skill.numCraftableVendor > 0 and CraftBench:GetTradeSkillOption("filterInventory-vendor")) and
+		   not (skill.numCraftableAlts > 0 and CraftBench:GetTradeSkillOption("filterInventory-alts")) then
 			return true
 		end
 	end
-	if CraftForge.recipeFilters then
-		for _,f in pairs(CraftForge.recipeFilters) do
+	if CraftBench.recipeFilters then
+		for _,f in pairs(CraftBench.recipeFilters) do
 			if f.filterMethod(f.namespace, skillIndex) then
 				return true
 			end
@@ -327,7 +327,7 @@ local function SkillIsFilteredOut(skillIndex)
 --
 -- String search
 --
-	local searchtext = CraftForge:GetTradeSkillOption("searchtext")
+	local searchtext = CraftBench:GetTradeSkillOption("searchtext")
 	if searchtext and searchtext ~= "" then
 		local filter = string.lower(searchtext)
 		local nameOnly = false
@@ -337,29 +337,29 @@ local function SkillIsFilteredOut(skillIndex)
 		end
 		local word
 		local name = ""
-		local tooltip = _G["CraftForgeParsingTooltip"]
+		local tooltip = _G["CraftBenchParsingTooltip"]
 		if tooltip == nil then
-			tooltip = CreateFrame("GameTooltip", "CraftForgeParsingTooltip", _G["ANCHOR_NONE"], "GameTooltipTemplate")
+			tooltip = CreateFrame("GameTooltip", "CraftBenchParsingTooltip", _G["ANCHOR_NONE"], "GameTooltipTemplate")
 			tooltip:SetOwner(WorldFrame, "ANCHOR_NONE");
 		end
 		local searchText = ""
 		if nameOnly then
 			searchText = recipe.name
 		else
-			if not CraftForge.data.tooltipCache or CraftForge.data.tooltipCachedTrade ~= CraftForge.currentTrade then
-				CraftForge.data.tooltipCachedTrade = CraftForge.currentTrade
-				CraftForge.data.tooltipCache = {}
+			if not CraftBench.data.tooltipCache or CraftBench.data.tooltipCachedTrade ~= CraftBench.currentTrade then
+				CraftBench.data.tooltipCachedTrade = CraftBench.currentTrade
+				CraftBench.data.tooltipCache = {}
 			end
-			if not CraftForge.data.tooltipCache[recipeID] then
+			if not CraftBench.data.tooltipCache[recipeID] then
 				tooltip:SetHyperlink("enchant:"..recipeID)
 				local tiplines = tooltip:NumLines()
 				for i=1, tiplines, 1 do
-					searchText = searchText.. " " .. string.lower(_G["CraftForgeParsingTooltipTextLeft"..i]:GetText() or " ")
-					searchText = searchText.. " " .. string.lower(_G["CraftForgeParsingTooltipTextRight"..i]:GetText() or " ")
+					searchText = searchText.. " " .. string.lower(_G["CraftBenchParsingTooltipTextLeft"..i]:GetText() or " ")
+					searchText = searchText.. " " .. string.lower(_G["CraftBenchParsingTooltipTextRight"..i]:GetText() or " ")
 				end
-				CraftForge.data.tooltipCache[recipeID] = searchText
+				CraftBench.data.tooltipCache[recipeID] = searchText
 			else
-				searchText = CraftForge.data.tooltipCache[recipeID]
+				searchText = CraftBench.data.tooltipCache[recipeID]
 			end
 		end
 		if searchText then
@@ -378,8 +378,8 @@ end
 local function set_sort_desc(toggle)
 	for _,entry in pairs(sorters) do
 		if entry.sorter == recipe_sort_method then
-			CraftForge:SetTradeSkillOption("sortdesc-" .. entry.name, toggle)
-			CraftForge:SortAndFilterRecipes()
+			CraftBench:SetTradeSkillOption("sortdesc-" .. entry.name, toggle)
+			CraftBench:SortAndFilterRecipes()
 		end
 	end
 end
@@ -387,26 +387,26 @@ end
 local function is_sort_desc()
 	for _,entry in pairs(sorters) do
 		if entry.sorter == recipe_sort_method then
-			return CraftForge:GetTradeSkillOption("sortdesc-" .. entry.name)
+			return CraftBench:GetTradeSkillOption("sortdesc-" .. entry.name)
 		end
 	end
 	return true
 end
 
 local function show_sort_toggle()
-	CraftForgeSortDescButton:Hide()
-	CraftForgeSortAscButton:Hide()
+	CraftBenchSortDescButton:Hide()
+	CraftBenchSortAscButton:Hide()
 	if recipe_sort_method ~= NOSORT then
 		if is_sort_desc() then
-			CraftForgeSortDescButton:Show()
+			CraftBenchSortDescButton:Show()
 		else
-			CraftForgeSortAscButton:Show()
+			CraftBenchSortAscButton:Show()
 		end
 	end
 end
 
-function CraftForge:ExpandAll()
-	local skillListKey = CraftForge.currentPlayer..":"..CraftForge.currentTrade..":"..CraftForge.currentGroupLabel
+function CraftBench:ExpandAll()
+	local skillListKey = CraftBench.currentPlayer..":"..CraftBench.currentTrade..":"..CraftBench.currentGroupLabel
 	if self.data.sortedSkillList[skillListKey] then
 		local sortedSkillList = self.data.sortedSkillList[skillListKey]
 		local numTradeSkills = sortedSkillList.count
@@ -417,12 +417,12 @@ function CraftForge:ExpandAll()
 			end
 		end
 	end
-	CraftForge:SortAndFilterRecipes()
-	CraftForge:UpdateTradeSkillWindow()
+	CraftBench:SortAndFilterRecipes()
+	CraftBench:UpdateTradeSkillWindow()
 end
 
-function CraftForge:CollapseAll()
-	local skillListKey = CraftForge.currentPlayer..":"..CraftForge.currentTrade..":"..CraftForge.currentGroupLabel
+function CraftBench:CollapseAll()
+	local skillListKey = CraftBench.currentPlayer..":"..CraftBench.currentTrade..":"..CraftBench.currentGroupLabel
 	if self.data.sortedSkillList[skillListKey] then
 		local sortedSkillList = self.data.sortedSkillList[skillListKey]
 		local numTradeSkills = sortedSkillList.count
@@ -433,8 +433,8 @@ function CraftForge:CollapseAll()
 			end
 		end
 	end
-	CraftForge:SortAndFilterRecipes()
-	CraftForge:UpdateTradeSkillWindow()
+	CraftBench:SortAndFilterRecipes()
+	CraftBench:UpdateTradeSkillWindow()
 end
 
 --
@@ -444,11 +444,11 @@ end
 --
 -- Adds the sorting routine to the list of sorting routines.
 --
-function CraftForge:AddRecipeSorter(text, sorter)
+function CraftBench:AddRecipeSorter(text, sorter)
 	assert(text and tostring(text),
-		"Usage CraftForge:AddRecipeSorter(text, sorter), text must be a string")
+		"Usage CraftBench:AddRecipeSorter(text, sorter), text must be a string")
 	assert(sorter and type(sorter) == "function",
-		"Usage CraftForge:AddRecipeSorter(text, sorter), sorter must be a function")
+		"Usage CraftBench:AddRecipeSorter(text, sorter), sorter must be a function")
 	for _,entry in pairs(sorters) do
 		if entry.name == text then
 			return
@@ -457,7 +457,7 @@ function CraftForge:AddRecipeSorter(text, sorter)
 	table.insert(sorters, {["name"]=text, ["sorter"]=sorter})
 end
 
-function CraftForge:InitializeSorting()
+function CraftBench:InitializeSorting()
 --
 -- Default sorting methods
 -- We don't go through the public API for this as we want our methods
@@ -477,10 +477,10 @@ function CraftForge:InitializeSorting()
 		while b.subGroup and #b.subGroup.entries > 0 do
 			b = b.subGroup.entries[1]
 		end
-		local ra = a.recipeID and CraftForge:GetRecipe(a.recipeID)
-		local rb = b.recipeID and CraftForge:GetRecipe(b.recipeID)
-		local _, _, pa = CraftForge:GetRecipeCostAndProfit(ra)
-		local _, _, pb = CraftForge:GetRecipeCostAndProfit(rb)
+		local ra = a.recipeID and CraftBench:GetRecipe(a.recipeID)
+		local rb = b.recipeID and CraftBench:GetRecipe(b.recipeID)
+		local _, _, pa = CraftBench:GetRecipeCostAndProfit(ra)
+		local _, _, pb = CraftBench:GetRecipeCostAndProfit(rb)
 		pa = pa or -999999999
 		pb = pb or -999999999
 		if pa == pb then
@@ -491,10 +491,10 @@ function CraftForge:InitializeSorting()
 	table.insert(sorters, 8, {["name"]=L["By Skill-Up Chance"] or "By Skill-Up Chance", ["sorter"]=function(tradeskill, a, b)
 		while a.subGroup and #a.subGroup.entries > 0 do a = a.subGroup.entries[1] end
 		while b.subGroup and #b.subGroup.entries > 0 do b = b.subGroup.entries[1] end
-		local ra = a.recipeID and CraftForge:GetRecipe(a.recipeID)
-		local rb = b.recipeID and CraftForge:GetRecipe(b.recipeID)
-		local ca = (CraftForge.GetSkillUpChance and ra) and (CraftForge:GetSkillUpChance(ra, nil, a.difficulty) or 0) or 0
-		local cb = (CraftForge.GetSkillUpChance and rb) and (CraftForge:GetSkillUpChance(rb, nil, b.difficulty) or 0) or 0
+		local ra = a.recipeID and CraftBench:GetRecipe(a.recipeID)
+		local rb = b.recipeID and CraftBench:GetRecipe(b.recipeID)
+		local ca = (CraftBench.GetSkillUpChance and ra) and (CraftBench:GetSkillUpChance(ra, nil, a.difficulty) or 0) or 0
+		local cb = (CraftBench.GetSkillUpChance and rb) and (CraftBench:GetSkillUpChance(rb, nil, b.difficulty) or 0) or 0
 		if ca == cb then
 			return (a.skillIndex or 0) < (b.skillIndex or 0)
 		end
@@ -503,10 +503,10 @@ function CraftForge:InitializeSorting()
 	table.insert(sorters, 9, {["name"]=L["By Cost / Skill-Up"] or "By Cost / Skill-Up", ["sorter"]=function(tradeskill, a, b)
 		while a.subGroup and #a.subGroup.entries > 0 do a = a.subGroup.entries[1] end
 		while b.subGroup and #b.subGroup.entries > 0 do b = b.subGroup.entries[1] end
-		local ra = a.recipeID and CraftForge:GetRecipe(a.recipeID)
-		local rb = b.recipeID and CraftForge:GetRecipe(b.recipeID)
-		local _, _, ca = CraftForge.GetRecipeCostAndSkillUp and ra and CraftForge:GetRecipeCostAndSkillUp(ra, nil, a.difficulty) or nil
-		local _, _, cb = CraftForge.GetRecipeCostAndSkillUp and rb and CraftForge:GetRecipeCostAndSkillUp(rb, nil, b.difficulty) or nil
+		local ra = a.recipeID and CraftBench:GetRecipe(a.recipeID)
+		local rb = b.recipeID and CraftBench:GetRecipe(b.recipeID)
+		local _, _, ca = CraftBench.GetRecipeCostAndSkillUp and ra and CraftBench:GetRecipeCostAndSkillUp(ra, nil, a.difficulty) or nil
+		local _, _, cb = CraftBench.GetRecipeCostAndSkillUp and rb and CraftBench:GetRecipeCostAndSkillUp(rb, nil, b.difficulty) or nil
 		ca = ca or 999999999
 		cb = cb or 999999999
 		if ca == cb then
@@ -516,32 +516,32 @@ function CraftForge:InitializeSorting()
 	end})
 
 	recipe_sort_method = sort_recipe_by_index
-	CraftForgeSortAscButton:SetScript("OnClick", function()
+	CraftBenchSortAscButton:SetScript("OnClick", function()
 		-- clicked the button will toggle sort ascending off
 		set_sort_desc(true)
-		CraftForgeSortAscButton:Hide()
-		CraftForgeSortDescButton:Show()
+		CraftBenchSortAscButton:Hide()
+		CraftBenchSortDescButton:Show()
 		self:UpdateTradeSkillWindow()
 	end)
-	CraftForgeSortAscButton:SetScript("OnEnter", function()
-		GameTooltip:SetOwner(CraftForgeSortAscButton, "ANCHOR_RIGHT")
+	CraftBenchSortAscButton:SetScript("OnEnter", function()
+		GameTooltip:SetOwner(CraftBenchSortAscButton, "ANCHOR_RIGHT")
 		GameTooltip:SetText(L["SORTASC"])
 	end)
-	CraftForgeSortAscButton:SetScript("OnLeave", function()
+	CraftBenchSortAscButton:SetScript("OnLeave", function()
 		GameTooltip:Hide()
 	end)
-	CraftForgeSortDescButton:SetScript("OnClick", function()
+	CraftBenchSortDescButton:SetScript("OnClick", function()
 		-- clicked the button will toggle sort descending off
 		set_sort_desc(false)
-		CraftForgeSortDescButton:Hide()
-		CraftForgeSortAscButton:Show()
+		CraftBenchSortDescButton:Hide()
+		CraftBenchSortAscButton:Show()
 		self:UpdateTradeSkillWindow()
 	end)
-	CraftForgeSortDescButton:SetScript("OnEnter", function()
-		GameTooltip:SetOwner(CraftForgeSortDescButton, "ANCHOR_RIGHT")
+	CraftBenchSortDescButton:SetScript("OnEnter", function()
+		GameTooltip:SetOwner(CraftBenchSortDescButton, "ANCHOR_RIGHT")
 		GameTooltip:SetText(L["SORTDESC"])
 	end)
-	CraftForgeSortDescButton:SetScript("OnLeave", function()
+	CraftBenchSortDescButton:SetScript("OnLeave", function()
 		GameTooltip:Hide()
 	end)
 end
@@ -549,31 +549,31 @@ end
 --
 -- Causes the list of recipes to be resorted
 --
-function CraftForge:SortAndFilterRecipes()
+function CraftBench:SortAndFilterRecipes()
 	DA.DEBUG(0,"SortAndFilterRecipes()")
-	local skillListKey = CraftForge.currentPlayer..":"..CraftForge.currentTrade..":"..CraftForge.currentGroupLabel
-	local numSkills = CraftForge:GetNumSkills(CraftForge.currentPlayer, CraftForge.currentTrade)
-	if not CraftForge.data.sortedSkillList then
-		--DA.DEBUG(1,"SortAndFilterRecipes: CraftForge.data.sortedSkillList = {}")
-		CraftForge.data.sortedSkillList = {}
+	local skillListKey = CraftBench.currentPlayer..":"..CraftBench.currentTrade..":"..CraftBench.currentGroupLabel
+	local numSkills = CraftBench:GetNumSkills(CraftBench.currentPlayer, CraftBench.currentTrade)
+	if not CraftBench.data.sortedSkillList then
+		--DA.DEBUG(1,"SortAndFilterRecipes: CraftBench.data.sortedSkillList = {}")
+		CraftBench.data.sortedSkillList = {}
 	end
-	if not CraftForge.data.sortedSkillList[skillListKey] then
-		--DA.DEBUG(1,"SortAndFilterRecipes: CraftForge.data.sortedSkillList[skillListKey] = {}")
-		CraftForge.data.sortedSkillList[skillListKey] = {}
+	if not CraftBench.data.sortedSkillList[skillListKey] then
+		--DA.DEBUG(1,"SortAndFilterRecipes: CraftBench.data.sortedSkillList[skillListKey] = {}")
+		CraftBench.data.sortedSkillList[skillListKey] = {}
 	end
-	local sortedSkillList = CraftForge.data.sortedSkillList[skillListKey]
+	local sortedSkillList = CraftBench.data.sortedSkillList[skillListKey]
 	local oldLength = #sortedSkillList
 	--DA.DEBUG(1,"SortAndFilterRecipes: numSkills= "..tostring(numSkills)..", oldLength= ",tostring(oldLength))
 	local button_index = 0
-	local searchtext = CraftForge:GetTradeSkillOption("searchtext")
-	local groupLabel = CraftForge.currentGroupLabel
+	local searchtext = CraftBench:GetTradeSkillOption("searchtext")
+	local groupLabel = CraftBench.currentGroupLabel
 	--DA.DEBUG(1,"SortAndFilterRecipes: searchtext="..tostring(searchtext)..", groupLabel="..tostring(groupLabel))
 	if searchtext and searchtext ~= "" or groupLabel == "Flat" then
 		--DA.DEBUG(1,"SortAndFilterRecipes: Flat")
 		for i=1, numSkills, 1 do
-			local skill = CraftForge:GetSkill(CraftForge.currentPlayer, CraftForge.currentTrade, i)
+			local skill = CraftBench:GetSkill(CraftBench.currentPlayer, CraftBench.currentTrade, i)
 			if skill then
-				local recipe = CraftForge:GetRecipe(skill.id)
+				local recipe = CraftBench:GetRecipe(skill.id)
 				if skill.id ~= 0 then							-- not a header
 					local filtered = SkillIsFilteredOut(i)
 					--DA.DEBUG(1,"SortAndFilterRecipes: SkillIsFilteredOut("..tostring(i)..")= "..tostring(filtered))
@@ -583,11 +583,11 @@ function CraftForge:SortAndFilterRecipes()
 --
 						button_index = button_index + 1
 						sortedSkillList[button_index] = {["recipeID"] = skill.id, ["spellID"] = recipe.spellID, ["name"] = recipe.name, ["skillIndex"] = i, ["recipeData"] = recipe, ["skillData"] = skill, ["depth"] = 0}
-					elseif i == CraftForge.selectedSkill then
+					elseif i == CraftBench.selectedSkill then
 --
 -- if filtered out and selected - deselect
 --
-						CraftForge.selectedSkill = nil
+						CraftBench.selectedSkill = nil
 					end
 				end
 			end
@@ -600,27 +600,27 @@ function CraftForge:SortAndFilterRecipes()
 		end
 		if not is_sort_desc() then
 			table.sort(sortedSkillList, function(a,b)
-				return recipe_sort_method(CraftForge.currentTrade, a, b)
+				return recipe_sort_method(CraftBench.currentTrade, a, b)
 			end)
 		else
 			table.sort(sortedSkillList, function(a,b)
-				return recipe_sort_method(CraftForge.currentTrade, b, a)
+				return recipe_sort_method(CraftBench.currentTrade, b, a)
 			end)
 		end
 	else
 --
 -- No search string and not Flat (i.e. Blizzard)
 --
-		local group = CraftForge:RecipeGroupFind(CraftForge.currentPlayer, CraftForge.currentTrade, CraftForge.currentGroupLabel, CraftForge.currentGroup)
-		--DA.DEBUG(1,"SortAndFilterRecipes: current grouping "..CraftForge.currentGroupLabel.." "..(CraftForge.currentGroup or "nil"))
+		local group = CraftBench:RecipeGroupFind(CraftBench.currentPlayer, CraftBench.currentTrade, CraftBench.currentGroupLabel, CraftBench.currentGroup)
+		--DA.DEBUG(1,"SortAndFilterRecipes: current grouping "..CraftBench.currentGroupLabel.." "..(CraftBench.currentGroup or "nil"))
 		if recipe_sort_method ~= NOSORT then
-			CraftForge:RecipeGroupSort(group, recipe_sort_method, is_sort_desc())
+			CraftBench:RecipeGroupSort(group, recipe_sort_method, is_sort_desc())
 		end
-		if CraftForge.currentGroup then
-			CraftForge:RecipeGroupInitFlatten(group, sortedSkillList)
-			button_index = CraftForge:RecipeGroupFlatten(group, 1, sortedSkillList, 1) + 1
+		if CraftBench.currentGroup then
+			CraftBench:RecipeGroupInitFlatten(group, sortedSkillList)
+			button_index = CraftBench:RecipeGroupFlatten(group, 1, sortedSkillList, 1) + 1
 		else
-			button_index = CraftForge:RecipeGroupFlatten(group, 0, sortedSkillList, 0)
+			button_index = CraftBench:RecipeGroupFlatten(group, 0, sortedSkillList, 0)
 		end
 	end
 	DA.DEBUG(1,"SortAndFilterRecipes: sorted "..button_index.." skills")
@@ -631,13 +631,13 @@ end
 --
 -- called when the sort drop down is first loaded
 --
-function CraftForge:SortDropdown_OnLoad()
-	UIDropDownMenu_Initialize(CraftForgeSortDropdown, CraftForge.SortDropdown_Initialize)
-	CraftForgeSortDropdown.displayMode = "MENU"  -- changes the pop-up borders to be rounded instead of square
+function CraftBench:SortDropdown_OnLoad()
+	UIDropDownMenu_Initialize(CraftBenchSortDropdown, CraftBench.SortDropdown_Initialize)
+	CraftBenchSortDropdown.displayMode = "MENU"  -- changes the pop-up borders to be rounded instead of square
 	-- Find out which sort method is selected
 	for i=1, #sorters, 1 do
 		if recipe_sort_method == sorters[i].sorter then
-			UIDropDownMenu_SetSelectedID(CraftForgeSortDropdown, i)
+			UIDropDownMenu_SetSelectedID(CraftBenchSortDropdown, i)
 			break
 		end
 	end
@@ -650,12 +650,12 @@ end
 --
 -- Called when the sort drop down is displayed
 --
-function CraftForge:SortDropdown_OnShow()
-	UIDropDownMenu_Initialize(CraftForgeSortDropdown, CraftForge.SortDropdown_Initialize)
-	CraftForgeSortDropdown.displayMode = "MENU"  -- changes the pop-up borders to be rounded instead of square
+function CraftBench:SortDropdown_OnShow()
+	UIDropDownMenu_Initialize(CraftBenchSortDropdown, CraftBench.SortDropdown_Initialize)
+	CraftBenchSortDropdown.displayMode = "MENU"  -- changes the pop-up borders to be rounded instead of square
 	for i=1, #sorters, 1 do
 		if recipe_sort_method == sorters[i].sorter then
-			UIDropDownMenu_SetSelectedID(CraftForgeSortDropdown, i)
+			UIDropDownMenu_SetSelectedID(CraftBenchSortDropdown, i)
 			break
 		end
 	end
@@ -665,9 +665,9 @@ end
 --
 -- The method we use the initialize the sorting drop down.
 --
-function CraftForge:SortDropdown_Initialize()
+function CraftBench:SortDropdown_Initialize()
 	recipe_sort_method = NOSORT
-	local currentSort = CraftForge:GetTradeSkillOption("sortmethod")
+	local currentSort = CraftBench:GetTradeSkillOption("sortmethod")
 	local matched = false
 	local info
 	for i=1, #sorters, 1 do
@@ -682,7 +682,7 @@ function CraftForge:SortDropdown_Initialize()
 		else
 			info.checked = false
 		end
-		info.func = CraftForge.SortDropdown_OnClick
+		info.func = CraftBench.SortDropdown_OnClick
 		info.value = i
 		if self then
 			info.owner = self:GetParent()
@@ -701,12 +701,12 @@ end
 --
 -- Called when the user selects an item in the sorting drop down
 --
-function CraftForge:SortDropdown_OnClick()
-	UIDropDownMenu_SetSelectedID(CraftForgeSortDropdown, self:GetID())
+function CraftBench:SortDropdown_OnClick()
+	UIDropDownMenu_SetSelectedID(CraftBenchSortDropdown, self:GetID())
 	local entry = sorters[self:GetID()]
-	CraftForge:SetTradeSkillOption("sortmethod", entry.name)
+	CraftBench:SetTradeSkillOption("sortmethod", entry.name)
 	recipe_sort_method = entry.sorter
 	show_sort_toggle()
-	CraftForge:SortAndFilterRecipes()
-	CraftForge:UpdateTradeSkillWindow()
+	CraftBench:SortAndFilterRecipes()
+	CraftBench:UpdateTradeSkillWindow()
 end

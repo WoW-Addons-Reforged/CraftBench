@@ -1,6 +1,6 @@
 --[[
 
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ]]--
 
-CraftForge.AtlasLootPlugin = {}
+CraftBench.AtlasLootPlugin = {}
 
-local plugin = CraftForge.AtlasLootPlugin
-local L = CraftForge.L
+local plugin = CraftBench.AtlasLootPlugin
+local L = CraftBench.L
 
 plugin.options = {
 	type = "group",
@@ -31,11 +31,11 @@ plugin.options = {
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.AtlasLoot.enabled
+				return CraftBench.db.profile.plugins.AtlasLoot.enabled
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.AtlasLoot.enabled = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.AtlasLoot.enabled = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1,
@@ -44,16 +44,16 @@ plugin.options = {
 }
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.AtlasLoot then
-		CraftForge.db.profile.plugins.AtlasLoot = {}
-		CraftForge.db.profile.plugins.AtlasLoot.enabled = true
+	if not CraftBench.db.profile.plugins.AtlasLoot then
+		CraftBench.db.profile.plugins.AtlasLoot = {}
+		CraftBench.db.profile.plugins.AtlasLoot.enabled = true
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 end
 
 function plugin.GetExtraText(skill, recipe)
 	if not skill or not recipe then return end
-	if not CraftForge.db.profile.plugins.AtlasLoot or not CraftForge.db.profile.plugins.AtlasLoot.enabled then return end
+	if not CraftBench.db.profile.plugins.AtlasLoot or not CraftBench.db.profile.plugins.AtlasLoot.enabled then return end
 	local al = _G.AtlasLoot
 	if not al or not al.Data then return end
 
@@ -81,4 +81,4 @@ function plugin.GetExtraText(skill, recipe)
 	return "|rAtlasLoot:", table.concat(lines, "\n")
 end
 
-CraftForge:RegisterDisplayDetailPlugin("AtlasLootPlugin")
+CraftBench:RegisterDisplayDetailPlugin("AtlasLootPlugin")

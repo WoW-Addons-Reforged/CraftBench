@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	CraftForge: A tradeskill window replacement.
+	CraftBench: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #  Template for all the buttons we use to display items in the required list
 #
 -->
-	<Frame name="CraftForgeRequiredListItemTemplate" hidden="false" virtual="true">
+	<Frame name="CraftBenchRequiredListItemTemplate" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="190" y="20"/>
 		</Size>
@@ -89,10 +89,10 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 			</OnLoad>
 			<OnEnter>
-				CraftForge:RequiredButtonOnEnter(self, CraftForgeFrame.selectedSkill, self:GetID())
+				CraftBench:RequiredButtonOnEnter(self, CraftBenchFrame.selectedSkill, self:GetID())
 			</OnEnter>
 			<OnLeave>
-				CraftForge:RequiredButtonOnLeave(self, CraftForgeFrame.selectedSkill, self:GetID())
+				CraftBench:RequiredButtonOnLeave(self, CraftBenchFrame.selectedSkill, self:GetID())
 			</OnLeave>
 			<OnUpdate>
 				CursorOnUpdate(self)
@@ -100,19 +100,19 @@
 			<OnClick>
 				if ( button == "LeftButton" and IsShiftKeyDown() ) then
 				<!-- Put a link to the *item* in chat into the current chat edit box -->
-					local link = CraftForge:GetRequiredItemLink(CraftForge.selectedSkill, self:GetID())
+					local link = CraftBench:GetRequiredItemLink(CraftBench.selectedSkill, self:GetID())
 					if not ChatEdit_InsertLink(link) then
-						CraftForge:XMLDebugLink("RequiredItemLink: link= ", link)
+						CraftBench:XMLDebugLink("RequiredItemLink: link= ", link)
 					end
 				else
 				<!-- generic click action -->
-					CraftForge:RequiredButtonOnClick(self, button, CraftForge.selectedSkill, self:GetID())
+					CraftBench:RequiredButtonOnClick(self, button, CraftBench.selectedSkill, self:GetID())
 				end
 			</OnClick>
 		</Scripts>
 	</Frame>
 
-<CheckButton name="CraftForgeRequiredListCheckButtonTemplate" virtual="true">
+<CheckButton name="CraftBenchRequiredListCheckButtonTemplate" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -136,7 +136,7 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<CheckButton name="CraftForgeRequiredListCheckButtonTemplate2" virtual="true">
+<CheckButton name="CraftBenchRequiredListCheckButtonTemplate2" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -160,15 +160,15 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<Frame name="CraftForgeRequiredList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
+<Frame name="CraftBenchRequiredList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
 	<Size><AbsDimension x="420" y="240"/></Size>
 	<Anchors>
 		<Anchor point="CENTER"/>
 	</Anchors>
 	<Frames>
-		<Button name="CraftForgeRequiredListCloseButton" inherits="UIPanelCloseButton" parent="CraftForgeRequiredList">
+		<Button name="CraftBenchRequiredListCloseButton" inherits="UIPanelCloseButton" parent="CraftBenchRequiredList">
 			<Anchors>
-				<Anchor point="TOPRIGHT" relativeTo="CraftForgeRequiredList" relativePoint="TOPRIGHT">
+				<Anchor point="TOPRIGHT" relativeTo="CraftBenchRequiredList" relativePoint="TOPRIGHT">
 					<Offset>
 						<AbsDimension x="-2" y="-2"/>
 					</Offset>
@@ -176,13 +176,13 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					HideUIPanel(CraftForgeRequiredList)
+					HideUIPanel(CraftBenchRequiredList)
 				</OnClick>
 			</Scripts>
 		</Button>
-		<CheckButton name="CraftForgeRequiredHaveItems" inherits="CraftForgeRequiredListCheckButtonTemplate2">
+		<CheckButton name="CraftBenchRequiredHaveItems" inherits="CraftBenchRequiredListCheckButtonTemplate2">
 			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeRequiredList" relativePoint="BOTTOMLEFT">
+				<Anchor point="BOTTOMLEFT" relativeTo="CraftBenchRequiredList" relativePoint="BOTTOMLEFT">
 					<Offset>
 						<AbsDimension x="10" y="10"/>
 					</Offset>
@@ -190,33 +190,33 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					CraftForge:RequiredListToggleHaveItems()
-					CraftForge:UpdateRequiredListWindow()
+					CraftBench:RequiredListToggleHaveItems()
+					CraftBench:UpdateRequiredListWindow()
 				</OnClick>
 			</Scripts>
 		</CheckButton>
-		<Frame name="CraftForgeRequiredListParent" parent="CraftForgeRequiredList">
+		<Frame name="CraftBenchRequiredListParent" parent="CraftBenchRequiredList">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeRequiredList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchRequiredList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-35"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeRequiredList" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchRequiredList" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-5" y="35"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
 		</Frame>
-		<ScrollFrame name="CraftForgeRequiredListList" inherits="FauxScrollFrameTemplate" parent="CraftForgeRequiredListParent">
+		<ScrollFrame name="CraftBenchRequiredListList" inherits="FauxScrollFrameTemplate" parent="CraftBenchRequiredListParent">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeRequiredListParent" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchRequiredListParent" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-5"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeRequiredListParent" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchRequiredListParent" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-27" y="5"/>
 					</Offset>
@@ -224,13 +224,13 @@
 			</Anchors>
 			<Scripts>
 				<OnVerticalScroll>
-					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_REQUIRED_LIST_HEIGHT, CraftForge.RequiredList_OnScroll)
+					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTBENCH_REQUIRED_LIST_HEIGHT, CraftBench.RequiredList_OnScroll)
 				</OnVerticalScroll>
 			</Scripts>
 		</ScrollFrame>
-		<Button name="CraftForgeRequiredListButton1" inherits="CraftForgeRequiredListItemTemplate">
+		<Button name="CraftBenchRequiredListButton1" inherits="CraftBenchRequiredListItemTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeRequiredListList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchRequiredListList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
 					</Offset>

@@ -1,20 +1,20 @@
 ----------------------------------------------------------
--- CraftForge - Recipe Watch (Pinned Material Goal HUD) --
+-- CraftBench - Recipe Watch (Pinned Material Goal HUD) --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-local L = CraftForge.L
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+local L = CraftBench.L
 
-CraftForge.Watch = CraftForge.Watch or {}
-local Watch = CraftForge.Watch
+CraftBench.Watch = CraftBench.Watch or {}
+local Watch = CraftBench.Watch
 
 local function ensureDB()
-	if not CraftForge.db then return nil end
-	if not CraftForge.db.char.watchedRecipes then
-		CraftForge.db.char.watchedRecipes = {}
+	if not CraftBench.db then return nil end
+	if not CraftBench.db.char.watchedRecipes then
+		CraftBench.db.char.watchedRecipes = {}
 	end
-	return CraftForge.db.char.watchedRecipes
+	return CraftBench.db.char.watchedRecipes
 end
 
 function Watch:IsWatched(recipeID)
@@ -28,8 +28,8 @@ function Watch:ToggleRecipe(recipeID, targetCount)
 	if db[recipeID] then
 		db[recipeID] = nil
 	else
-		local recipe = CraftForge.GetRecipe and CraftForge:GetRecipe(recipeID)
-		local name = (recipe and recipe.name) or (CraftForge.GetRecipeName and CraftForge:GetRecipeName(recipeID)) or ("Recipe #" .. tostring(recipeID))
+		local recipe = CraftBench.GetRecipe and CraftBench:GetRecipe(recipeID)
+		local name = (recipe and recipe.name) or (CraftBench.GetRecipeName and CraftBench:GetRecipeName(recipeID)) or ("Recipe #" .. tostring(recipeID))
 		local reagents = {}
 		if recipe and recipe.reagentData then
 			for i = 1, #recipe.reagentData do
@@ -46,13 +46,13 @@ function Watch:ToggleRecipe(recipeID, targetCount)
 		db[recipeID] = {
 			recipeID = recipeID,
 			name = name,
-			tradeID = (recipe and recipe.tradeID) or CraftForge.currentTrade,
+			tradeID = (recipe and recipe.tradeID) or CraftBench.currentTrade,
 			count = math.max(1, tonumber(targetCount) or 1),
 			reagents = reagents,
 		}
 	end
-	if CraftForge.WatchUI and CraftForge.WatchUI.Refresh then
-		CraftForge.WatchUI:Refresh(true)
+	if CraftBench.WatchUI and CraftBench.WatchUI.Refresh then
+		CraftBench.WatchUI:Refresh(true)
 	end
 end
 
@@ -60,8 +60,8 @@ function Watch:AdjustCount(recipeID, delta)
 	local db = ensureDB()
 	if not db or not db[recipeID] then return end
 	db[recipeID].count = math.max(1, (db[recipeID].count or 1) + delta)
-	if CraftForge.WatchUI and CraftForge.WatchUI.Refresh then
-		CraftForge.WatchUI:Refresh()
+	if CraftBench.WatchUI and CraftBench.WatchUI.Refresh then
+		CraftBench.WatchUI:Refresh()
 	end
 end
 
@@ -69,8 +69,8 @@ function Watch:RemoveRecipe(recipeID)
 	local db = ensureDB()
 	if not db or not recipeID then return end
 	db[recipeID] = nil
-	if CraftForge.WatchUI and CraftForge.WatchUI.Refresh then
-		CraftForge.WatchUI:Refresh()
+	if CraftBench.WatchUI and CraftBench.WatchUI.Refresh then
+		CraftBench.WatchUI:Refresh()
 	end
 end
 
@@ -86,7 +86,7 @@ function Watch:GetWatchedList()
 				local need = (r.need or 1) * (rec.count or 1)
 				local have = 0
 				if C_Item and C_Item.GetItemCount then
-					if CraftForge.isRetail then
+					if CraftBench.isRetail then
 						have = C_Item.GetItemCount(r.id, true, false, true, true) or 0
 					else
 						have = C_Item.GetItemCount(r.id, false) or 0
@@ -118,29 +118,29 @@ end
 function Watch:PinCurrentOrByName(query)
 	if query and query ~= "" then
 		local q = string.lower(query)
-		local player = CraftForge.currentPlayer or (CraftForge.unitName and CraftForge:unitName("player"))
-		local trade = CraftForge.currentTrade
-		if player and trade and CraftForge.GetNumSkills then
-			local n = CraftForge:GetNumSkills(player, trade) or 0
+		local player = CraftBench.currentPlayer or (CraftBench.unitName and CraftBench:unitName("player"))
+		local trade = CraftBench.currentTrade
+		if player and trade and CraftBench.GetNumSkills then
+			local n = CraftBench:GetNumSkills(player, trade) or 0
 			for i = 1, n do
-				local skill = CraftForge:GetSkill(player, trade, i)
+				local skill = CraftBench:GetSkill(player, trade, i)
 				if skill and skill.id and skill.id ~= 0 and skill.name and string.find(string.lower(skill.name), q, 1, true) then
 					self:ToggleRecipe(skill.id, 1)
 					return
 				end
 			end
 		end
-		CraftForge:Print(L["WATCH_NOT_FOUND"] or "No matching recipe found in current profession.")
+		CraftBench:Print(L["WATCH_NOT_FOUND"] or "No matching recipe found in current profession.")
 	else
-		if CraftForge.selectedSkill and CraftForge.GetSkill then
-			local skill = CraftForge:GetSkill(CraftForge.currentPlayer, CraftForge.currentTrade, CraftForge.selectedSkill)
+		if CraftBench.selectedSkill and CraftBench.GetSkill then
+			local skill = CraftBench:GetSkill(CraftBench.currentPlayer, CraftBench.currentTrade, CraftBench.selectedSkill)
 			if skill and skill.id and skill.id ~= 0 then
 				self:ToggleRecipe(skill.id, 1)
 				return
 			end
 		end
-		if CraftForge.WatchUI and CraftForge.WatchUI.ToggleVisible then
-			CraftForge.WatchUI:ToggleVisible()
+		if CraftBench.WatchUI and CraftBench.WatchUI.ToggleVisible then
+			CraftBench.WatchUI:ToggleVisible()
 		end
 	end
 end
@@ -150,10 +150,10 @@ evt:RegisterEvent("BAG_UPDATE_DELAYED")
 evt:RegisterEvent("PLAYER_ENTERING_WORLD")
 evt:SetScript("OnEvent", function(_, event)
 	if event == "PLAYER_ENTERING_WORLD" then
-		if CraftForge.WatchUI and CraftForge.WatchUI.Initialize then
-			CraftForge.WatchUI:Initialize()
+		if CraftBench.WatchUI and CraftBench.WatchUI.Initialize then
+			CraftBench.WatchUI:Initialize()
 		end
-	elseif CraftForge.WatchUI and CraftForge.WatchUI.Refresh then
-		CraftForge.WatchUI:Refresh()
+	elseif CraftBench.WatchUI and CraftBench.WatchUI.Refresh then
+		CraftBench.WatchUI:Refresh()
 	end
 end)

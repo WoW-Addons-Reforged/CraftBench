@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	
 ]]--
 
-CraftForge.AHDBPlugin = {}
+CraftBench.AHDBPlugin = {}
 
-local plugin = CraftForge.AHDBPlugin
-local L = CraftForge.L
+local plugin = CraftBench.AHDBPlugin
+local L = CraftBench.L
 
 plugin.options =
 {
@@ -35,11 +35,11 @@ plugin.options =
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.AHDB.enabled
+				return CraftBench.db.profile.plugins.AHDB.enabled
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.AHDB.enabled = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.AHDB.enabled = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1
@@ -47,14 +47,14 @@ plugin.options =
 		useShort = {
 			type = "toggle",
 			name = "useShort",
-			desc = CraftForge.L["Use Short money format"] or "Use Short money format",
+			desc = CraftBench.L["Use Short money format"] or "Use Short money format",
 			get = function()
-				return CraftForge.db.profile.plugins.AHDB.useShort
+				return CraftBench.db.profile.plugins.AHDB.useShort
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.AHDB.useShort = value
+				CraftBench.db.profile.plugins.AHDB.useShort = value
 				if value then
-					CraftForge.db.profile.plugins.AHDB.useShort = value
+					CraftBench.db.profile.plugins.AHDB.useShort = value
 				end
 			end,
 			order = 2
@@ -62,14 +62,14 @@ plugin.options =
 		onlyPositive = {
 			type = "toggle",
 			name = "onlyPositive",
-			desc = CraftForge.L["Only show positive values"] or "Only show positive values",
+			desc = CraftBench.L["Only show positive values"] or "Only show positive values",
 			get = function()
-				return CraftForge.db.profile.plugins.AHDB.onlyPositive
+				return CraftBench.db.profile.plugins.AHDB.onlyPositive
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.AHDB.onlyPositive = value
+				CraftBench.db.profile.plugins.AHDB.onlyPositive = value
 				if value then
-					CraftForge.db.profile.plugins.AHDB.onlyPositive = value
+					CraftBench.db.profile.plugins.AHDB.onlyPositive = value
 				end
 			end,
 			order = 3
@@ -77,14 +77,14 @@ plugin.options =
 		reagentPrices = {
 			type = "toggle",
 			name = "reagentPrices",
-			desc = CraftForge.L["Show prices for reagents"] or "Show prices for reagents",
+			desc = CraftBench.L["Show prices for reagents"] or "Show prices for reagents",
 			get = function()
-				return CraftForge.db.profile.plugins.AHDB.reagentPrices
+				return CraftBench.db.profile.plugins.AHDB.reagentPrices
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.AHDB.reagentPrices = value
+				CraftBench.db.profile.plugins.AHDB.reagentPrices = value
 				if value then
-					CraftForge.db.profile.plugins.AHDB.reagentPrices = value
+					CraftBench.db.profile.plugins.AHDB.reagentPrices = value
 				end
 			end,
 			order = 4
@@ -92,14 +92,14 @@ plugin.options =
 		buyablePrices = {
 			type = "toggle",
 			name = "buyablePrices",
-			desc = CraftForge.L["Show AH prices for buyable reagents"] or "Show AH prices for buyable reagents",
+			desc = CraftBench.L["Show AH prices for buyable reagents"] or "Show AH prices for buyable reagents",
 			get = function()
-				return CraftForge.db.profile.plugins.AHDB.buyablePrices
+				return CraftBench.db.profile.plugins.AHDB.buyablePrices
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.AHDB.buyablePrices = value
+				CraftBench.db.profile.plugins.AHDB.buyablePrices = value
 				if value then
-					CraftForge.db.profile.plugins.AHDB.buyablePrices = value
+					CraftBench.db.profile.plugins.AHDB.buyablePrices = value
 				end
 			end,
 			order = 5
@@ -107,14 +107,14 @@ plugin.options =
 		useVendorCalc = {
 			type = "toggle",
 			name = "useVendorCalc",
-			desc = CraftForge.L["Show calculated cost from vendor sell price for buyable reagents"] or "Show calculated cost from vendor sell price for buyable reagents",
+			desc = CraftBench.L["Show calculated cost from vendor sell price for buyable reagents"] or "Show calculated cost from vendor sell price for buyable reagents",
 			get = function()
-				return CraftForge.db.profile.plugins.AHDB.useVendorCalc
+				return CraftBench.db.profile.plugins.AHDB.useVendorCalc
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.AHDB.useVendorCalc = value
+				CraftBench.db.profile.plugins.AHDB.useVendorCalc = value
 				if value then
-					CraftForge.db.profile.plugins.AHDB.useVendorCalc = value
+					CraftBench.db.profile.plugins.AHDB.useVendorCalc = value
 				end
 			end,
 			order = 6
@@ -122,27 +122,27 @@ plugin.options =
 		buyFactor = {
 			type = "range",
 			name = "buyFactor",
-			desc = CraftForge.L["Multiply vendor sell price by this to get calculated buy price"] or "Multiply vendor sell price by this to get calculated buy price",
+			desc = CraftBench.L["Multiply vendor sell price by this to get calculated buy price"] or "Multiply vendor sell price by this to get calculated buy price",
 			min = 1, max = 10, step = 1, isPercent = false,
 			get = function()
-				return CraftForge.db.profile.plugins.AHDB.buyFactor
+				return CraftBench.db.profile.plugins.AHDB.buyFactor
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.AHDB.buyFactor = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.AHDB.buyFactor = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 10
 		},
 		markup = {
 			type = "range",
-			name = CraftForge.L["Markup %"] or "Markup %",
+			name = CraftBench.L["Markup %"] or "Markup %",
 			min = 0, max = 2, step = 0.01, isPercent = true,
 			get = function()
-				return CraftForge.db.profile.plugins.AHDB.markup
+				return CraftBench.db.profile.plugins.AHDB.markup
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.AHDB.markup = value
+				CraftBench.db.profile.plugins.AHDB.markup = value
 			end,
 			width = "double",
 			order = 11,
@@ -157,13 +157,13 @@ local buyFactorDef = 4
 local markupDef = 1.05
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.AHDB then
-		CraftForge.db.profile.plugins.AHDB = {}
-		CraftForge.db.profile.plugins.AHDB.enabled = true
-		CraftForge.db.profile.plugins.AHDB.buyFactor = buyFactorDef
-		CraftForge.db.profile.plugins.AHDB.markup = markupDef
+	if not CraftBench.db.profile.plugins.AHDB then
+		CraftBench.db.profile.plugins.AHDB = {}
+		CraftBench.db.profile.plugins.AHDB.enabled = true
+		CraftBench.db.profile.plugins.AHDB.buyFactor = buyFactorDef
+		CraftBench.db.profile.plugins.AHDB.markup = markupDef
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 end
 
 local function AHDB_Price(itemID)
@@ -207,16 +207,16 @@ function plugin.GetExtraText(skill, recipe)
 	if not recipe then return end
 	local itemID = recipe.itemID
 	local auctionData = {}
-	if CraftForge.db.profile.plugins.AHDB.enabled and itemID and AuctionDB then
+	if CraftBench.db.profile.plugins.AHDB.enabled and itemID and AuctionDB then
 		local itemName, itemLink = C_Item.GetItemInfo(itemID)
 		if not itemLink then 
 			DA.DEBUG(0,"GetExtraText: itemLink is nil")
 			return
 		end
 		local buyout = AHDB_Price(itemID) * recipe.numMade
-		extra_text = CraftForge:FormatMoneyFull(buyout, true)
+		extra_text = CraftBench:FormatMoneyFull(buyout, true)
 		label = "|r".."AHDB "..L["Buyout"]..":"
-		if CraftForge.db.profile.plugins.AHDB.reagentPrices then
+		if CraftBench.db.profile.plugins.AHDB.reagentPrices then
 			local toConcatLabel = {}
 			local toConcatExtra = {}
 			local cost = 0
@@ -227,7 +227,7 @@ function plugin.GetExtraText(skill, recipe)
 				end
 				local needed = reagent.numNeeded or 0
 				local id = reagent.id
-				if CraftForge.isRetail or CraftForge.isForever then
+				if CraftBench.isRetail or CraftBench.isForever then
 					id = reagent.reagentID
 				end
 				local reagentName, reagentLink
@@ -238,32 +238,32 @@ function plugin.GetExtraText(skill, recipe)
 				end
 				local text
 				local value = AHDB_Price(id) * needed
-				local buyFactor = CraftForge.db.profile.plugins.AHDB.buyFactor or buyFactorDef
-				if CraftForge:VendorSellsReagent(id) then
+				local buyFactor = CraftBench.db.profile.plugins.AHDB.buyFactor or buyFactorDef
+				if CraftBench:VendorSellsReagent(id) then
 					toConcatLabel[#toConcatLabel+1] = string.format("   %d x %s  |cff808080(%s)|r", needed, reagentName or "Unknown", L["buyable"])
-					if CraftForge.db.profile.plugins.AHDB.buyablePrices then
-						if CraftForge.db.profile.plugins.AHDB.useVendorCalc then
+					if CraftBench.db.profile.plugins.AHDB.buyablePrices then
+						if CraftBench.db.profile.plugins.AHDB.useVendorCalc then
 							local sellValue = select(11, C_Item.GetItemInfo(id))
 							value = ( sellValue or 0 ) * needed * buyFactor
 						end
-						toConcatExtra[#toConcatExtra+1] = CraftForge:FormatMoneyFull(value, true)
+						toConcatExtra[#toConcatExtra+1] = CraftBench:FormatMoneyFull(value, true)
 					else
 						value = 0
 						toConcatExtra[#toConcatExtra+1] = ""
 					end
 				else
-					toConcatExtra[#toConcatExtra+1] = CraftForge:FormatMoneyFull(value, true)
+					toConcatExtra[#toConcatExtra+1] = CraftBench:FormatMoneyFull(value, true)
 					toConcatLabel[#toConcatLabel+1] = string.format("   %d x %s", needed, reagentName or "Unknown")
 				end
 				cost = cost + value
 			end
-			if CraftForge.db.profile.plugins.AHDB.useVendorCalc then
-				local markup = CraftForge.db.profile.plugins.AHDB.markup or markupDef
+			if CraftBench.db.profile.plugins.AHDB.useVendorCalc then
+				local markup = CraftBench.db.profile.plugins.AHDB.markup or markupDef
 				label = label .. "\n\n" .. table.concat(toConcatLabel,"\n") .. "\n   " .. L["Reagents"] .." * ".. markup * 100 .."%:\n"
-				extra_text =  extra_text .. "\n\n" .. table.concat(toConcatExtra,"\n") .. "\n" .. CraftForge:FormatMoneyFull(cost * markup, true) .. "\n"
+				extra_text =  extra_text .. "\n\n" .. table.concat(toConcatExtra,"\n") .. "\n" .. CraftBench:FormatMoneyFull(cost * markup, true) .. "\n"
 			else
 				label = label .. "\n\n" .. table.concat(toConcatLabel,"\n") .. "\n   " .. L["Reagents"] .. ":\n"
-				extra_text =  extra_text .. "\n\n" .. table.concat(toConcatExtra,"\n") .. "\n" .. CraftForge:FormatMoneyFull(cost, true) .. "\n"
+				extra_text =  extra_text .. "\n\n" .. table.concat(toConcatExtra,"\n") .. "\n" .. CraftBench:FormatMoneyFull(cost, true) .. "\n"
 			end
 		end
 	end
@@ -275,21 +275,21 @@ function plugin.RecipeNameSuffix(skill, recipe)
 	if not recipe then return end
 	local itemID = recipe.itemID
 	local auctionData = {}
-	if CraftForge.db.profile.plugins.AHDB.enabled and itemID and AuctionDB then
+	if CraftBench.db.profile.plugins.AHDB.enabled and itemID and AuctionDB then
 		local buyout = AHDB_Price(itemID) * recipe.numMade
-		if CraftForge.db.profile.plugins.AHDB.reagentPrices then
+		if CraftBench.db.profile.plugins.AHDB.reagentPrices then
 			local cost = 0
 			for i=1, #recipe.reagentData, 1 do
 				local needed = recipe.reagentData[i].numNeeded or 0
 				local id = recipe.reagentData[i].id
-				if CraftForge.isRetail or CraftForge.isForever then
+				if CraftBench.isRetail or CraftBench.isForever then
 					id = recipe.reagentData[i].reagentID
 				end
 				local value = AHDB_Price(id) * needed
-				local buyFactor = CraftForge.db.profile.plugins.AHDB.buyFactor or buyFactorDef
-				if CraftForge:VendorSellsReagent(id) then
-					if CraftForge.db.profile.plugins.AHDB.buyablePrices then
-						if CraftForge.db.profile.plugins.AHDB.useVendorCalc then
+				local buyFactor = CraftBench.db.profile.plugins.AHDB.buyFactor or buyFactorDef
+				if CraftBench:VendorSellsReagent(id) then
+					if CraftBench.db.profile.plugins.AHDB.buyablePrices then
+						if CraftBench.db.profile.plugins.AHDB.useVendorCalc then
 							local sellValue = select(11, C_Item.GetItemInfo(id))
 							value = ( sellValue or 0 ) * needed * buyFactor
 						end
@@ -299,17 +299,17 @@ function plugin.RecipeNameSuffix(skill, recipe)
 				end
 				cost = cost + value
 			end
-			if CraftForge.db.profile.plugins.AHDB.useVendorCalc then
-				local markup = CraftForge.db.profile.plugins.AHDB.markup or markupDef
+			if CraftBench.db.profile.plugins.AHDB.useVendorCalc then
+				local markup = CraftBench.db.profile.plugins.AHDB.markup or markupDef
 				cost = cost * markup
 			end
 			local profit = buyout - cost
-			if CraftForge.db.profile.plugins.AHDB.useShort then
-				text = CraftForge:FormatMoneyShort(profit, true)
+			if CraftBench.db.profile.plugins.AHDB.useShort then
+				text = CraftBench:FormatMoneyShort(profit, true)
 			else
-				text = CraftForge:FormatMoneyFull(profit, true)
+				text = CraftBench:FormatMoneyFull(profit, true)
 			end
-			if CraftForge.db.profile.plugins.AHDB.onlyPositive and profit <= 0 then
+			if CraftBench.db.profile.plugins.AHDB.onlyPositive and profit <= 0 then
 				text = nil
 			end
 		end
@@ -317,6 +317,6 @@ function plugin.RecipeNameSuffix(skill, recipe)
 	return text
 end
 
-CraftForge:RegisterRecipeNamePlugin("AHDBPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
+CraftBench:RegisterRecipeNamePlugin("AHDBPlugin")		-- we have a RecipeNamePrefix or a RecipeNameSuffix function
 
-CraftForge:RegisterDisplayDetailPlugin("AHDBPlugin")	-- we have a GetExtraText function
+CraftBench:RegisterDisplayDetailPlugin("AHDBPlugin")	-- we have a GetExtraText function

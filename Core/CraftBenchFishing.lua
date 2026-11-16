@@ -1,12 +1,12 @@
 ----------------------------------------------------------
--- CraftForge - Fishing Logger, Auto-Lure & Pole Swap   --
+-- CraftBench - Fishing Logger, Auto-Lure & Pole Swap   --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
 
-CraftForge.Fishing = CraftForge.Fishing or {}
-local Fishing = CraftForge.Fishing
+CraftBench.Fishing = CraftBench.Fishing or {}
+local Fishing = CraftBench.Fishing
 
 local LAST_BAG = NUM_TOTAL_EQUIPPED_BAG_SLOTS or 5
 local LURE_MIN_LEFT = 5
@@ -29,9 +29,9 @@ local KNOWN_LURES = {
 	[118391] = { bonus = 200, req = 1 },  -- Worm Supreme
 }
 
-BINDING_HEADER_CRAFTFORGE_FISHING = "CraftForge: Fishing"
-_G["BINDING_NAME_CLICK CraftForgeFishingCastButton:LeftButton"] = "CraftForge: Cast Fishing / Apply Lure"
-_G["BINDING_NAME_CLICK CraftForgeFishingSwapButton:LeftButton"] = "CraftForge: Swap Fishing Pole / Weapons"
+BINDING_HEADER_CRAFTBENCH_FISHING = "CraftBench: Fishing"
+_G["BINDING_NAME_CLICK CraftBenchFishingCastButton:LeftButton"] = "CraftBench: Cast Fishing / Apply Lure"
+_G["BINDING_NAME_CLICK CraftBenchFishingSwapButton:LeftButton"] = "CraftBench: Swap Fishing Pole / Weapons"
 
 local function getSpellNameSafe(id)
 	if C_Spell and C_Spell.GetSpellInfo then
@@ -86,18 +86,18 @@ local function getItemInstantSafe(idOrLink)
 end
 
 local function ensureDB()
-	if not CraftForge.db then return nil end
-	if not CraftForge.db.global.fishingDB then
-		CraftForge.db.global.fishingDB = {
+	if not CraftBench.db then return nil end
+	if not CraftBench.db.global.fishingDB then
+		CraftBench.db.global.fishingDB = {
 			zones = {},
 			settings = { autoLure = true, easyCast = true, showBar = true, verbose = false, castKey = "", swapKey = "" },
 		}
 	end
-	local gdb = CraftForge.db.global.fishingDB
+	local gdb = CraftBench.db.global.fishingDB
 	gdb.zones = gdb.zones or {}
 	gdb.settings = gdb.settings or { autoLure = true, easyCast = true, showBar = true, verbose = false, castKey = "", swapKey = "" }
-	if not CraftForge.db.char.fishingWeapons then
-		CraftForge.db.char.fishingWeapons = {}
+	if not CraftBench.db.char.fishingWeapons then
+		CraftBench.db.char.fishingWeapons = {}
 	end
 	return gdb
 end
@@ -216,25 +216,25 @@ local function updateCastButton()
 	if castButton then
 		Fishing:ApplyCastAttributes(castButton)
 	end
-	if CraftForge.FishingUI and CraftForge.FishingUI._barCastBtn then
-		Fishing:ApplyCastAttributes(CraftForge.FishingUI._barCastBtn)
+	if CraftBench.FishingUI and CraftBench.FishingUI._barCastBtn then
+		Fishing:ApplyCastAttributes(CraftBench.FishingUI._barCastBtn)
 	end
-	if CraftForge.FishingUI and CraftForge.FishingUI.RefreshBar then
-		CraftForge.FishingUI:RefreshBar()
+	if CraftBench.FishingUI and CraftBench.FishingUI.RefreshBar then
+		CraftBench.FishingUI:RefreshBar()
 	end
 end
 
 local function swapPoleAndWeapons()
 	if InCombatLockdown() then return end
 	ensureDB()
-	local charWeapons = CraftForge.db.char.fishingWeapons
+	local charWeapons = CraftBench.db.char.fishingWeapons
 	local poleEquipped, currentMH = Fishing:IsPoleEquipped()
 	local equipByID = (C_Item and C_Item.EquipItemByName) or EquipItemByName
 
 	if not poleEquipped then
 		local _, _, poleID = Fishing:FindPoleInBags()
 		if not poleID then
-			CraftForge:Print("No fishing pole found in your bags.")
+			CraftBench:Print("No fishing pole found in your bags.")
 			return
 		end
 		charWeapons.mh = currentMH
@@ -331,8 +331,8 @@ local function recordCaughtItem(rec, itemID, link, count, isNewCatch)
 		session.catches = session.catches + 1
 	end
 	local unitVal = 0
-	if CraftForge.GetItemMarketOrVendorPrice then
-		unitVal = CraftForge:GetItemMarketOrVendorPrice(itemID) or 0
+	if CraftBench.GetItemMarketOrVendorPrice then
+		unitVal = CraftBench:GetItemMarketOrVendorPrice(itemID) or 0
 	elseif vendorPrice then
 		unitVal = vendorPrice
 	end
@@ -342,11 +342,11 @@ local function recordCaughtItem(rec, itemID, link, count, isNewCatch)
 
 	local gdb = ensureDB()
 	if gdb and gdb.settings and gdb.settings.verbose == true then
-		CraftForge:Print(string.format("%s x%d (%s)", it.link or it.name, qty, rec.subzone or rec.zone or "?"))
+		CraftBench:Print(string.format("%s x%d (%s)", it.link or it.name, qty, rec.subzone or rec.zone or "?"))
 	end
 
-	if CraftForge.FishingUI and CraftForge.FishingUI.Refresh then
-		CraftForge.FishingUI:Refresh()
+	if CraftBench.FishingUI and CraftBench.FishingUI.Refresh then
+		CraftBench.FishingUI:Refresh()
 	end
 end
 
@@ -402,11 +402,11 @@ function Fishing:ApplyKeyBindings()
 	if SetOverrideBindingClick then
 		local ck = s.castKey and s.castKey:match("^%s*(.-)%s*$") or ""
 		if ck ~= "" and castBindOwner then
-			SetOverrideBindingClick(castBindOwner, true, ck:upper(), "CraftForgeFishingCastButton", "LeftButton")
+			SetOverrideBindingClick(castBindOwner, true, ck:upper(), "CraftBenchFishingCastButton", "LeftButton")
 		end
 		local sk = s.swapKey and s.swapKey:match("^%s*(.-)%s*$") or ""
 		if sk ~= "" and swapBindOwner then
-			SetOverrideBindingClick(swapBindOwner, true, sk:upper(), "CraftForgeFishingSwapButton", "LeftButton")
+			SetOverrideBindingClick(swapBindOwner, true, sk:upper(), "CraftBenchFishingSwapButton", "LeftButton")
 		end
 	end
 end
@@ -421,7 +421,7 @@ function Fishing:Initialize()
 	easyBindOwner = CreateFrame("Frame")
 
 	local useDown = GetCVarBool and GetCVarBool("ActionButtonUseKeyDown")
-	castButton = CreateFrame("Button", "CraftForgeFishingCastButton", UIParent, "SecureActionButtonTemplate")
+	castButton = CreateFrame("Button", "CraftBenchFishingCastButton", UIParent, "SecureActionButtonTemplate")
 	castButton:RegisterForClicks(useDown and "LeftButtonDown" or "LeftButtonUp")
 	castButton:HookScript("PostClick", function()
 		if ClearOverrideBindings and easyBindOwner and not InCombatLockdown() then
@@ -432,7 +432,7 @@ function Fishing:Initialize()
 		end
 	end)
 
-	swapButton = CreateFrame("Button", "CraftForgeFishingSwapButton", UIParent)
+	swapButton = CreateFrame("Button", "CraftBenchFishingSwapButton", UIParent)
 	swapButton:SetScript("OnClick", swapPoleAndWeapons)
 
 	-- Double-right-click on WorldFrame when holding a Fishing Pole -> Easy-Cast
@@ -451,7 +451,7 @@ function Fishing:Initialize()
 			if (now - lastRightClick) <= 0.45 then
 				lastRightClick = 0
 				if SetOverrideBindingClick then
-					SetOverrideBindingClick(easyBindOwner, true, "BUTTON2", "CraftForgeFishingCastButton", "LeftButton")
+					SetOverrideBindingClick(easyBindOwner, true, "BUTTON2", "CraftBenchFishingCastButton", "LeftButton")
 					if C_Timer and C_Timer.After then
 						C_Timer.After(0.25, function()
 							if ClearOverrideBindings and not InCombatLockdown() then
@@ -468,8 +468,8 @@ function Fishing:Initialize()
 
 	updateCastButton()
 	self:ApplyKeyBindings()
-	if CraftForge.FishingUI and CraftForge.FishingUI.InitializeBar then
-		CraftForge.FishingUI:InitializeBar()
+	if CraftBench.FishingUI and CraftBench.FishingUI.InitializeBar then
+		CraftBench.FishingUI:InitializeBar()
 	end
 
 	local f = CreateFrame("Frame")
@@ -493,8 +493,8 @@ function Fishing:Initialize()
 		elseif event == "CHAT_MSG_SKILL" and type(arg1) == "string" then
 			if arg1:find(FISHING_SPELL_NAME, 1, true) or arg1:find("Fishing", 1, true) or arg1:find("Angeln", 1, true) then
 				session.ups = session.ups + 1
-				if CraftForge.FishingUI and CraftForge.FishingUI.Refresh then
-					CraftForge.FishingUI:Refresh()
+				if CraftBench.FishingUI and CraftBench.FishingUI.Refresh then
+					CraftBench.FishingUI:Refresh()
 				end
 			end
 		else

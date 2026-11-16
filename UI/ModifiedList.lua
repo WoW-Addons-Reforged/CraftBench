@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,19 +17,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
 
 -- ===========================================================================================
 --    Window creation and update methods
 -- ===========================================================================================
 local num_buttons = 0
 local function get_button(i)
-	local button = _G["CraftForgeModifiedListButton"..i]
+	local button = _G["CraftBenchModifiedListButton"..i]
 	if not button then
-		button = CreateFrame("Button", "CraftForgeModifiedListButton"..i, CraftForgeModifiedListParent, "CraftForgeModifiedListItemTemplate")
-		button:SetParent(CraftForgeModifiedListParent)
-		button:SetPoint("TOPLEFT", "CraftForgeModifiedListButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(CraftForgeModifiedListParent:GetFrameLevel() + 1)
+		button = CreateFrame("Button", "CraftBenchModifiedListButton"..i, CraftBenchModifiedListParent, "CraftBenchModifiedListItemTemplate")
+		button:SetParent(CraftBenchModifiedListParent)
+		button:SetPoint("TOPLEFT", "CraftBenchModifiedListButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftBenchModifiedListParent:GetFrameLevel() + 1)
 	end
 	return button
 end
@@ -50,40 +50,40 @@ local FrameBackdrop = {
 	insets = { left = 3, right = 3, top = 30, bottom = 3 }
 }
 
-CRAFTFORGE_MODIFIED_LIST_HEIGHT = 24
+CRAFTBENCH_MODIFIED_LIST_HEIGHT = 24
 local function createModifiedListFrame(self)
 	--DA.DEBUG(0,"createModifiedListFrame")
-	local frame = CraftForgeModifiedList
+	local frame = CraftBenchModifiedList
 	if not frame then
 		return nil
 	end
-	local UIStyle = CraftForge.UIStyle
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local UIStyle = CraftBench.UIStyle
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		frame:SetFrameStrata("TOOLTIP")
 	else
 		frame:SetFrameStrata("HIGH")
 	end
 	UIStyle.SkinFrame(frame, false)
-	local titletext = frame:CreateFontString("CraftForgeModifiedListTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = frame:CreateFontString("CraftBenchModifiedListTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -1)
 	titletext:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -36, -1)
 	titletext:SetHeight(26)
 	titletext:SetJustifyH("CENTER")
-	titletext:SetText("CraftForge: Modified Reagents")
+	titletext:SetText("CraftBench: Modified Reagents")
 	UIStyle.StyleHeaderBar(frame, titletext, 1)
-	if CraftForgeModifiedListCloseButton then UIStyle.SkinCloseButton(CraftForgeModifiedListCloseButton) end
+	if CraftBenchModifiedListCloseButton then UIStyle.SkinCloseButton(CraftBenchModifiedListCloseButton) end
 	frame.titletext = titletext
-	CraftForgeModifiedBestQualityText:SetText(PROFESSIONS_USE_BEST_QUALITY_REAGENTS)
+	CraftBenchModifiedBestQualityText:SetText(PROFESSIONS_USE_BEST_QUALITY_REAGENTS)
 --
 -- The frame enclosing the scroll list needs a border and a background .....
 --
-	local backdrop = CraftForgeModifiedListParent
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local backdrop = CraftBenchModifiedListParent
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		backdrop:SetFrameStrata("HIGH")
 	end
 	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
-	if CraftForgeModifiedList then UIStyle.StyleScrollBar(CraftForgeModifiedList) end
+	if CraftBenchModifiedList then UIStyle.StyleScrollBar(CraftBenchModifiedList) end
 	local ModifiedListLocation = {
 		prefix = "ModifiedListLocation_"
 	}
@@ -98,7 +98,7 @@ local function createModifiedListFrame(self)
 --
 -- lets play the resize me game!
 --
-	CraftForge:EnableResize(frame, 420, 240, CraftForge.UpdateModifiedListWindow)
+	CraftBench:EnableResize(frame, 420, 240, CraftBench.UpdateModifiedListWindow)
 --
 -- so hitting [ESC] will close the window
 --
@@ -106,14 +106,14 @@ local function createModifiedListFrame(self)
 --
 -- Adjust the button height
 --
-	CRAFTFORGE_MODIFIED_LIST_HEIGHT = math.max(CraftForgeModifiedListButton1:GetHeight(), CRAFTFORGE_MODIFIED_LIST_HEIGHT)
+	CRAFTBENCH_MODIFIED_LIST_HEIGHT = math.max(CraftBenchModifiedListButton1:GetHeight(), CRAFTBENCH_MODIFIED_LIST_HEIGHT)
 	return frame
 end
 
 --
 -- Called to update the modified list window
 --
-function CraftForge:UpdateModifiedListWindow()
+function CraftBench:UpdateModifiedListWindow()
 	--DA.DEBUG(0,"UpdateModifiedListWindow()")
 	self.InProgress.modified = true
 	local numItems
@@ -124,25 +124,25 @@ function CraftForge:UpdateModifiedListWindow()
 	else
 		return
 	end
-	CraftForgeModifiedNeeded:SetText(self.cachedModifiedNeeded)
-	CraftForgeModifiedNeeded:SetTextColor(1,1,1)
-	local height = CraftForgeModifiedListParent:GetHeight()
-	local width = CraftForgeModifiedListParent:GetWidth() - 30 -- Allow for scrollbars
-	--DA.DEBUG(1,"UpdateModifiedListWindow: height= "..tostring(height)..", CRAFTFORGE_MODIFIED_LIST_HEIGHT= "..tostring(CRAFTFORGE_MODIFIED_LIST_HEIGHT))
+	CraftBenchModifiedNeeded:SetText(self.cachedModifiedNeeded)
+	CraftBenchModifiedNeeded:SetTextColor(1,1,1)
+	local height = CraftBenchModifiedListParent:GetHeight()
+	local width = CraftBenchModifiedListParent:GetWidth() - 30 -- Allow for scrollbars
+	--DA.DEBUG(1,"UpdateModifiedListWindow: height= "..tostring(height)..", CRAFTBENCH_MODIFIED_LIST_HEIGHT= "..tostring(CRAFTBENCH_MODIFIED_LIST_HEIGHT))
 	--DA.DEBUG(1,"UpdateModifiedListWindow: width= "..tostring(width))
-	local button_count = height / CRAFTFORGE_MODIFIED_LIST_HEIGHT
+	local button_count = height / CRAFTBENCH_MODIFIED_LIST_HEIGHT
 	button_count = math.floor(button_count) - 1
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(CraftForgeModifiedListList,			-- frame
+	FauxScrollFrame_Update(CraftBenchModifiedListList,			-- frame
 							numItems,						-- num items
 							button_count,					-- num to display
-							CRAFTFORGE_MODIFIED_LIST_HEIGHT)	-- value step (item height)
+							CRAFTBENCH_MODIFIED_LIST_HEIGHT)	-- value step (item height)
 --
 -- Where in the list of items to start counting.
 --
-	local itemOffset = FauxScrollFrame_GetOffset(CraftForgeModifiedListList)
+	local itemOffset = FauxScrollFrame_GetOffset(CraftBenchModifiedListList)
 	--DA.DEBUG(1,"UpdateModifiedListWindow: itemOffset= "..tostring(itemOffset))
 	for i=1, button_count, 1 do
 		num_buttons = math.max(num_buttons, i)
@@ -219,25 +219,25 @@ end
 --
 -- Updates the scrollbar when a scroll event happens
 --
-function CraftForge:ModifiedList_OnScroll()
-	CraftForge:UpdateModifiedListWindow()
+function CraftBench:ModifiedList_OnScroll()
+	CraftBench:UpdateModifiedListWindow()
 end
 
 --
 -- Functions to show and hide the ModifiedList
 --
-function CraftForge:DisplayModifiedList()
+function CraftBench:DisplayModifiedList()
 	--DA.DEBUG(0,"DisplayModifiedList()")
 	if not self.ModifiedList then
 		self.ModifiedList = createModifiedListFrame(self)
 	end
 	if not self.ModifiedList:IsVisible() then
-		CraftForgeModifiedListCloseButton:Enable()
+		CraftBenchModifiedListCloseButton:Enable()
 		self.ModifiedList:Show()
 	end
 end
 
-function CraftForge:HideModifiedList(clear)
+function CraftBench:HideModifiedList(clear)
 	--DA.DEBUG(0,"HideModifiedList()")
 	if self.ModifiedList then
 		self.ModifiedList:Hide()
@@ -248,10 +248,10 @@ function CraftForge:HideModifiedList(clear)
 end
 
 --
--- Called when an modified reagent button in the CraftForge detail frame is clicked
+-- Called when an modified reagent button in the CraftBench detail frame is clicked
 --
 
-function CraftForge:ModifiedReagentOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:ModifiedReagentOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"ModifiedReagentOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
 	local thisModified = recipe.modifiedData[reagentIndex - 100]
@@ -273,7 +273,7 @@ end
 -- Returns a link for the modified reagent required to create the specified
 -- item, the index'th reagent required for the item is returned
 --
-function CraftForge:GetModifiedItemLink(skillIndex, index)
+function CraftBench:GetModifiedItemLink(skillIndex, index)
 	--DA.DEBUG(0,"GetModifiedItemLink("..tostring(skillIndex)..", "..tostring(index)..")")
 	if skillIndex and index then
 		local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
@@ -288,17 +288,17 @@ end
 --
 -- Called when then mouse enters a modified button in the ModifiedList frame
 --
-function CraftForge:ModifiedButtonOnEnter(button, skillIndex, modifiedIndex)
+function CraftBench:ModifiedButtonOnEnter(button, skillIndex, modifiedIndex)
 	--DA.DEBUG(0,"ModifiedButtonOnEnter("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(modifiedIndex)..")")
-	local tip = GameTooltip -- CraftForgeTradeskillTooltip
+	local tip = GameTooltip -- CraftBenchTradeskillTooltip
 	tip:SetOwner(button, "ANCHOR_BOTTOMRIGHT")
-	if CraftForge.db.profile.scale_tooltip then
+	if CraftBench.db.profile.scale_tooltip then
 		local uiScale = 1.0;
 		if ( GetCVar("useUiScale") == "1" ) then
 			uiScale = tonumber(GetCVar("uiscale"))
 		end
-		if CraftForge.db.profile.ttscale then
-			uiScale = uiScale * CraftForge.db.profile.ttscale
+		if CraftBench.db.profile.ttscale then
+			uiScale = uiScale * CraftBench.db.profile.ttscale
 		end
 		tip:SetScale(uiScale)
 	end
@@ -311,11 +311,11 @@ end
 --
 -- Called when the mouse leaves a modified button in the ModifiedList frame
 --
-function CraftForge:ModifiedButtonOnLeave(button, skillIndex, modifiedIndex)
+function CraftBench:ModifiedButtonOnLeave(button, skillIndex, modifiedIndex)
 	--DA.DEBUG(0,"ModifiedButtonOnLeave("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(modifiedIndex)..")")
-	local tip = GameTooltip -- CraftForgeTradeskillTooltip
-	if CraftForge.db.profile.scale_tooltip then
-		tip:SetScale(CraftForge.gttScale)
+	local tip = GameTooltip -- CraftBenchTradeskillTooltip
+	if CraftBench.db.profile.scale_tooltip then
+		tip:SetScale(CraftBench.gttScale)
 	end
 	tip:Hide()
 	ResetCursor()
@@ -324,7 +324,7 @@ end
 --
 -- Called when the mouse is clicked on a modified button in the ModifiedList frame
 --
-function CraftForge:ModifiedButtonOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:ModifiedButtonOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"ModifiedButtonOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	local mreagentID = self.cachedModifiedList[reagentIndex].itemID
 	if not self.modifiedSelected then
@@ -340,22 +340,22 @@ function CraftForge:ModifiedButtonOnClick(button, mouse, skillIndex, reagentInde
 	self:UpdateDetailWindow(skillIndex)
 end
 
-function CraftForge:ModifiedListToggleBestQuality()
+function CraftBench:ModifiedListToggleBestQuality()
 	self.db.profile.best_quality = not self.db.profile.best_quality
 	--DA.DEBUG(0,"ModifiedListToggleBestQuality: best_quality= "..tostring(self.db.profile.best_quality))
-	CraftForgeUseHighestQuality:SetChecked(self.db.profile.best_quality)
+	CraftBenchUseHighestQuality:SetChecked(self.db.profile.best_quality)
 	self:UpdateDetailWindow(self.selectedSkill)
 end
 
-function CraftForge:ModifyItemCount(this,button)
+function CraftBench:ModifyItemCount(this,button)
 	--DA.DEBUG(0,"ModifyItemCount("..tostring(this)..", "..tostring(button))
 end
 
-function CraftForge:ResetItemCount(this,button)
+function CraftBench:ResetItemCount(this,button)
 	--DA.DEBUG(0,"ResetItemCount("..tostring(this)..", "..tostring(button))
 end
 
-function CraftForge:ModifiedItemCount(this, button, count)
+function CraftBench:ModifiedItemCount(this, button, count)
 	--DA.DEBUG(0,"ModifiedItemCount("..tostring(this)..", "..tostring(button)..", "..tostring(count))
 	local parent = this:GetParent()
 	local itemID = parent.mreagentID
@@ -402,18 +402,18 @@ function CraftForge:ModifiedItemCount(this, button, count)
 			thisReagent.quantity = val
 		end
 		if total == self.cachedModifiedNeeded then
-			CraftForgeModifiedNeeded:SetTextColor(1,1,1)
-			CraftForgeModifiedListCloseButton:Enable()
+			CraftBenchModifiedNeeded:SetTextColor(1,1,1)
+			CraftBenchModifiedListCloseButton:Enable()
 		else
-			CraftForgeModifiedNeeded:SetTextColor(1,0,0)
+			CraftBenchModifiedNeeded:SetTextColor(1,0,0)
 			if mreagents then
-				CraftForgeModifiedListCloseButton:Disable()
+				CraftBenchModifiedListCloseButton:Disable()
 			end
 		end
 	else
 		input:SetText(tostring(val))
-		CraftForgeModifiedNeeded:SetTextColor(1,0,0)
-		CraftForgeModifiedListCloseButton:Disable()
+		CraftBenchModifiedNeeded:SetTextColor(1,0,0)
+		CraftBenchModifiedListCloseButton:Disable()
 	end
 	--DA.DEBUG(1,"ModifiedItemCount: (after) mreagents= "..DA.DUMP1(mreagents))
 end
@@ -423,7 +423,7 @@ end
 -- Builds a table in the format needed by C_TradeSkillUI.CraftRecipe
 -- using self.db.profile.best_quality to determine the order.
 --
-function CraftForge:InitializeModifiedSelected(mreagent)
+function CraftBench:InitializeModifiedSelected(mreagent)
 	--DA.DEBUG(0,"InitializeModifiedSelected("..DA.DUMP(mreagent)..")")
 	local modifiedSelected = {}
 	local total = 0
@@ -463,7 +463,7 @@ end
 --
 -- Called to check if there still are enough reagents.
 --
-function CraftForge:CheckModifiedSelected(mreagent)
+function CraftBench:CheckModifiedSelected(mreagent)
 	--DA.DEBUG(0,"CheckModifiedSelected("..DA.DUMP(mreagent)..")")
 	if mreagent then
 		for j,reagent in pairs(mreagent) do

@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
-local UIStyle = CraftForge.UIStyle
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
+local UIStyle = CraftBench.UIStyle
 
-CRAFTFORGE_TRADE_SKILL_HEIGHT = 20
+CRAFTBENCH_TRADE_SKILL_HEIGHT = 20
 
 local COLORORANGE = "|cffff8040"
 local COLORYELLOW = "|cffffff00"
@@ -39,36 +39,36 @@ local CCRAFT =  "|cffffff80"	-- Yellow = How many you can make by crafting the r
 local CVENDOR = "|cffffa050"	-- Orange = How many you can make if you purchase materials from a vendor
 local CALTS = "|cffff80ff"		-- Purple = How many you can make using materials on your alts
 
--- min height for CraftForge window
-local CRAFTFORGE_MIN_HEIGHT = 580
+-- min height for CraftBench window
+local CRAFTBENCH_MIN_HEIGHT = 580
 --
 -- height of the header portion
 --
 -- this value reflects the offsets of 
--- CraftForgeSkillListParent and CraftForgeReagentParent
+-- CraftBenchSkillListParent and CraftBenchReagentParent
 --   (Y offset is either 110 or 130)
 --   (we really should compute this from those values)
 --
-local CRAFTFORGE_HEADER_HEIGHT = 145		-- 125 if Filter is removed under Search
+local CRAFTBENCH_HEADER_HEIGHT = 145		-- 125 if Filter is removed under Search
 
 -- min width for skill list window
-local CRAFTFORGE_SKILLLIST_MIN_WIDTH = 440
+local CRAFTBENCH_SKILLLIST_MIN_WIDTH = 440
 
 -- min/max width for the reagent window
-local CRAFTFORGE_REAGENT_MIN_WIDTH = 350
-local CRAFTFORGE_REAGENT_MAX_WIDTH = 385
-local CRAFTFORGE_REAGENT_MIN_HEIGHT = 300
+local CRAFTBENCH_REAGENT_MIN_WIDTH = 350
+local CRAFTBENCH_REAGENT_MAX_WIDTH = 385
+local CRAFTBENCH_REAGENT_MIN_HEIGHT = 300
 local reagent_height
 
 -- min width of count text
-local CRAFTFORGE_COUNT_MIN_WIDTH = 100
+local CRAFTBENCH_COUNT_MIN_WIDTH = 100
 
 --
 -- Stack of previsouly selected skills for use by the
 -- "click on reagent, go to recipe" code and for clicking on Queue'd recipes
 -- stack is stack of tables: { "player", "tradeID", "skillIndex"}
 --
-CraftForge.skillStack = {}
+CraftBench.skillStack = {}
 
 --
 -- Stolen from the Waterfall Ace2 addon.
@@ -101,15 +101,15 @@ local pre_show_callbacks = {}
 --
 local pre_hide_callbacks = {}
 
-function CraftForge:AddPreButtonShowCallback(method)
+function CraftBench:AddPreButtonShowCallback(method)
 	assert(method and type(method) == "function",
-		   "Usage: CraftForge:AddPreButtonShowCallback(method). method must be a non-nil function")
+		   "Usage: CraftBench:AddPreButtonShowCallback(method). method must be a non-nil function")
 	table.insert(pre_show_callbacks, method)
 end
 
-function CraftForge:AddPreButtonHideCallback(method)
+function CraftBench:AddPreButtonHideCallback(method)
 	assert(method and type(method) == "function",
-		   "Usage: CraftForge:AddPreButtonHideCallback(method). method must be a non-nil function")
+		   "Usage: CraftBench:AddPreButtonHideCallback(method). method must be a non-nil function")
 	table.insert(pre_hide_callbacks, method)
 end
 
@@ -121,7 +121,7 @@ local function get_craftable_counts(skill, numMade)
 	--DA.DEBUG(2,"get_craftable_counts: name= "..tostring(skill.name)..", numMade= "..tostring(numMade))
 	--DA.DEBUG(3,"get_craftable_counts: skill= "..DA.DUMP1(skill,1))
 	local factor = 1
-	if CraftForge.db.profile.show_craft_counts then
+	if CraftBench.db.profile.show_craft_counts then
 		factor = numMade or 1
 	end
 	local num          = math.floor((skill.numCraftable or 0) / factor)
@@ -133,11 +133,11 @@ local function get_craftable_counts(skill, numMade)
 	return num, numrecursive, numwvendor, numwalts, numbank
 end
 
-function CraftForge:CreateTradeSkillWindow()
+function CraftBench:CreateTradeSkillWindow()
 --
--- The CraftForgeFrame is defined in the file MainFrame.xml
+-- The CraftBenchFrame is defined in the file MainFrame.xml
 --
-	local frame = CraftForgeFrame
+	local frame = CraftBenchFrame
 	if not frame then
 		return frame
 	end
@@ -151,8 +151,8 @@ function CraftForge:CreateTradeSkillWindow()
 	if not frame.SetBackdrop then
 		Mixin(frame, BackdropTemplateMixin)
 	end
-	local UIStyle = CraftForge.UIStyle
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local UIStyle = CraftBench.UIStyle
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		frame:SetFrameStrata("HIGH")
 		frame:SetBackdrop(TSMBackdrop)
 		frame:SetBackdropColor(0.1, 0.1, 0.1)
@@ -160,193 +160,193 @@ function CraftForge:CreateTradeSkillWindow()
 		UIStyle.SkinFrame(frame, false)
 	end
 
-	local titletext = frame:CreateFontString("CraftForgeTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = frame:CreateFontString("CraftBenchTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -1)
 	titletext:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -36, -1)
 	titletext:SetHeight(26)
 	titletext:SetJustifyH("CENTER")
-	titletext:SetText(L["CraftForge Trade Skills"].." "..CraftForge.version)
+	titletext:SetText(L["CraftBench Trade Skills"].." "..CraftBench.version)
 	UIStyle.StyleHeaderBar(frame, titletext, 1)
-	if CraftForgeFrameCloseButton then
-		UIStyle.SkinCloseButton(CraftForgeFrameCloseButton)
+	if CraftBenchFrameCloseButton then
+		UIStyle.SkinCloseButton(CraftBenchFrameCloseButton)
 	end
-	if CraftForgeCloseButton then
-		UIStyle.SkinCloseButton(CraftForgeCloseButton)
+	if CraftBenchCloseButton then
+		UIStyle.SkinCloseButton(CraftBenchCloseButton)
 	end
-	if CraftForgeShowOptionsButton then
-		CraftForgeShowOptionsButton:SetSize(22, 22)
-		CraftForgeShowOptionsButton:ClearAllPoints()
-		if CraftForgeFrameCloseButton then
-			CraftForgeShowOptionsButton:SetPoint("RIGHT", CraftForgeFrameCloseButton, "LEFT", -4, 0)
+	if CraftBenchShowOptionsButton then
+		CraftBenchShowOptionsButton:SetSize(22, 22)
+		CraftBenchShowOptionsButton:ClearAllPoints()
+		if CraftBenchFrameCloseButton then
+			CraftBenchShowOptionsButton:SetPoint("RIGHT", CraftBenchFrameCloseButton, "LEFT", -4, 0)
 		end
-		CraftForgeShowOptionsButton:SetText("")
-		UIStyle.SkinButton(CraftForgeShowOptionsButton, "default")
-		if not CraftForgeShowOptionsButton._cfGearIcon then
-			local gear = CraftForgeShowOptionsButton:CreateTexture(nil, "OVERLAY")
+		CraftBenchShowOptionsButton:SetText("")
+		UIStyle.SkinButton(CraftBenchShowOptionsButton, "default")
+		if not CraftBenchShowOptionsButton._cfGearIcon then
+			local gear = CraftBenchShowOptionsButton:CreateTexture(nil, "OVERLAY")
 			gear:SetSize(14, 14)
-			gear:SetPoint("CENTER", CraftForgeShowOptionsButton, "CENTER", 0, 0)
+			gear:SetPoint("CENTER", CraftBenchShowOptionsButton, "CENTER", 0, 0)
 			gear:SetTexture("Interface\\Icons\\Trade_Engineering")
 			gear:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-			CraftForgeShowOptionsButton._cfGearIcon = gear
+			CraftBenchShowOptionsButton._cfGearIcon = gear
 		end
-		CraftForgeShowOptionsButton:SetScript("OnClick", function()
-			CraftForge:InventoryFilterButtons_Hide()
-			if IsShiftKeyDown() and CraftForge.Share and CraftForge.Share.OpenOptions then
-				CraftForge.Share:OpenOptions()
+		CraftBenchShowOptionsButton:SetScript("OnClick", function()
+			CraftBench:InventoryFilterButtons_Hide()
+			if IsShiftKeyDown() and CraftBench.Share and CraftBench.Share.OpenOptions then
+				CraftBench.Share:OpenOptions()
 			else
-				CraftForge:ShowOptions()
+				CraftBench:ShowOptions()
 			end
 		end)
-		CraftForgeShowOptionsButton:HookScript("OnEnter", function(self)
+		CraftBenchShowOptionsButton:HookScript("OnEnter", function(self)
 			GameTooltip:SetOwner(self, "ANCHOR_TOP")
 			GameTooltip:ClearLines()
 			GameTooltip:AddLine(L["Config"], 1, 0.85, 0.25)
 			GameTooltip:AddLine(L["CONFIGDESC"], 0.9, 0.9, 0.9, true)
 			GameTooltip:Show()
 		end)
-		CraftForgeShowOptionsButton:HookScript("OnLeave", function()
+		CraftBenchShowOptionsButton:HookScript("OnLeave", function()
 			GameTooltip:Hide()
 		end)
 	end
-	local filterLabel = _G["CraftForgeFilterLabel"]
+	local filterLabel = _G["CraftBenchFilterLabel"]
 	if filterLabel then filterLabel:SetText(L["Filter"]) end
-	local filterText = _G["CraftForgeFilterText"]
+	local filterText = _G["CraftBenchFilterText"]
 	if filterText then filterText:SetText("") end
-	local searchLabel = _G["CraftForgeSearchLabel"]
+	local searchLabel = _G["CraftBenchSearchLabel"]
 	if searchLabel then searchLabel:SetText(L["Search"]) end
-	CraftForgePluginButton:SetText(L["Plugins"])
-	CraftForgePluginButton:Hide()
-	CraftForgeCreateAllButton:SetText(L["Create All"])
-	CraftForgeQueueAllButton:SetText(L["Queue All"])
-	CraftForgeCreateButton:SetText(L["Create"])
-	CraftForgeQueueButton:SetText(L["Queue"])
-	CraftForgeStartQueueButton:SetText(L["Process"])
-	CraftForgeEmptyQueueButton:SetText(L["Clear"])
-	CraftForgeEnchantButton:SetText(L["Enchant"])
-	CraftForgeRecipeNotesButton:SetText(L["Notes"])
-	CraftForgeRecipeNotesFrameLabel:SetText(L["Notes"])
-	CraftForgeShoppingListButton:SetText(L["Shopping List"])
-	CraftForgeSortLabel:SetText(L["Sorting"])
-	CraftForgeGroupLabel:SetText(L["Grouping"])
-	CraftForgeIgnoredMatsButton:SetText(L["Ignored List"])
-	CraftForgeQueueManagementButton:SetText(L["Queues"])
-	CraftForgeQueueLoadButton:SetText(L["Load"])
-	CraftForgeQueueDeleteButton:SetText(L["Delete"])
-	CraftForgeQueueSaveButton:SetText(L["Save"])
-	CraftForgeQueueOnlyButton:SetText(">")
+	CraftBenchPluginButton:SetText(L["Plugins"])
+	CraftBenchPluginButton:Hide()
+	CraftBenchCreateAllButton:SetText(L["Create All"])
+	CraftBenchQueueAllButton:SetText(L["Queue All"])
+	CraftBenchCreateButton:SetText(L["Create"])
+	CraftBenchQueueButton:SetText(L["Queue"])
+	CraftBenchStartQueueButton:SetText(L["Process"])
+	CraftBenchEmptyQueueButton:SetText(L["Clear"])
+	CraftBenchEnchantButton:SetText(L["Enchant"])
+	CraftBenchRecipeNotesButton:SetText(L["Notes"])
+	CraftBenchRecipeNotesFrameLabel:SetText(L["Notes"])
+	CraftBenchShoppingListButton:SetText(L["Shopping List"])
+	CraftBenchSortLabel:SetText(L["Sorting"])
+	CraftBenchGroupLabel:SetText(L["Grouping"])
+	CraftBenchIgnoredMatsButton:SetText(L["Ignored List"])
+	CraftBenchQueueManagementButton:SetText(L["Queues"])
+	CraftBenchQueueLoadButton:SetText(L["Load"])
+	CraftBenchQueueDeleteButton:SetText(L["Delete"])
+	CraftBenchQueueSaveButton:SetText(L["Save"])
+	CraftBenchQueueOnlyButton:SetText(">")
 
-	UIStyle.SkinButton(CraftForgePluginButton, "default")
-	UIStyle.SkinButton(CraftForgeCreateAllButton, "default")
-	UIStyle.SkinButton(CraftForgeQueueAllButton, "default")
-	UIStyle.SkinButton(CraftForgeCreateButton, "primary")
-	UIStyle.SkinButton(CraftForgeQueueButton, "default")
-	UIStyle.SkinButton(CraftForgeStartQueueButton, "primary")
-	UIStyle.SkinButton(CraftForgeEmptyQueueButton, "danger")
-	UIStyle.SkinButton(CraftForgeEnchantButton, "default")
-	UIStyle.SkinButton(CraftForgeRecipeNotesButton, "default")
-	UIStyle.SkinButton(CraftForgeShoppingListButton, "default")
-	UIStyle.SkinButton(CraftForgeIgnoredMatsButton, "default")
-	UIStyle.SkinButton(CraftForgeQueueManagementButton, "default")
-	UIStyle.SkinButton(CraftForgeQueueLoadButton, "default")
-	UIStyle.SkinButton(CraftForgeQueueDeleteButton, "danger")
-	UIStyle.SkinButton(CraftForgeQueueSaveButton, "default")
-	UIStyle.SkinButton(CraftForgeQueueOnlyButton, "default")
-	if CraftForgeFilterButton then UIStyle.SkinButton(CraftForgeFilterButton, "default") end
-	if CraftForgeFilterInputBox then UIStyle.SkinEditBox(CraftForgeFilterInputBox) end
-	if CraftForgeSearchBox then
-		UIStyle.SkinEditBox(CraftForgeSearchBox)
-		CraftForgeSearchBox:SetTextInsets(4, 4, 0, 0)
+	UIStyle.SkinButton(CraftBenchPluginButton, "default")
+	UIStyle.SkinButton(CraftBenchCreateAllButton, "default")
+	UIStyle.SkinButton(CraftBenchQueueAllButton, "default")
+	UIStyle.SkinButton(CraftBenchCreateButton, "primary")
+	UIStyle.SkinButton(CraftBenchQueueButton, "default")
+	UIStyle.SkinButton(CraftBenchStartQueueButton, "primary")
+	UIStyle.SkinButton(CraftBenchEmptyQueueButton, "danger")
+	UIStyle.SkinButton(CraftBenchEnchantButton, "default")
+	UIStyle.SkinButton(CraftBenchRecipeNotesButton, "default")
+	UIStyle.SkinButton(CraftBenchShoppingListButton, "default")
+	UIStyle.SkinButton(CraftBenchIgnoredMatsButton, "default")
+	UIStyle.SkinButton(CraftBenchQueueManagementButton, "default")
+	UIStyle.SkinButton(CraftBenchQueueLoadButton, "default")
+	UIStyle.SkinButton(CraftBenchQueueDeleteButton, "danger")
+	UIStyle.SkinButton(CraftBenchQueueSaveButton, "default")
+	UIStyle.SkinButton(CraftBenchQueueOnlyButton, "default")
+	if CraftBenchFilterButton then UIStyle.SkinButton(CraftBenchFilterButton, "default") end
+	if CraftBenchFilterInputBox then UIStyle.SkinEditBox(CraftBenchFilterInputBox) end
+	if CraftBenchSearchBox then
+		UIStyle.SkinEditBox(CraftBenchSearchBox)
+		CraftBenchSearchBox:SetTextInsets(4, 4, 0, 0)
 	end
-	if CraftForgeItemCountInputBox then
-		UIStyle.SkinEditBox(CraftForgeItemCountInputBox)
-		CraftForgeItemCountInputBox:SetJustifyH("CENTER")
-		CraftForgeItemCountInputBox:SetTextInsets(2, 2, 0, 0)
+	if CraftBenchItemCountInputBox then
+		UIStyle.SkinEditBox(CraftBenchItemCountInputBox)
+		CraftBenchItemCountInputBox:SetJustifyH("CENTER")
+		CraftBenchItemCountInputBox:SetTextInsets(2, 2, 0, 0)
 	end
-	if CraftForgeQueueNameInputBox then UIStyle.SkinEditBox(CraftForgeQueueNameInputBox) end
-	if CraftForgeRecipeGroupDropdown then UIStyle.SkinDropDown(CraftForgeRecipeGroupDropdown) end
-	if CraftForgeSortDropdown then UIStyle.SkinDropDown(CraftForgeSortDropdown) end
-	if CraftForgeFilterDropdown then UIStyle.SkinDropDown(CraftForgeFilterDropdown) end
-	if CraftForgeQueueLoadDropdown then UIStyle.SkinDropDown(CraftForgeQueueLoadDropdown) end
+	if CraftBenchQueueNameInputBox then UIStyle.SkinEditBox(CraftBenchQueueNameInputBox) end
+	if CraftBenchRecipeGroupDropdown then UIStyle.SkinDropDown(CraftBenchRecipeGroupDropdown) end
+	if CraftBenchSortDropdown then UIStyle.SkinDropDown(CraftBenchSortDropdown) end
+	if CraftBenchFilterDropdown then UIStyle.SkinDropDown(CraftBenchFilterDropdown) end
+	if CraftBenchQueueLoadDropdown then UIStyle.SkinDropDown(CraftBenchQueueLoadDropdown) end
 	for _, fs in ipairs({
-		CraftForgeGroupLabel, CraftForgeSortLabel, CraftForgeFilterLabel, CraftForgeSearchLabel,
-		CraftForgeReagentLabel, CraftForgeExtraTextLabel, CraftForgeExtraText,
-		CraftForgeRequirementText, CraftForgeSkillCooldown, CraftForgeQueueLabel,
+		CraftBenchGroupLabel, CraftBenchSortLabel, CraftBenchFilterLabel, CraftBenchSearchLabel,
+		CraftBenchReagentLabel, CraftBenchExtraTextLabel, CraftBenchExtraText,
+		CraftBenchRequirementText, CraftBenchSkillCooldown, CraftBenchQueueLabel,
 	}) do
 		if fs then UIStyle.ApplyFont(fs, -1) end
 	end
-	if CraftForgeSkillName then UIStyle.ApplyFont(CraftForgeSkillName, 1) end
+	if CraftBenchSkillName then UIStyle.ApplyFont(CraftBenchSkillName, 1) end
 	for i = 1, 8 do
-		local rText = _G["CraftForgeReagent" .. i .. "Text"]
-		local rCount = _G["CraftForgeReagent" .. i .. "Count"]
+		local rText = _G["CraftBenchReagent" .. i .. "Text"]
+		local rCount = _G["CraftBenchReagent" .. i .. "Count"]
 		if rText then UIStyle.ApplyFont(rText, -1) end
 		if rCount then UIStyle.ApplyFont(rCount, -1) end
 	end
 --
 -- Always want these visible.
 --
-	CraftForgeItemCountInputBox:SetText("1");
+	CraftBenchItemCountInputBox:SetText("1");
 --
 -- Progression status bar
 --
-	CraftForgeRankFrame:SetStatusBarColor(0.22, 0.45, 0.85, 0.95)
-	CraftForgeRankFrameBackground:SetVertexColor(0.05, 0.06, 0.09, 0.95)
-	if CraftForgeRankFrameBorder then CraftForgeRankFrameBorder:Hide() end
-	UIStyle.SkinInset(CraftForgeRankFrame)
-	if CraftForgeRankFrameSkillRank then UIStyle.ApplyFont(CraftForgeRankFrameSkillRank, -1) end
-	if not CraftForgeRankFrame.subRanks then
-		CraftForgeRankFrame.subRanks = {}
-		CraftForgeRankFrame.subRanks.red = CreateFrame("StatusBar", "CraftForgeRankFrameRed", CraftForgeFrame, "CraftForgeRankFrameTemplate")
-		CraftForgeRankFrame.subRanks.red:SetStatusBarColor(1.00, 0.00, 0.00, 1.00);
-		CraftForgeRankFrame.subRanks.red:SetFrameLevel(CraftForgeFrame:GetFrameLevel()+8)
-		CraftForgeRankFrame.subRanks.orange = CreateFrame("StatusBar", "CraftForgeRankFrameOrange", CraftForgeFrame, "CraftForgeRankFrameTemplate")
-		CraftForgeRankFrame.subRanks.orange:SetStatusBarColor(1.00, 0.50, 0.25, 1.00);
-		CraftForgeRankFrame.subRanks.orange:SetFrameLevel(CraftForgeFrame:GetFrameLevel()+7)
-		CraftForgeRankFrame.subRanks.yellow = CreateFrame("StatusBar", "CraftForgeRankFrameYellow", CraftForgeFrame, "CraftForgeRankFrameTemplate")
-		CraftForgeRankFrame.subRanks.yellow:SetStatusBarColor(1.00, 1.00, 0.00, 1.00);
-		CraftForgeRankFrame.subRanks.yellow:SetFrameLevel(CraftForgeFrame:GetFrameLevel()+6)
-		CraftForgeRankFrame.subRanks.green  = CreateFrame("StatusBar", "CraftForgeRankFrameGreen" , CraftForgeFrame, "CraftForgeRankFrameTemplate")
-		CraftForgeRankFrame.subRanks.green:SetStatusBarColor(0.25, 0.75, 0.25, 1.00);
-		CraftForgeRankFrame.subRanks.green:SetFrameLevel(CraftForgeFrame:GetFrameLevel()+5)
-		CraftForgeRankFrame.subRanks.gray   = CreateFrame("StatusBar", "CraftForgeRankFrameGray"  , CraftForgeFrame, "CraftForgeRankFrameTemplate")
-		CraftForgeRankFrame.subRanks.gray:SetStatusBarColor(0.50, 0.50, 0.50, 1.00);
-		CraftForgeRankFrame.subRanks.gray:SetFrameLevel(CraftForgeFrame:GetFrameLevel()+4)
+	CraftBenchRankFrame:SetStatusBarColor(0.22, 0.45, 0.85, 0.95)
+	CraftBenchRankFrameBackground:SetVertexColor(0.05, 0.06, 0.09, 0.95)
+	if CraftBenchRankFrameBorder then CraftBenchRankFrameBorder:Hide() end
+	UIStyle.SkinInset(CraftBenchRankFrame)
+	if CraftBenchRankFrameSkillRank then UIStyle.ApplyFont(CraftBenchRankFrameSkillRank, -1) end
+	if not CraftBenchRankFrame.subRanks then
+		CraftBenchRankFrame.subRanks = {}
+		CraftBenchRankFrame.subRanks.red = CreateFrame("StatusBar", "CraftBenchRankFrameRed", CraftBenchFrame, "CraftBenchRankFrameTemplate")
+		CraftBenchRankFrame.subRanks.red:SetStatusBarColor(1.00, 0.00, 0.00, 1.00);
+		CraftBenchRankFrame.subRanks.red:SetFrameLevel(CraftBenchFrame:GetFrameLevel()+8)
+		CraftBenchRankFrame.subRanks.orange = CreateFrame("StatusBar", "CraftBenchRankFrameOrange", CraftBenchFrame, "CraftBenchRankFrameTemplate")
+		CraftBenchRankFrame.subRanks.orange:SetStatusBarColor(1.00, 0.50, 0.25, 1.00);
+		CraftBenchRankFrame.subRanks.orange:SetFrameLevel(CraftBenchFrame:GetFrameLevel()+7)
+		CraftBenchRankFrame.subRanks.yellow = CreateFrame("StatusBar", "CraftBenchRankFrameYellow", CraftBenchFrame, "CraftBenchRankFrameTemplate")
+		CraftBenchRankFrame.subRanks.yellow:SetStatusBarColor(1.00, 1.00, 0.00, 1.00);
+		CraftBenchRankFrame.subRanks.yellow:SetFrameLevel(CraftBenchFrame:GetFrameLevel()+6)
+		CraftBenchRankFrame.subRanks.green  = CreateFrame("StatusBar", "CraftBenchRankFrameGreen" , CraftBenchFrame, "CraftBenchRankFrameTemplate")
+		CraftBenchRankFrame.subRanks.green:SetStatusBarColor(0.25, 0.75, 0.25, 1.00);
+		CraftBenchRankFrame.subRanks.green:SetFrameLevel(CraftBenchFrame:GetFrameLevel()+5)
+		CraftBenchRankFrame.subRanks.gray   = CreateFrame("StatusBar", "CraftBenchRankFrameGray"  , CraftBenchFrame, "CraftBenchRankFrameTemplate")
+		CraftBenchRankFrame.subRanks.gray:SetStatusBarColor(0.50, 0.50, 0.50, 1.00);
+		CraftBenchRankFrame.subRanks.gray:SetFrameLevel(CraftBenchFrame:GetFrameLevel()+4)
 	end
-	CraftForgeFrameEmptySpace = CreateFrame("Button", nil, CraftForgeSkillListParent, "CraftForgeEmptySpaceTemplate")
-	CraftForgeFrameEmptySpace.skill = { ["mainGroup"] = true, }
-	CraftForgeFrameEmptySpace:SetPoint("TOPLEFT",CraftForgeSkillListParent,"TOPLEFT")
-	CraftForgeFrameEmptySpace:SetPoint("BOTTOMRIGHT",CraftForgeSkillListParent,"BOTTOMRIGHT")
-	CraftForgeFrameEmptySpace:Show()
+	CraftBenchFrameEmptySpace = CreateFrame("Button", nil, CraftBenchSkillListParent, "CraftBenchEmptySpaceTemplate")
+	CraftBenchFrameEmptySpace.skill = { ["mainGroup"] = true, }
+	CraftBenchFrameEmptySpace:SetPoint("TOPLEFT",CraftBenchSkillListParent,"TOPLEFT")
+	CraftBenchFrameEmptySpace:SetPoint("BOTTOMRIGHT",CraftBenchSkillListParent,"BOTTOMRIGHT")
+	CraftBenchFrameEmptySpace:Show()
 --
 -- The frame enclosing the scroll list needs a border and a background .....
 --
-	local backdrop = CraftForgeSkillListParent
+	local backdrop = CraftBenchSkillListParent
 	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
-	UIStyle.StyleScrollBar(CraftForgeSkillList)
+	UIStyle.StyleScrollBar(CraftBenchSkillList)
 --
 -- Frame enclosing the reagent list
 --
-	backdrop = CraftForgeReagentParent
+	backdrop = CraftBenchReagentParent
 	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
 --
 -- Frame enclosing the queue
 --
-	backdrop = CraftForgeQueueParent
+	backdrop = CraftBenchQueueParent
 	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
-	UIStyle.StyleScrollBar(CraftForgeQueueList)
+	UIStyle.StyleScrollBar(CraftBenchQueueList)
 --
 -- Frame enclosing the pop out notes panel
 --
-	backdrop = CraftForgeRecipeNotesFrame
+	backdrop = CraftBenchRecipeNotesFrame
 	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
 	backdrop:Hide() -- initially hidden
-	backdrop = CraftForgeQueueManagementParent
+	backdrop = CraftBenchQueueManagementParent
 	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
-	self.gearTexture = CraftForgeReagentParent:CreateTexture(nil, "OVERLAY")
+	self.gearTexture = CraftBenchReagentParent:CreateTexture(nil, "OVERLAY")
 	self.gearTexture:SetTexture("Interface\\Icons\\Trade_Engineering")
 	self.gearTexture:SetHeight(16)
 	self.gearTexture:SetWidth(16)
@@ -371,7 +371,7 @@ function CraftForge:CreateTradeSkillWindow()
 --
 	self:InitializeSorting()
 	self:ConfigureRecipeControls(false)				-- initial setting
-	self.craftforgeStandaloneQueue=CraftForge:CreateStandaloneQueueFrame()
+	self.craftbenchStandaloneQueue=CraftBench:CreateStandaloneQueueFrame()
 	self.fullView = true
 	self.saved_full_button_count = 0
 	self.saved_SA_button_count = 0
@@ -381,13 +381,13 @@ function CraftForge:CreateTradeSkillWindow()
 	return frame
 end
 
-function CraftForge:InitRecipeFilterButtons()
-	local lastButton = CraftForgeRecipeDifficultyButton
+function CraftBench:InitRecipeFilterButtons()
+	local lastButton = CraftBenchRecipeDifficultyButton
 	if self.recipeFilters then
 		for name, filter in pairs(self.recipeFilters) do
 			local newButton = filter.initMethod(filter.namespace)
 			if newButton then
-				newButton:SetParent(CraftForgeFrame)
+				newButton:SetParent(CraftBenchFrame)
 				newButton:SetPoint("BOTTOMRIGHT", lastButton, "BOTTOMLEFT", -5, 0)
 				lastButton = newButton
 				newButton:Show()
@@ -401,17 +401,17 @@ end
 -- This is called when the window has changed enough that
 -- sorting or filtering may need to be updated.
 --
-function CraftForge:ResetTradeSkillWindow()
+function CraftBench:ResetTradeSkillWindow()
 	--DA.DEBUG(0,"ResetTradeSkillWindow()")
-	CraftForge:SortDropdown_OnShow()
-	local buttons = CraftForgeFrame.added_buttons
+	CraftBench:SortDropdown_OnShow()
+	local buttons = CraftBenchFrame.added_buttons
 	if buttons then
-		local last_button = CraftForgePluginButton
+		local last_button = CraftBenchPluginButton
 		for i=1, #buttons, 1 do
 			local button = buttons[i]
 			if button then
 				button:ClearAllPoints()
-				button:SetParent(CraftForgeFrame)
+				button:SetParent(CraftBenchFrame)
 				button:SetPoint("TOPLEFT", last_button, "BOTTOMLEFT", 0, -1)
 				button:Hide()
 				button:SetAlpha(0)
@@ -425,25 +425,25 @@ end
 --
 -- Something has changed in the tradeskills, and the window needs to be updated
 --
-function CraftForge:TradeSkillRank_Updated()
+function CraftBench:TradeSkillRank_Updated()
 	--DA.DEBUG(0,"TradeSkillRank_Updated()")
 	local _, rank, maxRank = self:GetTradeSkillLine();
 	if rank and maxRank then
-		CraftForgeRankFrame:SetMinMaxValues(0, maxRank);
-		CraftForgeRankFrame:SetValue(rank);
-		CraftForgeRankFrameSkillRank:SetText(rank.."/"..maxRank);
-		for c,s in pairs(CraftForgeRankFrame.subRanks) do
+		CraftBenchRankFrame:SetMinMaxValues(0, maxRank);
+		CraftBenchRankFrame:SetValue(rank);
+		CraftBenchRankFrameSkillRank:SetText(rank.."/"..maxRank);
+		for c,s in pairs(CraftBenchRankFrame.subRanks) do
 			s:SetMinMaxValues(0, maxRank)
 		end
-		CraftForgeRankFrame.subRanks.gray:SetValue(maxRank)
+		CraftBenchRankFrame.subRanks.gray:SetValue(maxRank)
 	end
 	--DA.DEBUG(0,"TradeSkillRank_Updated over")
 end
 
-function CraftForge:ClickSkillButton(skillIndex)
+function CraftBench:ClickSkillButton(skillIndex)
 	if skillIndex and self.button_count then
 		for i=1, self.button_count, 1 do
-			local button = _G["CraftForgeScrollButton"..i]
+			local button = _G["CraftBenchScrollButton"..i]
 			if button and button.skill and button.skill.skillIndex and button.skill.skillIndex == skillIndex and button:IsVisible() and not button.skill.subGroup then
 				button:Click("LeftButton", true);
 			end
@@ -454,26 +454,26 @@ end
 --
 -- Called when the list of skills is scrolled
 --
-function CraftForge:SkillList_OnScroll()
-	CraftForge:UpdateTradeSkillWindow()
+function CraftBench:SkillList_OnScroll()
+	CraftBench:UpdateTradeSkillWindow()
 end
 
 local num_recipe_buttons = 1
 local function get_recipe_button(i)
-	local button = _G["CraftForgeScrollButton"..i]
+	local button = _G["CraftBenchScrollButton"..i]
 	if not button then
-		button = CreateFrame("Button", "CraftForgeScrollButton"..i, CraftForgeSkillListParent, "CraftForgeSkillButtonTemplate")
-		button:SetParent(CraftForgeSkillListParent)
-		button:SetPoint("TOPLEFT", "CraftForgeScrollButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(CraftForgeSkillListParent:GetFrameLevel() + 3)
+		button = CreateFrame("Button", "CraftBenchScrollButton"..i, CraftBenchSkillListParent, "CraftBenchSkillButtonTemplate")
+		button:SetParent(CraftBenchSkillListParent)
+		button:SetPoint("TOPLEFT", "CraftBenchScrollButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftBenchSkillListParent:GetFrameLevel() + 3)
 		num_recipe_buttons = i
 	end
-	local buttonDrag = _G["CraftForgeScrollButtonDrag"..i]
+	local buttonDrag = _G["CraftBenchScrollButtonDrag"..i]
 	if not buttonDrag then
-		buttonDrag = CreateFrame("Frame", "CraftForgeScrollButtonDrag"..i, CraftForgeSkillListParent, "CraftForgeSkillButtonDragTemplate")
-		buttonDrag:SetParent(CraftForgeSkillListParent)
-		buttonDrag:SetPoint("TOPLEFT", "CraftForgeScrollButton"..i, "TOPLEFT")
-		buttonDrag:SetFrameLevel(CraftForgeSkillListParent:GetFrameLevel() + 2)
+		buttonDrag = CreateFrame("Frame", "CraftBenchScrollButtonDrag"..i, CraftBenchSkillListParent, "CraftBenchSkillButtonDragTemplate")
+		buttonDrag:SetParent(CraftBenchSkillListParent)
+		buttonDrag:SetPoint("TOPLEFT", "CraftBenchScrollButton"..i, "TOPLEFT")
+		buttonDrag:SetFrameLevel(CraftBenchSkillListParent:GetFrameLevel() + 2)
 		buttonDrag:Hide()
 	end
 	if not button.highlight then
@@ -505,13 +505,13 @@ local function get_recipe_button(i)
 		button.cfAccent:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 0, 1)
 		button.cfAccent:SetWidth(2)
 		button.cfAccent:Hide()
-		button.highlight = CreateFrame("Frame", "CraftForgeScrollHightlight"..i, button)
+		button.highlight = CreateFrame("Frame", "CraftBenchScrollHightlight"..i, button)
 		button.highlight:SetParent(button)
 		button.highlight:SetWidth(290)
 		button.highlight:SetHeight(20)
 		button.highlight:SetPoint("LEFT", button:GetName(), "LEFT")
 		button.highlight:SetPoint("RIGHT", button:GetName(), "RIGHT")
-		button:SetFrameLevel(CraftForgeSkillListParent:GetFrameLevel())
+		button:SetFrameLevel(CraftBenchSkillListParent:GetFrameLevel())
 		local t = button.highlight:CreateTexture(nil, "ARTWORK")
 		t:SetColorTexture(0.96, 0.77, 0.43, 0.22)
 		t:SetAllPoints(button.highlight)
@@ -519,8 +519,8 @@ local function get_recipe_button(i)
 		button.highlight:SetAlpha(1)
 		button.highlight:Hide()
 	end
-	if CraftForge.customSkillButtons then
-		for n, b in pairs(CraftForge.customSkillButtons) do
+	if CraftBench.customSkillButtons then
+		for n, b in pairs(CraftBench.customSkillButtons) do
 			b.initMethod(b.namespace, button, i)
 		end
 	end
@@ -561,68 +561,68 @@ end
 -- Hide UI components that cannot be used for crafts and show that
 -- that are only applicable to trade skills, as needed
 --
-function CraftForge:ConfigureRecipeControls(enchant)
+function CraftBench:ConfigureRecipeControls(enchant)
 	--DA.DEBUG(0,"ConfigureRecipeControls("..tostring(enchant)..")")
 	if enchant then
-		CraftForgeQueueAllButton:Hide()
-		CraftForgeQueueButton:Hide()
-		CraftForgeCreateAllButton:Hide()
-		CraftForgeCreateButton:Hide()
-		CraftForgeQueueParent:Hide()
-		CraftForgeStartQueueButton:Hide()
-		CraftForgeEmptyQueueButton:Hide()
-		CraftForgeItemCountInputBox:Hide()
-		CraftForgeSub10Button:Hide()
-		CraftForgeSub1Button:Hide()
-		CraftForgeAdd1Button:Hide()
-		CraftForgeAdd10Button:Hide()
-		CraftForgeClearNumButton:Hide()
-		CraftForgeQueueOnlyButton:Hide()
-		CraftForgeEnchantButton:Show();
+		CraftBenchQueueAllButton:Hide()
+		CraftBenchQueueButton:Hide()
+		CraftBenchCreateAllButton:Hide()
+		CraftBenchCreateButton:Hide()
+		CraftBenchQueueParent:Hide()
+		CraftBenchStartQueueButton:Hide()
+		CraftBenchEmptyQueueButton:Hide()
+		CraftBenchItemCountInputBox:Hide()
+		CraftBenchSub10Button:Hide()
+		CraftBenchSub1Button:Hide()
+		CraftBenchAdd1Button:Hide()
+		CraftBenchAdd10Button:Hide()
+		CraftBenchClearNumButton:Hide()
+		CraftBenchQueueOnlyButton:Hide()
+		CraftBenchEnchantButton:Show();
 	else
-		CraftForgeQueueAllButton:Show()
-		CraftForgeQueueButton:Show()
-		CraftForgeCreateAllButton:Show()
-		CraftForgeCreateButton:Show()
-		CraftForgeQueueParent:Show()
-		CraftForgeStartQueueButton:Show()
-		CraftForgeEmptyQueueButton:Show()
-		CraftForgeItemCountInputBox:Show()
-		CraftForgeSub10Button:Show()
-		CraftForgeSub1Button:Show()
-		CraftForgeAdd1Button:Show()
-		CraftForgeAdd10Button:Show()
-		CraftForgeClearNumButton:Show()
-		CraftForgeQueueOnlyButton:Show()
-		CraftForgeEnchantButton:Hide()
+		CraftBenchQueueAllButton:Show()
+		CraftBenchQueueButton:Show()
+		CraftBenchCreateAllButton:Show()
+		CraftBenchCreateButton:Show()
+		CraftBenchQueueParent:Show()
+		CraftBenchStartQueueButton:Show()
+		CraftBenchEmptyQueueButton:Show()
+		CraftBenchItemCountInputBox:Show()
+		CraftBenchSub10Button:Show()
+		CraftBenchSub1Button:Show()
+		CraftBenchAdd1Button:Show()
+		CraftBenchAdd10Button:Show()
+		CraftBenchClearNumButton:Show()
+		CraftBenchQueueOnlyButton:Show()
+		CraftBenchEnchantButton:Hide()
 	end
 	self:InitRecipeFilterButtons()
-	if self.currentPlayer ~= (CraftForge:unitName("player")) then
+	if self.currentPlayer ~= (CraftBench:unitName("player")) then
 --
 -- Disable processing because this is not the current player
 --
-		CraftForgeStartQueueButton:Disable()
-		CraftForgeCreateAllButton:Disable()
-		CraftForgeCreateButton:Disable()
+		CraftBenchStartQueueButton:Disable()
+		CraftBenchCreateAllButton:Disable()
+		CraftBenchCreateButton:Disable()
 	else
-		CraftForgeStartQueueButton:Enable()
-		CraftForgeCreateAllButton:Enable()
-		CraftForgeCreateButton:Enable()
+		CraftBenchStartQueueButton:Enable()
+		CraftBenchCreateAllButton:Enable()
+		CraftBenchCreateButton:Enable()
 	end
 end
 
-function CraftForge:RecipeDifficultyButton_OnShow()
+function CraftBench:RecipeDifficultyButton_OnShow()
 	local level = self:GetTradeSkillOption("filterLevel")
 	local v = 1-level/4
-	CraftForgeRecipeDifficultyButtonTexture:SetTexCoord(0,1,v,v+.25)
+	CraftBenchRecipeDifficultyButtonTexture:SetTexCoord(0,1,v,v+.25)
 end
 
-function CraftForge:ShowReagentDetails()
+function CraftBench:ShowReagentDetails()
 	--DA.DEBUG(0,"ShowReagentDetails()")
-	CraftForgeQueueManagementParent:Hide();
-	CraftForgeReagentParent:Show()
-	CraftForgeReagentParent:SetHeight(reagent_height)
-	CraftForge:ReAnchorButtons(CraftForgeReagentParent)
+	CraftBenchQueueManagementParent:Hide();
+	CraftBenchReagentParent:Show()
+	CraftBenchReagentParent:SetHeight(reagent_height)
+	CraftBench:ReAnchorButtons(CraftBenchReagentParent)
 end
 
 --
@@ -659,7 +659,7 @@ local function getTransmogPrefix(recipe)
 	return nil
 end
 
-function CraftForge:UpdateTradeSkillWindow()
+function CraftBench:UpdateTradeSkillWindow()
 	--DA.DEBUG(0,"UpdateTradeSkillWindow()")
 --[[
 	if self.InProgress.main then 
@@ -698,14 +698,14 @@ function CraftForge:UpdateTradeSkillWindow()
 	self:UpdateDetailWindow(self.selectedSkill)
 	self:UpdateTradeButtons(self.currentPlayer)
 	self:UpdateIgnoredMatsButton()
-	CraftForgeIgnoredMatsButton:Show()
+	CraftBenchIgnoredMatsButton:Show()
 --
 -- Plugin button only shows if any plugins have registered
 --
-	if CraftForgePluginButton and CraftForgeFrame.added_buttons and #CraftForgeFrame.added_buttons > 0 then
-		CraftForgePluginButton:Show()
+	if CraftBenchPluginButton and CraftBenchFrame.added_buttons and #CraftBenchFrame.added_buttons > 0 then
+		CraftBenchPluginButton:Show()
 	else
-		CraftForgePluginButton:Hide()
+		CraftBenchPluginButton:Hide()
 	end
 --
 -- If any plugins have registered an Update function, call it now
@@ -714,45 +714,45 @@ function CraftForge:UpdateTradeSkillWindow()
 --
 -- shopping list button always shown
 --
-	CraftForgeShoppingListButton:Show()
-	CraftForgeFrame:SetAlpha(self.db.profile.transparency)
-	CraftForgeFrame:SetScale(self.db.profile.scale)
-	local uiScale = CraftForgeFrame:GetEffectiveScale()
-	local width = CraftForgeFrame:GetWidth() - 20 -- for padding.
-	local height = CraftForgeFrame:GetHeight()
+	CraftBenchShoppingListButton:Show()
+	CraftBenchFrame:SetAlpha(self.db.profile.transparency)
+	CraftBenchFrame:SetScale(self.db.profile.scale)
+	local uiScale = CraftBenchFrame:GetEffectiveScale()
+	local width = CraftBenchFrame:GetWidth() - 20 -- for padding.
+	local height = CraftBenchFrame:GetHeight()
 	local reagent_width = width / 2
-	reagent_height = CRAFTFORGE_REAGENT_MIN_HEIGHT + ((height - CRAFTFORGE_MIN_HEIGHT) * 2) / 3
+	reagent_height = CRAFTBENCH_REAGENT_MIN_HEIGHT + ((height - CRAFTBENCH_MIN_HEIGHT) * 2) / 3
 	--DA.DEBUG(0,"UpdateTradeSkillWindow: fullView="..tostring(self.fullView)..", reagent_height="..string.format("%.0d", reagent_height))
 	if not self.fullView then
-		reagent_height = CRAFTFORGE_REAGENT_MIN_HEIGHT + height - CRAFTFORGE_MIN_HEIGHT + 85
+		reagent_height = CRAFTBENCH_REAGENT_MIN_HEIGHT + height - CRAFTBENCH_MIN_HEIGHT + 85
 		--DA.DEBUG(0,"UpdateTradeSkillWindow: new_reagent_height="..string.format("%.0d", reagent_height))
 	end
-	if reagent_width < CRAFTFORGE_REAGENT_MIN_WIDTH then
-		reagent_width = CRAFTFORGE_REAGENT_MIN_WIDTH
-	elseif reagent_width > CRAFTFORGE_REAGENT_MAX_WIDTH then
-		reagent_width = CRAFTFORGE_REAGENT_MAX_WIDTH
+	if reagent_width < CRAFTBENCH_REAGENT_MIN_WIDTH then
+		reagent_width = CRAFTBENCH_REAGENT_MIN_WIDTH
+	elseif reagent_width > CRAFTBENCH_REAGENT_MAX_WIDTH then
+		reagent_width = CRAFTBENCH_REAGENT_MAX_WIDTH
 	end
-	CraftForgeReagentParent:SetWidth(reagent_width)
-	CraftForgeReagentParent:SetHeight(reagent_height)
-	CraftForgeRankFrame:SetWidth(reagent_width)
-	CraftForgeQueueManagementParent:SetWidth(reagent_width)
-	width = CraftForgeFrame:GetWidth() - reagent_width - 20 -- padding
-	CraftForgeSkillListParent:SetWidth(width)
+	CraftBenchReagentParent:SetWidth(reagent_width)
+	CraftBenchReagentParent:SetHeight(reagent_height)
+	CraftBenchRankFrame:SetWidth(reagent_width)
+	CraftBenchQueueManagementParent:SetWidth(reagent_width)
+	width = CraftBenchFrame:GetWidth() - reagent_width - 20 -- padding
+	CraftBenchSkillListParent:SetWidth(width)
 	--DA.DEBUG(0,"UpdateTradeSkillWindow: width= "..string.format("%.0d", width)..", height= "..string.format("%.0d", height)..", reagent_width= "..string.format("%.0d", reagent_width)..", reagent_height= "..string.format("%.0d", reagent_height))
 --
 -- Set the state of any craft specific options
 --
 	self:RecipeDifficultyButton_OnShow()
-	if CraftForge.isRetail then
-		CraftForgeUseHighestQuality:SetChecked(self.db.profile.best_quality)
-		CraftForgeUseHighestQuality:Show()
-		CraftForgeUseConcentration:SetChecked(self.db.profile.use_concentration)
-		CraftForgeUseConcentration:Show()
+	if CraftBench.isRetail then
+		CraftBenchUseHighestQuality:SetChecked(self.db.profile.best_quality)
+		CraftBenchUseHighestQuality:Show()
+		CraftBenchUseConcentration:SetChecked(self.db.profile.use_concentration)
+		CraftBenchUseConcentration:Show()
 	else
-		CraftForgeUseHighestQuality:Hide()
-		CraftForgeUseConcentration:Hide()
+		CraftBenchUseHighestQuality:Hide()
+		CraftBenchUseConcentration:Hide()
 	end
-	CraftForgeHideUncraftableRecipes:SetChecked(self:GetTradeSkillOption("hideuncraftable"))
+	CraftBenchHideUncraftableRecipes:SetChecked(self:GetTradeSkillOption("hideuncraftable"))
 	C_TradeSkillUI.SetOnlyShowMakeableRecipes(self:GetTradeSkillOption("hideuncraftable"))
 	self:UpdateQueueWindow()
 	self:UpdateShoppingListWindow()
@@ -762,9 +762,9 @@ function CraftForge:UpdateTradeSkillWindow()
 --
 	local tradeName = self:GetTradeName(self.currentTrade)
 	if not tradeName then tradeName = "" end
-	local title = _G["CraftForgeTitleText"];
+	local title = _G["CraftBenchTitleText"];
 	if title then
-		title:SetText(L["CraftForge Trade Skills"] .. " "..self.version..": " .. self.currentPlayer .. "/" .. tradeName)
+		title:SetText(L["CraftBench Trade Skills"] .. " "..self.version..": " .. self.currentPlayer .. "/" .. tradeName)
 	end
 	local sortedSkillList = self.data.sortedSkillList[skillListKey]
 	local rank,maxRank = 0,0
@@ -775,37 +775,37 @@ function CraftForge:UpdateTradeSkillWindow()
 --
 -- Progression status bar
 --
-	CraftForgeRankFrame:SetMinMaxValues(0, maxRank)
-	CraftForgeRankFrame:SetValue(rank)
-	CraftForgeRankFrameSkillRank:SetText(tradeName.."    "..rank.."/"..maxRank)
-	CraftForgeRankFrame.subRanks.gray:SetValue(maxRank)
-	for c,s in pairs(CraftForgeRankFrame.subRanks) do
+	CraftBenchRankFrame:SetMinMaxValues(0, maxRank)
+	CraftBenchRankFrame:SetValue(rank)
+	CraftBenchRankFrameSkillRank:SetText(tradeName.."    "..rank.."/"..maxRank)
+	CraftBenchRankFrame.subRanks.gray:SetValue(maxRank)
+	for c,s in pairs(CraftBenchRankFrame.subRanks) do
 		s:SetMinMaxValues(0, maxRank)
 	end
 --
--- it seems the resize for the main craftforge window happens before the resize for the skill list box
+-- it seems the resize for the main craftbench window happens before the resize for the skill list box
 --
-	local button_count = (CraftForgeFrame:GetHeight() - CRAFTFORGE_HEADER_HEIGHT) / CRAFTFORGE_TRADE_SKILL_HEIGHT
+	local button_count = (CraftBenchFrame:GetHeight() - CRAFTBENCH_HEADER_HEIGHT) / CRAFTBENCH_TRADE_SKILL_HEIGHT
 	button_count = math.floor(button_count)
 	self.button_count = button_count
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(CraftForgeSkillList,				-- frame
+	FauxScrollFrame_Update(CraftBenchSkillList,				-- frame
 							numTradeSkills,					-- num items
 							button_count,					-- num to display
-							CRAFTFORGE_TRADE_SKILL_HEIGHT)		-- value step (item height)
+							CRAFTBENCH_TRADE_SKILL_HEIGHT)		-- value step (item height)
 --
 -- Where in the list of skill to start counting.
 --
-	local skillOffset = FauxScrollFrame_GetOffset(CraftForgeSkillList);
+	local skillOffset = FauxScrollFrame_GetOffset(CraftBenchSkillList);
 --
 -- Remove any selected highlight, it will be added back as needed
 --
-	CraftForgeHighlightFrame:Hide();
+	CraftBenchHighlightFrame:Hide();
 	local nilFound = false
-	width = CraftForgeSkillListParent:GetWidth() - 10
-	if CraftForgeSkillList:IsVisible() then
+	width = CraftBenchSkillListParent:GetWidth() - 10
+	if CraftBenchSkillList:IsVisible() then
 --
 -- Adjust for the width of the scroll bar, if it is visible.
 --
@@ -820,7 +820,7 @@ function CraftForge:UpdateTradeSkillWindow()
 	local showVendor = self:GetTradeSkillOption("filterInventory-vendor")
 	local showAlts = self:GetTradeSkillOption("filterInventory-alts")
 	local catstring = {}
-	CraftForgeFrameEmptySpace.skill.subGroup = self:RecipeGroupFind(self.currentPlayer,self.currentTrade,self.currentGroupLabel,self.currentGroup)
+	CraftBenchFrameEmptySpace.skill.subGroup = self:RecipeGroupFind(self.currentPlayer,self.currentTrade,self.currentGroupLabel,self.currentGroup)
 	--DA.DEBUG(0,"UpdateTradeSkillWindow: GroupLabel= "..tostring(self.currentGroupLabel)..", Group= "..tostring(self.currentGroup))
 	self.visibleSkillButtons = math.min(numTradeSkills - skillOffset, button_count)
 --
@@ -862,7 +862,7 @@ function CraftForge:UpdateTradeSkillWindow()
 --
 -- end of FUBAR fixes
 --
-			local hasProgressBar = CraftForge.hasProgressBar[skill.name]
+			local hasProgressBar = CraftBench.hasProgressBar[skill.name]
 			buttonText:SetText("")
 			levelText:SetText("")
 			countText:SetText("")
@@ -883,12 +883,12 @@ function CraftForge:UpdateTradeSkillWindow()
 			if self.dragEngaged then
 				buttonDrag:SetWidth(width)
 				button.highlight:Hide()
-				if CraftForge.mouseOver then
-					if CraftForge.mouseOver.skill.subGroup then
-						if button == CraftForge.mouseOver then
+				if CraftBench.mouseOver then
+					if CraftBench.mouseOver.skill.subGroup then
+						if button == CraftBench.mouseOver then
 							button.highlight:Show()
 						end
-					elseif skill.subGroup == CraftForge.mouseOver.skill.parent then
+					elseif skill.subGroup == CraftBench.mouseOver.skill.parent then
 						button.highlight:Show()
 					end
 				end
@@ -930,11 +930,11 @@ function CraftForge:UpdateTradeSkillWindow()
 					countText:SetTextColor(0.96, 0.77, 0.43, textAlpha)
 					local expanded = skill.subGroup.expanded
 					if expanded then
-						buttonExpand:SetNormalTexture("Interface\\Addons\\CraftForge\\Icons\\expand_arrow_open.tga")
-						buttonExpand:SetHighlightTexture("Interface\\Addons\\CraftForge\\Icons\\expand_arrow_open.tga")
+						buttonExpand:SetNormalTexture("Interface\\Addons\\CraftBench\\Icons\\expand_arrow_open.tga")
+						buttonExpand:SetHighlightTexture("Interface\\Addons\\CraftBench\\Icons\\expand_arrow_open.tga")
 					else
-						buttonExpand:SetNormalTexture("Interface\\Addons\\CraftForge\\Icons\\expand_arrow_closed.tga")
-						buttonExpand:SetHighlightTexture("Interface\\Addons\\CraftForge\\Icons\\expand_arrow_closed.tga")
+						buttonExpand:SetNormalTexture("Interface\\Addons\\CraftBench\\Icons\\expand_arrow_closed.tga")
+						buttonExpand:SetHighlightTexture("Interface\\Addons\\CraftBench\\Icons\\expand_arrow_closed.tga")
 					end
 					local name = strsplit(":", skill.name).." ("..#skill.subGroup.entries..")"
 					buttonText:SetText(name)
@@ -944,7 +944,7 @@ function CraftForge:UpdateTradeSkillWindow()
 					button:UnlockHighlight() -- headers never get highlighted
 					buttonExpand:Show()
 					if hasProgressBar then
-						local category = CraftForge.db.global.Categories[self.currentTrade][hasProgressBar]
+						local category = CraftBench.db.global.Categories[self.currentTrade][hasProgressBar]
 						local currentRank = category.skillLineCurrentLevel
 						local startingRank = category.skillLineStartingRank
 						local maxRank = category.skillLineMaxLevel
@@ -986,7 +986,7 @@ function CraftForge:UpdateTradeSkillWindow()
 				local recipe = self:GetRecipe(skill.recipeID)
 				buttonExpand.group = nil
 				button.skill = skill
-				local skill_color = CraftForge.skill_style_type[recipe.difficulty] or skill.color or skill.skillData.color or NORMAL_FONT_COLOR
+				local skill_color = CraftBench.skill_style_type[recipe.difficulty] or skill.color or skill.skillData.color or NORMAL_FONT_COLOR
 				buttonText:SetTextColor(skill_color.r, skill_color.g, skill_color.b, textAlpha)
 				countText:SetTextColor(skill_color.r, skill_color.g, skill_color.b, textAlpha)
 				buttonExpand:Hide()
@@ -998,7 +998,7 @@ function CraftForge:UpdateTradeSkillWindow()
 						self:GetNormalTexture():SetAlpha(0)
 					end
 				end
-				buttonFavorite:SetFavorite(CraftForge:IsFavorite(skill.recipeID))
+				buttonFavorite:SetFavorite(CraftBench:IsFavorite(skill.recipeID))
 				buttonFavorite:Show()
 --
 -- If the item has a minimum level requirement, then print that here
@@ -1105,7 +1105,7 @@ function CraftForge:UpdateTradeSkillWindow()
 --
 -- Show the count of the item currently owned that the recipe will produce
 --
-				if showOwned and self.currentPlayer == CraftForge:unitName("player") then
+				if showOwned and self.currentPlayer == CraftBench:unitName("player") then
 					local numowned = (self.db.realm.auctionData[self.currentPlayer][recipe.itemID] or 0) + C_Item.GetItemCount(recipe.itemID,true)
 					if numowned > 0 then
 						if numowned >= 1000 then
@@ -1124,7 +1124,7 @@ function CraftForge:UpdateTradeSkillWindow()
 						countText:Show()
 					end
 				end
-				countText:SetWidth(math.max(countText:GetStringWidth(),CRAFTFORGE_COUNT_MIN_WIDTH)) -- make end of buttonText have a fixed location
+				countText:SetWidth(math.max(countText:GetStringWidth(),CRAFTBENCH_COUNT_MIN_WIDTH)) -- make end of buttonText have a fixed location
 				button:SetID(skillIndex or 0)
 --
 -- If enhanced recipe display is enabled, show the difficulty as text,
@@ -1138,10 +1138,10 @@ function CraftForge:UpdateTradeSkillWindow()
 -- If this recipe is upgradable, append the current and maximum upgrade levels
 --
 				--DA.DEBUG(0,"UpdateTradeSkillWindow: skill= "..DA.DUMP1(skill,1))
-				local recipeInfo = CraftForge.data.recipeInfo[self.currentTrade][skill.recipeID]
+				local recipeInfo = CraftBench.data.recipeInfo[self.currentTrade][skill.recipeID]
 				--DA.DEBUG(0,"UpdateTradeSkillWindow: recipeInfo= "..DA.DUMP1(recipeInfo))
 				if recipeInfo and recipeInfo.upgradeable then
-					if CraftForge.db.profile.show_max_upgrade then
+					if CraftBench.db.profile.show_max_upgrade then
 						text = text .. " ("..tostring(recipeInfo.recipeUpgrade).."/"..tostring(recipeInfo.maxUpgrade)..")"
 					else
 						text = text .. " ("..tostring(recipeInfo.recipeUpgrade)..")"
@@ -1170,20 +1170,20 @@ function CraftForge:UpdateTradeSkillWindow()
 -- Set this line's highlight and color
 --
 				if not self.dragEngaged and self.selectedSkill and self.selectedSkill == skillIndex then
-					CraftForgeHighlightFrame:SetPoint("TOPLEFT", "CraftForgeScrollButton"..i, "TOPLEFT", 0, 0)
-					CraftForgeHighlightFrame:SetWidth(button:GetWidth())
-					CraftForgeHighlightFrame:SetFrameLevel(button:GetFrameLevel())
+					CraftBenchHighlightFrame:SetPoint("TOPLEFT", "CraftBenchScrollButton"..i, "TOPLEFT", 0, 0)
+					CraftBenchHighlightFrame:SetWidth(button:GetWidth())
+					CraftBenchHighlightFrame:SetFrameLevel(button:GetFrameLevel())
 					if color then
-						CraftForgeHighlight:SetColorTexture(color.r, color.g, color.b, 0.4)
+						CraftBenchHighlight:SetColorTexture(color.r, color.g, color.b, 0.4)
 					else
-						CraftForgeHighlight:SetColorTexture(0.7, 0.7, 0.7, 0.4)
+						CraftBenchHighlight:SetColorTexture(0.7, 0.7, 0.7, 0.4)
 					end
 --
 -- Update the details for this skill, just in case something
 -- has changed (mats consumed, etc)
 --
 					self:UpdateDetailWindow(self.selectedSkill)
-					CraftForgeHighlightFrame:Show()
+					CraftBenchHighlightFrame:Show()
 					button:LockHighlight()
 				else
 --
@@ -1209,11 +1209,11 @@ function CraftForge:UpdateTradeSkillWindow()
 	end
 	if self.visibleSkillButtons > 0 then
 		local button = get_recipe_button(self.visibleSkillButtons)
-		CraftForgeFrameEmptySpace:SetPoint("TOPLEFT",button,"BOTTOMLEFT")
+		CraftBenchFrameEmptySpace:SetPoint("TOPLEFT",button,"BOTTOMLEFT")
 	else
-		CraftForgeFrameEmptySpace:SetPoint("TOPLEFT",CraftForgeSkillListParent,"TOPLEFT")
+		CraftBenchFrameEmptySpace:SetPoint("TOPLEFT",CraftBenchSkillListParent,"TOPLEFT")
 	end
-	CraftForgeFrameEmptySpace:SetPoint("BOTTOMRIGHT",CraftForgeSkillListParent,"BOTTOMRIGHT")
+	CraftBenchFrameEmptySpace:SetPoint("BOTTOMRIGHT",CraftBenchSkillListParent,"BOTTOMRIGHT")
 	self.InProgress.main = false
 --	self.InProgress.mainDepth = self.InProgress.mainDepth - 1
 	--DA.DEBUG(3,"UpdateTradeSkillWindow Complete")
@@ -1223,7 +1223,7 @@ end
 -- Display an action packed tooltip when we are over
 -- a recipe in the list of skills
 --
-function CraftForge:SkillButton_OnEnter(button)
+function CraftBench:SkillButton_OnEnter(button)
 	--DA.DEBUG(0,"SkillButton_OnEnter("..tostring(button)..")")
 	local id = button:GetID()
 	if not id then
@@ -1260,7 +1260,7 @@ function CraftForge:SkillButton_OnEnter(button)
 		return
 	end
 	buttonName:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
-	local recipe = self:GetRecipe(skill.recipeID) or CraftForge.unknownRecipe
+	local recipe = self:GetRecipe(skill.recipeID) or CraftBench.unknownRecipe
 	if not self.db.profile.show_detailed_recipe_tooltip then
 --
 -- User does not want the tooltip displayed, it can get a bit big after all
@@ -1268,7 +1268,7 @@ function CraftForge:SkillButton_OnEnter(button)
 		button.locked = false
 		return
 	end
-	local tip = GameTooltip -- CraftForgeTradeskillTooltip
+	local tip = GameTooltip -- CraftBenchTradeskillTooltip
 	tip:SetOwner(button, "ANCHOR_RIGHT", 8, 0)
 	if not tip.SetBackdrop then
 		Mixin(tip, BackdropTemplateMixin)
@@ -1283,29 +1283,29 @@ function CraftForge:SkillButton_OnEnter(button)
 -- Set the tooltip's scale to match that of the default UI
 --
 	local uiScale = 1.0;
-	if CraftForge.db.profile.scale_tooltip then
-		if tip == GameTooltip and not CraftForge.gttScale then
-			CraftForge.gttScale = GameTooltip:GetScale()
+	if CraftBench.db.profile.scale_tooltip then
+		if tip == GameTooltip and not CraftBench.gttScale then
+			CraftBench.gttScale = GameTooltip:GetScale()
 		end
 		if ( GetCVar("useUiScale") == "1" ) then
 			uiScale = tonumber(GetCVar("uiscale"))
 		end
-		if CraftForge.db.profile.ttscale then
-			uiScale = uiScale * CraftForge.db.profile.ttscale
+		if CraftBench.db.profile.ttscale then
+			uiScale = uiScale * CraftBench.db.profile.ttscale
 		end
 		tip:SetScale(uiScale)
 	end
 --
 -- Name of the recipe
 --
-		local color = CraftForge.skill_style_type[skill.difficulty]
+		local color = CraftBench.skill_style_type[skill.difficulty]
 		if (color) then
 			tip:AddLine(skill.name, color.r, color.g, color.b, false)
 		else
 			tip:AddLine(skill.name, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, false)
 		end
 --
---	Add CraftForge specific information to the tooltip
+--	Add CraftBench specific information to the tooltip
 --
 	local num, numrecursive, numwvendor, numwalts, numbank = 0, 0, 0, 0, 0
 	if skill.skillData then
@@ -1390,7 +1390,7 @@ function CraftForge:SkillButton_OnEnter(button)
 	end
 --	local text = string.format("[%s/%s]", L["Inventory"], L["Craftable"])
 --	tip:AddDoubleLine("\n", text)
-	local showSource = CraftForge.db.profile.show_recipe_source_for_learned
+	local showSource = CraftBench.db.profile.show_recipe_source_for_learned
 	if not showSource then
 		local rInfo = C_TradeSkillUI and C_TradeSkillUI.GetRecipeInfo and skill.id and C_TradeSkillUI.GetRecipeInfo(skill.id)
 		if rInfo and not rInfo.learned then
@@ -1400,8 +1400,8 @@ function CraftForge:SkillButton_OnEnter(button)
 		end
 	end
 	local sourceText = showSource and C_TradeSkillUI and C_TradeSkillUI.GetRecipeSourceText and skill.id and C_TradeSkillUI.GetRecipeSourceText(skill.id) or nil
-	if showSource and (not sourceText or sourceText == "") and CraftForge.ATTPlugin and CraftForge.ATTPlugin.GetRecipeSource then
-		sourceText = CraftForge.ATTPlugin.GetRecipeSource(skill, recipe)
+	if showSource and (not sourceText or sourceText == "") and CraftBench.ATTPlugin and CraftBench.ATTPlugin.GetRecipeSource then
+		sourceText = CraftBench.ATTPlugin.GetRecipeSource(skill, recipe)
 	end
 	if sourceText and sourceText ~= "" then
 		tip:AddLine(" ")
@@ -1439,9 +1439,9 @@ function CraftForge:SkillButton_OnEnter(button)
 	tip:AddLine(" ")
 	local text1 = string.format("recipeID= %d",skill.recipeID)
 	local item = string.format("itemID= %d",recipe.itemID)
-	local scroll = string.format("scrollID= %d", CraftForge.scrollData[skill.recipeID])
-	--DA.DEBUG(1,"SkillButton_OnEnter: recipeID= "..tostring(skill.recipeID)..", scrollData= "..tostring(CraftForge.scrollData[skill.recipeID]))
-	if CraftForge.scrollData[skill.recipeID] then
+	local scroll = string.format("scrollID= %d", CraftBench.scrollData[skill.recipeID])
+	--DA.DEBUG(1,"SkillButton_OnEnter: recipeID= "..tostring(skill.recipeID)..", scrollData= "..tostring(CraftBench.scrollData[skill.recipeID]))
+	if CraftBench.scrollData[skill.recipeID] then
 		tip:AddDoubleLine(text1, scroll)
 	elseif recipe.recipeType == Enum.TradeskillRecipeType.Enchant then
 		tip:AddDoubleLine(text1, "Enchant")
@@ -1457,16 +1457,16 @@ end
 --
 -- Sets the game tooltip item to the selected skill
 --
-function CraftForge:SetTradeSkillToolTip(skillIndex)
+function CraftBench:SetTradeSkillToolTip(skillIndex)
 	--DA.DEBUG(2,"SetTradeSkillToolTip("..tostring(skillIndex)..", "..tostring(onEvent)..")")
 	GameTooltip:ClearLines()
-	if CraftForge.db.profile.scale_tooltip then
+	if CraftBench.db.profile.scale_tooltip then
 		local uiScale = 1.0;
 		if ( GetCVar("useUiScale") == "1" ) then
 			uiScale = tonumber(GetCVar("uiscale"))
 		end
-		if CraftForge.db.profile.ttscale then
-			uiScale = uiScale * CraftForge.db.profile.ttscale
+		if CraftBench.db.profile.ttscale then
+			uiScale = uiScale * CraftBench.db.profile.ttscale
 		end
 		GameTooltip:SetScale(uiScale)
 	end
@@ -1493,16 +1493,16 @@ end
 --
 -- Clears any changes and hides the game tooltip
 --
-function CraftForge:ClearTradeSkillToolTip(skillIndex)
-	if CraftForge.db.profile.scale_tooltip then
-		GameTooltip:SetScale(CraftForge.gttScale)
+function CraftBench:ClearTradeSkillToolTip(skillIndex)
+	if CraftBench.db.profile.scale_tooltip then
+		GameTooltip:SetScale(CraftBench.gttScale)
 	end
 	GameTooltip:Hide()
 	ResetCursor()
 end
 
-CraftForge.bopCache = {}
-function CraftForge:bopCheck(item)
+CraftBench.bopCache = {}
+function CraftBench:bopCheck(item)
 	--DA.DEBUG(0,"bopCheck("..tostring(item)..")")
 	if not self.bopCache[item] then
 		local _, link, _, _, _, _, _, _, _, _, _, _, _, bindType, _, _, _ = C_Item.GetItemInfo(item)
@@ -1515,7 +1515,7 @@ function CraftForge:bopCheck(item)
 	return false
 end
 
-function CraftForge:SkillButton_SetSelections(id1, id2)
+function CraftBench:SkillButton_SetSelections(id1, id2)
 	local skillListKey = self.currentPlayer..":"..self.currentTrade..":"..self.currentGroupLabel
 	local sortedSkillList = self.data.sortedSkillList[skillListKey]
 	if id1 > id2 then id1,id2 = id2,id1 end
@@ -1528,7 +1528,7 @@ function CraftForge:SkillButton_SetSelections(id1, id2)
 	end
 end
 
-function CraftForge:SkillButton_SetAllSelections(toggle)
+function CraftBench:SkillButton_SetAllSelections(toggle)
 	local skillListKey = self.currentPlayer..":"..self.currentTrade..":"..self.currentGroupLabel
 	local sortedSkillList = self.data.sortedSkillList[skillListKey]
 	for i=1,sortedSkillList.count do
@@ -1536,11 +1536,11 @@ function CraftForge:SkillButton_SetAllSelections(toggle)
 	end
 end
 
-function CraftForge:SkillButton_ClearSelections()
+function CraftBench:SkillButton_ClearSelections()
 	self:SkillButton_SetAllSelections(false)
 end
 
-function CraftForge:NameEditSave()
+function CraftBench:NameEditSave()
 	if SkillButtonNameEdit:IsVisible() and SkillButtonNameEdit.originalButton then
 		SkillButtonNameEdit.originalButton:SetText(SkillButtonNameEdit:GetText())
 		self:RecipeGroupRenameEntry(SkillButtonNameEdit.skill, SkillButtonNameEdit:GetText())
@@ -1548,16 +1548,16 @@ function CraftForge:NameEditSave()
 	SkillButtonNameEdit:ClearFocus()
 end
 
-function CraftForge:SkillButton_OnMouseDown(button)
+function CraftBench:SkillButton_OnMouseDown(button)
 	self.dragStartXY = { GetCursorPosition() }
 	self.selectedTextOffsetXY = { 0, 0 }
 end
 
-function CraftForge:SkillButton_OnMouseUp(button)
+function CraftBench:SkillButton_OnMouseUp(button)
 	--DA.DEBUG(0, "SkillButton_OnMouseUp")
 end
 
-function CraftForge:SkillButton_DragUpdate()
+function CraftBench:SkillButton_DragUpdate()
 	if self.dragEngaged then
 		local x,y = GetCursorPosition()
 		self.selectedTextOffsetXY[1] = x - self.dragStartXY[1]
@@ -1566,8 +1566,8 @@ function CraftForge:SkillButton_DragUpdate()
 	end
 end
 
-function CraftForge:SkillButton_OnDragStop(button, mouse)
-	CraftForge:SkillButton_OnReceiveDrag(CraftForge.mouseOver, mouse)
+function CraftBench:SkillButton_OnDragStop(button, mouse)
+	CraftBench:SkillButton_OnReceiveDrag(CraftBench.mouseOver, mouse)
 	for i=1,num_recipe_buttons do
 		local button, buttonDrag = get_recipe_button(i)
 		buttonDrag:Hide()
@@ -1577,7 +1577,7 @@ function CraftForge:SkillButton_OnDragStop(button, mouse)
 	self:UpdateTradeSkillWindow()
 end
 
-function CraftForge:SkillButton_OnDragStart(button, mouse)
+function CraftBench:SkillButton_OnDragStart(button, mouse)
 	local skill = button.skill
 	if skill.selected and skill then
 		if not self:RecipeGroupIsLocked() then
@@ -1608,7 +1608,7 @@ function CraftForge:SkillButton_OnDragStart(button, mouse)
 	self:UpdateTradeSkillWindow()
 end
 
-function CraftForge:SkillButton_OnReceiveDrag(button, mouse)
+function CraftBench:SkillButton_OnReceiveDrag(button, mouse)
 	if not self:RecipeGroupIsLocked() then
 		local skill = nil
 		local destinationGroup = nil
@@ -1641,9 +1641,9 @@ function CraftForge:SkillButton_OnReceiveDrag(button, mouse)
 	end
 end
 
-function CraftForge:SkillButton_LinkRecipe()
+function CraftBench:SkillButton_LinkRecipe()
 	DA.DEBUG(0,"SkillButton_LinkRecipe()")
-	local skill = CraftForge.menuButton.skill
+	local skill = CraftBench.menuButton.skill
 	if skill and skill.recipeID then
 		local spellLink = C_TradeSkillUI.GetRecipeLink(skill.recipeID)
 		if spellLink then
@@ -1662,8 +1662,8 @@ end
 --
 -- Inspired by Kaliel's Tracker
 --
-StaticPopupDialogs["CRAFTFORGE_WowheadURL"] = {
-	text = "CraftForge - Wowhead URL",
+StaticPopupDialogs["CRAFTBENCH_WowheadURL"] = {
+	text = "CraftBench - Wowhead URL",
 	button2 = CLOSE,
 	hasEditBox = true,
 	editBoxWidth = 300,
@@ -1703,9 +1703,9 @@ StaticPopupDialogs["CRAFTFORGE_WowheadURL"] = {
 --
 -- Pop up a dialog with a Wowhead URL
 --
-function CraftForge:SkillButton_WowheadURL()
+function CraftBench:SkillButton_WowheadURL()
 	DA.DEBUG(0,"SkillButton_WowheadURL()")
-	local skill = CraftForge.menuButton.skill
+	local skill = CraftBench.menuButton.skill
 	--DA.DEBUG(1,"SkillButton_WowheadURL: skill= "..DA.DUMP1(skill,1))
 	if skill and skill.recipeID then
 		--DA.DEBUG(1,"SkillButton_WowheadURL: recipeID= "..tostring(skill.recipeID)..", name= "..tostring(skill.name))
@@ -1713,12 +1713,12 @@ function CraftForge:SkillButton_WowheadURL()
 		--DA.DEBUG(2,"SkillButton_WowheadURL: recipe= "..DA.DUMP1(recipe,1))
 		if recipe and recipe.itemID then
 			--DA.DEBUG(2,"SkillButton_WowheadURL: itemID= "..tostring(recipe.itemID)..", name= "..tostring(recipe.name))
-			StaticPopup_Show("CRAFTFORGE_WowheadURL", recipe.itemID, recipe.name)
+			StaticPopup_Show("CRAFTBENCH_WowheadURL", recipe.itemID, recipe.name)
 		end
 	end
 end
 
-function CraftForge:SkillButton_CopySelected()
+function CraftBench:SkillButton_CopySelected()
 	DA.DEBUG(0,"SkillButton_CopySelected()")
 	local skillListKey = self.currentPlayer..":"..self.currentTrade..":"..self.currentGroupLabel
 	local sortedSkillList = self.data.sortedSkillList[skillListKey]
@@ -1736,7 +1736,7 @@ function CraftForge:SkillButton_CopySelected()
 	end
 end
 
-function CraftForge:SkillButton_PasteSelected(button)
+function CraftBench:SkillButton_PasteSelected(button)
 	DA.DEBUG(0,"SkillButton_PasteSelected("..tostring(button)..")")
 	if not self:RecipeGroupIsLocked() then
 		local parentGroup
@@ -1756,7 +1756,7 @@ function CraftForge:SkillButton_PasteSelected(button)
 	end
 end
 
-function CraftForge:SkillButton_DeleteSelected()
+function CraftBench:SkillButton_DeleteSelected()
 	DA.DEBUG(0,"SkillButton_DeleteSelected()")
 	if not self:RecipeGroupIsLocked() then
 		local skillListKey = self.currentPlayer..":"..self.currentTrade..":"..self.currentGroupLabel
@@ -1772,13 +1772,13 @@ function CraftForge:SkillButton_DeleteSelected()
 	end
 end
 
-function CraftForge:SkillButton_CutSelected()
+function CraftBench:SkillButton_CutSelected()
 	DA.DEBUG(0,"SkillButton_CutSelected()")
-	CraftForge:SkillButton_CopySelected()
-	CraftForge:SkillButton_DeleteSelected()
+	CraftBench:SkillButton_CopySelected()
+	CraftBench:SkillButton_DeleteSelected()
 end
 
-function CraftForge:SkillButton_NewGroup()
+function CraftBench:SkillButton_NewGroup()
 	DA.DEBUG(0,"SkillButton_NewGroup()")
 	if not self:RecipeGroupIsLocked() then
 		local player = self.currentPlayer
@@ -1793,7 +1793,7 @@ function CraftForge:SkillButton_NewGroup()
 	end
 end
 
-function CraftForge:SkillButton_MakeGroup()
+function CraftBench:SkillButton_MakeGroup()
 	DA.DEBUG(0,"SkillButton_MakeGroup()")
 	if not self:RecipeGroupIsLocked() then
 		local player = self.currentPlayer
@@ -1815,7 +1815,7 @@ function CraftForge:SkillButton_MakeGroup()
 	end
 end
 
-function CraftForge:SkillButton_OnKeyDown(button, key)
+function CraftBench:SkillButton_OnKeyDown(button, key)
 	DA.DEBUG(3,"SkillButton_OnKeyDown("..tostring(button)..", "..tostring(key)..")")
 	if key == "D" then
 		self:SkillButton_SetAllSelections(false)
@@ -1839,7 +1839,7 @@ function CraftForge:SkillButton_OnKeyDown(button, key)
 	self:UpdateTradeSkillWindow()
 end
 
-function CraftForge:SkillButton_NameEditEnable(button)
+function CraftBench:SkillButton_NameEditEnable(button)
 	DA.DEBUG(3,"SkillButton_NameEditEnable("..tostring(button)..")")
 	if not self:RecipeGroupIsLocked() then
 		SkillButtonNameEdit:SetText(button.skill.name)
@@ -1857,35 +1857,35 @@ function CraftForge:SkillButton_NameEditEnable(button)
 	end
 end
 
-function CraftForge:FavoriteButton_OnClick(button, mouse)
+function CraftBench:FavoriteButton_OnClick(button, mouse)
 	if (mouse=="LeftButton") then
 	  if button.skill then
-			CraftForge:ToggleFavorite(button.skill.recipeID)
-			button:SetFavorite(CraftForge:IsFavorite(button.skill.recipeID))
+			CraftBench:ToggleFavorite(button.skill.recipeID)
+			button:SetFavorite(CraftBench:IsFavorite(button.skill.recipeID))
 		end
 	end
 end
 
-function CraftForge:FavoritesOnlyRefresh()
-	if CraftForge:GetTradeSkillOption("favoritesOnly") then
-		CraftForgeFavoritesOnlyButton:LockHighlight()
+function CraftBench:FavoritesOnlyRefresh()
+	if CraftBench:GetTradeSkillOption("favoritesOnly") then
+		CraftBenchFavoritesOnlyButton:LockHighlight()
 	else
-		CraftForgeFavoritesOnlyButton:UnlockHighlight()
+		CraftBenchFavoritesOnlyButton:UnlockHighlight()
 	end
 end
 
-function CraftForge:SetGroupSelection(skillName)
+function CraftBench:SetGroupSelection(skillName)
 	self.currentGroup = skillName
-	CraftForge:SetTradeSkillOption("group", skillName)
+	CraftBench:SetTradeSkillOption("group", skillName)
 end
 
 --
 -- When one of the skill buttons in the left scroll pane is clicked
 --
 local lastClick = 0
-function CraftForge:SkillButton_OnClick(button, mouse)
+function CraftBench:SkillButton_OnClick(button, mouse)
 	if (mouse == "LeftButton") then
-		CraftForge:QueueManagementToggle(true)
+		CraftBench:QueueManagementToggle(true)
 		local doubleClicked = false
 		local thisClick = GetTime()
 		local delay = thisClick - lastClick
@@ -1897,10 +1897,10 @@ function CraftForge:SkillButton_OnClick(button, mouse)
 		if doubleClicked then
 			if button.skill.subGroup then
 				if button.skill.mainGroup or self.currentGroup == button.skill.name then
-					CraftForge:SetGroupSelection(nil)
+					CraftBench:SetGroupSelection(nil)
 					button.skill.subGroup.expanded = true
 				else
-					CraftForge:SetGroupSelection(button.skill.name)
+					CraftBench:SetGroupSelection(button.skill.name)
 					button.skill.subGroup.expanded = true
 				end
 				self:SortAndFilterRecipes()
@@ -1973,7 +1973,7 @@ function CraftForge:SkillButton_OnClick(button, mouse)
 --
 -- Currently the only "useful" option.
 --
-			self:CraftForgeSkillMenu_Show(button)
+			self:CraftBenchSkillMenu_Show(button)
 		end
 	end
 end
@@ -1981,7 +1981,7 @@ end
 --
 -- When one of the skill buttons in the left scroll pane is clicked
 --
-function CraftForge:SkillExpandButton_OnClick(button, mouse, doubleClicked)
+function CraftBench:SkillExpandButton_OnClick(button, mouse, doubleClicked)
 	--DA.DEBUG(3,"SkillExpandButton_OnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(doubleClicked))
 	if (mouse=="LeftButton") then
 		if button.group then
@@ -1996,7 +1996,7 @@ end
 -- This function assures that a recipe that is indirectly selected (via reagent clicks, for example)
 -- will be visible in the skill list (ie, not scrolled off the top/bottom)
 --
-function CraftForge:ScrollToSkillIndex(skillIndex)
+function CraftBench:ScrollToSkillIndex(skillIndex)
 	--DA.DEBUG(0,"ScrollToSkillIndex("..tostring(skillIndex)..")")
 	if skillIndex == nil then
 		return
@@ -2004,7 +2004,7 @@ function CraftForge:ScrollToSkillIndex(skillIndex)
 --
 -- Scroll the skill list to make sure the new skill is revealed
 --
-	if CraftForgeSkillList:IsVisible() then
+	if CraftBenchSkillList:IsVisible() then
 		local skillListKey = self.currentPlayer..":"..self.currentTrade..":"..self.currentGroupLabel
 		local sortedSkillList = self.data.sortedSkillList[skillListKey]
 		if sortedSkillList then
@@ -2016,19 +2016,19 @@ function CraftForge:ScrollToSkillIndex(skillIndex)
 				end
 			end
 			sortedIndex = sortedIndex or 1
-			local scrollbar = _G["CraftForgeSkillListScrollBar"]
-			local button_count = CraftForgeSkillList:GetHeight() / CRAFTFORGE_TRADE_SKILL_HEIGHT
+			local scrollbar = _G["CraftBenchSkillListScrollBar"]
+			local button_count = CraftBenchSkillList:GetHeight() / CRAFTBENCH_TRADE_SKILL_HEIGHT
 			button_count = math.floor(button_count)
-			local skillOffset = FauxScrollFrame_GetOffset(CraftForgeSkillList)
+			local skillOffset = FauxScrollFrame_GetOffset(CraftBenchSkillList)
 			--DA.DEBUG(0,"ScrollToSkillIndex: "..(skillOffset or "nil").." > "..(sortedIndex or "nil"))
 			if skillOffset > sortedIndex then
 				sortedIndex = sortedIndex - 1
-				FauxScrollFrame_SetOffset(CraftForgeSkillList, sortedIndex)
-				scrollbar:SetValue(sortedIndex * CRAFTFORGE_TRADE_SKILL_HEIGHT)
+				FauxScrollFrame_SetOffset(CraftBenchSkillList, sortedIndex)
+				scrollbar:SetValue(sortedIndex * CRAFTBENCH_TRADE_SKILL_HEIGHT)
 			elseif (skillOffset + button_count) < sortedIndex then
 				sortedIndex = sortedIndex - button_count
-				FauxScrollFrame_SetOffset(CraftForgeSkillList, sortedIndex)
-				scrollbar:SetValue(sortedIndex * CRAFTFORGE_TRADE_SKILL_HEIGHT)
+				FauxScrollFrame_SetOffset(CraftBenchSkillList, sortedIndex)
+				scrollbar:SetValue(sortedIndex * CRAFTBENCH_TRADE_SKILL_HEIGHT)
 			end
 		end
 	end
@@ -2038,29 +2038,29 @@ end
 --
 -- Go to the previous recipe in the history list.
 --
-function CraftForge:GoToPreviousSkill()
+function CraftBench:GoToPreviousSkill()
 	local entry = table.remove(self.skillStack)
 	if entry then
 		self:SetTradeSkill(entry.player,entry.tradeID,entry.skillIndex)
 	end
 end
 
-function CraftForge:PushSkill(player, tradeID, skillIndex)
+function CraftBench:PushSkill(player, tradeID, skillIndex)
 	local entry = { ["player"] = player, ["tradeID"] = tradeID, ["skillIndex"] = skillIndex }
 	table.insert(self.skillStack, entry)
 end
 
-function CraftForge:getLvlUpChance()
+function CraftBench:getLvlUpChance()
 --
 -- % to level up with this receipt is calculated by: (greySkill - yourSkill) / (greySkill - yellowSkill
 --
-	local skilRanks = CraftForge:GetSkillRanks(CraftForge.currentPlayer, CraftForge.currentTrade)
+	local skilRanks = CraftBench:GetSkillRanks(CraftBench.currentPlayer, CraftBench.currentTrade)
 	local currentLevel, maxLevel = 0, 0
 	if skilRanks then
 		currentLevel, maxLevel = skilRanks.rank, skilRanks.maxRank
 	end
-	local gray = tonumber(CraftForgeRankFrame.subRanks.green:GetValue())
-	local yellow = tonumber(CraftForgeRankFrame.subRanks.orange:GetValue())
+	local gray = tonumber(CraftBenchRankFrame.subRanks.green:GetValue())
+	local yellow = tonumber(CraftBenchRankFrame.subRanks.orange:GetValue())
 	--DA.DEBUG(0,"getLvlUpChance: currentLevel= "..tostring(currentLevel)..", gray= "..tostring(gray)..", yellow= "..tostring(yellow))
 	if (currentLevel > gray) then
 		return 0
@@ -2075,27 +2075,27 @@ function CraftForge:getLvlUpChance()
 	end
 end
 
-local function RankFrameMenuList(CraftForgeRankFrameMenu, rootDescription)
-	if CraftForge.isTest then 
+local function RankFrameMenuList(CraftBenchRankFrameMenu, rootDescription)
+	if CraftBench.isTest then 
 		local title = "RankFrameMenuList"
 		rootDescription:CreateTitle(title);
 	end
-	rootDescription:CreateButton(L["Button 1"], function() CraftForge:RankFrame_Button1() end);
+	rootDescription:CreateButton(L["Button 1"], function() CraftBench:RankFrame_Button1() end);
 	rootDescription:CreateDivider(); -- CreateSpacer, CreateDivider
-	rootDescription:CreateButton(L["Button 2"], function() CraftForge:RankFrame_Button2() end);
+	rootDescription:CreateButton(L["Button 2"], function() CraftBench:RankFrame_Button2() end);
 end
 
 --
 -- Called when then mouse enters the rank status bar
 --
-function CraftForge:RankFrame_OnEnter(button)
+function CraftBench:RankFrame_OnEnter(button)
 	GameTooltip:SetOwner(button, "ANCHOR_BOTTOMLEFT")
-	local r,g,b = CraftForgeSkillName:GetTextColor()
-	GameTooltip:AddLine(CraftForgeSkillName:GetText(),r,g,b)
-	local gray = CraftForgeRankFrame.subRanks.green:GetValue()
-	local green = CraftForgeRankFrame.subRanks.yellow:GetValue()
-	local yellow = CraftForgeRankFrame.subRanks.orange:GetValue()
-	local orange = CraftForgeRankFrame.subRanks.red:GetValue()
+	local r,g,b = CraftBenchSkillName:GetTextColor()
+	GameTooltip:AddLine(CraftBenchSkillName:GetText(),r,g,b)
+	local gray = CraftBenchRankFrame.subRanks.green:GetValue()
+	local green = CraftBenchRankFrame.subRanks.yellow:GetValue()
+	local yellow = CraftBenchRankFrame.subRanks.orange:GetValue()
+	local orange = CraftBenchRankFrame.subRanks.red:GetValue()
 	-- lets add the chance to level up that skill with that receipt
 	local chance = self:getLvlUpChance()
 	chance = math.floor(chance*10)/10		-- one decimal is enough
@@ -2106,63 +2106,63 @@ end
 --
 -- Called when then mouse leaves the rank status bar
 --
-function CraftForge:RankFrame_OnLeave(button)
-	CraftForge.RankFrameExtra = false
+function CraftBench:RankFrame_OnLeave(button)
+	CraftBench.RankFrameExtra = false
 	GameTooltip:Hide()
 end
 
-function CraftForge:RankFrame_OnMouseDown(button)
+function CraftBench:RankFrame_OnMouseDown(button)
 	local mouse = GetMouseButtonClicked()
 	DA.DEBUG(3,"RankFrame_OnMouseDown("..tostring(button).."), "..tostring(mouse))
 	if (mouse == "LeftButton") then
-		if not CraftForge.RankFrameExtra then
+		if not CraftBench.RankFrameExtra then
 			GameTooltip:AddLine("RankFrame_OnMouseDown")
-			CraftForge.RankFrameExtra = true
+			CraftBench.RankFrameExtra = true
 		end
 		GameTooltip:Show()
 	elseif (mouse == "RightButton") then
-		self:CraftForgeRankFrame_Show(button)
+		self:CraftBenchRankFrame_Show(button)
 	end
 end
 
-function CraftForge:RankFrame_OnMouseUp(button)
+function CraftBench:RankFrame_OnMouseUp(button)
 	local mouse = GetMouseButtonClicked()
 	DA.DEBUG(3,"RankFrame_OnMouseUp("..tostring(button).."), "..tostring(mouse))
 	if (mouse == "LeftButton") then
 		GameTooltip:AddLine("RankFrame_OnMouseUp")
 		GameTooltip:Show()
 	elseif (mouse == "RightButton") then
-		self:CraftForgeRankFrame_Show(button)
+		self:CraftBenchRankFrame_Show(button)
 	end
 end
 
-function CraftForge:CraftForgeRankFrame_Show(button)
-	--DA.DEBUG(0,"CraftForgeRankFrame_Show("..tostring(button)..")")
+function CraftBench:CraftBenchRankFrame_Show(button)
+	--DA.DEBUG(0,"CraftBenchRankFrame_Show("..tostring(button)..")")
 	local x, y = GetCursorPosition()
 	local uiScale = UIParent:GetEffectiveScale()
-	if not CraftForgeRankFrameMenu then
-		CraftForgeRankFrameMenu = CreateFrame("Frame", "CraftForgeRankFrameMenu", _G["UIParent"], "UIDropDownMenuTemplate")
-		CraftForgeRankFrameMenu:SetScale(uiScale)
+	if not CraftBenchRankFrameMenu then
+		CraftBenchRankFrameMenu = CreateFrame("Frame", "CraftBenchRankFrameMenu", _G["UIParent"], "UIDropDownMenuTemplate")
+		CraftBenchRankFrameMenu:SetScale(uiScale)
 	end
 	self.menuButton = button
 --	GameTooltip:Hide() --hide tooltip, because it may be over the menu, sometimes it still fails
-	MenuUtil.CreateContextMenu(CraftForgeRankFrameMenu, RankFrameMenuList);
+	MenuUtil.CreateContextMenu(CraftBenchRankFrameMenu, RankFrameMenuList);
 end
 
-function CraftForge:RankFrame_Button1()
+function CraftBench:RankFrame_Button1()
 	DA.DEBUG(0,"RankFrame_Button1()")
 end
 
-function CraftForge:RankFrame_Button2()
+function CraftBench:RankFrame_Button2()
 	DA.DEBUG(0,"RankFrame_Button2()")
 end
 
-function CraftForge:CraftForgeFrameForceClose()
-	--DA.DEBUG(0,"CraftForgeFrameForceClose()")
+function CraftBench:CraftBenchFrameForceClose()
+	--DA.DEBUG(0,"CraftBenchFrameForceClose()")
 --
--- CraftForge's Close (X) button just hides our frames to avoid crashing TSM
+-- CraftBench's Close (X) button just hides our frames to avoid crashing TSM
 --
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		if TSM_API.IsUIVisible("CRAFTING") then
 			return self:HideAllWindows()
 		end
@@ -2171,7 +2171,7 @@ function CraftForge:CraftForgeFrameForceClose()
 	return self:HideAllWindows()
 end
 
-function CraftForge:InventoryFilterButton_OnClick(button)
+function CraftBench:InventoryFilterButton_OnClick(button)
 	local slot = button.slot or ""
 	local option = "filterInventory-"..slot
 	self:ToggleTradeSkillOption(option)
@@ -2181,7 +2181,7 @@ function CraftForge:InventoryFilterButton_OnClick(button)
 	self:UpdateTradeSkillWindow()
 end
 
-function CraftForge:InventoryFilterButton_OnEnter(button)
+function CraftBench:InventoryFilterButton_OnEnter(button)
 	local slot = button.slot or ""
 	local option = "filterInventory-"..slot
 	local value = self:GetTradeSkillOption(option)
@@ -2194,11 +2194,11 @@ function CraftForge:InventoryFilterButton_OnEnter(button)
 	GameTooltip:Show()
 end
 
-function CraftForge:InventoryFilterButton_OnLeave(button)
+function CraftBench:InventoryFilterButton_OnLeave(button)
 	GameTooltip:Hide()
 end
 
-function CraftForge:InventoryFilterButton_OnShow(button)
+function CraftBench:InventoryFilterButton_OnShow(button)
 	local slot = button.slot or ""
 	local option = "filterInventory-"..slot
 	local value = self:GetTradeSkillOption(option)
@@ -2209,203 +2209,203 @@ function CraftForge:InventoryFilterButton_OnShow(button)
 	end
 end
 
-function CraftForge:InventoryFilterButtons_Show()
-	CraftForgeInventoryFilterBag:Show()
-	CraftForgeInventoryFilterCraft:Show()
-	CraftForgeInventoryFilterVendor:Show()
-	CraftForgeInventoryFilterAlts:Show()
-	CraftForgeInventoryFilterOwned:Show()
+function CraftBench:InventoryFilterButtons_Show()
+	CraftBenchInventoryFilterBag:Show()
+	CraftBenchInventoryFilterCraft:Show()
+	CraftBenchInventoryFilterVendor:Show()
+	CraftBenchInventoryFilterAlts:Show()
+	CraftBenchInventoryFilterOwned:Show()
 end
 
-function CraftForge:InventoryFilterButtons_Hide()
-	CraftForgeInventoryFilterBag:Hide()
-	CraftForgeInventoryFilterCraft:Hide()
-	CraftForgeInventoryFilterVendor:Hide()
-	CraftForgeInventoryFilterAlts:Hide()
-	CraftForgeInventoryFilterOwned:Hide()
+function CraftBench:InventoryFilterButtons_Hide()
+	CraftBenchInventoryFilterBag:Hide()
+	CraftBenchInventoryFilterCraft:Hide()
+	CraftBenchInventoryFilterVendor:Hide()
+	CraftBenchInventoryFilterAlts:Hide()
+	CraftBenchInventoryFilterOwned:Hide()
 end
 
-local function SkillMenuList(CraftForgeSkillMenu, rootDescription)
-	if CraftForge.isTest then 
+local function SkillMenuList(CraftBenchSkillMenu, rootDescription)
+	if CraftBench.isTest then 
 		local title = "skillMenuList"
-		if CraftForge.isLocked then
+		if CraftBench.isLocked then
 			title = title .. "(locked)"
 		end
 		rootDescription:CreateTitle(title);
 	end
-	rootDescription:CreateButton(L["Link Recipe"], function() CraftForge:SkillButton_LinkRecipe() end);
-	rootDescription:CreateButton(L["Wowhead URL"], function() CraftForge:SkillButton_WowheadURL() end);
-	if CraftForge.isLocked then
+	rootDescription:CreateButton(L["Link Recipe"], function() CraftBench:SkillButton_LinkRecipe() end);
+	rootDescription:CreateButton(L["Wowhead URL"], function() CraftBench:SkillButton_WowheadURL() end);
+	if CraftBench.isLocked then
 		rootDescription:CreateButton(L["Add to Ignore Materials"], function()
-			local skill = CraftForge.menuButton.skill
+			local skill = CraftBench.menuButton.skill
 			if skill and skill.recipeID then
 				local recipeID = skill.recipeID
 				local spellLink = C_TradeSkillUI.GetRecipeLink(skill.recipeID)
-				CraftForge.db.realm.userIgnoredMats[CraftForge.currentPlayer][recipeID] = spellLink
-				if CraftForge.ignoreList and CraftForge.ignoreList:IsVisible() then
-					CraftForge:UpdateIgnoreListWindow()
+				CraftBench.db.realm.userIgnoredMats[CraftBench.currentPlayer][recipeID] = spellLink
+				if CraftBench.ignoreList and CraftBench.ignoreList:IsVisible() then
+					CraftBench:UpdateIgnoreListWindow()
 				end
 			end
 		end);
 	end
-	rootDescription:CreateButton(CraftForge.favoriteMenuText, function()
-		local recipeID = CraftForge.menuButton.skill.recipeID
-		local favoriteButton = _G[CraftForge.menuButton:GetName() .. "Favorite"]
-		CraftForge:ToggleFavorite(recipeID)
-		favoriteButton:SetFavorite(CraftForge:IsFavorite(recipeID))
+	rootDescription:CreateButton(CraftBench.favoriteMenuText, function()
+		local recipeID = CraftBench.menuButton.skill.recipeID
+		local favoriteButton = _G[CraftBench.menuButton:GetName() .. "Favorite"]
+		CraftBench:ToggleFavorite(recipeID)
+		favoriteButton:SetFavorite(CraftBench:IsFavorite(recipeID))
 	end);
-	if not CraftForge.isLocked then
+	if not CraftBench.isLocked then
 		local submenu1 = rootDescription:CreateButton(L["Ignore"]);
 			submenu1:CreateButton(L["Add Recipe to Ignored List"], function()
-				local index = CraftForge.menuButton:GetID()
-				local skillDB = CraftForge.db.realm.skillDB[CraftForge.currentPlayer][CraftForge.currentTrade][index]
+				local index = CraftBench.menuButton:GetID()
+				local skillDB = CraftBench.db.realm.skillDB[CraftBench.currentPlayer][CraftBench.currentTrade][index]
 				local recipeID = string.sub(skillDB,2)
 				local print=(tostring(index)..", "..tostring(skillDB)..", "..tostring(recipeID))
-				CraftForge.db.realm.userIgnoredMats[CraftForge.currentPlayer][recipeID] = CraftForge.currentTrade
-				if CraftForge.ignoreList and CraftForge.ignoreList:IsVisible() then
-					CraftForge:UpdateIgnoreListWindow()
+				CraftBench.db.realm.userIgnoredMats[CraftBench.currentPlayer][recipeID] = CraftBench.currentTrade
+				if CraftBench.ignoreList and CraftBench.ignoreList:IsVisible() then
+					CraftBench:UpdateIgnoreListWindow()
 				end
 			end);
 			submenu1:CreateButton(L["Remove Recipe from Ignored List"], function()
-				local index = CraftForge.menuButton:GetID()
-				local skillDB = CraftForge.db.realm.skillDB[CraftForge.currentPlayer][CraftForge.currentTrade][index]
+				local index = CraftBench.menuButton:GetID()
+				local skillDB = CraftBench.db.realm.skillDB[CraftBench.currentPlayer][CraftBench.currentTrade][index]
 				local recipeID = string.sub(skillDB,2)
 				local print=(tostring(index)..", "..tostring(skillDB)..", "..tostring(recipeID))
-				CraftForge.db.realm.userIgnoredMats[CraftForge.currentPlayer][recipeID] = nil
-				if CraftForge.ignoreList and CraftForge.ignoreList:IsVisible() then
-					CraftForge:UpdateIgnoreListWindow()
+				CraftBench.db.realm.userIgnoredMats[CraftBench.currentPlayer][recipeID] = nil
+				if CraftBench.ignoreList and CraftBench.ignoreList:IsVisible() then
+					CraftBench:UpdateIgnoreListWindow()
 				end
 			end);
 		local submenu2 = rootDescription:CreateButton(L["New Group"]);
-			submenu2:CreateButton(L["Empty Group"], function() CraftForge:SkillButton_NewGroup() end);
-			submenu2:CreateButton(L["From Selection"], function() CraftForge:SkillButton_MakeGroup() end);
+			submenu2:CreateButton(L["Empty Group"], function() CraftBench:SkillButton_NewGroup() end);
+			submenu2:CreateButton(L["From Selection"], function() CraftBench:SkillButton_MakeGroup() end);
 	end
 	rootDescription:CreateDivider(); -- CreateSpacer, CreateDivider
-	rootDescription:CreateButton(L["Copy"], function() CraftForge:SkillButton_CopySelected() end);
-	if not CraftForge.isLocked then
-		rootDescription:CreateButton(L["Cut"], function() CraftForge:SkillButton_CutSelected() end);
-		rootDescription:CreateButton(L["Paste"], function() CraftForge:SkillButton_PasteSelected(CraftForge.menuButton) end);
+	rootDescription:CreateButton(L["Copy"], function() CraftBench:SkillButton_CopySelected() end);
+	if not CraftBench.isLocked then
+		rootDescription:CreateButton(L["Cut"], function() CraftBench:SkillButton_CutSelected() end);
+		rootDescription:CreateButton(L["Paste"], function() CraftBench:SkillButton_PasteSelected(CraftBench.menuButton) end);
 	end
 end;
 
-local function HeaderMenuList(CraftForgeSkillMenu, rootDescription)
-	if CraftForge.isTest then 
+local function HeaderMenuList(CraftBenchSkillMenu, rootDescription)
+	if CraftBench.isTest then 
 		local title = "headerMenuList"
-		if CraftForge.isLocked then
+		if CraftBench.isLocked then
 			title = title .. "(locked)"
 		end
 		rootDescription:CreateTitle(title);
 	end
-	if not CraftForge.isLocked then
-		rootDescription:CreateButton(L["Rename Group"], function() CraftForge:SkillButton_NameEditEnable(CraftForge.menuButton) end);
+	if not CraftBench.isLocked then
+		rootDescription:CreateButton(L["Rename Group"], function() CraftBench:SkillButton_NameEditEnable(CraftBench.menuButton) end);
 		local submenu1 = rootDescription:CreateButton(L["New Group"]);
-			submenu1:CreateButton(L["Empty Group"], function() CraftForge:SkillButton_NewGroup() end);
-			submenu1:CreateButton(L["From Selection"], function() CraftForge:SkillButton_MakeGroup() end);
+			submenu1:CreateButton(L["Empty Group"], function() CraftBench:SkillButton_NewGroup() end);
+			submenu1:CreateButton(L["From Selection"], function() CraftBench:SkillButton_MakeGroup() end);
 		rootDescription:CreateDivider(); -- CreateSpacer, CreateDivider
 	end
 	local submenu2 = rootDescription:CreateButton(L["Selection"]);
-		submenu2:CreateButton(L["Select All"], function() CraftForge:SkillButton_SetAllSelections(true) CraftForge:UpdateTradeSkillWindow() end);
-		submenu2:CreateButton(L["Select None"], function() CraftForge:SkillButton_SetAllSelections(false) CraftForge:UpdateTradeSkillWindow() end);
+		submenu2:CreateButton(L["Select All"], function() CraftBench:SkillButton_SetAllSelections(true) CraftBench:UpdateTradeSkillWindow() end);
+		submenu2:CreateButton(L["Select None"], function() CraftBench:SkillButton_SetAllSelections(false) CraftBench:UpdateTradeSkillWindow() end);
 	rootDescription:CreateDivider(); -- CreateSpacer, CreateDivider
-	rootDescription:CreateButton(L["Copy"], function() CraftForge:SkillButton_CopySelected() end);
-	if not CraftForge.isLocked then
-		rootDescription:CreateButton(L["Cut"], function() CraftForge:SkillButton_CutSelected() end);
-		rootDescription:CreateButton(L["Paste"], function() CraftForge:SkillButton_PasteSelected(CraftForge.menuButton) end);
+	rootDescription:CreateButton(L["Copy"], function() CraftBench:SkillButton_CopySelected() end);
+	if not CraftBench.isLocked then
+		rootDescription:CreateButton(L["Cut"], function() CraftBench:SkillButton_CutSelected() end);
+		rootDescription:CreateButton(L["Paste"], function() CraftBench:SkillButton_PasteSelected(CraftBench.menuButton) end);
 	end
 end;
 
-local function HeaderMenuListMainGroup(CraftForgeSkillMenu, rootDescription)
-	if CraftForge.isTest then 
+local function HeaderMenuListMainGroup(CraftBenchSkillMenu, rootDescription)
+	if CraftBench.isTest then 
 		local title = "headerMenuListMainGroup"
-		if CraftForge.isLocked then
+		if CraftBench.isLocked then
 			title = title .. "(locked)"
 		end
 		rootDescription:CreateTitle(title);
 	end
-	if not CraftForge.isLocked then
+	if not CraftBench.isLocked then
 		local submenu1 = rootDescription:CreateButton(L["New Group"]);
-			submenu1:CreateButton(L["Empty Group"], function() CraftForge:SkillButton_NewGroup() end);
-			submenu1:CreateButton(L["From Selection"], function() CraftForge:SkillButton_MakeGroup() end);
+			submenu1:CreateButton(L["Empty Group"], function() CraftBench:SkillButton_NewGroup() end);
+			submenu1:CreateButton(L["From Selection"], function() CraftBench:SkillButton_MakeGroup() end);
 		rootDescription:CreateDivider(); -- CreateSpacer, CreateDivider
 		local submenu2 = rootDescription:CreateButton(L["Selection"]);
-			submenu2:CreateButton(L["Select All"], function() CraftForge:SkillButton_SetAllSelections(true) CraftForge:UpdateTradeSkillWindow() end);
-			submenu2:CreateButton(L["Select None"], function() CraftForge:SkillButton_SetAllSelections(false) CraftForge:UpdateTradeSkillWindow() end);
+			submenu2:CreateButton(L["Select All"], function() CraftBench:SkillButton_SetAllSelections(true) CraftBench:UpdateTradeSkillWindow() end);
+			submenu2:CreateButton(L["Select None"], function() CraftBench:SkillButton_SetAllSelections(false) CraftBench:UpdateTradeSkillWindow() end);
 		rootDescription:CreateDivider(); -- CreateSpacer, CreateDivider
 	end
-	rootDescription:CreateButton(L["Copy"], function() CraftForge:SkillButton_CopySelected() end);
-	if not CraftForge.isLocked then
-		rootDescription:CreateButton(L["Cut"], function() CraftForge:SkillButton_CutSelected() end);
-		rootDescription:CreateButton(L["Paste"], function() CraftForge:SkillButton_PasteSelected(CraftForge.menuButton) end);
+	rootDescription:CreateButton(L["Copy"], function() CraftBench:SkillButton_CopySelected() end);
+	if not CraftBench.isLocked then
+		rootDescription:CreateButton(L["Cut"], function() CraftBench:SkillButton_CutSelected() end);
+		rootDescription:CreateButton(L["Paste"], function() CraftBench:SkillButton_PasteSelected(CraftBench.menuButton) end);
 	end
 end;
 
 --
 -- Called when the skill operators drop down is displayed
 --
-function CraftForge:CraftForgeSkillMenu_Show(button)
-	--DA.DEBUG(0,"CraftForgeSkillMenu_Show("..tostring(button)..")")
+function CraftBench:CraftBenchSkillMenu_Show(button)
+	--DA.DEBUG(0,"CraftBenchSkillMenu_Show("..tostring(button)..")")
 	local x, y = GetCursorPosition()
 	local uiScale = UIParent:GetEffectiveScale()
 	local locked = self:RecipeGroupIsLocked()
 	self.isLocked = locked
-	if not CraftForgeSkillMenu then
-		CraftForgeSkillMenu = CreateFrame("Frame", "CraftForgeSkillMenu", _G["UIParent"], "UIDropDownMenuTemplate") -- WowStyle1DropdownTemplate
-		CraftForgeSkillMenu:SetScale(uiScale)
+	if not CraftBenchSkillMenu then
+		CraftBenchSkillMenu = CreateFrame("Frame", "CraftBenchSkillMenu", _G["UIParent"], "UIDropDownMenuTemplate") -- WowStyle1DropdownTemplate
+		CraftBenchSkillMenu:SetScale(uiScale)
 	end
 	self.menuButton = button
 	if button.skill.subGroup then
 		if button.skill.mainGroup then
-			MenuUtil.CreateContextMenu(CraftForgeSkillMenu, HeaderMenuListMainGroup);
+			MenuUtil.CreateContextMenu(CraftBenchSkillMenu, HeaderMenuListMainGroup);
 		else
-			MenuUtil.CreateContextMenu(CraftForgeSkillMenu, HeaderMenuList);
+			MenuUtil.CreateContextMenu(CraftBenchSkillMenu, HeaderMenuList);
 		end
 	else
 		GameTooltip:Hide() --hide tooltip, because it may be over the menu, sometimes it still fails
 		if C_TradeSkillUI.GetShowLearned() then
-			CraftForge.favoriteMenuText = L["Set Favorite"]
+			CraftBench.favoriteMenuText = L["Set Favorite"]
 		else
-			CraftForge.favoriteMenuText = L["Cannot Set Favorite"]
+			CraftBench.favoriteMenuText = L["Cannot Set Favorite"]
 		end
-		if CraftForge:IsFavorite(button.skill.recipeID) then
-			CraftForge.favoriteMenuText = L["Remove Favorite"]
+		if CraftBench:IsFavorite(button.skill.recipeID) then
+			CraftBench.favoriteMenuText = L["Remove Favorite"]
 		end
-		MenuUtil.CreateContextMenu(CraftForgeSkillMenu, SkillMenuList);
+		MenuUtil.CreateContextMenu(CraftBenchSkillMenu, SkillMenuList);
 	end
 end
 
-function CraftForge:ReAnchorButtons(newFrame)
+function CraftBench:ReAnchorButtons(newFrame)
 	--DA.DEBUG(0,"ReAnchorButtons("..tostring(newFrame)..")")
-	CraftForgeRecipeNotesButton:SetPoint("BOTTOMRIGHT",newFrame,"TOPRIGHT",0,2)
-	CraftForgeQueueAllButton:SetPoint("TOPLEFT",newFrame,"BOTTOMLEFT",0,-2)
-	CraftForgeEnchantButton:SetPoint("TOPLEFT",newFrame,"BOTTOMLEFT",0,-2)
---	CraftForgeQueueButton:SetPoint("TOPRIGHT",newFrame,"BOTTOMRIGHT",0,-2)
+	CraftBenchRecipeNotesButton:SetPoint("BOTTOMRIGHT",newFrame,"TOPRIGHT",0,2)
+	CraftBenchQueueAllButton:SetPoint("TOPLEFT",newFrame,"BOTTOMLEFT",0,-2)
+	CraftBenchEnchantButton:SetPoint("TOPLEFT",newFrame,"BOTTOMLEFT",0,-2)
+--	CraftBenchQueueButton:SetPoint("TOPRIGHT",newFrame,"BOTTOMRIGHT",0,-2)
 end
 
 --
--- The CraftForgeQueue and StandaloneQueue functions start here
+-- The CraftBenchQueue and StandaloneQueue functions start here
 --
-function CraftForge:CraftForgeQueueMenu_Show(button)
-	--DA.DEBUG(0,"CraftForgeQueueMenu_Show("..tostring(button)..")")
+function CraftBench:CraftBenchQueueMenu_Show(button)
+	--DA.DEBUG(0,"CraftBenchQueueMenu_Show("..tostring(button)..")")
 	local x, y = GetCursorPosition()
 	local uiScale = UIParent:GetEffectiveScale()
-	if not CraftForgeQueueMenu then
-		CraftForgeQueueMenu = CreateFrame("Frame", "CraftForgeQueueMenu", _G["UIParent"], "UIDropDownMenuTemplate")
-		--DA.DEBUG(0,"CraftForgeQueueMenu_Show: uiScale= "..tostring(uiScale))
-		CraftForgeQueueMenu:SetScale(uiScale)
+	if not CraftBenchQueueMenu then
+		CraftBenchQueueMenu = CreateFrame("Frame", "CraftBenchQueueMenu", _G["UIParent"], "UIDropDownMenuTemplate")
+		--DA.DEBUG(0,"CraftBenchQueueMenu_Show: uiScale= "..tostring(uiScale))
+		CraftBenchQueueMenu:SetScale(uiScale)
 	end
 	self.queueMenuButton = button
-	MenuUtil.CreateButtonContextMenu(CraftForgeQueueMenu,
-	{L["Move to Top"], function() CraftForge:QueueMoveToTop(CraftForge.queueMenuButton:GetID()) end},
-	{L["Move Up"], function() CraftForge:QueueMoveUp(CraftForge.queueMenuButton:GetID()) end},
-	{L["Move Down"], function() CraftForge:QueueMoveDown(CraftForge.queueMenuButton:GetID()) end},
-	{L["Move to Bottom"], function() CraftForge:QueueMoveToBottom(CraftForge.queueMenuButton:GetID()) end}
+	MenuUtil.CreateButtonContextMenu(CraftBenchQueueMenu,
+	{L["Move to Top"], function() CraftBench:QueueMoveToTop(CraftBench.queueMenuButton:GetID()) end},
+	{L["Move Up"], function() CraftBench:QueueMoveUp(CraftBench.queueMenuButton:GetID()) end},
+	{L["Move Down"], function() CraftBench:QueueMoveDown(CraftBench.queueMenuButton:GetID()) end},
+	{L["Move to Bottom"], function() CraftBench:QueueMoveToBottom(CraftBench.queueMenuButton:GetID()) end}
 	);
 end
 
 --
 -- The start/pause queue button.
 --
-function CraftForge:StartQueue_OnClick(button, mouse)
+function CraftBench:StartQueue_OnClick(button, mouse)
 	if self.queuecasting then
 		DA.MARK3(L["Cancel incomplete processing"])
 		self:CancelCast()
@@ -2417,23 +2417,23 @@ function CraftForge:StartQueue_OnClick(button, mouse)
 	self:UpdateQueueWindow()
 end
 
-function CraftForge:QueueManagementToggle(showDetails)
+function CraftBench:QueueManagementToggle(showDetails)
 	--DA.DEBUG(0,"QueueManagementToggle("..tostring(showDetails)..")")
-	if CraftForgeQueueManagementParent:IsVisible() or showDetails then
-		CraftForge:ShowReagentDetails()
+	if CraftBenchQueueManagementParent:IsVisible() or showDetails then
+		CraftBench:ShowReagentDetails()
 	else
-		CraftForgeQueueManagementParent:Show();
-		CraftForgeQueueManagementParent:SetHeight(100)
-		CraftForgeReagentParent:Hide()
-		CraftForge:ReAnchorButtons(CraftForgeQueueManagementParent)
+		CraftBenchQueueManagementParent:Show();
+		CraftBenchQueueManagementParent:SetHeight(100)
+		CraftBenchReagentParent:Hide()
+		CraftBench:ReAnchorButtons(CraftBenchQueueManagementParent)
 	end
 end
 
-function CraftForge:QueueItemButton_OnClick(this, button)
+function CraftBench:QueueItemButton_OnClick(this, button)
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	local index = this:GetID()
 	if button == "LeftButton" then
-		CraftForge:QueueManagementToggle(true)
+		CraftBench:QueueManagementToggle(true)
 		local recipeID = queue[index].recipeID
 		local recipe = self:GetRecipe(recipeID)
 		local tradeID = recipe.tradeID
@@ -2442,25 +2442,25 @@ function CraftForge:QueueItemButton_OnClick(this, button)
 		self:SetTradeSkill(self.currentPlayer, tradeID, newSkillIndex)
 		--DA.DEBUG(0,"QueueItemButton_OnClick: done selecting new skill")
 	elseif button == "RightButton" then
-		CraftForge:CraftForgeQueueMenu_Show(this)
+		CraftBench:CraftBenchQueueMenu_Show(this)
 	end
 end
 
 --
 -- Called when the list of queued items is scrolled
 --
-function CraftForge:QueueList_OnScroll()
-	CraftForge:UpdateQueueWindow()
+function CraftBench:QueueList_OnScroll()
+	CraftBench:UpdateQueueWindow()
 end
 
 local num_queue_buttons = 0
 local function get_queue_button(i)
-	local button = _G["CraftForgeQueueButton"..i]
+	local button = _G["CraftBenchQueueButton"..i]
 	if not button then
-		button = CreateFrame("Button", "CraftForgeQueueButton"..i, CraftForgeQueueParent, "CraftForgeQueueItemButtonTemplate")
-		button:SetParent(CraftForgeQueueParent)
-		button:SetPoint("TOPLEFT", "CraftForgeQueueButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(CraftForgeQueueParent:GetFrameLevel() + 1)
+		button = CreateFrame("Button", "CraftBenchQueueButton"..i, CraftBenchQueueParent, "CraftBenchQueueItemButtonTemplate")
+		button:SetParent(CraftBenchQueueParent)
+		button:SetPoint("TOPLEFT", "CraftBenchQueueButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftBenchQueueParent:GetFrameLevel() + 1)
 	end
 	return button
 end
@@ -2469,29 +2469,29 @@ end
 -- Updates the window/scroll list displaying queue of items
 -- that are waiting to be crafted.
 --
-function CraftForge:UpdateQueueWindow()
+function CraftBench:UpdateQueueWindow()
 	--DA.DEBUG(0,"UpdateQueueWindow()")
 	local queue = self.db.realm.queueData[self.currentPlayer]
 	if not queue then
-		CraftForgeStartQueueButton:SetText(L["Process"])
-		CraftForgeEmptyQueueButton:Disable()
-		CraftForgeStartQueueButton:Disable()
+		CraftBenchStartQueueButton:SetText(L["Process"])
+		CraftBenchEmptyQueueButton:Disable()
+		CraftBenchStartQueueButton:Disable()
 		return
 	end
 	local numItems = #queue
 	if numItems > 0 then
-		CraftForgeStartQueueButton:Enable()
-		CraftForgeEmptyQueueButton:Enable()
+		CraftBenchStartQueueButton:Enable()
+		CraftBenchEmptyQueueButton:Enable()
 	else
-		CraftForgeStartQueueButton:Disable()
-		CraftForgeEmptyQueueButton:Disable()
+		CraftBenchStartQueueButton:Disable()
+		CraftBenchEmptyQueueButton:Disable()
 	end
 	if self.queuecasting and UnitCastingInfo("player") then
-		CraftForgeStartQueueButton:SetText(L["Pause"])
+		CraftBenchStartQueueButton:SetText(L["Pause"])
 	else
-		CraftForgeStartQueueButton:SetText(L["Process"])
+		CraftBenchStartQueueButton:SetText(L["Process"])
 	end
-	local button_count = CraftForgeQueueParentBase:GetHeight() / CRAFTFORGE_TRADE_SKILL_HEIGHT
+	local button_count = CraftBenchQueueParentBase:GetHeight() / CRAFTBENCH_TRADE_SKILL_HEIGHT
 	button_count = math.max(0, (math.floor(button_count) - 1))
 	--DA.DEBUG(0,"UpdateQueueWindow: button_count="..button_count)
 	if button_count == 0 then
@@ -2510,16 +2510,16 @@ function CraftForge:UpdateQueueWindow()
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(CraftForgeQueueList,				-- frame
+	FauxScrollFrame_Update(CraftBenchQueueList,				-- frame
 						   numItems,                        -- num items
 						   button_count,                    -- num to display
-						   CRAFTFORGE_TRADE_SKILL_HEIGHT)      -- value step (item height)
+						   CRAFTBENCH_TRADE_SKILL_HEIGHT)      -- value step (item height)
 --
 -- Where in the list of skill to start counting.
 --
-	local itemOffset = FauxScrollFrame_GetOffset(CraftForgeQueueList)
+	local itemOffset = FauxScrollFrame_GetOffset(CraftBenchQueueList)
 	--DA.DEBUG(0,"UpdateQueueWindow: itemOffset="..itemOffset)
-	local width = CraftForgeQueueList:GetWidth()
+	local width = CraftBenchQueueList:GetWidth()
 --
 -- Iterate through all the buttons that make up the scroll window
 -- and fill then in with data or hide them, as necessary
@@ -2585,60 +2585,60 @@ function CraftForge:UpdateQueueWindow()
 	end
 end
 
-function CraftForge:ShowFullView()
-	CraftForge.fullView = true
-	CraftForgeQueueParentBase:SetParent(CraftForgeFrame)
-	CraftForgeQueueParentBase:ClearAllPoints()
-	CraftForgeQueueParentBase:SetPoint("TOPLEFT",CraftForgeCreateAllButton,"BOTTOMLEFT",0,-3)
-	CraftForgeQueueParentBase:SetPoint("BOTTOMRIGHT",CraftForgeFrame,"BOTTOMRIGHT",-10,32)
-	CraftForgeStandaloneQueue:Hide()
-	CraftForgeQueueOnlyButton:SetText(">")
-	CraftForge:UpdateQueueWindow()
+function CraftBench:ShowFullView()
+	CraftBench.fullView = true
+	CraftBenchQueueParentBase:SetParent(CraftBenchFrame)
+	CraftBenchQueueParentBase:ClearAllPoints()
+	CraftBenchQueueParentBase:SetPoint("TOPLEFT",CraftBenchCreateAllButton,"BOTTOMLEFT",0,-3)
+	CraftBenchQueueParentBase:SetPoint("BOTTOMRIGHT",CraftBenchFrame,"BOTTOMRIGHT",-10,32)
+	CraftBenchStandaloneQueue:Hide()
+	CraftBenchQueueOnlyButton:SetText(">")
+	CraftBench:UpdateQueueWindow()
 end
 
-function CraftForge:ShowQueueView()
+function CraftBench:ShowQueueView()
 	--DA.DEBUG(0,"ShowQueueView()")
-	CraftForge.fullView = false
-	CraftForgeQueueParentBase:SetParent(CraftForgeStandaloneQueue)
-	CraftForgeQueueParentBase:ClearAllPoints()
-	CraftForgeQueueParentBase:SetPoint("TOPLEFT",CraftForgeStandaloneQueue,"TOPLEFT",5,-32)
-	CraftForgeQueueParentBase:SetPoint("BOTTOMRIGHT",CraftForgeStandaloneQueue,"BOTTOMRIGHT",-5,30)
-	CraftForgeStandaloneQueue:Show()
-	CraftForgeQueueOnlyButton:SetText("<")
-	CraftForge:UpdateQueueWindow()
+	CraftBench.fullView = false
+	CraftBenchQueueParentBase:SetParent(CraftBenchStandaloneQueue)
+	CraftBenchQueueParentBase:ClearAllPoints()
+	CraftBenchQueueParentBase:SetPoint("TOPLEFT",CraftBenchStandaloneQueue,"TOPLEFT",5,-32)
+	CraftBenchQueueParentBase:SetPoint("BOTTOMRIGHT",CraftBenchStandaloneQueue,"BOTTOMRIGHT",-5,30)
+	CraftBenchStandaloneQueue:Show()
+	CraftBenchQueueOnlyButton:SetText("<")
+	CraftBench:UpdateQueueWindow()
 end
 
-function CraftForge:QueueOnlyViewToggle()
+function CraftBench:QueueOnlyViewToggle()
 	--DA.DEBUG(0,"QueueOnlyViewToggle()")
-	FauxScrollFrame_SetOffset(CraftForgeQueueList, 0)
+	FauxScrollFrame_SetOffset(CraftBenchQueueList, 0)
 	self.fullView = not self.fullView
 	if self.fullView then
 		self:ShowFullView()
 		if self.db.profile.queue_only_view then
-			CraftForgeFrame:Show()
+			CraftBenchFrame:Show()
 		end
 		self:UpdateTradeSkillWindow()
 	else
 		self:ShowQueueView()
 		if self.db.profile.queue_only_view then
-			CraftForgeFrame:Hide()
+			CraftBenchFrame:Hide()
 		end
 	end
 end
 
-function CraftForge:StandaloneQueueClose()
+function CraftBench:StandaloneQueueClose()
 	--DA.DEBUG(0,"StandaloneQueueClose()")
 	self:ShowFullView()
 	if self.db.profile.queue_only_view then
-		self:CraftForgeFrameForceClose()
+		self:CraftBenchFrameForceClose()
 	end
 end
 
-function CraftForge:HideStandaloneQueue()
+function CraftBench:HideStandaloneQueue()
 	--DA.DEBUG(0,"HideStandaloneQueue()")
 	local closed
-	if self.craftforgeStandaloneQueue and self.craftforgeStandaloneQueue:IsVisible() then
-		CraftForgeStandaloneQueue:Hide()
+	if self.craftbenchStandaloneQueue and self.craftbenchStandaloneQueue:IsVisible() then
+		CraftBenchStandaloneQueue:Hide()
 		closed = true
 	end
 	return closed
@@ -2647,26 +2647,26 @@ end
 --
 -- Creates and sets up the Standalone Queue Frame
 --
-function CraftForge:CreateStandaloneQueueFrame()
+function CraftBench:CreateStandaloneQueueFrame()
 	--DA.DEBUG(0,"CreateStandaloneQueueFrame()")
-	local frame = CraftForgeStandaloneQueue
+	local frame = CraftBenchStandaloneQueue
 	if not frame then
 		return nil
 	end
-	local UIStyle = CraftForge.UIStyle
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local UIStyle = CraftBench.UIStyle
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		frame:SetFrameStrata("HIGH")
 	end
 	UIStyle.SkinFrame(frame, false)
-	local titletext = frame:CreateFontString("CraftForgeStandaloneQueueTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = frame:CreateFontString("CraftBenchStandaloneQueueTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -1)
 	titletext:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -36, -1)
 	titletext:SetHeight(26)
 	titletext:SetJustifyH("CENTER")
-	titletext:SetText("CraftForge: " .. L["Queue"])
+	titletext:SetText("CraftBench: " .. L["Queue"])
 	UIStyle.StyleHeaderBar(frame, titletext, 1)
-	if CraftForgeStandaloneQueueCloseButton then
-		UIStyle.SkinCloseButton(CraftForgeStandaloneQueueCloseButton)
+	if CraftBenchStandaloneQueueCloseButton then
+		UIStyle.SkinCloseButton(CraftBenchStandaloneQueueCloseButton)
 	end
 
 --
@@ -2686,7 +2686,7 @@ function CraftForge:CreateStandaloneQueueFrame()
 --
 -- lets play the resize me game!
 --
-	CraftForge:EnableResize(frame, 385, 170, CraftForge.UpdateStandaloneQueueWindow)
+	CraftBench:EnableResize(frame, 385, 170, CraftBench.UpdateStandaloneQueueWindow)
 --
 -- so hitting [ESC] will close the window
 --
@@ -2694,13 +2694,13 @@ function CraftForge:CreateStandaloneQueueFrame()
 	return frame
 end
 
-function CraftForge:UpdateStandaloneQueueWindow()
+function CraftBench:UpdateStandaloneQueueWindow()
 	--DA.DEBUG(0,"UpdateStandaloneQueueWindow()")
-	if not self.craftforgeStandaloneQueue or not self.craftforgeStandaloneQueue:IsVisible() then
+	if not self.craftbenchStandaloneQueue or not self.craftbenchStandaloneQueue:IsVisible() then
 		return
 	end
-	CraftForgeStandaloneQueue:SetAlpha(self.db.profile.transparency)
-	CraftForgeStandaloneQueue:SetScale(self.db.profile.scale)
+	CraftBenchStandaloneQueue:SetAlpha(self.db.profile.transparency)
+	CraftBenchStandaloneQueue:SetScale(self.db.profile.scale)
 	self:UpdateQueueWindow()
 end
 
@@ -2711,30 +2711,30 @@ end
 -- The frame representing the main tradeskill window will be
 -- returned in case you need to pop up a frame attached to it.
 --
-function CraftForge:AddButtonToTradeskillWindow(button)
+function CraftBench:AddButtonToTradeskillWindow(button)
 	--DA.DEBUG(0,"AddButtonToTradeskillWindow("..tostring(button)..")")
-	if not CraftForgeFrame.added_buttons then
-		CraftForgeFrame.added_buttons = {}
+	if not CraftBenchFrame.added_buttons then
+		CraftBenchFrame.added_buttons = {}
 	end
 	button:Hide()
 --
 -- See if this button has already been added ...
 --
-	for i=1, #CraftForgeFrame.added_buttons, 1 do
-		if CraftForgeFrame.added_buttons[i] == button then
+	for i=1, #CraftBenchFrame.added_buttons, 1 do
+		if CraftBenchFrame.added_buttons[i] == button then
 			return	-- ... yup
 		end
 	end
-	table.insert(CraftForgeFrame.added_buttons, button)	-- ... nope
-	if CraftForgePluginButton then
-		CraftForgePluginButton:Show()
+	table.insert(CraftBenchFrame.added_buttons, button)	-- ... nope
+	if CraftBenchPluginButton then
+		CraftBenchPluginButton:Show()
 	end
-	return CraftForgeFrame
+	return CraftBenchFrame
 end
 
-function CraftForge:ToggleUseConcentration()
+function CraftBench:ToggleUseConcentration()
 	self.db.profile.use_concentration = not self.db.profile.use_concentration
 	--DA.DEBUG(0,"ToggleUseConcentration: use_concentration= "..tostring(self.db.profile.use_concentration))
-	CraftForgeUseConcentration:SetChecked(self.db.profile.use_concentration)
+	CraftBenchUseConcentration:SetChecked(self.db.profile.use_concentration)
 	self:UpdateDetailWindow(self.selectedSkill)
 end

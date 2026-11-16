@@ -1,13 +1,13 @@
 ----------------------------------------------------------
--- CraftForge - Native Dark-Gold Options Window         --
+-- CraftBench - Native Dark-Gold Options Window         --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-local L = CraftForge.L
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+local L = CraftBench.L
 
-CraftForge.OptionsUI = CraftForge.OptionsUI or {}
-local OptionsUI = CraftForge.OptionsUI
+CraftBench.OptionsUI = CraftBench.OptionsUI or {}
+local OptionsUI = CraftBench.OptionsUI
 
 local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
 
@@ -61,7 +61,7 @@ local function makeInfo(opt, parentChain, pathKeys)
 		type = opt and opt.type,
 		arg = opt and opt.arg,
 		uiType = "dialog",
-		uiName = "CraftForgeOptions-1.0",
+		uiName = "CraftBenchOptions-1.0",
 	}
 	for i = #parentChain, 1, -1 do
 		if parentChain[i] and parentChain[i].handler then
@@ -149,9 +149,9 @@ local function closeDropdownMenu()
 end
 
 local function openDropdownMenu(anchor, items, currentValue, onSelect)
-	local UIStyle = CraftForge.UIStyle
+	local UIStyle = CraftBench.UIStyle
 	if not dropdownMenu then
-		dropdownMenu = CreateFrame("Frame", "CraftForgeOptionsDropdownMenu", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+		dropdownMenu = CreateFrame("Frame", "CraftBenchOptionsDropdownMenu", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 		dropdownMenu:SetFrameStrata("FULLSCREEN_DIALOG")
 		dropdownMenu:SetClampedToScreen(true)
 		dropdownMenu:EnableMouse(true)
@@ -263,8 +263,8 @@ end
 local function ensureOptionsFrame()
 	if optionsFrame then return optionsFrame end
 
-	local UIStyle = CraftForge.UIStyle
-	local f = CreateFrame("Frame", "CraftForgeOptionsWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local UIStyle = CraftBench.UIStyle
+	local f = CreateFrame("Frame", "CraftBenchOptionsWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	f:SetSize(780, 560)
 	f:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	f:SetFrameStrata("DIALOG")
@@ -279,11 +279,11 @@ local function ensureOptionsFrame()
 	end)
 	f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
 	f:SetScript("OnHide", function() closeDropdownMenu() end)
-	tinsert(UISpecialFrames, "CraftForgeOptionsWindow")
+	tinsert(UISpecialFrames, "CraftBenchOptionsWindow")
 
 	if UIStyle then
 		UIStyle.SkinFrame(f, false)
-		local title = "CraftForge " .. tostring(CraftForge.version or "") .. " — " .. (L["Options"] or "Options")
+		local title = "CraftBench " .. tostring(CraftBench.version or "") .. " — " .. (L["Options"] or "Options")
 		UIStyle.CreateHeader(f, title, "Interface\\Icons\\Trade_BlackSmithing", function()
 			f:Hide()
 		end)
@@ -296,7 +296,7 @@ local function ensureOptionsFrame()
 	sidebar:SetWidth(190)
 	if UIStyle then UIStyle.SkinInset(sidebar) end
 
-	local sideScroll = CreateFrame("ScrollFrame", "CraftForgeOptionsSideScroll", sidebar, "UIPanelScrollFrameTemplate")
+	local sideScroll = CreateFrame("ScrollFrame", "CraftBenchOptionsSideScroll", sidebar, "UIPanelScrollFrameTemplate")
 	sideScroll:SetPoint("TOPLEFT", sidebar, "TOPLEFT", 6, -8)
 	sideScroll:SetPoint("BOTTOMRIGHT", sidebar, "BOTTOMRIGHT", -24, 8)
 	if UIStyle and UIStyle.StyleScrollBar then UIStyle.StyleScrollBar(sideScroll) end
@@ -319,7 +319,7 @@ local function ensureOptionsFrame()
 	subTabBar:Hide()
 	f._subTabBar = subTabBar
 
-	local scroll = CreateFrame("ScrollFrame", "CraftForgeOptionsContentScroll", contentBox, "UIPanelScrollFrameTemplate")
+	local scroll = CreateFrame("ScrollFrame", "CraftBenchOptionsContentScroll", contentBox, "UIPanelScrollFrameTemplate")
 	scroll:SetPoint("TOPLEFT", contentBox, "TOPLEFT", 12, -12)
 	scroll:SetPoint("BOTTOMRIGHT", contentBox, "BOTTOMRIGHT", -28, 12)
 	if UIStyle and UIStyle.StyleScrollBar then UIStyle.StyleScrollBar(scroll) end
@@ -339,7 +339,7 @@ local function ensureOptionsFrame()
 end
 
 local function renderOptionGroup(parent, optTable, parentChain, basePath, startY, contentWidth, onRefresh)
-	local UIStyle = CraftForge.UIStyle
+	local UIStyle = CraftBench.UIStyle
 	local y = startY
 	local sorted = getSortedArgs(optTable.args, parentChain, basePath)
 
@@ -737,8 +737,8 @@ end
 
 function OptionsUI:Refresh()
 	if not optionsFrame or not optionsFrame:IsShown() then return end
-	local UIStyle = CraftForge.UIStyle
-	local rootOpt = AceConfigRegistry:GetOptionsTable("CraftForgeGUI", "dialog", "CraftForgeOptions-1.0")
+	local UIStyle = CraftBench.UIStyle
+	local rootOpt = AceConfigRegistry:GetOptionsTable("CraftBenchGUI", "dialog", "CraftBenchOptions-1.0")
 	if not rootOpt or not rootOpt.args then return end
 
 	closeDropdownMenu()

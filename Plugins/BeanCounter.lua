@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-CraftForge.BCPlugin = {}
+CraftBench.BCPlugin = {}
 
-local plugin = CraftForge.BCPlugin
-local L = CraftForge.L
+local plugin = CraftBench.BCPlugin
+local L = CraftBench.L
 
 plugin.options =
 {
@@ -32,11 +32,11 @@ plugin.options =
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.beancounter.enabled
+				return CraftBench.db.profile.plugins.beancounter.enabled
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.beancounter.enabled = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.beancounter.enabled = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1
@@ -46,11 +46,11 @@ plugin.options =
 			name = L["Sales for "].."x"..L[" days"],
 			min = 1, max = 180, step = 1, isPercent = false,
 			get = function()
-				return CraftForge.db.profile.plugins.beancounter.days
+				return CraftBench.db.profile.plugins.beancounter.days
 			end,
 			set = function(self,t)
-				CraftForge.db.profile.plugins.beancounter.days = t
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.beancounter.days = t
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 2,
@@ -87,19 +87,19 @@ function plugin.SortSoldAmount(skill,a,b)
 end
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.beancounter then
-		CraftForge.db.profile.plugins.beancounter = {}
-		CraftForge.db.profile.plugins.beancounter.enabled = true
-		CraftForge.db.profile.plugins.beancounter.days = 30
+	if not CraftBench.db.profile.plugins.beancounter then
+		CraftBench.db.profile.plugins.beancounter = {}
+		CraftBench.db.profile.plugins.beancounter.enabled = true
+		CraftBench.db.profile.plugins.beancounter.days = 30
 	end
-	CraftForge:AddPluginOptions(plugin.options)
---	CraftForge:AddRecipeSorter("BC: "..L["Sold amount"], plugin.SortSoldAmount)
---	CraftForge:AddRecipeSorter("BC: "..L["Gold earned"], plugin.SortGoldEarned)
+	CraftBench:AddPluginOptions(plugin.options)
+--	CraftBench:AddRecipeSorter("BC: "..L["Sold amount"], plugin.SortSoldAmount)
+--	CraftBench:AddRecipeSorter("BC: "..L["Gold earned"], plugin.SortGoldEarned)
 end
 
 function plugin.GetBCValues(itemID)
 	local success, failed, sucessStack, failedStack, earned = 0, 0, 0, 0, 0
-	local daysNum = CraftForge.db.profile.plugins.beancounter.days or 0
+	local daysNum = CraftBench.db.profile.plugins.beancounter.days or 0
 	local realm = GetRealmName()
 	local now = time()
 	local days = daysNum * 86400 --days to seconds
@@ -143,7 +143,7 @@ function plugin.GetExtraText(skill, recipe)
 	local label, extra_text
 	if not skill or not recipe then return end
 	local itemID = recipe.itemID
-	if BeanCounterDB and itemID and CraftForge.db.profile.plugins.beancounter.enabled then
+	if BeanCounterDB and itemID and CraftBench.db.profile.plugins.beancounter.enabled then
 		if BeanCounter and BeanCounterUiFrame and BeanCounterUiFrame:IsVisible() then
 			local name = C_Item.GetItemInfo(itemID)
 			if name then
@@ -154,11 +154,11 @@ function plugin.GetExtraText(skill, recipe)
 		label=label..L["Sold amount"]..":\n";
 		label=label..L["Gold earned"]..":"..FONT_COLOR_CODE_CLOSE;
 		local success, failed, sucessStack, failedStack, earned  = plugin.GetBCValues(itemID)
-		extra_text = L["Sales for "]..(CraftForge.db.profile.plugins.beancounter.days or 0)..L[" days"].."\n"
+		extra_text = L["Sales for "]..(CraftBench.db.profile.plugins.beancounter.days or 0)..L[" days"].."\n"
 		extra_text = extra_text..GREEN_FONT_COLOR_CODE..sucessStack..FONT_COLOR_CODE_CLOSE.." / "..RED_FONT_COLOR_CODE..failedStack.."\n"
-		extra_text = extra_text..FONT_COLOR_CODE_CLOSE..CraftForge:FormatMoneyFull(earned, true);
+		extra_text = extra_text..FONT_COLOR_CODE_CLOSE..CraftBench:FormatMoneyFull(earned, true);
 	end
 	return label, extra_text
 end
 
-CraftForge:RegisterDisplayDetailPlugin("BCPlugin")		-- we have a GetExtraText function
+CraftBench:RegisterDisplayDetailPlugin("BCPlugin")		-- we have a GetExtraText function

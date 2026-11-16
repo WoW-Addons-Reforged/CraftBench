@@ -1,6 +1,6 @@
 local addonName,addonTable = ...
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,27 +17,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ]]--
 
-CraftForge = LibStub("AceAddon-3.0"):NewAddon("CraftForge", "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0", "AceTimer-3.0", "AceBucket-3.0")
+CraftBench = LibStub("AceAddon-3.0"):NewAddon("CraftBench", "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0", "AceTimer-3.0", "AceBucket-3.0")
 local AceDB = LibStub("AceDB-3.0")
 
 -- Pull it into the local namespace, it's faster to access that way
-local CraftForge = CraftForge
-local DA = CraftForge -- needed because LibStub changed the definition of CraftForge
+local CraftBench = CraftBench
+local DA = CraftBench -- needed because LibStub changed the definition of CraftBench
 
 -- Localization
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
-CraftForge.L = L
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
+CraftBench.L = L
 
 -- Get version info from the .toc file
-CraftForge.version = C_AddOns.GetAddOnMetadata("CraftForge", "Version")
-CraftForge.isTest = string.find(CraftForge.version,"-") or string.find(CraftForge.version,"+")
-CraftForge.interface = select(4, GetBuildInfo())
-CraftForge.build = (CraftForge.interface < 16000 and "Classic") or
-  (CraftForge.interface < 20000 and "Forever") or 
-  (CraftForge.interface < 30000 and "BCC") or
-  (CraftForge.interface < 40000 and "Wrath") or 
-  (CraftForge.interface < 50000 and "Cata") or
-  (CraftForge.interface < 60000 and "Mists") or
+CraftBench.version = C_AddOns.GetAddOnMetadata("CraftBench", "Version")
+CraftBench.isTest = string.find(CraftBench.version,"-") or string.find(CraftBench.version,"+")
+CraftBench.interface = select(4, GetBuildInfo())
+CraftBench.build = (CraftBench.interface < 16000 and "Classic") or
+  (CraftBench.interface < 20000 and "Forever") or 
+  (CraftBench.interface < 30000 and "BCC") or
+  (CraftBench.interface < 40000 and "Wrath") or 
+  (CraftBench.interface < 50000 and "Cata") or
+  (CraftBench.interface < 60000 and "Mists") or
   "Retail"
 --
 --	isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE -- 1
@@ -48,28 +48,28 @@ CraftForge.build = (CraftForge.interface < 16000 and "Classic") or
 --	isForever = WOW_PROJECT_ID == WOW_PROJECT_CAMELOT -- 18
 --	isMists = WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC -- 19
 --
-CraftForge.project = WOW_PROJECT_ID
+CraftBench.project = WOW_PROJECT_ID
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-	CraftForge.isRetail = true
+	CraftBench.isRetail = true
 elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
-	CraftForge.isClassic = true
+	CraftBench.isClassic = true
 elseif WOW_PROJECT_BURNING_CRUSADE_CLASSIC and WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then
-	CraftForge.isBCC = true
+	CraftBench.isBCC = true
 elseif WOW_PROJECT_WRATH_CLASSIC and WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
-	CraftForge.isWrath = true
+	CraftBench.isWrath = true
 elseif WOW_PROJECT_CATACLYSM_CLASSIC and WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC then
-	CraftForge.isCata = true
+	CraftBench.isCata = true
 elseif WOW_PROJECT_MISTS_CLASSIC and WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC then
-	CraftForge.isMists = true
+	CraftBench.isMists = true
 elseif WOW_PROJECT_CAMELOT and WOW_PROJECT_ID == WOW_PROJECT_CAMELOT then
-	CraftForge.isForever = true
+	CraftBench.isForever = true
 end
 if GetGameType then
-	CraftForge.gametype = GetGameType()
-	CraftForge.isTalebound = CraftForge.gametype == "wowhack"
+	CraftBench.gametype = GetGameType()
+	CraftBench.isTalebound = CraftBench.gametype == "wowhack"
 end
 
-CraftForge.gttScale = GameTooltip:GetScale()
+CraftBench.gttScale = GameTooltip:GetScale()
 
 local defaults = {
 	profile = {
@@ -151,7 +151,7 @@ local defaults = {
 --
 -- default options for each player/tradeskill
 --
-CraftForge.defaultOptions = {
+CraftBench.defaultOptions = {
 	["sortmethod"] = "None",
 	["grouping"] = "Blizzard",
 	["searchtext"] = "",
@@ -167,7 +167,7 @@ CraftForge.defaultOptions = {
 	["isfirstcraft"] = false,
 }
 
-CraftForge.unknownRecipe = {
+CraftBench.unknownRecipe = {
 	tradeID = 0,
 	name = "unknown",
 	tools = {},
@@ -183,11 +183,11 @@ CraftForge.unknownRecipe = {
 	numCraftableBank = 0,
 }
 
-function CraftForge:DisableBlizzardFrame()
+function CraftBench:DisableBlizzardFrame()
 	DA.DEBUG(0,"DisableBlizzardFrame()")
 	if not ProfessionsFrame then
 		DA.WARN("DisableBlizzardFrame: ProfessionsFrame is nil")
-	elseif CraftForge.isRetail or self.db.profile.hide_blizzard_frame then
+	elseif CraftBench.isRetail or self.db.profile.hide_blizzard_frame then
 		if self.BlizzardTradeSkillFrame == nil then
 			self.BlizzardTradeSkillFrame = ProfessionsFrame
 			self.tradeSkillHide = ProfessionsFrame:GetScript("OnHide")
@@ -201,7 +201,7 @@ function CraftForge:DisableBlizzardFrame()
 	end
 end
 
-function CraftForge:EnableBlizzardFrame()
+function CraftBench:EnableBlizzardFrame()
 	DA.DEBUG(0,"EnableBlizzardFrame()")
 	local blizzFrame = ProfessionsFrame or TradeSkillFrame
 	if not blizzFrame then return end
@@ -210,7 +210,7 @@ function CraftForge:EnableBlizzardFrame()
 		blizzFrame:SetScript("OnHide", self.tradeSkillHide)
 		self.tradeSkillHide = nil
 	end
-	if CraftForge.isRetail or self.db.profile.hide_blizzard_frame then
+	if CraftBench.isRetail or self.db.profile.hide_blizzard_frame then
 		ShowUIPanel(blizzFrame)
 	elseif self.db.profile.scale_blizzard_frame then
 		blizzFrame:SetScale(self.db.profile.scale_blizzard_up or 1.0)
@@ -221,12 +221,12 @@ end
 --
 -- Called when the addon is loaded
 --
-function CraftForge:OnInitialize()
+function CraftBench:OnInitialize()
 	DA.DEBUG(0,"OnInitialize()");
 --
 --	Create the database
 --
-	self.db = AceDB:New("CraftForgeDB", defaults)
+	self.db = AceDB:New("CraftBenchDB", defaults)
 --
 -- Information useful for debugging
 --
@@ -237,24 +237,24 @@ function CraftForge:OnInitialize()
 	self.db.global.build = self.build          -- text derived from interface
 	self.db.global.gametype = self.gametype    -- from GetGameType
 	
-	if not CraftForgeWho then
-		CraftForgeWho = {}
+	if not CraftBenchWho then
+		CraftBenchWho = {}
 	end
-	if not CraftForgeDBPC then
-		CraftForgeDBPC = {}
+	if not CraftBenchDBPC then
+		CraftBenchDBPC = {}
 	end
-	if not CraftForgeProfile then
-		CraftForgeProfile = {}
+	if not CraftBenchProfile then
+		CraftBenchProfile = {}
 	end
-	if not CraftForgeMemory then
-		CraftForgeMemory = {}
+	if not CraftBenchMemory then
+		CraftBenchMemory = {}
 	end
 	if DA.deepcopy then			-- For serious debugging, start with a clean slate
-		CraftForgeMemory = {}
-		CraftForgeDBPC = {}
+		CraftBenchMemory = {}
+		CraftBenchDBPC = {}
 	end
-	DA.DebugLog = CraftForgeDBPC
-	DA.DebugProfile = CraftForgeProfile
+	DA.DebugLog = CraftBenchDBPC
+	DA.DebugProfile = CraftBenchProfile
 	if not self.InProgress then
 		self.InProgress = {}
 	end
@@ -299,7 +299,7 @@ function CraftForge:OnInitialize()
 -- we clear the saved variables recipe data just to be safe.
 --
 	local dataVersion = 11
-	if CraftForge.isForever then
+	if CraftBench.isForever then
 		dataVersion = 12
 	end
 	local queueVersion = 1
@@ -401,9 +401,9 @@ function CraftForge:OnInitialize()
 
 --
 -- configure the addon options and the slash command handler
--- (CraftForge.options is defined in CraftForgeOptions.lua)
+-- (CraftBench.options is defined in CraftBenchOptions.lua)
 --
-	CraftForge:ConfigureOptions()
+	CraftBench:ConfigureOptions()
 --
 -- Copy the profile debugging variables to the global table 
 -- where DebugAids.lua is looking for them.
@@ -415,40 +415,40 @@ function CraftForge:OnInitialize()
 --
 -- Note:	Undefined is the same as false so we only need to predefine true variables
 --
-	if CraftForge.db.profile.WarnLog == nil then
-		CraftForge.db.profile.WarnLog = true
+	if CraftBench.db.profile.WarnLog == nil then
+		CraftBench.db.profile.WarnLog = true
 	end
 
-	CraftForge.WarnLog = CraftForge.db.profile.WarnLog
-	CraftForge.WarnShow = CraftForge.db.profile.WarnShow
-	CraftForge.DebugShow = CraftForge.db.profile.DebugShow
-	CraftForge.DebugLogging = CraftForge.db.profile.DebugLogging
-	CraftForge.DebugLevel = CraftForge.db.profile.DebugLevel
-	CraftForge.LogLevel = CraftForge.db.profile.LogLevel
-	CraftForge.MAXDEBUG = CraftForge.db.profile.MAXDEBUG or 4000
-	CraftForge.MAXPROFILE = CraftForge.db.profile.MAXPROFILE or 2000
-	CraftForge.TableDump = CraftForge.db.profile.TableDump
-	CraftForge.TraceShow = CraftForge.db.profile.TraceShow
-	CraftForge.TraceLog = CraftForge.db.profile.TraceLog
-	CraftForge.TraceLog2 = CraftForge.db.profile.TraceLog2
-	CraftForge.ProfileShow = CraftForge.db.profile.ProfileShow
+	CraftBench.WarnLog = CraftBench.db.profile.WarnLog
+	CraftBench.WarnShow = CraftBench.db.profile.WarnShow
+	CraftBench.DebugShow = CraftBench.db.profile.DebugShow
+	CraftBench.DebugLogging = CraftBench.db.profile.DebugLogging
+	CraftBench.DebugLevel = CraftBench.db.profile.DebugLevel
+	CraftBench.LogLevel = CraftBench.db.profile.LogLevel
+	CraftBench.MAXDEBUG = CraftBench.db.profile.MAXDEBUG or 4000
+	CraftBench.MAXPROFILE = CraftBench.db.profile.MAXPROFILE or 2000
+	CraftBench.TableDump = CraftBench.db.profile.TableDump
+	CraftBench.TraceShow = CraftBench.db.profile.TraceShow
+	CraftBench.TraceLog = CraftBench.db.profile.TraceLog
+	CraftBench.TraceLog2 = CraftBench.db.profile.TraceLog2
+	CraftBench.ProfileShow = CraftBench.db.profile.ProfileShow
 --
--- Profile variable to control CraftForge fixes for Blizzard bugs.
--- Can be toggled [or turned off] with "/craftforge fixbugs [off]"
+-- Profile variable to control CraftBench fixes for Blizzard bugs.
+-- Can be toggled [or turned off] with "/craftbench fixbugs [off]"
 --
-	if CraftForge.db.profile.FixBugs == nil then
-		CraftForge.db.profile.FixBugs = true
+	if CraftBench.db.profile.FixBugs == nil then
+		CraftBench.db.profile.FixBugs = true
 	end
-	CraftForge.FixBugs = CraftForge.db.profile.FixBugs
+	CraftBench.FixBugs = CraftBench.db.profile.FixBugs
 
 --
 -- Create static popups for changing professions
 --
-StaticPopupDialogs["CRAFTFORGE_CONTINUE_CHANGE"] = {
-	text = "CraftForge-Classic\n"..L["Press Okay to continue changing professions"],
+StaticPopupDialogs["CRAFTBENCH_CONTINUE_CHANGE"] = {
+	text = "CraftBench-Classic\n"..L["Press Okay to continue changing professions"],
 	button1 = OKAY,
 	OnAccept = function( self )
-		CraftForge:ContinueChange()
+		CraftBench:ContinueChange()
 		return
 	end,
 	timeout = 0,
@@ -457,19 +457,19 @@ StaticPopupDialogs["CRAFTFORGE_CONTINUE_CHANGE"] = {
 	hideOnEscape = 1
 };
 
-StaticPopupDialogs["CRAFTFORGE_MANUAL_CHANGE"] = {
-	text = "CraftForge\n"..L["Press your button which opens %s"],
+StaticPopupDialogs["CRAFTBENCH_MANUAL_CHANGE"] = {
+	text = "CraftBench\n"..L["Press your button which opens %s"],
 --	button1 = OKAY,
 --	OnAccept = function( self )
---		CraftForge:ContinueChange(true)
+--		CraftBench:ContinueChange(true)
 --		return
 --	end,
 	OnCancel = function( self )
-		CraftForge:FinishChange()
+		CraftBench:FinishChange()
 		return
 	end,
 	OnHide = function( self )
-		CraftForge:FinishChange()
+		CraftBench:FinishChange()
 		return
 	end,
 	timeout = 30,
@@ -481,27 +481,27 @@ StaticPopupDialogs["CRAFTFORGE_MANUAL_CHANGE"] = {
 --
 -- Create our frame
 --
-	if not CraftForge.tradeSkillFrame then
-		CraftForge.tradeSkillFrame = CraftForge:CreateTradeSkillWindow()
-		tinsert(UISpecialFrames, CraftForge.tradeSkillFrame:GetName())
+	if not CraftBench.tradeSkillFrame then
+		CraftBench.tradeSkillFrame = CraftBench:CreateTradeSkillWindow()
+		tinsert(UISpecialFrames, CraftBench.tradeSkillFrame:GetName())
 	end
 
 --
 -- Now do the character initialization
 --
-	self:InitializeDatabase(CraftForge:unitName("player"))
+	self:InitializeDatabase(CraftBench:unitName("player"))
 	self:InitializePlugins()
 	self.NewsGUI:Initialize()
 
 --
 --	Some counters for high frequency events
 --
-	if not CraftForge.bagUpdateCounts then
-		CraftForge.bagUpdateCounts = {}
+	if not CraftBench.bagUpdateCounts then
+		CraftBench.bagUpdateCounts = {}
 	end
-	CraftForge.bagUpdateDelayedCount = 0
-	CraftForge.unitInventoryChangedCount = 0
-	CraftForge.bankUpdateCount = 0
+	CraftBench.bagUpdateDelayedCount = 0
+	CraftBench.unitInventoryChangedCount = 0
+	CraftBench.bankUpdateCount = 0
 end
 
 --
@@ -512,52 +512,52 @@ end
 -- rarely used. There is a dataVersion number to
 -- increment to trigger a call.
 --
-function CraftForge:FlushAllData()
+function CraftBench:FlushAllData()
 	DA.DEBUG(0,"FlushAllData()");
-	CraftForge.data = {}
-	CraftForge.db.realm.tradeSkills = {}
-	CraftForge.db.realm.auctionData = {}
-	CraftForge.db.realm.inventoryData = {}
-	CraftForge.db.realm.userIgnoredMats = {}
-	CraftForge.db.realm.options = {}
-	CraftForge.db.realm.toolData = {}
-	CraftForge.db.realm.faction = {}
-	CraftForge.db.realm.race = {}
-	CraftForge.db.realm.class = {}
-	CraftForge.db.realm.guid = {}
-	CraftForge.db.global.server = {}
-	CraftForge:FlushCustomData()
-	CraftForge:FlushQueueData()
-	CraftForge:FlushRecipeData()
-	CraftForge:FlushDetailData()
-	CraftForge:FlushPlayerData()
-	CraftForge:InitializeMissingVendorItems()
+	CraftBench.data = {}
+	CraftBench.db.realm.tradeSkills = {}
+	CraftBench.db.realm.auctionData = {}
+	CraftBench.db.realm.inventoryData = {}
+	CraftBench.db.realm.userIgnoredMats = {}
+	CraftBench.db.realm.options = {}
+	CraftBench.db.realm.toolData = {}
+	CraftBench.db.realm.faction = {}
+	CraftBench.db.realm.race = {}
+	CraftBench.db.realm.class = {}
+	CraftBench.db.realm.guid = {}
+	CraftBench.db.global.server = {}
+	CraftBench:FlushCustomData()
+	CraftBench:FlushQueueData()
+	CraftBench:FlushRecipeData()
+	CraftBench:FlushDetailData()
+	CraftBench:FlushPlayerData()
+	CraftBench:InitializeMissingVendorItems()
 end
 
 --
 -- Flush all data for the current player
 --
-function CraftForge:FlushPlayerData()
+function CraftBench:FlushPlayerData()
 	DA.DEBUG(0,"FlushPlayerData()");
-	local player = CraftForge:unitName("player")
-	CraftForge.db.realm.tradeSkills[player] = {}
-	CraftForge.db.realm.auctionData[player] = {}
-	CraftForge.db.realm.inventoryData[player] = {}
-	CraftForge.db.realm.userIgnoredMats[player] = {}
-	CraftForge.db.realm.bagData[player] = {}
-	CraftForge.db.realm.bagDetails[player] = {}
-	CraftForge.db.realm.bankData[player] = {}
-	CraftForge.db.realm.bankDetails[player] = {}
-	CraftForge.db.realm.queueData[player] = {}
-	CraftForge.db.realm.reagentsInQueue[player] = {}
-	CraftForge.db.realm.modifiedInQueue[player] = {}
-	CraftForge.db.realm.groupDB[player] = {}
-	CraftForge.db.realm.options[player] = {}
-	CraftForge.db.realm.toolData[player] = {}
-	CraftForge.db.realm.faction[player] = {}
-	CraftForge.db.realm.race[player] = {}
-	CraftForge.db.realm.class[player] = {}
-	CraftForge.db.realm.guid[player]= {}
+	local player = CraftBench:unitName("player")
+	CraftBench.db.realm.tradeSkills[player] = {}
+	CraftBench.db.realm.auctionData[player] = {}
+	CraftBench.db.realm.inventoryData[player] = {}
+	CraftBench.db.realm.userIgnoredMats[player] = {}
+	CraftBench.db.realm.bagData[player] = {}
+	CraftBench.db.realm.bagDetails[player] = {}
+	CraftBench.db.realm.bankData[player] = {}
+	CraftBench.db.realm.bankDetails[player] = {}
+	CraftBench.db.realm.queueData[player] = {}
+	CraftBench.db.realm.reagentsInQueue[player] = {}
+	CraftBench.db.realm.modifiedInQueue[player] = {}
+	CraftBench.db.realm.groupDB[player] = {}
+	CraftBench.db.realm.options[player] = {}
+	CraftBench.db.realm.toolData[player] = {}
+	CraftBench.db.realm.faction[player] = {}
+	CraftBench.db.realm.race[player] = {}
+	CraftBench.db.realm.class[player] = {}
+	CraftBench.db.realm.guid[player]= {}
 end
 
 --
@@ -565,10 +565,10 @@ end
 -- effort by the player so don't clear it without
 -- good cause.
 --
-function CraftForge:FlushCustomData()
+function CraftBench:FlushCustomData()
 	DA.DEBUG(0,"FlushCustomData()");
-	CraftForge.db.realm.groupDB = {}
-	CraftForge.db.profile.groupSN = {}
+	CraftBench.db.realm.groupDB = {}
+	CraftBench.db.profile.groupSN = {}
 end
 
 --
@@ -576,11 +576,11 @@ end
 -- clearing these tables is just the current
 -- queue and should have minimal impact.
 --
-function CraftForge:FlushQueueData()
+function CraftBench:FlushQueueData()
 	DA.DEBUG(0,"FlushQueueData()");
-	CraftForge.db.realm.queueData = {}
-	CraftForge.db.realm.reagentsInQueue = {}
-	CraftForge.db.realm.modifiedInQueue = {}
+	CraftBench.db.realm.queueData = {}
+	CraftBench.db.realm.reagentsInQueue = {}
+	CraftBench.db.realm.modifiedInQueue = {}
 end
 
 --
@@ -589,16 +589,16 @@ end
 -- Blizzard's "stealth" changes to recipes are the
 -- primary reason this function exists.
 --
-function CraftForge:FlushRecipeData()
+function CraftBench:FlushRecipeData()
 	DA.DEBUG(0,"FlushRecipeData()");
-	CraftForge.db.global.recipeDB = {}
-	CraftForge.db.global.recipeNameDB = {}
-	CraftForge.db.global.itemRecipeUsedIn = {}
-	CraftForge.db.global.itemRecipeSource = {}
-	CraftForge.db.global.Categories = {}
-	if CraftForge.data and CraftForge.data.recipeInfo then
-		CraftForge.data.recipeInfo = {}
-	CraftForge:InitializeSkillLevels()
+	CraftBench.db.global.recipeDB = {}
+	CraftBench.db.global.recipeNameDB = {}
+	CraftBench.db.global.itemRecipeUsedIn = {}
+	CraftBench.db.global.itemRecipeSource = {}
+	CraftBench.db.global.Categories = {}
+	if CraftBench.data and CraftBench.data.recipeInfo then
+		CraftBench.data.recipeInfo = {}
+	CraftBench:InitializeSkillLevels()
 	end
 end
 
@@ -607,15 +607,15 @@ end
 -- can take a lot of space so clearing these tables
 -- can free that up.
 --
-function CraftForge:FlushDetailData()
+function CraftBench:FlushDetailData()
 	DA.DEBUG(0,"FlushDetailData()");
-	CraftForge.db.realm.bagData = {}
-	CraftForge.db.realm.bagDetails = {}
-	CraftForge.db.realm.bankData = {}
-	CraftForge.db.realm.bankDetails = {}
-	CraftForge.db.global.warbandData = {}
-	CraftForge.db.global.warbandDetails = {}
-	CraftForge.db.global.detailedGuildbank = {}
+	CraftBench.db.realm.bagData = {}
+	CraftBench.db.realm.bagDetails = {}
+	CraftBench.db.realm.bankData = {}
+	CraftBench.db.realm.bankDetails = {}
+	CraftBench.db.global.warbandData = {}
+	CraftBench.db.global.warbandDetails = {}
+	CraftBench.db.global.detailedGuildbank = {}
 end
 
 --
@@ -623,7 +623,7 @@ end
 -- or a table when bought with an alternate currency
 -- table entries are {name, quantity, currencyName, currencyID, currencyCount}
 --
-function CraftForge:InitializeMissingVendorItems()
+function CraftBench:InitializeMissingVendorItems()
 	self.db.global.MissingVendorItems = {
 		[30817] = "Simple Flour",
 		[4539]  = "Goldenbark Apple",
@@ -636,11 +636,11 @@ function CraftForge:InitializeMissingVendorItems()
 	}
 end
 
-function CraftForge:InitializeDatabase(player)
+function CraftBench:InitializeDatabase(player)
 	if self.linkedSkill or self.isGuild then  -- Avoid adding unnecessary data to savedvariables
 		return
 	end
-	local clean = CraftForge.CleanDatabase
+	local clean = CraftBench.CleanDatabase
 	local action = clean and "Clean" or "Initialize"
 	DA.DEBUG(0,action.." database for "..tostring(player))
 --
@@ -789,11 +789,11 @@ function CraftForge:InitializeDatabase(player)
 			end
 			self.db.profile.plugins.recipeNamePlugin = nil
 		end
-		CraftForge:InitializePlugins()
+		CraftBench:InitializePlugins()
 	end
 end
 
-function CraftForge:RegisterRecipeFilter(name, namespace, initMethod, filterMethod)
+function CraftBench:RegisterRecipeFilter(name, namespace, initMethod, filterMethod)
 	if not self.recipeFilters then
 		self.recipeFilters = {}
 	end
@@ -804,7 +804,7 @@ end
 --
 -- Called when the addon is enabled
 --
-function CraftForge:OnEnable()
+function CraftBench:OnEnable()
 	DA.DEBUG(0,"OnEnable()");
 --
 -- Hook into the events that we care about
@@ -819,7 +819,7 @@ function CraftForge:OnEnable()
 	self:RegisterEvent("TRADE_SKILL_DETAILS_UPDATE")
 --	self:RegisterEvent("TRADE_SKILL_FILTER_UPDATE")
 	self:RegisterEvent("TRADE_SKILL_LIST_UPDATE")
---	self:RegisterEvent("GUILD_RECIPE_KNOWN_BY_MEMBERS", "CraftForgeShowGuildCrafters")
+--	self:RegisterEvent("GUILD_RECIPE_KNOWN_BY_MEMBERS", "CraftBenchShowGuildCrafters")
 	self:RegisterEvent("GARRISON_TRADESKILL_NPC_CLOSED")
 	self:RegisterBucketEvent("BAG_UPDATE", 0.25, "OnBagUpdateBucket")	-- Throttled bag/bank updates via AceBucket-3.0
 	self:RegisterEvent("BAG_UPDATE_DELAYED")		-- Fires after all applicable BAG_UPDATE events for a specific action have been fired.
@@ -890,7 +890,7 @@ function CraftForge:OnEnable()
 	self:RegisterEvent("SKILL_LINES_CHANGED") -- replacement for CHAT_MSG_SKILL
 	self:RegisterEvent("NEW_RECIPE_LEARNED") -- arg1 = recipeID
 
-	if CraftForge.db.profile.BlizzOR then
+	if CraftBench.db.profile.BlizzOR then
 --
 -- Dump the data passed to C_TradeSkillUI functions so we can learn how Blizzard handles the new stuff
 --
@@ -937,7 +937,7 @@ function CraftForge:OnEnable()
 	self.hideTrivialRecipes = false
 	self.currentTrade = nil
 	self.selectedSkill = nil
-	self.currentPlayer = CraftForge:unitName("player")
+	self.currentPlayer = CraftBench:unitName("player")
 	self.currentGroupLabel = "Blizzard"
 	self.currentGroup = nil
 	self.dataScanned = false
@@ -955,27 +955,27 @@ end
 --
 -- Called when the addon is disabled
 --
-function CraftForge:OnDisable()
-	DA.DEBUG(0,"CraftForge:OnDisable()");
+function CraftBench:OnDisable()
+	DA.DEBUG(0,"CraftBench:OnDisable()");
 	self:UnregisterAllEvents()
 	self:EnableBlizzardFrame()
 end
 
-function CraftForge:PLAYER_LOGIN()
+function CraftBench:PLAYER_LOGIN()
 	DA.TRACE("PLAYER_LOGIN")
 end
 
-function CraftForge:PLAYER_MONEY()
+function CraftBench:PLAYER_MONEY()
 	DA.TRACE("PLAYER_MONEY")
 end
 
-function CraftForge:UI_ERROR_MESSAGE(event,errtype,text)
+function CraftBench:UI_ERROR_MESSAGE(event,errtype,text)
 	DA.TRACE("UI_ERROR_MESSAGE( "..tostring(errtype)..", "..tostring(text).." )")
 end
 
-function CraftForge:PLAYER_ENTERING_WORLD()
+function CraftBench:PLAYER_ENTERING_WORLD()
 	DA.TRACE("PLAYER_ENTERING_WORLD")
-	local player = CraftForge:unitName("player")
+	local player = CraftBench:unitName("player")
 	local realm = GetRealmName()
 	local faction = UnitFactionGroup("player")
 	local raceName, raceFile, raceID = UnitRace("player")
@@ -987,32 +987,32 @@ function CraftForge:PLAYER_ENTERING_WORLD()
 -- PLAYER_ENTERING_WORLD happens on login and when changing zones so
 -- only save the time of the first one.
 --
-	if not CraftForge.loginTime then
-		CraftForge.loginTime = GetTime()
+	if not CraftBench.loginTime then
+		CraftBench.loginTime = GetTime()
 	end
 --
 -- Store some identifying data in the per character saved variables file
 --
-	CraftForgeWho.player = player
-	CraftForgeWho.realm = realm
-	CraftForgeWho.faction = faction
-	CraftForgeWho.raceFile = raceFile
-	CraftForgeWho.classFile = classFile
+	CraftBenchWho.player = player
+	CraftBenchWho.realm = realm
+	CraftBenchWho.faction = faction
+	CraftBenchWho.raceFile = raceFile
+	CraftBenchWho.classFile = classFile
 	self.db.realm.faction[player] = faction
 	self.db.realm.race[player] = raceFile
 	self.db.realm.class[player] = classFile
-	CraftForgeWho.locale = locale
-	CraftForgeWho.wowBuild = wowBuild
-	CraftForgeWho.wowVersion = wowVersion
-	CraftForgeWho.guid = guid
-	CraftForgeWho.version = CraftForge.version
+	CraftBenchWho.locale = locale
+	CraftBenchWho.wowBuild = wowBuild
+	CraftBenchWho.wowVersion = wowVersion
+	CraftBenchWho.guid = guid
+	CraftBenchWho.version = CraftBench.version
 	if guid then
 		local kind, server, ID = strsplit("-", guid)
 		DA.DEBUG(1,"player="..tostring(player)..", faction="..tostring(faction)..", guid="..tostring(guid)..", server="..tostring(server))
 --
 -- If we support data sharing across connected realms, then
--- CraftForge.db.realm.* data needs to move to 
--- CraftForge.db.global.* data indexed by server.
+-- CraftBench.db.realm.* data needs to move to 
+-- CraftBench.db.global.* data indexed by server.
 --
 		self.db.realm.guid[player]= guid
 		if (server) then
@@ -1037,21 +1037,21 @@ function CraftForge:PLAYER_ENTERING_WORLD()
 	end
 end
 
-function CraftForge:ADDON_ACTION_BLOCKED()
+function CraftBench:ADDON_ACTION_BLOCKED()
 	DA.TRACE("ADDON_ACTION_BLOCKED")
---	print("|cf0f00000CraftForge-Classic|r: Combat lockdown restriction." ..
+--	print("|cf0f00000CraftBench-Classic|r: Combat lockdown restriction." ..
 --								  " Leave combat and try again.")
 --	self:HideAllWindows()
 end
 
-function CraftForge:PLAYER_LOGOUT()
+function CraftBench:PLAYER_LOGOUT()
 	DA.TRACE("PLAYER_LOGOUT")
 --
 -- Make a copy of the in memory data for debugging. Note: DeepCopy.lua needs to be added to the .toc
 --
 	if DA.deepcopy then
 		self.data.sortedSkillList = {"Removed"} -- This table is huge so don't save it unless needed.
---		CraftForgeMemory = DA.deepcopy(self.data)	-- Everything else
+--		CraftBenchMemory = DA.deepcopy(self.data)	-- Everything else
 --
 -- For RecipeGroups debugging:
 --
@@ -1062,23 +1062,23 @@ function CraftForge:PLAYER_LOGOUT()
 				self.data.groupList[self.currentPlayer][tradeID]["Blizzard"] = {"Removed"}
 			end
 		end
-		CraftForgeMemory = DA.deepcopy(self.data.groupList) -- minus all the group "Blizzard" stuff
+		CraftBenchMemory = DA.deepcopy(self.data.groupList) -- minus all the group "Blizzard" stuff
 	end
 end
 
-function CraftForge:CHAT_MSG_SKILL(event,text)	-- Replaced by SKILL_LINES_CHANGED
+function CraftBench:CHAT_MSG_SKILL(event,text)	-- Replaced by SKILL_LINES_CHANGED
 	DA.TRACE("CHAT_MSG_SKILL")
-	if CraftForge.tradeSkillOpen then
---		CraftForge:RescanTrade()
---		CraftForge:UpdateTradeSkillWindow()
---		CraftForge.dataSourceChanged = true	-- Process the change on the next TRADE_SKILL_LIST_UPDATE
+	if CraftBench.tradeSkillOpen then
+--		CraftBench:RescanTrade()
+--		CraftBench:UpdateTradeSkillWindow()
+--		CraftBench.dataSourceChanged = true	-- Process the change on the next TRADE_SKILL_LIST_UPDATE
 	end
 end
 
-function CraftForge:SKILL_LINES_CHANGED()
+function CraftBench:SKILL_LINES_CHANGED()
 	DA.TRACE("SKILL_LINES_CHANGED")
-	if CraftForge.tradeSkillOpen then
-		CraftForge.dataSourceChanged = true	-- Process the change on the next TRADE_SKILL_LIST_UPDATE
+	if CraftBench.tradeSkillOpen then
+		CraftBench.dataSourceChanged = true	-- Process the change on the next TRADE_SKILL_LIST_UPDATE
 		if not self._skillLineRescanTimer then
 			self._skillLineRescanTimer = self:ScheduleTimer(function()
 				self._skillLineRescanTimer = nil
@@ -1092,136 +1092,136 @@ function CraftForge:SKILL_LINES_CHANGED()
 	end
 end
 
-function CraftForge:NEW_RECIPE_LEARNED(event, recipeID)
+function CraftBench:NEW_RECIPE_LEARNED(event, recipeID)
 	DA.TRACE("NEW_RECIPE_LEARNED")
 	DA.TRACE("recipeID= ", recipeID)
-	if CraftForge.tradeSkillOpen then
-		CraftForge.dataSourceChanged = true	-- Process the change on the next TRADE_SKILL_LIST_UPDATE
+	if CraftBench.tradeSkillOpen then
+		CraftBench.dataSourceChanged = true	-- Process the change on the next TRADE_SKILL_LIST_UPDATE
 	end
 end
 
-function CraftForge:TRADE_SKILL_SHOW()
+function CraftBench:TRADE_SKILL_SHOW()
 	DA.TRACE("TRADE_SKILL_SHOW")
-	CraftForge.dataSourceChanged = false
-	CraftForge.detailsUpdate = false
-	CraftForge.skillListUpdate = false
-	CraftForge.adjustInventory = false
-	CraftForge:CraftForgeShow()
+	CraftBench.dataSourceChanged = false
+	CraftBench.detailsUpdate = false
+	CraftBench.skillListUpdate = false
+	CraftBench.adjustInventory = false
+	CraftBench:CraftBenchShow()
 end
 
-function CraftForge:TRADE_SKILL_CLOSE()
+function CraftBench:TRADE_SKILL_CLOSE()
 	DA.TRACE("TRADE_SKILL_CLOSE")
-	CraftForge:CraftForgeClose()
-	CraftForge.dataSourceChanged = false
-	CraftForge.detailsUpdate = false
-	CraftForge.skillListUpdate = false
-	CraftForge.adjustInventory = false
+	CraftBench:CraftBenchClose()
+	CraftBench.dataSourceChanged = false
+	CraftBench.detailsUpdate = false
+	CraftBench.skillListUpdate = false
+	CraftBench.adjustInventory = false
 end
 
-function CraftForge:TRADE_SKILL_DATA_SOURCE_CHANGED()
+function CraftBench:TRADE_SKILL_DATA_SOURCE_CHANGED()
 	DA.TRACE("TRADE_SKILL_DATA_SOURCE_CHANGED")
-	DA.TRACE("tradeSkillOpen= "..tostring(CraftForge.tradeSkillOpen))
-	if CraftForge.tradeSkillOpen then
-		CraftForge.dataSourceChanged = true
-		CraftForge:CraftForgeShowWindow("CHANGED")
-		if CraftForge.delaySelectedSkill then
-			self:SetSelectedSkill(CraftForge.delaySkillIndex)
-			CraftForge.delaySelectedSkill = false
+	DA.TRACE("tradeSkillOpen= "..tostring(CraftBench.tradeSkillOpen))
+	if CraftBench.tradeSkillOpen then
+		CraftBench.dataSourceChanged = true
+		CraftBench:CraftBenchShowWindow("CHANGED")
+		if CraftBench.delaySelectedSkill then
+			self:SetSelectedSkill(CraftBench.delaySkillIndex)
+			CraftBench.delaySelectedSkill = false
 		end
 	end
 end
 
-function CraftForge:TRADE_SKILL_DATA_SOURCE_CHANGING()
+function CraftBench:TRADE_SKILL_DATA_SOURCE_CHANGING()
 	DA.TRACE("TRADE_SKILL_DATA_SOURCE_CHANGING")
-	DA.TRACE("tradeSkillOpen= "..tostring(CraftForge.tradeSkillOpen))
-	if CraftForge.tradeSkillOpen then
-		CraftForge:CraftForgeShow()
+	DA.TRACE("tradeSkillOpen= "..tostring(CraftBench.tradeSkillOpen))
+	if CraftBench.tradeSkillOpen then
+		CraftBench:CraftBenchShow()
 	end
 end
 
-function CraftForge:TRADE_SKILL_DETAILS_UPDATE()
+function CraftBench:TRADE_SKILL_DETAILS_UPDATE()
 	DA.TRACE("TRADE_SKILL_DETAILS_UPDATE")
-	DA.TRACE("tradeSkillOpen= "..tostring(CraftForge.tradeSkillOpen))
-	if CraftForge.tradeSkillOpen then
-		CraftForge.detailsUpdate = true
-		CraftForge:RescanTrade()
-		CraftForge:UpdateTradeSkillWindow()
+	DA.TRACE("tradeSkillOpen= "..tostring(CraftBench.tradeSkillOpen))
+	if CraftBench.tradeSkillOpen then
+		CraftBench.detailsUpdate = true
+		CraftBench:RescanTrade()
+		CraftBench:UpdateTradeSkillWindow()
 	end
 end
 
-function CraftForge:TRADE_SKILL_FILTER_UPDATE()
+function CraftBench:TRADE_SKILL_FILTER_UPDATE()
 	DA.TRACE("TRADE_SKILL_FILTER_UPDATE")
 end
 
-function CraftForge:TRADE_SKILL_LIST_UPDATE()
+function CraftBench:TRADE_SKILL_LIST_UPDATE()
 	DA.TRACE("TRADE_SKILL_LIST_UPDATE")
-	--DA.TRACE("tradeSkillOpen= "..tostring(CraftForge.tradeSkillOpen))
-	--DA.TRACE("dataSourceChanged= "..tostring(CraftForge.dataSourceChanged))
-	--DA.TRACE("adjustInventory= "..tostring(CraftForge.adjustInventory))
-	if CraftForge.tradeSkillOpen and CraftForge.dataSourceChanged then
-		CraftForge.dataSourceChanged = false
-		CraftForge.adjustInventory = false
-		CraftForge.skillListUpdate = true
-		CraftForge:CraftForgeShowWindow("UPDATE")
+	--DA.TRACE("tradeSkillOpen= "..tostring(CraftBench.tradeSkillOpen))
+	--DA.TRACE("dataSourceChanged= "..tostring(CraftBench.dataSourceChanged))
+	--DA.TRACE("adjustInventory= "..tostring(CraftBench.adjustInventory))
+	if CraftBench.tradeSkillOpen and CraftBench.dataSourceChanged then
+		CraftBench.dataSourceChanged = false
+		CraftBench.adjustInventory = false
+		CraftBench.skillListUpdate = true
+		CraftBench:CraftBenchShowWindow("UPDATE")
 	end
-	if CraftForge.tradeSkillOpen and CraftForge.adjustInventory then
-		CraftForge.skillListUpdate = true
-		CraftForge:AdjustInventory()
+	if CraftBench.tradeSkillOpen and CraftBench.adjustInventory then
+		CraftBench.skillListUpdate = true
+		CraftBench:AdjustInventory()
 	end
 end
 
-function CraftForge:TRADE_SKILL_NAME_UPDATE()
+function CraftBench:TRADE_SKILL_NAME_UPDATE()
 	DA.TRACE("TRADE_SKILL_NAME_UPDATE")
-	DA.TRACE("linkedSkill= "..tostring(CraftForge.linkedSkill))
-	if CraftForge.linkedSkill then
-		CraftForge:CraftForgeShow()
+	DA.TRACE("linkedSkill= "..tostring(CraftBench.linkedSkill))
+	if CraftBench.linkedSkill then
+		CraftBench:CraftBenchShow()
 	end
 end
 
-function CraftForge:GARRISON_TRADESKILL_NPC_CLOSED()
+function CraftBench:GARRISON_TRADESKILL_NPC_CLOSED()
 	DA.TRACE("GARRISON_TRADESKILL_NPC_CLOSED")
 end
 
-function CraftForge:ITEM_DATA_LOAD_RESULT(event, itemID, result)
+function CraftBench:ITEM_DATA_LOAD_RESULT(event, itemID, result)
 	if itemID then
 		local name = C_Item.GetItemInfo(itemID)
 		DA.TRACE3("ITEM_DATA_LOAD_RESULT(", itemID, result, "), "..tostring(name))
 	else
 		DA.TRACE3("ITEM_DATA_LOAD_RESULT")
 	end
-	if CraftForge.salvageDataNeeded then
-		CraftForge:UpdateSalvageListWindow()
-		CraftForge.salvageDataNeeded = nil
+	if CraftBench.salvageDataNeeded then
+		CraftBench:UpdateSalvageListWindow()
+		CraftBench.salvageDataNeeded = nil
 	end
-	if CraftForge.finishingDataNeeded then
-		CraftForge:UpdateFinishingListWindow()
-		CraftForge.finishingDataNeeded = nil
+	if CraftBench.finishingDataNeeded then
+		CraftBench:UpdateFinishingListWindow()
+		CraftBench.finishingDataNeeded = nil
 	end
-	if CraftForge.optionalDataNeeded then
-		CraftForge:UpdateOptionalListWindow()
-		CraftForge.optionalDataNeeded = nil
+	if CraftBench.optionalDataNeeded then
+		CraftBench:UpdateOptionalListWindow()
+		CraftBench.optionalDataNeeded = nil
 	end
-	if CraftForge.modifiedDataNeeded then
-		CraftForge:UpdateModifiedListWindow()
-		CraftForge.modifiedDataNeeded = nil
+	if CraftBench.modifiedDataNeeded then
+		CraftBench:UpdateModifiedListWindow()
+		CraftBench.modifiedDataNeeded = nil
 	end
-	if CraftForge.detailDataNeeded then
-		if not CraftForge.InProgress.detail then
-			CraftForge:UpdateDetailWindow(self.selectedSkill)
+	if CraftBench.detailDataNeeded then
+		if not CraftBench.InProgress.detail then
+			CraftBench:UpdateDetailWindow(self.selectedSkill)
 		end
-		CraftForge.detailDataNeeded = nil
+		CraftBench.detailDataNeeded = nil
 	end
 end
 
-function CraftForge:GET_ITEM_INFO_RECEIVED(event, itemID, result)
+function CraftBench:GET_ITEM_INFO_RECEIVED(event, itemID, result)
 	if itemID then
 		local name = C_Item.GetItemInfo(itemID)
 		DA.TRACE3("GET_ITEM_INFO_RECEIVED(", itemID, result, "), "..tostring(name))
-		if result and self.tradeSkillOpen and CraftForgeFrame and CraftForgeFrame:IsVisible() then
+		if result and self.tradeSkillOpen and CraftBenchFrame and CraftBenchFrame:IsVisible() then
 			if not self._itemInfoRefreshTimer then
 				self._itemInfoRefreshTimer = self:ScheduleTimer(function()
 					self._itemInfoRefreshTimer = nil
-					if self.tradeSkillOpen and CraftForgeFrame and CraftForgeFrame:IsVisible() then
+					if self.tradeSkillOpen and CraftBenchFrame and CraftBenchFrame:IsVisible() then
 						self:UpdateTradeSkillWindow()
 					end
 				end, 0.2)
@@ -1235,43 +1235,43 @@ end
 --
 -- Dragonflight replacement for *_SHOW events
 --
-function CraftForge:PLAYER_INTERACTION_MANAGER_FRAME_SHOW(event,interactionType)
+function CraftBench:PLAYER_INTERACTION_MANAGER_FRAME_SHOW(event,interactionType)
 	DA.TRACE("PLAYER_INTERACTION_MANAGER_FRAME_SHOW(", interactionType, ")")
 	if interactionType == Enum.PlayerInteractionType.Merchant then -- 5
---		CraftForge:CraftForge:MERCHANT_SHOW()
-		CraftForge:MerchantShow()
+--		CraftBench:CraftBench:MERCHANT_SHOW()
+		CraftBench:MerchantShow()
 	end
 	if interactionType == Enum.PlayerInteractionType.Banker then -- 8
-		CraftForge:BANKFRAME_OPENED()
+		CraftBench:BANKFRAME_OPENED()
 	end
 	if interactionType == Enum.PlayerInteractionType.GuildBanker then -- 10
-		CraftForge:GUILDBANKFRAME_OPENED()
+		CraftBench:GUILDBANKFRAME_OPENED()
 	end
 	if interactionType == Enum.PlayerInteractionType.Auctioneer then -- 21
-		CraftForge:AUCTION_HOUSE_SHOW()
+		CraftBench:AUCTION_HOUSE_SHOW()
 	end
 end
 
 --
 -- Dragonflight replacement for *_CLOSED events
 --
-function CraftForge:PLAYER_INTERACTION_MANAGER_FRAME_HIDE(event,interactionType)
+function CraftBench:PLAYER_INTERACTION_MANAGER_FRAME_HIDE(event,interactionType)
 	DA.TRACE("PLAYER_INTERACTION_MANAGER_FRAME_HIDE(", interactionType, ")")
 	if interactionType == Enum.PlayerInteractionType.Merchant then -- 5
---		CraftForge:MERCHANT_CLOSED()
+--		CraftBench:MERCHANT_CLOSED()
 	end
 	if interactionType == Enum.PlayerInteractionType.Banker then -- 8
-		CraftForge:BANKFRAME_CLOSED()
+		CraftBench:BANKFRAME_CLOSED()
 	end
 	if interactionType == Enum.PlayerInteractionType.GuildBanker then -- 10
-		CraftForge:GUILDBANKFRAME_CLOSED()
+		CraftBench:GUILDBANKFRAME_CLOSED()
 	end
 	if interactionType == Enum.PlayerInteractionType.Auctioneer then -- 21
-		CraftForge:AUCTION_HOUSE_CLOSED()
+		CraftBench:AUCTION_HOUSE_CLOSED()
 	end
 end
 
-function CraftForge:IsTradeSkillLinked()
+function CraftBench:IsTradeSkillLinked()
 	local isGuild = C_TradeSkillUI.IsTradeSkillGuild()
 	local isLinked, linkedPlayer = C_TradeSkillUI.IsTradeSkillLinked()
 	DA.DEBUG(0,"IsTradeSkillLinked: isGuild="..tostring(isGuild)..", isLinked="..tostring(isLinked)..", linkedPlayer="..tostring(linkedPlayer))
@@ -1288,13 +1288,13 @@ end
 
 --
 -- Allow modifier keys that change initial frame behavior to be disabled.
--- Modifier keys within the CraftForge frame are not effected.
--- Type "/craftforge nomodkeys" to toggle.
+-- Modifier keys within the CraftBench frame are not effected.
+-- Type "/craftbench nomodkeys" to toggle.
 --
 -- Make modifier key to open Blizzard frame optional.
 --
-function CraftForge:IsModKey1Down()
-	if not CraftForge.db.profile.nomodkeys and IsShiftKeyDown() then
+function CraftBench:IsModKey1Down()
+	if not CraftBench.db.profile.nomodkeys and IsShiftKeyDown() then
 		return true
 	end
 	return false
@@ -1303,8 +1303,8 @@ end
 --
 -- Make modifier key to alter some behaviors optional.
 --
-function CraftForge:IsModKey2Down()
-	if not CraftForge.db.profile.nomodkeys and IsControlKeyDown() then
+function CraftBench:IsModKey2Down()
+	if not CraftBench.db.profile.nomodkeys and IsControlKeyDown() then
 		return true
 	end
 	return false
@@ -1313,8 +1313,8 @@ end
 --
 -- Make modifier key to alter some behaviors optional.
 --
-function CraftForge:IsModKey3Down()
-	if not CraftForge.db.profile.nomodkeys and IsAltKeyDown() then
+function CraftBench:IsModKey3Down()
+	if not CraftBench.db.profile.nomodkeys and IsAltKeyDown() then
 		return true
 	end
 	return false
@@ -1324,17 +1324,17 @@ end
 -- Checks to see if the current trade is one that we support.
 -- Control key says we do (even if we don't, debugging)
 -- Shift key says we don't support it (even if we do)
--- Shift key behavior can be swapped with "/craftforge swapshiftkey"
+-- Shift key behavior can be swapped with "/craftbench swapshiftkey"
 --
-function CraftForge:IsSupportedTradeskill(tradeID)
+function CraftBench:IsSupportedTradeskill(tradeID)
 	DA.DEBUG(0,"IsSupportedTradeskill("..tostring(tradeID)..")")
 	if self:IsModKey2Down() then
 		return true
 	end
 	if self:IsModKey1Down() then
-		return CraftForge.db.profile.swapshiftkey
+		return CraftBench.db.profile.swapshiftkey
 	end
-	if not tradeID or self.BlizzardSkillList[tradeID] or self.currentPlayer ~= CraftForge:unitName("player") then
+	if not tradeID or self.BlizzardSkillList[tradeID] or self.currentPlayer ~= CraftBench:unitName("player") then
 		DA.DEBUG(3,"IsSupportedTradeskill: BlizzardSkillList="..tostring(self.BlizzardSkillList[tradeID]))
 		return false
 	end
@@ -1343,17 +1343,17 @@ function CraftForge:IsSupportedTradeskill(tradeID)
 		DA.DEBUG(3,"IsSupportedTradeskill: not ranks")
 		return false
 	end
-	return not CraftForge.db.profile.swapshiftkey
+	return not CraftBench.db.profile.swapshiftkey
 end
 
 --
--- Checks to see if this trade follower can not use CraftForge frame.
+-- Checks to see if this trade follower can not use CraftBench frame.
 --
-function CraftForge:IsNotSupportedFollower(tradeID)
+function CraftBench:IsNotSupportedFollower(tradeID)
 	--DA.DEBUG(0,"IsNotSupportedFollower("..tostring(tradeID)..")")
-	CraftForge.wasNPCCrafting = false
+	CraftBench.wasNPCCrafting = false
 	if self:IsModKey1Down() and self:IsModKey3Down() then
-		CraftForge.wasNPCCrafting = true
+		CraftBench.wasNPCCrafting = true
 		DA.DEBUG(3,"IsNotSupportedFollower: ShiftKey and AltKey down")
 		return true -- Use Blizzard frame
 	end
@@ -1361,9 +1361,9 @@ function CraftForge:IsNotSupportedFollower(tradeID)
 		DA.DEBUG(3,"IsNotSupportedFollower: not tradeID")
 		return true -- Unknown tradeskill, play it safe and use Blizzard frame
 	end
-	if C_TradeSkillUI.IsNPCCrafting() and CraftForge.FollowerSkillList[tradeID] then
+	if C_TradeSkillUI.IsNPCCrafting() and CraftBench.FollowerSkillList[tradeID] then
 		DA.DEBUG(3,"IsNotSupportedFollower: IsNPCCrafting and FollowerSkillList")
-		CraftForge.wasNPCCrafting = true
+		CraftBench.wasNPCCrafting = true
 		return true -- Any NPC for this tradeskill uses Blizzard Frame
 	end
 	local guid = UnitGUID("target")
@@ -1372,19 +1372,19 @@ function CraftForge:IsNotSupportedFollower(tradeID)
 		DA.DEBUG(3,"IsNotSupportedFollower: IsNPCCrafting="..tostring(C_TradeSkillUI.IsNPCCrafting())..", gtype="..tostring(gtype)..", npc_id="..tostring(npc_id))
 		if self:IsModKey2Down() and self:IsModKey3Down() then
 			DA.DEBUG(3,"IsNotSupportedFollower: CtrlKey and AltKey down")
-			CraftForge.wasNPCCrafting = true
-			return false -- Use CraftForge frame (mostly for debugging)
+			CraftBench.wasNPCCrafting = true
+			return false -- Use CraftBench frame (mostly for debugging)
 		end
-		if gtype and gtype == "Creature" and CraftForge.FollowerNPC[npc_id] then
-			CraftForge.wasNPCCrafting = true
-			return true -- This specific NPC crafts things CraftForge can't process, use Blizzard frame
+		if gtype and gtype == "Creature" and CraftBench.FollowerNPC[npc_id] then
+			CraftBench.wasNPCCrafting = true
+			return true -- This specific NPC crafts things CraftBench can't process, use Blizzard frame
 		end
-		if C_TradeSkillUI.IsNPCCrafting() and CraftForge.db.profile.use_blizzard_for_followers then
-			CraftForge.wasNPCCrafting = true
+		if C_TradeSkillUI.IsNPCCrafting() and CraftBench.db.profile.use_blizzard_for_followers then
+			CraftBench.wasNPCCrafting = true
 			return true -- Option makes this easy, use Blizzard frame
 		end
 	end
-	return false -- Use CraftForge frame
+	return false -- Use CraftBench frame
 end
 
 --
@@ -1393,43 +1393,43 @@ end
 --
 -- Forever returns something "dynamically" different
 --
-BINDING_NAME_CRAFTFORGEPROFESSION1 = L["Profession"].." 1"
-BINDING_NAME_CRAFTFORGEPROFESSION2 = L["Profession"].." 2"
-BINDING_NAME_CRAFTFORGEPROFESSION3 = L["Profession"].." 3"
-BINDING_NAME_CRAFTFORGEPROFESSION4 = L["Profession"].." 4"
-BINDING_NAME_CRAFTFORGEPROFESSION5 = L["Profession"].." 5"
-BINDING_NAME_CRAFTFORGEPROFESSION6 = L["Profession"].." 6"
-BINDING_NAME_CRAFTFORGEPROFESSION7 = L["Profession"].." 7"
+BINDING_NAME_CRAFTBENCHPROFESSION1 = L["Profession"].." 1"
+BINDING_NAME_CRAFTBENCHPROFESSION2 = L["Profession"].." 2"
+BINDING_NAME_CRAFTBENCHPROFESSION3 = L["Profession"].." 3"
+BINDING_NAME_CRAFTBENCHPROFESSION4 = L["Profession"].." 4"
+BINDING_NAME_CRAFTBENCHPROFESSION5 = L["Profession"].." 5"
+BINDING_NAME_CRAFTBENCHPROFESSION6 = L["Profession"].." 6"
+BINDING_NAME_CRAFTBENCHPROFESSION7 = L["Profession"].." 7"
 
 local function ChangeBindings(i, name)
 	DA.DEBUG(0,"ChangeBindings("..tostring(i)..", "..tostring(name)..")")
 	if i == 1 then
-		BINDING_NAME_CRAFTFORGEPROFESSION1 = name
+		BINDING_NAME_CRAFTBENCHPROFESSION1 = name
 	end
 	if i == 2 then
-		BINDING_NAME_CRAFTFORGEPROFESSION2 = name
+		BINDING_NAME_CRAFTBENCHPROFESSION2 = name
 	end
 	if i == 3 then
-		BINDING_NAME_CRAFTFORGEPROFESSION3 = name
+		BINDING_NAME_CRAFTBENCHPROFESSION3 = name
 	end
 	if i == 4 then
-		BINDING_NAME_CRAFTFORGEPROFESSION4 = name
+		BINDING_NAME_CRAFTBENCHPROFESSION4 = name
 	end
 	if i == 5 then
-		BINDING_NAME_CRAFTFORGEPROFESSION5 = name
+		BINDING_NAME_CRAFTBENCHPROFESSION5 = name
 	end
 	if i == 6 then
-		BINDING_NAME_CRAFTFORGEPROFESSION6 = name
+		BINDING_NAME_CRAFTBENCHPROFESSION6 = name
 	end
 	if i == 7 then
-		BINDING_NAME_CRAFTFORGEPROFESSION7 = name
+		BINDING_NAME_CRAFTBENCHPROFESSION7 = name
 	end
 end
 
 --
 -- called from keybindings in Bindings.xml
 --
-function CraftForge:ShowProfession(whichone)
+function CraftBench:ShowProfession(whichone)
 	local tradeName, tradeID
 	DA.DEBUG(0,"ShowProfession("..tostring(whichone)..")")
 	--DA.MARK3("ShowProfession("..tostring(whichone)..")")
@@ -1455,15 +1455,15 @@ end
 --
 -- Show the tradeskill window, called from TRADE_SKILL_SHOW event, clicking on links, or clicking on guild professions
 --
-function CraftForge:CraftForgeShow()
-	DA.DEBUG(0,"CraftForgeShow: (was showing "..tostring(self.currentTrade)..")");
+function CraftBench:CraftBenchShow()
+	DA.DEBUG(0,"CraftBenchShow: (was showing "..tostring(self.currentTrade)..")");
 	local linkedPlayer
 	self.linkedSkill, linkedPlayer, self.isGuild = self:IsTradeSkillLinked()
-	StaticPopup_Hide("CRAFTFORGE_MANUAL_CHANGE")
+	StaticPopup_Hide("CRAFTBENCH_MANUAL_CHANGE")
 	if self.linkedSkill or self.isGuild then
 		return
 	end
-	self.currentPlayer = CraftForge:unitName("player")
+	self.currentPlayer = CraftBench:unitName("player")
 	local frame = self.tradeSkillFrame
 	if not frame then
 		frame = self:CreateTradeSkillWindow()
@@ -1472,51 +1472,51 @@ function CraftForge:CraftForgeShow()
 	end
 	self:ScanPlayerTradeSkills(self.currentPlayer)
 	local baseinfo = C_TradeSkillUI.GetBaseProfessionInfo()
-	--DA.DEBUG(3,"CraftForgeShow: GetBaseProfessionInfo info= "..DA.DUMP1(baseinfo))
+	--DA.DEBUG(3,"CraftBenchShow: GetBaseProfessionInfo info= "..DA.DUMP1(baseinfo))
 	local childinfo = C_TradeSkillUI.GetChildProfessionInfos()
-	--DA.DEBUG(3,"CraftForgeShow: GetChildProfessionInfos info= "..DA.DUMP(childinfo))
+	--DA.DEBUG(3,"CraftBenchShow: GetChildProfessionInfos info= "..DA.DUMP(childinfo))
 
 	self.currentTrade = self.tradeSkillIDsByName[baseinfo.professionName]	-- names are localized so use a table to translate
 
-	DA.DEBUG(0,"CraftForgeShow: trade= "..tostring(self.currentTrade))
+	DA.DEBUG(0,"CraftBenchShow: trade= "..tostring(self.currentTrade))
 	local link = C_TradeSkillUI.GetTradeSkillListLink()
 	if not link then
-		DA.DEBUG(0,"CraftForgeShow: "..tostring(skillLineName).." not linkable")
+		DA.DEBUG(0,"CraftBenchShow: "..tostring(skillLineName).." not linkable")
 	end
-	if TSM_API and TSM_API.IsUIVisible("CRAFTING") and CraftForge.db.profile.tsm_prefer then
+	if TSM_API and TSM_API.IsUIVisible("CRAFTING") and CraftBench.db.profile.tsm_prefer then
 --
 -- Use the TradeSkillMaster UI 
 --
-		DA.DEBUG(3,"CraftForgeShow: "..tostring(self.currentTrade).." TSM Preferred")
+		DA.DEBUG(3,"CraftBenchShow: "..tostring(self.currentTrade).." TSM Preferred")
 		self:HideAllWindows()
 --		self:EnableBlizzardFrame()
 --		ShowUIPanel(ProfessionsFrame)
-		CraftForge.BlizzardUIshowing = true
-	elseif self:IsNotSupportedFollower(self.currentTrade) or CraftForge.db.profile.tsm_prefer then
+		CraftBench.BlizzardUIshowing = true
+	elseif self:IsNotSupportedFollower(self.currentTrade) or CraftBench.db.profile.tsm_prefer then
 --
 -- Use the Blizzard UI for any garrison follower that can't use ours
 --
-		DA.DEBUG(3,"CraftForgeShow: "..tostring(self.currentTrade).." IsNotSupportedFollower")
+		DA.DEBUG(3,"CraftBenchShow: "..tostring(self.currentTrade).." IsNotSupportedFollower")
 		self:HideAllWindows()
 		self:EnableBlizzardFrame()
 	elseif self:IsSupportedTradeskill(self.currentTrade) then
-		DA.DEBUG(3,"CraftForgeShow: "..tostring(self.currentTrade).." IsSupportedTradeskill")
+		DA.DEBUG(3,"CraftBenchShow: "..tostring(self.currentTrade).." IsSupportedTradeskill")
 		self:DisableBlizzardFrame()
 		self.tradeSkillOpen = true
 		self.selectedSkill = nil
 		self.dataScanned = false
 		self:SetTradeSkillLearned()
-		DA.DEBUG(3,"CraftForgeShow: waiting for TRADE_SKILL_DATA_SOURCE_CHANGED")
+		DA.DEBUG(3,"CraftBenchShow: waiting for TRADE_SKILL_DATA_SOURCE_CHANGED")
 		if C_Timer and C_Timer.After then
 			C_Timer.After(0.05, function()
-				if CraftForge.tradeSkillOpen and not CraftForge.dataSourceChanged and (not CraftForge.tradeSkillFrame or not CraftForge.tradeSkillFrame:IsVisible()) then
-					CraftForge:CraftForgeShowWindow("TIMER")
+				if CraftBench.tradeSkillOpen and not CraftBench.dataSourceChanged and (not CraftBench.tradeSkillFrame or not CraftBench.tradeSkillFrame:IsVisible()) then
+					CraftBench:CraftBenchShowWindow("TIMER")
 				end
 			end)
 		end
---		self:CraftForgeShowWindow() -- Need to wait until TRADE_SKILL_DATA_SOURCE_CHANGED
+--		self:CraftBenchShowWindow() -- Need to wait until TRADE_SKILL_DATA_SOURCE_CHANGED
 	else
-		DA.DEBUG(3,"CraftForgeShow: "..tostring(self.currentTrade).." not IsSupportedTradeskill")
+		DA.DEBUG(3,"CraftBenchShow: "..tostring(self.currentTrade).." not IsSupportedTradeskill")
 		self:HideAllWindows()
 		self:EnableBlizzardFrame()
 	end
@@ -1525,13 +1525,13 @@ end
 --
 -- Called from events TRADE_SKILL_DATA_SOURCE_CHANGED and TRADE_SKILL_LIST_UPDATE
 --
-function CraftForge:CraftForgeShowWindow(where)
-	DA.DEBUG(0,"CraftForgeShowWindow("..tostring(where).."), "..tostring(self.currentTrade))
-	if not CraftForge.db.profile.tsm_compat then
+function CraftBench:CraftBenchShowWindow(where)
+	DA.DEBUG(0,"CraftBenchShowWindow("..tostring(where).."), "..tostring(self.currentTrade))
+	if not CraftBench.db.profile.tsm_compat then
 		if TSM_API and where == "CHANGED" then
 			if TSM_API.IsUIVisible("CRAFTING") then
-				if not CraftForge.db.profile.tsm_prefer then
-					DA.MARK3(L["TradeSkillMaster must be in 'WOW UI' mode to use CraftForge"])
+				if not CraftBench.db.profile.tsm_prefer then
+					DA.MARK3(L["TradeSkillMaster must be in 'WOW UI' mode to use CraftBench"])
 				end
 				return
 			end
@@ -1561,7 +1561,7 @@ function CraftForge:CraftForgeShowWindow(where)
 	self.currentGroupLabel = self:GetTradeSkillOption("grouping")
 	self:RecipeGroupDropdown_OnShow()
 	self:ShowTradeSkillWindow()
-	local searchbox = _G["CraftForgeSearchBox"]
+	local searchbox = _G["CraftBenchSearchBox"]
 	local oldtext = searchbox:GetText()
 	local searchText = self:GetTradeSkillOption("searchtext")
 --
@@ -1572,30 +1572,30 @@ function CraftForge:CraftForgeShowWindow(where)
 	end
 end
 
-function CraftForge:CraftForgeClose()
-	DA.DEBUG(0,"CraftForgeClose()")
+function CraftBench:CraftBenchClose()
+	DA.DEBUG(0,"CraftBenchClose()")
 	self.tradeSkillOpen = false
 	self:HideAllWindows()
 	if self.isForever and self.db.profile.scale_blizzard_frame and ProfessionsFrame then
 		ProfessionsFrame:SetScale(1.0)	-- Just to make sure
 	end
-	if CraftForge.wasNPCCrafting then
+	if CraftBench.wasNPCCrafting then
 		DA.DEBUG(0,"wasNPCCrafting")
-		CraftForge.wasNPCCrafting = false
+		CraftBench.wasNPCCrafting = false
 		C_Garrison.CloseGarrisonTradeskillNPC()
 		C_Garrison.CloseTradeskillCrafter()
 	end
 end
 
 -- Rescans the trades (and thus bags). Can only be called if the tradeskill window is open and a trade selected.
-function CraftForge:RescanBags()
+function CraftBench:RescanBags()
 	DA.DEBUG(0,"RescanBags()")
 	local start = GetTime()
-	CraftForge:InventoryScan()
-	CraftForge:UpdateTradeSkillWindow()
+	CraftBench:InventoryScan()
+	CraftBench:UpdateTradeSkillWindow()
 	local elapsed = GetTime() - start
 	if elapsed > 0.5 then
-		DA.DEBUG(0,"WARNING: craftforge inventory scan took " .. math.floor(elapsed*100+.5)/100 .. " seconds to complete.")
+		DA.DEBUG(0,"WARNING: craftbench inventory scan took " .. math.floor(elapsed*100+.5)/100 .. " seconds to complete.")
 	end
 end
 
@@ -1604,7 +1604,7 @@ end
 -- This could be because an enchant has used up mats or the player
 -- may have received more mats.
 --
-function CraftForge:OnBagUpdateBucket(bags)
+function CraftBench:OnBagUpdateBucket(bags)
 	if not self.BAG_UPDATE then return end
 	if type(bags) == "table" then
 		for bagID in pairs(bags) do
@@ -1617,7 +1617,7 @@ function CraftForge:OnBagUpdateBucket(bags)
 	end
 end
 
-function CraftForge:TRADE_CLOSED()
+function CraftBench:TRADE_CLOSED()
 	self:BAG_UPDATE("FAKE_BAG_UPDATE", 0)
 end
 
@@ -1626,12 +1626,12 @@ end
 --   delayChange is set when ChangeTradeSkill is called
 --     and cleared here when the timer expires.
 --
-function CraftForge:DelayChange()
+function CraftBench:DelayChange()
 	DA.DEBUG(0,"DelayChange()")
-	CraftForge.delayChange = false
-	if CraftForge.delayNeeded then
-		CraftForge.delayNeeded = false
-		CraftForge:ChangeTradeSkill(CraftForge.delayTrade, CraftForge.changingName)
+	CraftBench.delayChange = false
+	if CraftBench.delayNeeded then
+		CraftBench.delayNeeded = false
+		CraftBench:ChangeTradeSkill(CraftBench.delayTrade, CraftBench.changingName)
 	end
 end
 
@@ -1643,7 +1643,7 @@ end
 --
 -- This triggers the whole rescan process via a TRADE_SKILL_SHOW event
 --
-function CraftForge:ChangeTradeSkill(tradeID, tradeName)
+function CraftBench:ChangeTradeSkill(tradeID, tradeName)
 	DA.DEBUG(0,"ChangeTradeSkill("..tostring(tradeID)..", "..tostring(tradeName)..")")
 	local byName = true
 	if not self.delayChange then
@@ -1655,10 +1655,10 @@ function CraftForge:ChangeTradeSkill(tradeID, tradeName)
 			self.dialogSwitch = true
 			if self.isRetail and tradeName == "Mining" then tradeName = "Mining Journal" end
 			DA.DEBUG(0,"ChangeTradeSkill: changingTrade= "..tostring(self.changingTrade)..", changingName= "..tostring(self.changingName))
-			StaticPopup_Show("CRAFTFORGE_MANUAL_CHANGE", self.changingName)
+			StaticPopup_Show("CRAFTBENCH_MANUAL_CHANGE", self.changingName)
 		else
 			if self.isRetail and tradeName == "Mining" then tradeName = "Mining Journal" end
-			if CraftForge.isForever then
+			if CraftBench.isForever then
 				if tradeID == 2366 then
 					tradeID = 1278062		-- herbalism skills (Gardening)
 					byName = false
@@ -1681,11 +1681,11 @@ function CraftForge:ChangeTradeSkill(tradeID, tradeName)
 			self.delayName = tradeName
 			self.delayChange = true
 			self.dialogSwitch = false
-			CraftForge:ScheduleTimer("DelayChange", 0.5)
+			CraftBench:ScheduleTimer("DelayChange", 0.5)
 		end
 	else
 		DA.DEBUG(1,"ChangeTradeSkill: waiting for callback")
-		CraftForge.delayNeeded = true
+		CraftBench.delayNeeded = true
 	end
 end
 
@@ -1694,19 +1694,19 @@ end
 --   changingTrade and changingName should be set to
 --   the target profession.
 --
-function CraftForge:ContinueChange(manual)
+function CraftBench:ContinueChange(manual)
 	DA.DEBUG(0,"ContinueChange("..tostring(manual)..")")
 	DA.DEBUG(1,"ContinueChange: changingTrade= "..tostring(self.changingTrade)..", changingName= "..tostring(self.changingName))
 	if not manual then
-		self.currentTrade = CraftForge.changingTrade
-		CraftForge:ChangeTradeSkill(CraftForge.changingTrade, CraftForge.changingName)
+		self.currentTrade = CraftBench.changingTrade
+		CraftBench:ChangeTradeSkill(CraftBench.changingTrade, CraftBench.changingName)
 	end
 end
 
 --
 -- Called from the static popup when hidden or canceled
 --
-function CraftForge:FinishChange()
+function CraftBench:FinishChange()
 	DA.DEBUG(0,"FinishChange()")
 	self.changingTrade = nil
 	self.changingName = nil
@@ -1716,7 +1716,7 @@ end
 --
 -- Either change to a different profession or change the currently selected recipe
 --
-function CraftForge:SetTradeSkill(player, tradeID, skillIndex)
+function CraftBench:SetTradeSkill(player, tradeID, skillIndex)
 	DA.DEBUG(0,"SetTradeSkill("..tostring(player)..", "..tostring(tradeID)..", "..tostring(skillIndex)..")")
 	if not self.db.realm.queueData[player] then
 		self.db.realm.queueData[player] = {}
@@ -1741,16 +1741,16 @@ end
 --
 -- Shows the trade skill frame.
 --
-function CraftForge:ShowTradeSkillWindow()
+function CraftBench:ShowTradeSkillWindow()
 	DA.DEBUG(0,"ShowTradeSkillWindow()")
 	if UnitAffectingCombat("player") then
-		print("|cff8888ffCraftForge|r: Combat lockdown restriction." ..
+		print("|cff8888ffCraftBench|r: Combat lockdown restriction." ..
 		  " Leave combat and try again.")
 		self.dataSourceChanged = false
 		self.detailsUpdate = false
 		self.skillListUpdate = false
 		self.adjustInventory = false
-		self:CraftForgeClose()
+		self:CraftBenchClose()
 		return
 	end
 	local frame = self.tradeSkillFrame
@@ -1769,12 +1769,12 @@ function CraftForge:ShowTradeSkillWindow()
 	end
 --[[
 	if self.db.profile.select_top_recipe then
-		if CraftForgeScrollButton1.skill.skillIndex then
+		if CraftBenchScrollButton1.skill.skillIndex then
 			DA.DEBUG(1,"ShowTradeSkillWindow: Selecting First Recipe")
-			self:SetSelectedSkill(CraftForgeScrollButton1.skill.skillIndex)
+			self:SetSelectedSkill(CraftBenchScrollButton1.skill.skillIndex)
 		else
 			DA.DEBUG(1,"ShowTradeSkillWindow: Selecting Second Recipe")
-			self:SetSelectedSkill(CraftForgeScrollButton2.skill.skillIndex)
+			self:SetSelectedSkill(CraftBenchScrollButton2.skill.skillIndex)
 		end
 	end
 --]]
@@ -1782,9 +1782,9 @@ function CraftForge:ShowTradeSkillWindow()
 end
 
 --
--- Hides the CraftForge trade skill window. Does nothing if the window is not visible
+-- Hides the CraftBench trade skill window. Does nothing if the window is not visible
 --
-function CraftForge:HideTradeSkillWindow()
+function CraftBench:HideTradeSkillWindow()
 	--DA.DEBUG(0,"HideTradeSkillWindow()")
 	local closed -- was anything closed by us?
 	local frame = self.tradeSkillFrame
@@ -1796,9 +1796,9 @@ function CraftForge:HideTradeSkillWindow()
 end
 
 --
--- Hides any and all CraftForge windows that are open
+-- Hides any and all CraftBench windows that are open
 --
-function CraftForge:HideAllWindows()
+function CraftBench:HideAllWindows()
 	DA.DEBUG(0,"HideAllWindows()")
 	local closed -- was anything closed?
 	if self:HideTradeSkillWindow() then
@@ -1837,7 +1837,7 @@ end
 --
 -- Notes when a new trade has been selected
 --
-function CraftForge:SetSelectedTrade(newTrade)
+function CraftBench:SetSelectedTrade(newTrade)
 	DA.DEBUG(0,"SetSelectedTrade("..tostring(newTrade)..")")
 	self.currentTrade = newTrade;
 	self:SetSelectedSkill(nil)
@@ -1846,12 +1846,12 @@ end
 --
 -- Sets the specific trade skill that the user wants to see details on.
 --
-function CraftForge:SetSelectedSkill(skillIndex)
+function CraftBench:SetSelectedSkill(skillIndex)
 	--DA.DEBUG(0,"SetSelectedSkill("..tostring(skillIndex)..")")
 	if skillIndex then
 		self:HideNotesWindow()
 		self:ConfigureRecipeControls(false)
-		if CraftForge.BlizzardUIshowing or CraftForge.isForever then
+		if CraftBench.BlizzardUIshowing or CraftBench.isForever then
 			local skill = self:GetSkill(self.currentPlayer, self.currentTrade, skillIndex)
 			if skill and ProfessionsFrame and ProfessionsFrame.CraftingPage and ProfessionsFrame.CraftingPage.RecipeList then
 				local recipeInfo = C_TradeSkillUI.GetRecipeInfo(skill.id)
@@ -1871,7 +1871,7 @@ end
 --
 -- Updates the text we filter the list of recipes against.
 --
-function CraftForge:UpdateSearch(text)
+function CraftBench:UpdateSearch(text)
 	DA.DEBUG(0,"UpdateSearch("..tostring(text)..")")
 	self:SetTradeSkillOption("searchtext", text)
 	self:SortAndFilterRecipes()
@@ -1883,7 +1883,7 @@ end
 -- If there is no user supplied note, then return nil
 -- The item can be either a recipe or reagent name
 --
-function CraftForge:GetItemNote(key)
+function CraftBench:GetItemNote(key)
 	--DA.DEBUG(0,"GetItemNote("..tostring(key)..")")
 	local result
 	if not self.db.realm.notes[self.currentPlayer] then
@@ -1900,7 +1900,7 @@ function CraftForge:GetItemNote(key)
 	if id then
 		result = self.db.realm.notes[self.currentPlayer][id]
 	else
-		DA.MARK2("Error: CraftForge:GetItemNote() could not determine item ID for " .. key);
+		DA.MARK2("Error: CraftBench:GetItemNote() could not determine item ID for " .. key);
 	end
 	if result and result == "" then
 		result = nil
@@ -1913,7 +1913,7 @@ end
 -- Sets the note for the specified object, if there is already a note
 -- then it is overwritten
 --
-function CraftForge:SetItemNote(key, note)
+function CraftBench:SetItemNote(key, note)
 	--DA.DEBUG(0,"SetItemNote("..tostring(key)..", "..tostring(note)..")")
 	local kind, id = strsplit(":", key)
 	id = tonumber(id) or 0
@@ -1929,16 +1929,16 @@ function CraftForge:SetItemNote(key, note)
 	if id then
 		self.db.realm.notes[self.currentPlayer][id] = note
 	else
-		DA.MARK2("Error: CraftForge:SetItemNote() could not determine item ID for " .. key);
+		DA.MARK2("Error: CraftBench:SetItemNote() could not determine item ID for " .. key);
 	end
 end
 
 --
--- Adds the craftforge notes text to the tooltip for a specified
+-- Adds the craftbench notes text to the tooltip for a specified
 -- item.
 -- Returns true if tooltip modified.
 --
-function CraftForge:AddItemNotesToTooltip(tooltip)
+function CraftBench:AddItemNotesToTooltip(tooltip)
 	--DA.DEBUG(0,"AddItemNotesToTooltip()")
 	if IsControlKeyDown() then
 		return
@@ -1969,10 +1969,10 @@ function CraftForge:AddItemNotesToTooltip(tooltip)
 			--DA.DEBUG(1,"player= "..tostring(player)..", table= "..DA.DUMP1(notes_table)..", note= '"..tostring(note).."'")
 			if note then
 				if not header_added then
-					tooltip:AddLine("CraftForge " .. L["Notes"] .. ":")
+					tooltip:AddLine("CraftBench " .. L["Notes"] .. ":")
 					header_added = true
 				end
-				if player ~= CraftForge:unitName("player") then
+				if player ~= CraftBench:unitName("player") then
 					note = GRAY_FONT_COLOR_CODE .. player .. ": " .. FONT_COLOR_CODE_CLOSE .. note
 				end
 				tooltip:AddLine(" " .. note, 1, 1, 1, true) -- r,g,b, wrap
@@ -1980,7 +1980,7 @@ function CraftForge:AddItemNotesToTooltip(tooltip)
 		end
 		if self:VendorSellsReagent(id) then
 			if not header_added then
-				tooltip:AddLine("CraftForge " .. L["Notes"] .. ":")
+				tooltip:AddLine("CraftBench " .. L["Notes"] .. ":")
 				header_added = true
 			end
 			tooltip:AddLine(" Buyable")
@@ -1989,7 +1989,7 @@ function CraftForge:AddItemNotesToTooltip(tooltip)
 	if crafters_enabled then
 		if self.db.global.itemRecipeSource[id] then
 			if not header_added then
-				tooltip:AddLine("CraftForge " .. L["Notes"] .. ":")
+				tooltip:AddLine("CraftBench " .. L["Notes"] .. ":")
 				header_added = true
 			end
 			tooltip:AddLine(" Craftable")
@@ -2013,7 +2013,7 @@ function CraftForge:AddItemNotesToTooltip(tooltip)
 			local inQueue = self.db.realm.reagentsInQueue[self.currentPlayer][id]
 			if inQueue then
 				if not header_added then
-					tooltip:AddLine("CraftForge " .. L["Notes"] .. ":")
+					tooltip:AddLine("CraftBench " .. L["Notes"] .. ":")
 					header_added = true
 				end
 				if inQueue < 0 then
@@ -2027,7 +2027,7 @@ function CraftForge:AddItemNotesToTooltip(tooltip)
 	return header_added
 end
 
-function CraftForge:ToggleTradeSkillOption(option)
+function CraftBench:ToggleTradeSkillOption(option)
 	--DA.DEBUG(0,"ToggleTradeSkillOption("..tostring(option)..")")
 	local v = self:GetTradeSkillOption(option)
 	self:SetTradeSkillOption(option, not v)
@@ -2036,15 +2036,15 @@ end
 --
 -- Returns the state of a craft specific option
 --
-function CraftForge:GetTradeSkillOption(option)
+function CraftBench:GetTradeSkillOption(option)
 	local r
 	local player = self.currentPlayer
 	local trade = self.currentTrade
 	local options = self.db.realm.options
 	if not options or not player or not options[player] or not trade or not options[player][trade] then
-		r = CraftForge.defaultOptions[option]
+		r = CraftBench.defaultOptions[option]
 	elseif options[player][trade][option] == nil then
-		r =  CraftForge.defaultOptions[option]
+		r =  CraftBench.defaultOptions[option]
 	else
 		r = options[player][trade][option]
 	end
@@ -2055,7 +2055,7 @@ end
 --
 -- sets the state of a craft specific option
 --
-function CraftForge:SetTradeSkillOption(option, value)
+function CraftBench:SetTradeSkillOption(option, value)
 	--DA.DEBUG(0,"SetTradeSkillOption("..tostring(option)..", "..tostring(value)..")")
 	if not self.linkedSkill and not self.isGuild then
 		local player = self.currentPlayer
@@ -2075,15 +2075,15 @@ function CraftForge:SetTradeSkillOption(option, value)
 	end
 end
 
-function CraftForge:IsActive()
-	return CraftForge:IsEnabled()
+function CraftBench:IsActive()
+	return CraftBench:IsEnabled()
 end
 
-function CraftForge:XMLDebug(text)
+function CraftBench:XMLDebug(text)
 	DA.DEBUG(0,text)
 end
 
-function CraftForge:XMLDebugLink(text, link)
+function CraftBench:XMLDebugLink(text, link)
 	DA.DEBUG(0,text..DA.PLINK(link))
 end
 
@@ -2122,9 +2122,9 @@ end
 --
 -- Note function name is intentionally different than the Blizzard function
 --
-function CraftForge:unitName(target)
-	if CraftForge.isForever then
-		if CraftForge.db.global.useFirstNameOnly then
+function CraftBench:unitName(target)
+	if CraftBench.isForever then
+		if CraftBench.db.global.useFirstNameOnly then
 			return UnitName(target)
 		else
 			return GetUnitName(target)

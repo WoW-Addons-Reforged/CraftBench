@@ -1,20 +1,20 @@
 ----------------------------------------------------------
--- CraftForge - On-Screen Recipe Watch HUD              --
+-- CraftBench - On-Screen Recipe Watch HUD              --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-local L = CraftForge.L
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+local L = CraftBench.L
 
-CraftForge.WatchUI = CraftForge.WatchUI or {}
-local WatchUI = CraftForge.WatchUI
+CraftBench.WatchUI = CraftBench.WatchUI or {}
+local WatchUI = CraftBench.WatchUI
 
 local hudFrame
 
 local function ensureHUD()
 	if hudFrame then return hudFrame end
-	local UIStyle = CraftForge.UIStyle
-	local f = CreateFrame("Frame", "CraftForgeWatchHUD", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local UIStyle = CraftBench.UIStyle
+	local f = CreateFrame("Frame", "CraftBenchWatchHUD", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	f:SetSize(250, 120)
 	f:SetFrameStrata("MEDIUM")
 	f:SetClampedToScreen(true)
@@ -24,13 +24,13 @@ local function ensureHUD()
 	f:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	f:SetScript("OnDragStop", function(self)
 		self:StopMovingOrSizing()
-		if CraftForge.db and CraftForge.db.profile then
+		if CraftBench.db and CraftBench.db.profile then
 			local p, _, rp, x, y = self:GetPoint()
-			CraftForge.db.profile.watchHudPos = { point = p, relPoint = rp, x = x, y = y }
+			CraftBench.db.profile.watchHudPos = { point = p, relPoint = rp, x = x, y = y }
 		end
 	end)
 
-	local pos = CraftForge.db and CraftForge.db.profile and CraftForge.db.profile.watchHudPos
+	local pos = CraftBench.db and CraftBench.db.profile and CraftBench.db.profile.watchHudPos
 	if pos and pos.point then
 		f:SetPoint(pos.point, UIParent, pos.relPoint or pos.point, pos.x or 0, pos.y or 0)
 	else
@@ -43,7 +43,7 @@ local function ensureHUD()
 
 	local title = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	title:SetPoint("TOPLEFT", f, "TOPLEFT", 8, -6)
-	title:SetText("|cffffd100" .. (L["WATCH_TITLE"] or "CraftForge Watch") .. "|r")
+	title:SetText("|cffffd100" .. (L["WATCH_TITLE"] or "CraftBench Watch") .. "|r")
 	f._title = title
 
 	local closeBtn = CreateFrame("Button", nil, f)
@@ -72,7 +72,7 @@ local function acquireLine(parent, idx)
 end
 
 function WatchUI:Initialize()
-	local list = CraftForge.Watch and CraftForge.Watch:GetWatchedList() or {}
+	local list = CraftBench.Watch and CraftBench.Watch:GetWatchedList() or {}
 	if #list > 0 then
 		self:Refresh(true)
 	end
@@ -89,7 +89,7 @@ function WatchUI:ToggleVisible()
 end
 
 function WatchUI:Refresh(forceShow)
-	local Watch = CraftForge.Watch
+	local Watch = CraftBench.Watch
 	if not Watch then return end
 	local list = Watch:GetWatchedList()
 	if not hudFrame and not forceShow and #list == 0 then return end
@@ -106,7 +106,7 @@ function WatchUI:Refresh(forceShow)
 		local ln = acquireLine(f, 1)
 		ln:ClearAllPoints()
 		ln:SetPoint("TOPLEFT", f, "TOPLEFT", 8, y)
-		ln._fs:SetText("|cff9d9d9d" .. (L["WATCH_EMPTY"] or "No recipes pinned (/cf watch)") .. "|r")
+		ln._fs:SetText("|cff9d9d9d" .. (L["WATCH_EMPTY"] or "No recipes pinned (/cb watch)") .. "|r")
 		ln:SetScript("OnClick", nil)
 		ln:Show()
 		y = y - 20
@@ -158,6 +158,6 @@ function WatchUI:Refresh(forceShow)
 	f:SetHeight(math.max(54, -y + 6))
 end
 
-function CraftForge:ToggleWatchHUD()
+function CraftBench:ToggleWatchHUD()
 	WatchUI:ToggleVisible()
 end

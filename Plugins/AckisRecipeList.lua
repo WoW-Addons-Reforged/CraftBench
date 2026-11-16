@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-CraftForge.ARLPlugin = {}
+CraftBench.ARLPlugin = {}
 
-local plugin = CraftForge.ARLPlugin
-local L = CraftForge.L
+local plugin = CraftBench.ARLPlugin
+local L = CraftBench.L
 local ARLProfessionInitialized = {}
 
 plugin.options =
@@ -33,11 +33,11 @@ plugin.options =
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.ARL.enabled
+				return CraftBench.db.profile.plugins.ARL.enabled
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.ARL.enabled = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.ARL.enabled = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1
@@ -46,17 +46,17 @@ plugin.options =
 }
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.ARL then
-		CraftForge.db.profile.plugins.ARL = {}
-		CraftForge.db.profile.plugins.ARL.enabled = true
+	if not CraftBench.db.profile.plugins.ARL then
+		CraftBench.db.profile.plugins.ARL = {}
+		CraftBench.db.profile.plugins.ARL.enabled = true
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 end
 
 function plugin.GetExtraText(skill, recipe)
 	local label, extra_text
 	local bop
-	if AckisRecipeList and AckisRecipeList.InitRecipeData and CraftForge.db.profile.plugins.ARL.enabled then
+	if AckisRecipeList and AckisRecipeList.InitRecipeData and CraftBench.db.profile.plugins.ARL.enabled then
 		local _, recipeList, mobList, trainerList = AckisRecipeList:InitRecipeData()
 		local recipeData = AckisRecipeList:GetRecipeData(skill.id)
 		if recipeData == nil and not ARLProfessionInitialized[recipe.tradeID] then
@@ -74,4 +74,4 @@ function plugin.GetExtraText(skill, recipe)
 	return label, extra_text
 end
 
-CraftForge:RegisterDisplayDetailPlugin("ARLPlugin")
+CraftBench:RegisterDisplayDetailPlugin("ARLPlugin")

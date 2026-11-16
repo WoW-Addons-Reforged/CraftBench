@@ -55,7 +55,7 @@ with open('SpellName.' + build + '.csv', newline='', encoding='utf-8') as f:
 
 with open('scrollData.' + build + '.lua', 'w', encoding='utf-8', newline='\n') as o:
 	o.write("-- " + build + "\n")
-	o.write("CraftForge.scrollData = {\n")
+	o.write("CraftBench.scrollData = {\n")
 	for spell_id, item_ids in enchants_to_items.items():
 		spell_name = spell_to_name.get(spell_id, "")
 		# Retail Enchants can create multiple scrolls (different iLvls).

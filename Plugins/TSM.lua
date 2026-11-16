@@ -1,7 +1,7 @@
 local addonName, addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-CraftForge.TSMPlugin = {}
+CraftBench.TSMPlugin = {}
 
-local plugin = CraftForge.TSMPlugin
-local L = CraftForge.L
+local plugin = CraftBench.TSMPlugin
+local L = CraftBench.L
 
 plugin.options = {
 	type = "group",
@@ -31,11 +31,11 @@ plugin.options = {
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.TSM.enabled
+				return CraftBench.db.profile.plugins.TSM.enabled
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.TSM.enabled = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.TSM.enabled = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1,
@@ -50,11 +50,11 @@ plugin.options = {
 				DBHistorical = "DBHistorical",
 			},
 			get = function()
-				return CraftForge.db.profile.plugins.TSM.priceSource or "DBMarket"
+				return CraftBench.db.profile.plugins.TSM.priceSource or "DBMarket"
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.TSM.priceSource = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.TSM.priceSource = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 2,
@@ -62,7 +62,7 @@ plugin.options = {
 	},
 }
 
-function CraftForge:GetTSMPrice(itemID)
+function CraftBench:GetTSMPrice(itemID)
 	if not itemID or not _G.TSM_API or not _G.TSM_API.GetCustomPriceValue then
 		return nil
 	end
@@ -79,27 +79,27 @@ function CraftForge:GetTSMPrice(itemID)
 end
 
 function plugin.GetExtraText(skill, recipe)
-	local cfg = CraftForge.db and CraftForge.db.profile and CraftForge.db.profile.plugins and CraftForge.db.profile.plugins.TSM
+	local cfg = CraftBench.db and CraftBench.db.profile and CraftBench.db.profile.plugins and CraftBench.db.profile.plugins.TSM
 	if not cfg or not cfg.enabled or not _G.TSM_API then
 		return
 	end
 	if not recipe or not recipe.itemID or recipe.itemID == 0 then
 		return
 	end
-	local price = CraftForge:GetTSMPrice(recipe.itemID)
-	if price and price > 0 and CraftForge.FormatMoneyFull then
-		return "|cff66ccffTSM (" .. (cfg.priceSource or "DBMarket") .. "):|r", CraftForge:FormatMoneyFull(price, true)
+	local price = CraftBench:GetTSMPrice(recipe.itemID)
+	if price and price > 0 and CraftBench.FormatMoneyFull then
+		return "|cff66ccffTSM (" .. (cfg.priceSource or "DBMarket") .. "):|r", CraftBench:FormatMoneyFull(price, true)
 	end
 end
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.TSM then
-		CraftForge.db.profile.plugins.TSM = {
+	if not CraftBench.db.profile.plugins.TSM then
+		CraftBench.db.profile.plugins.TSM = {
 			enabled = true,
 			priceSource = "DBMarket",
 		}
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 end
 
-CraftForge:RegisterDisplayDetailPlugin("TSMPlugin")
+CraftBench:RegisterDisplayDetailPlugin("TSMPlugin")

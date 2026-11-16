@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -- These FormatMoney* functions were shamelessly copied from LibAbacus-3.0
 
-local L = CraftForge.L
+local L = CraftBench.L
 
 local gsub = string.gsub
 
@@ -89,7 +89,7 @@ end
 
 local inf = math.huge
 
-function CraftForge:FormatMoneyExtended(value, colorize, textColor)
+function CraftBench:FormatMoneyExtended(value, colorize, textColor)
 	local gold = abs(value / 10000)
 	local silver = abs(mod(value / 100, 100))
 	local copper = abs(mod(value, 100))
@@ -133,7 +133,7 @@ function CraftForge:FormatMoneyExtended(value, colorize, textColor)
 	end
 end
 
-function CraftForge:FormatMoneyFull(value, colorize, textColor)
+function CraftBench:FormatMoneyFull(value, colorize, textColor)
 	local gold = abs(value / 10000)
 	local silver = abs(mod(value / 100, 100))
 	local copper = abs(mod(value, 100))
@@ -177,7 +177,7 @@ function CraftForge:FormatMoneyFull(value, colorize, textColor)
 	end
 end
 
-function CraftForge:FormatMoneyShort(copper, colorize, textColor)
+function CraftBench:FormatMoneyShort(copper, colorize, textColor)
 	local color = COLOR_WHITE
 	if textColor then
 		if copper > 0 then
@@ -213,7 +213,7 @@ function CraftForge:FormatMoneyShort(copper, colorize, textColor)
 	end
 end
 
-function CraftForge:FormatMoneyCondensed(value, colorize, textColor)
+function CraftBench:FormatMoneyCondensed(value, colorize, textColor)
 	local negl = ""
 	local negr = ""
 	if value < 0 then

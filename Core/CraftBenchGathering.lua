@@ -1,12 +1,12 @@
 ----------------------------------------------------------
--- CraftForge - Gathering Professions (Herb/Mine/Skin)  --
+-- CraftBench - Gathering Professions (Herb/Mine/Skin)  --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
 
-CraftForge.Gathering = CraftForge.Gathering or {}
-local Gathering = CraftForge.Gathering
+CraftBench.Gathering = CraftBench.Gathering or {}
+local Gathering = CraftBench.Gathering
 
 Gathering.DATA = {
 	herbalism = {

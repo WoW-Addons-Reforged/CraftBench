@@ -1,12 +1,12 @@
 ----------------------------------------------------------
--- CraftForge - Smart Profession Leveling Planner       --
+-- CraftBench - Smart Profession Leveling Planner       --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
 
-CraftForge.Leveling = CraftForge.Leveling or {}
-local Leveling = CraftForge.Leveling
+CraftBench.Leveling = CraftBench.Leveling or {}
+local Leveling = CraftBench.Leveling
 
 local DIFF_GAIN = {
 	optimal = 1.0,
@@ -21,7 +21,7 @@ local DIFF_PRIORITY = {
 }
 
 local function ensureLevelingDB()
-	local prof = CraftForge.db and CraftForge.db.profile
+	local prof = CraftBench.db and CraftBench.db.profile
 	if not prof then return nil end
 	if not prof.leveling then
 		prof.leveling = {
@@ -89,8 +89,8 @@ local function estimateRecipeCost(recipe)
 				-- Treated as 0g when player gathers materials themselves
 			else
 				local unitPrice = 0
-				if CraftForge.GetItemMarketOrVendorPrice then
-					unitPrice = CraftForge:GetItemMarketOrVendorPrice(r.reagentID) or 0
+				if CraftBench.GetItemMarketOrVendorPrice then
+					unitPrice = CraftBench:GetItemMarketOrVendorPrice(r.reagentID) or 0
 				end
 				if unitPrice <= 0 then
 					unitPrice = 100
@@ -103,13 +103,13 @@ local function estimateRecipeCost(recipe)
 end
 
 function Leveling:BuildPlan(currentSkill, targetSkill)
-	local player = CraftForge.currentPlayer or (CraftForge.unitName and CraftForge:unitName("player"))
-	local tradeID = CraftForge.currentTrade
-	if not player or not tradeID or not CraftForge.GetNumSkills then
+	local player = CraftBench.currentPlayer or (CraftBench.unitName and CraftBench:unitName("player"))
+	local tradeID = CraftBench.currentTrade
+	if not player or not tradeID or not CraftBench.GetNumSkills then
 		return nil, "NO_PROFESSION"
 	end
 
-	local n = CraftForge:GetNumSkills(player, tradeID) or 0
+	local n = CraftBench:GetNumSkills(player, tradeID) or 0
 	if n == 0 then
 		return nil, "NO_RECIPES"
 	end
@@ -118,14 +118,14 @@ function Leveling:BuildPlan(currentSkill, targetSkill)
 	local ignored = db and db.ignoredRecipes or {}
 	local candidates = {}
 	for i = 1, n do
-		local skill = CraftForge:GetSkill(player, tradeID, i)
+		local skill = CraftBench:GetSkill(player, tradeID, i)
 		if skill and skill.id and skill.id ~= 0 and not ignored[skill.id] and DIFF_GAIN[skill.difficulty] then
-			local recipe = CraftForge:GetRecipe(skill.id)
+			local recipe = CraftBench:GetRecipe(skill.id)
 			if recipe and recipe.reagentData and #recipe.reagentData > 0 then
 				local cost = estimateRecipeCost(recipe)
 				local gain = DIFF_GAIN[skill.difficulty]
-				if CraftForge.GetSkillUpChance then
-					local chance = CraftForge:GetSkillUpChance(recipe, currentSkill, skill.difficulty)
+				if CraftBench.GetSkillUpChance then
+					local chance = CraftBench:GetSkillUpChance(recipe, currentSkill, skill.difficulty)
 					if chance and chance > 0 then
 						gain = chance
 					end
@@ -201,7 +201,7 @@ function Leveling:BuildPlan(currentSkill, targetSkill)
 			need = need,
 			inBags = inBags,
 			inBoth = inBoth,
-			missing = math.max(0, need - (CraftForge.isForever and inBags or inBoth)),
+			missing = math.max(0, need - (CraftBench.isForever and inBags or inBoth)),
 		})
 	end
 	table.sort(reagents, function(a, b) return (a.name or "") < (b.name or "") end)
@@ -220,16 +220,16 @@ function Leveling:QueuePlan(plan)
 	if not plan or not plan.steps or #plan.steps == 0 then return 0 end
 	local queued = 0
 	for _, step in ipairs(plan.steps) do
-		if CraftForge.QueueCommand and CraftForge.QueueAppend then
-			local cmd = CraftForge:QueueCommand(step.recipeID, step.crafts)
+		if CraftBench.QueueCommand and CraftBench.QueueAppend then
+			local cmd = CraftBench:QueueCommand(step.recipeID, step.crafts)
 			if cmd then
-				CraftForge:QueueAppend(cmd, true, false)
+				CraftBench:QueueAppend(cmd, true, false)
 				queued = queued + 1
 			end
 		end
 	end
-	if queued > 0 and CraftForge.UpdateTradeSkillWindow then
-		CraftForge:UpdateTradeSkillWindow()
+	if queued > 0 and CraftBench.UpdateTradeSkillWindow then
+		CraftBench:UpdateTradeSkillWindow()
 	end
 	return queued
 end

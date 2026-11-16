@@ -1,7 +1,7 @@
 local addonName, addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-CraftForge.BaganatorPlugin = {}
+CraftBench.BaganatorPlugin = {}
 
-local plugin = CraftForge.BaganatorPlugin
-local L = CraftForge.L
+local plugin = CraftBench.BaganatorPlugin
+local L = CraftBench.L
 
 local cornerWidgetRegistered = false
 
@@ -33,11 +33,11 @@ plugin.options = {
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.Baganator.enabled
+				return CraftBench.db.profile.plugins.Baganator.enabled
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.Baganator.enabled = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.Baganator.enabled = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1,
@@ -46,10 +46,10 @@ plugin.options = {
 			type = "toggle",
 			name = L["Highlight queued reagents in Baganator"],
 			get = function()
-				return CraftForge.db.profile.plugins.Baganator.showQueueCorner
+				return CraftBench.db.profile.plugins.Baganator.showQueueCorner
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.Baganator.showQueueCorner = value
+				CraftBench.db.profile.plugins.Baganator.showQueueCorner = value
 				if Baganator and Baganator.API and Baganator.API.RequestItemButtonsRefresh then
 					Baganator.API.RequestItemButtonsRefresh()
 				end
@@ -61,10 +61,10 @@ plugin.options = {
 }
 
 local function isItemQueuedReagent(itemID)
-	if not itemID or not CraftForge.db or not CraftForge.db.realm or not CraftForge.db.realm.reagentsInQueue then
+	if not itemID or not CraftBench.db or not CraftBench.db.realm or not CraftBench.db.realm.reagentsInQueue then
 		return false
 	end
-	local q = CraftForge.db.realm.reagentsInQueue[CraftForge.currentPlayer]
+	local q = CraftBench.db.realm.reagentsInQueue[CraftBench.currentPlayer]
 	return q and q[itemID] and q[itemID] > 0
 end
 
@@ -73,12 +73,12 @@ local function registerCornerWidget()
 	if not Baganator or not Baganator.API or not Baganator.API.RegisterCornerWidget then return end
 	cornerWidgetRegistered = true
 
-	Baganator.API.RegisterCornerWidget("CraftForge Queue", "craftforge_queue",
+	Baganator.API.RegisterCornerWidget("CraftBench Queue", "craftbench_queue",
 		function(cornerFrame, details)
-			if not CraftForge.db or not CraftForge.db.profile or not CraftForge.db.profile.plugins or not CraftForge.db.profile.plugins.Baganator then
+			if not CraftBench.db or not CraftBench.db.profile or not CraftBench.db.profile.plugins or not CraftBench.db.profile.plugins.Baganator then
 				return false
 			end
-			local cfg = CraftForge.db.profile.plugins.Baganator
+			local cfg = CraftBench.db.profile.plugins.Baganator
 			if not cfg.enabled or not cfg.showQueueCorner then
 				return false
 			end
@@ -96,26 +96,26 @@ local function registerCornerWidget()
 end
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.Baganator then
-		CraftForge.db.profile.plugins.Baganator = {
+	if not CraftBench.db.profile.plugins.Baganator then
+		CraftBench.db.profile.plugins.Baganator = {
 			enabled = true,
 			showQueueCorner = true,
 		}
 	end
-	if CraftForge.db.profile.plugins.Baganator.enabled == nil then
-		CraftForge.db.profile.plugins.Baganator.enabled = true
+	if CraftBench.db.profile.plugins.Baganator.enabled == nil then
+		CraftBench.db.profile.plugins.Baganator.enabled = true
 	end
-	if CraftForge.db.profile.plugins.Baganator.showQueueCorner == nil then
-		CraftForge.db.profile.plugins.Baganator.showQueueCorner = true
+	if CraftBench.db.profile.plugins.Baganator.showQueueCorner == nil then
+		CraftBench.db.profile.plugins.Baganator.showQueueCorner = true
 	end
 
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 	registerCornerWidget()
 end
 
 function plugin.GetExtraText(skill, recipe)
 	local label, text = "", ""
-	if not recipe or not CraftForge.db.profile.plugins.Baganator or not CraftForge.db.profile.plugins.Baganator.enabled then
+	if not recipe or not CraftBench.db.profile.plugins.Baganator or not CraftBench.db.profile.plugins.Baganator.enabled then
 		return label, text
 	end
 	if not Syndicator or not Syndicator.API or not Syndicator.API.GetInventoryInfoByItemID or not recipe.itemID then
@@ -143,4 +143,4 @@ function plugin.GetExtraText(skill, recipe)
 	return label, text
 end
 
-CraftForge:RegisterDisplayDetailPlugin("BaganatorPlugin")
+CraftBench:RegisterDisplayDetailPlugin("BaganatorPlugin")

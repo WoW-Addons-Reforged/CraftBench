@@ -1,7 +1,7 @@
 local addonName, addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-CraftForge.NewsName = "CraftForge News"
-CraftForge.NewsData = {
+CraftBench.NewsName = "CraftBench News"
+CraftBench.NewsData = {
 	{
 		version = "1.0.0",
 		data = {
 			{
 				name = "Highlights",
 				data = {
-					{ header = "CraftForge 1.0.0", body = "Initial CraftForge release with full Retail, Classic, Forever, BCC, Wrath, Cata & Mists support." },
+					{ header = "CraftBench 1.0.0", body = "Initial CraftBench release with full Retail, Classic, Forever, BCC, Wrath, Cata & Mists support." },
 					{ header = "Modern Dark-Gold UI", body = "Unified Dark-Gold UI theme across main window, standalone queue, shopping list, notes and reagent panels." },
 					{ header = "One-Click Material Processing", body = "Integrated one-click Disenchanting, Prospecting, Milling and Pick Lock via secure click overlay." },
 				},

@@ -1,7 +1,7 @@
 local addonName, addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-CraftForge.BetterBagsPlugin = {}
+CraftBench.BetterBagsPlugin = {}
 
-local plugin = CraftForge.BetterBagsPlugin
-local L = CraftForge.L
+local plugin = CraftBench.BetterBagsPlugin
+local L = CraftBench.L
 local categoryRegistered = false
 
 plugin.options = {
@@ -32,10 +32,10 @@ plugin.options = {
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.BetterBags.enabled
+				return CraftBench.db.profile.plugins.BetterBags.enabled
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.BetterBags.enabled = value
+				CraftBench.db.profile.plugins.BetterBags.enabled = value
 			end,
 			width = "double",
 			order = 1,
@@ -44,10 +44,10 @@ plugin.options = {
 			type = "toggle",
 			name = L["BETTERBAGS_QUEUE_CAT"],
 			get = function()
-				return CraftForge.db.profile.plugins.BetterBags.queueCategory
+				return CraftBench.db.profile.plugins.BetterBags.queueCategory
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.BetterBags.queueCategory = value
+				CraftBench.db.profile.plugins.BetterBags.queueCategory = value
 			end,
 			width = "double",
 			order = 2,
@@ -64,16 +64,16 @@ local function registerBetterBagsCategory()
 	if not ok or not categories or not categories.RegisterCategoryFunction then return end
 
 	categoryRegistered = true
-	categories:RegisterCategoryFunction("CraftForgeQueueReagents", function(data)
-		local cfg = CraftForge.db and CraftForge.db.profile and CraftForge.db.profile.plugins and CraftForge.db.profile.plugins.BetterBags
+	categories:RegisterCategoryFunction("CraftBenchQueueReagents", function(data)
+		local cfg = CraftBench.db and CraftBench.db.profile and CraftBench.db.profile.plugins and CraftBench.db.profile.plugins.BetterBags
 		if not cfg or not cfg.enabled or not cfg.queueCategory then
 			return nil
 		end
 		local itemID = data and data.itemInfo and data.itemInfo.itemID
-		if itemID and CraftForge.db and CraftForge.db.realm and CraftForge.db.realm.reagentsInQueue then
-			for _, reagents in pairs(CraftForge.db.realm.reagentsInQueue) do
+		if itemID and CraftBench.db and CraftBench.db.realm and CraftBench.db.realm.reagentsInQueue then
+			for _, reagents in pairs(CraftBench.db.realm.reagentsInQueue) do
 				if reagents and reagents[itemID] and reagents[itemID] > 0 then
-					return "CraftForge: " .. (L["Queue"] or "Queue")
+					return "CraftBench: " .. (L["Queue"] or "Queue")
 				end
 			end
 		end
@@ -82,13 +82,13 @@ local function registerBetterBagsCategory()
 end
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.BetterBags then
-		CraftForge.db.profile.plugins.BetterBags = {
+	if not CraftBench.db.profile.plugins.BetterBags then
+		CraftBench.db.profile.plugins.BetterBags = {
 			enabled = true,
 			queueCategory = true,
 		}
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 	registerBetterBagsCategory()
 end
 
@@ -96,4 +96,4 @@ function plugin.Update()
 	registerBetterBagsCategory()
 end
 
-CraftForge:RegisterUpdatePlugin("BetterBagsPlugin")
+CraftBench:RegisterUpdatePlugin("BetterBagsPlugin")

@@ -7,8 +7,8 @@
 ## Interface-Titan: 38002
 ## Interface-Cata: 40402
 ## Interface-Mists: 50503, 50504
-## Title: CraftForge |cff7fff7f -Ace3-|r
-## IconTexture: Interface\AddOns\CraftForge\Icons\CraftForge.tga
+## Title: CraftBench |cff7fff7f -Ace3-|r
+## IconTexture: Interface\AddOns\CraftBench\Icons\CraftBench.tga
 ## Notes: All-in-One Profession, Crafting & Material-Processing Suite
 ## Notes-deDE: All-in-One Suite für Berufe, Crafting-Warteschlange und Materialverarbeitung
 ## Notes-esES: Suite todo en uno para profesiones y fabricación
@@ -28,9 +28,9 @@
 ## Category-zhTW: 專業技能
 ## X-License: GPL-3.0
 ## X-Credits: Based on Skillet (yossa, bsmorgan, lilsparky, nogudnik, Slartie)
-## X-Website: https://github.com/gOOvER/CraftForge
-## SavedVariables: CraftForgeDB
-## SavedVariablesPerCharacter: CraftForgeWho, CraftForgeDBPC, CraftForgeMemory, CraftForgeProfile
+## X-Website: https://github.com/gOOvER/CraftBench
+## SavedVariables: CraftBenchDB
+## SavedVariablesPerCharacter: CraftBenchWho, CraftBenchDBPC, CraftBenchMemory, CraftBenchProfile
 ## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, AchievementsUtils, AckisRecipeList, AtlasLootClassic, AuctionDB, Auctionator, Baganator, BeanCounter, CanIMogIt, CraftInfoAnywhere, DataStore, DataStore_Auctions, GatherMate2, GathererReforged, Journalator, OribosExchange, Overachiever, Questie, Syndicator, TradeSkillMaster, tekDebug
 ## X-Embeds: Ace3, LibStub, CallbackHandler-1.0, LibWindow-1.1, LibPeriodicTable-3.1, HereBeDragons-2.0
 
@@ -74,30 +74,30 @@ Locale\Locale-zhCN.lua
 Locale\Locale-zhTW.lua
 
 #### Core files
-Core\CraftForge.lua
-Core\CraftForgeOptions.lua
-Core\CraftForgeTables.lua
-Core\CraftForgeData.lua
-Core\CraftForgeNewsGUI.lua
-Core\CraftForgeNewsData.lua
-Core\CraftForgeFishing.lua
-Core\CraftForgeContacts.lua
-Core\CraftForgeCooldowns.lua
-Core\CraftForgeWatch.lua
-Core\CraftForgeLeveling.lua
-Core\CraftForgeSkillUp.lua
-Core\CraftForgeGear.lua
-Core\CraftForgeGathering.lua
-Core\CraftForgeCamping.lua
+Core\CraftBench.lua
+Core\CraftBenchOptions.lua
+Core\CraftBenchTables.lua
+Core\CraftBenchData.lua
+Core\CraftBenchNewsGUI.lua
+Core\CraftBenchNewsData.lua
+Core\CraftBenchFishing.lua
+Core\CraftBenchContacts.lua
+Core\CraftBenchCooldowns.lua
+Core\CraftBenchWatch.lua
+Core\CraftBenchLeveling.lua
+Core\CraftBenchSkillUp.lua
+Core\CraftBenchGear.lua
+Core\CraftBenchGathering.lua
+Core\CraftBenchCamping.lua
 Core\TradeskillInfo.lua
-Core\CraftForgeQueue.lua
+Core\CraftBenchQueue.lua
 Core\ThirdPartyHooks.lua
 Core\Upgrades.lua
 Core\RecipeGroups.lua
 Core\Inventory.lua
-Core\CraftForgePlugin.lua
-Core\CraftForgeProcess.lua
-Core\CraftForgeShare.lua
+Core\CraftBenchPlugin.lua
+Core\CraftBenchProcess.lua
+Core\CraftBenchShare.lua
 
 #### Data files
 Data\SkillLevelData.lua

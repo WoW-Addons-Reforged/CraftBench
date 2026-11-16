@@ -1,6 +1,6 @@
 --[[
 
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ]]--
 
-CraftForge.QuestiePlugin = {}
+CraftBench.QuestiePlugin = {}
 
-local plugin = CraftForge.QuestiePlugin
-local L = CraftForge.L
+local plugin = CraftBench.QuestiePlugin
+local L = CraftBench.L
 
 plugin.options = {
 	type = "group",
@@ -31,11 +31,11 @@ plugin.options = {
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.Questie.enabled
+				return CraftBench.db.profile.plugins.Questie.enabled
 			end,
 			set = function(_, value)
-				CraftForge.db.profile.plugins.Questie.enabled = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.Questie.enabled = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1,
@@ -80,16 +80,16 @@ local function ResolveRecipeItemID(recipe)
 end
 
 function plugin.OnInitialize()
-	if not CraftForge.db.profile.plugins.Questie then
-		CraftForge.db.profile.plugins.Questie = {}
-		CraftForge.db.profile.plugins.Questie.enabled = true
+	if not CraftBench.db.profile.plugins.Questie then
+		CraftBench.db.profile.plugins.Questie = {}
+		CraftBench.db.profile.plugins.Questie.enabled = true
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 end
 
 function plugin.GetExtraText(skill, recipe)
 	if not skill or not recipe then return end
-	if not CraftForge.db.profile.plugins.Questie or not CraftForge.db.profile.plugins.Questie.enabled then return end
+	if not CraftBench.db.profile.plugins.Questie or not CraftBench.db.profile.plugins.Questie.enabled then return end
 	local QuestieDB = GetQuestieDB()
 	if not QuestieDB or not QuestieDB.QueryItemSingle then return end
 
@@ -145,4 +145,4 @@ function plugin.GetExtraText(skill, recipe)
 	return "|rQuestie:", table.concat(lines, "\n")
 end
 
-CraftForge:RegisterDisplayDetailPlugin("QuestiePlugin")
+CraftBench:RegisterDisplayDetailPlugin("QuestiePlugin")

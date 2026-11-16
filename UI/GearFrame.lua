@@ -1,22 +1,22 @@
 ----------------------------------------------------------
--- CraftForge - Native Dark-Gold Crafted Gear Window    --
+-- CraftBench - Native Dark-Gold Crafted Gear Window    --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-local L = CraftForge.L
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+local L = CraftBench.L
 
-CraftForge.GearUI = CraftForge.GearUI or {}
-local GearUI = CraftForge.GearUI
+CraftBench.GearUI = CraftBench.GearUI or {}
+local GearUI = CraftBench.GearUI
 
 local gearFrame
 local activeCategory = "all"
 
 local function ensureFrame()
 	if gearFrame then return gearFrame end
-	local UIStyle = CraftForge.UIStyle
+	local UIStyle = CraftBench.UIStyle
 
-	local f = CreateFrame("Frame", "CraftForgeGearWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local f = CreateFrame("Frame", "CraftBenchGearWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	f:SetSize(740, 500)
 	f:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	f:SetFrameStrata("DIALOG")
@@ -27,11 +27,11 @@ local function ensureFrame()
 	f:RegisterForDrag("LeftButton")
 	f:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-	tinsert(UISpecialFrames, "CraftForgeGearWindow")
+	tinsert(UISpecialFrames, "CraftBenchGearWindow")
 
 	if UIStyle then
 		UIStyle.SkinFrame(f, false)
-		UIStyle.CreateHeader(f, "CraftForge — " .. (L["GEAR_TITLE"] or "Crafted Gear"), 132633, function()
+		UIStyle.CreateHeader(f, "CraftBench — " .. (L["GEAR_TITLE"] or "Crafted Gear"), 132633, function()
 			f:Hide()
 		end)
 	end
@@ -76,7 +76,7 @@ local function ensureFrame()
 	infoText:SetTextColor(0.75, 0.75, 0.75)
 	f._infoText = infoText
 
-	local sf = CreateFrame("ScrollFrame", "CraftForgeGearScroll", f, "UIPanelScrollFrameTemplate")
+	local sf = CreateFrame("ScrollFrame", "CraftBenchGearScroll", f, "UIPanelScrollFrameTemplate")
 	sf:SetPoint("TOPLEFT", topBar, "BOTTOMLEFT", 0, -6)
 	sf:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -28, 12)
 	if UIStyle and UIStyle.SkinScrollBar and sf.ScrollBar then
@@ -95,7 +95,7 @@ end
 
 function GearUI:Refresh()
 	local f = ensureFrame()
-	local UIStyle = CraftForge.UIStyle
+	local UIStyle = CraftBench.UIStyle
 	for k, btn in pairs(f._tabs) do
 		if k == activeCategory then
 			if UIStyle then UIStyle.ApplyBox(btn, 0.25, 0.21, 0.08, 1, 0.79, 0.64, 0.15, 1) end
@@ -106,7 +106,7 @@ function GearUI:Refresh()
 
 	for _, r in ipairs(f._rows) do r:Hide() end
 
-	local items = CraftForge.Gear and CraftForge.Gear:CollectCraftableGear(activeCategory) or {}
+	local items = CraftBench.Gear and CraftBench.Gear:CollectCraftableGear(activeCategory) or {}
 	f._infoText:SetText(string.format("%d %s", #items, L["Items"] or "Items"))
 
 	local y = -4
@@ -190,8 +190,8 @@ function GearUI:Refresh()
 			GameTooltip:Hide()
 		end)
 		row:SetScript("OnClick", function()
-			if CraftForge.SetSelectedSkill and entry.skillIndex then
-				CraftForge:SetSelectedSkill(entry.skillIndex, true)
+			if CraftBench.SetSelectedSkill and entry.skillIndex then
+				CraftBench:SetSelectedSkill(entry.skillIndex, true)
 			end
 		end)
 
@@ -202,7 +202,7 @@ function GearUI:Refresh()
 	f._content:SetHeight(math.max(100, -y + 10))
 end
 
-function CraftForge:ShowGear()
+function CraftBench:ShowGear()
 	local f = ensureFrame()
 	if f:IsShown() then
 		f:Hide()

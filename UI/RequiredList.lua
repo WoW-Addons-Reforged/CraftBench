@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
 
-function CraftForge:RequiredListToggleHaveItems()
+function CraftBench:RequiredListToggleHaveItems()
 	self.db.profile.hide_unowned = not self.db.profile.hide_unowned
 	self:HideRequiredList()
 end
@@ -29,12 +29,12 @@ end
 -- ===========================================================================================
 local num_buttons = 0
 local function get_button(i)
-	local button = _G["CraftForgeRequiredListButton"..i]
+	local button = _G["CraftBenchRequiredListButton"..i]
 	if not button then
-		button = CreateFrame("Button", "CraftForgeRequiredListButton"..i, CraftForgeRequiredListParent, "CraftForgeRequiredListItemTemplate")
-		button:SetParent(CraftForgeRequiredListParent)
-		button:SetPoint("TOPLEFT", "CraftForgeRequiredListButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(CraftForgeRequiredListParent:GetFrameLevel() + 1)
+		button = CreateFrame("Button", "CraftBenchRequiredListButton"..i, CraftBenchRequiredListParent, "CraftBenchRequiredListItemTemplate")
+		button:SetParent(CraftBenchRequiredListParent)
+		button:SetPoint("TOPLEFT", "CraftBenchRequiredListButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftBenchRequiredListParent:GetFrameLevel() + 1)
 	end
 	return button
 end
@@ -55,41 +55,41 @@ local FrameBackdrop = {
 	insets = { left = 3, right = 3, top = 30, bottom = 3 }
 }
 
-CRAFTFORGE_REQUIRED_LIST_HEIGHT = 16
+CRAFTBENCH_REQUIRED_LIST_HEIGHT = 16
 local function createRequiredListFrame(self)
 	--DA.DEBUG(0,"createRequiredListFrame")
-	local frame = CraftForgeRequiredList
+	local frame = CraftBenchRequiredList
 	if not frame then
 		return nil
 	end
-	local UIStyle = CraftForge.UIStyle
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local UIStyle = CraftBench.UIStyle
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		frame:SetFrameStrata("TOOLTIP")
 	else
 		frame:SetFrameStrata("HIGH")
 	end
 	UIStyle.SkinFrame(frame, false)
-	local titletext = frame:CreateFontString("CraftForgeRequiredListTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = frame:CreateFontString("CraftBenchRequiredListTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -1)
 	titletext:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -36, -1)
 	titletext:SetHeight(26)
 	titletext:SetJustifyH("CENTER")
-	titletext:SetText("CraftForge: Required Reagents")
+	titletext:SetText("CraftBench: Required Reagents")
 	UIStyle.StyleHeaderBar(frame, titletext, 1)
-	if CraftForgeRequiredListCloseButton then UIStyle.SkinCloseButton(CraftForgeRequiredListCloseButton) end
+	if CraftBenchRequiredListCloseButton then UIStyle.SkinCloseButton(CraftBenchRequiredListCloseButton) end
 	frame.titletext = titletext
-	CraftForgeRequiredHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
-	CraftForgeRequiredHaveItems:SetChecked(CraftForge.db.profile.hide_unowned)
+	CraftBenchRequiredHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
+	CraftBenchRequiredHaveItems:SetChecked(CraftBench.db.profile.hide_unowned)
 --
 -- The frame enclosing the scroll list needs a border and a background .....
 --
-	local backdrop = CraftForgeRequiredListParent
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local backdrop = CraftBenchRequiredListParent
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		backdrop:SetFrameStrata("HIGH")
 	end
 	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
-	if CraftForgeRequiredList then UIStyle.StyleScrollBar(CraftForgeRequiredList) end
+	if CraftBenchRequiredList then UIStyle.StyleScrollBar(CraftBenchRequiredList) end
 	local RequiredListLocation = {
 		prefix = "RequiredListLocation_"
 	}
@@ -104,7 +104,7 @@ local function createRequiredListFrame(self)
 --
 -- lets play the resize me game!
 --
-	CraftForge:EnableResize(frame, 420, 240, CraftForge.UpdateRequiredListWindow)
+	CraftBench:EnableResize(frame, 420, 240, CraftBench.UpdateRequiredListWindow)
 --
 -- so hitting [ESC] will close the window
 --
@@ -112,14 +112,14 @@ local function createRequiredListFrame(self)
 --
 -- Adjust the button height
 --
-	CRAFTFORGE_REQUIRED_LIST_HEIGHT = math.max(CraftForgeRequiredListButton1:GetHeight(), CRAFTFORGE_REQUIRED_LIST_HEIGHT)
+	CRAFTBENCH_REQUIRED_LIST_HEIGHT = math.max(CraftBenchRequiredListButton1:GetHeight(), CRAFTBENCH_REQUIRED_LIST_HEIGHT)
 	return frame
 end
 
 --
 -- Called to update the optional list window
 --
-function CraftForge:UpdateRequiredListWindow()
+function CraftBench:UpdateRequiredListWindow()
 	--DA.DEBUG(0,"UpdateRequiredListWindow()")
 	self.InProgress.optional = true
 	local numItems
@@ -130,24 +130,24 @@ function CraftForge:UpdateRequiredListWindow()
 	else
 		return
 	end
-	local height = CraftForgeRequiredListParent:GetHeight() - 30 -- Allow for frame border
-	local width = CraftForgeRequiredListParent:GetWidth() - 30 -- Allow for scrollbars
-	--DA.DEBUG(1,"UpdateRequiredListWindow: CraftForgeRequiredListParent height= "..tostring(height)..", CRAFTFORGE_REQUIRED_LIST_HEIGHT= "..tostring(CRAFTFORGE_REQUIRED_LIST_HEIGHT))
-	--DA.DEBUG(1,"UpdateRequiredListWindow: CraftForgeRequiredListParent width= "..tostring(width))
-	local button_count = height / CRAFTFORGE_REQUIRED_LIST_HEIGHT
+	local height = CraftBenchRequiredListParent:GetHeight() - 30 -- Allow for frame border
+	local width = CraftBenchRequiredListParent:GetWidth() - 30 -- Allow for scrollbars
+	--DA.DEBUG(1,"UpdateRequiredListWindow: CraftBenchRequiredListParent height= "..tostring(height)..", CRAFTBENCH_REQUIRED_LIST_HEIGHT= "..tostring(CRAFTBENCH_REQUIRED_LIST_HEIGHT))
+	--DA.DEBUG(1,"UpdateRequiredListWindow: CraftBenchRequiredListParent width= "..tostring(width))
+	local button_count = height / CRAFTBENCH_REQUIRED_LIST_HEIGHT
 	button_count = math.floor(button_count) - 1
 	--DA.DEBUG(1,"UpdateRequiredListWindow: numItems= "..tostring(numItems)..", button_count= "..tostring(button_count))
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(CraftForgeRequiredListList,			-- frame
+	FauxScrollFrame_Update(CraftBenchRequiredListList,			-- frame
 							numItems,						-- num items
 							button_count,					-- num to display
-							CRAFTFORGE_REQUIRED_LIST_HEIGHT)	-- value step (item height)
+							CRAFTBENCH_REQUIRED_LIST_HEIGHT)	-- value step (item height)
 --
 -- Where in the list of items to start counting.
 --
-	local itemOffset = FauxScrollFrame_GetOffset(CraftForgeRequiredListList)
+	local itemOffset = FauxScrollFrame_GetOffset(CraftBenchRequiredListList)
 	--DA.DEBUG(1,"UpdateRequiredListWindow: itemOffset= "..tostring(itemOffset))
 	for i=1, button_count, 1 do
 		num_buttons = math.max(num_buttons, i)
@@ -164,7 +164,7 @@ function CraftForge:UpdateRequiredListWindow()
 			local oreagentName, oreagentLink = C_Item.GetItemInfo(oreagentID)
 			local oreagentQuality
 			if not oreagentName then
-				CraftForge.optionalDataNeeded = true
+				CraftBench.optionalDataNeeded = true
 				C_Item.RequestLoadItemDataByID(oreagentID)
 				oreagentName = "item:"..tostring(oreagentID)
 			end
@@ -221,25 +221,25 @@ end
 --
 -- Updates the scrollbar when a scroll event happens
 --
-function CraftForge:RequiredList_OnScroll()
-	CraftForge:UpdateRequiredListWindow()
+function CraftBench:RequiredList_OnScroll()
+	CraftBench:UpdateRequiredListWindow()
 end
 
 --
 -- Functions to show and hide the RequiredList
 --
-function CraftForge:DisplayRequiredList()
+function CraftBench:DisplayRequiredList()
 	--DA.DEBUG(0,"DisplayRequiredList()")
 	if not self.RequiredList then
 		self.RequiredList = createRequiredListFrame(self)
 	end
 	if not self.RequiredList:IsVisible() then
-		self.RequiredList.titletext:SetText("CraftForge: Required Reagents")
+		self.RequiredList.titletext:SetText("CraftBench: Required Reagents")
 		self.RequiredList:Show()
 	end
 end
 
-function CraftForge:HideRequiredList(clear)
+function CraftBench:HideRequiredList(clear)
 	--DA.DEBUG(0,"HideRequiredList()")
 	if self.RequiredList then
 		self.RequiredList:Hide()
@@ -250,15 +250,15 @@ function CraftForge:HideRequiredList(clear)
 end
 
 --
--- Called when an required reagent button in the CraftForge detail frame is clicked.
+-- Called when an required reagent button in the CraftBench detail frame is clicked.
 -- This required list is used for selecting Required reagents.
 -- This has the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function CraftForge:RequiredReagentOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:RequiredReagentOnClick(button, mouse, skillIndex, reagentIndex)
 	DA.DEBUG(0,"RequiredReagentOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
-	CraftForgeRequiredHaveItems:Hide()
+	CraftBenchRequiredHaveItems:Hide()
 	local thisRequired, index
 --
 -- Required reagents are identified with a negative index < -100.
@@ -288,7 +288,7 @@ end
 -- Returns a link for the required reagent required to create the specified
 -- item, the index'th reagent required for the item is returned
 --
-function CraftForge:GetRequiredItemLink(skillIndex, index)
+function CraftBench:GetRequiredItemLink(skillIndex, index)
 	--DA.DEBUG(0,"GetRequiredItemLink("..tostring(skillIndex)..", "..tostring(index)..")")
 	if skillIndex and index then
 		local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
@@ -303,17 +303,17 @@ end
 --
 -- Called when then mouse enters a required button
 --
-function CraftForge:RequiredButtonOnEnter(button, skillIndex, optionalIndex)
+function CraftBench:RequiredButtonOnEnter(button, skillIndex, optionalIndex)
 	--DA.DEBUG(0,"RequiredButtonOnEnter("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(optionalIndex)..")")
-	local tip = GameTooltip -- CraftForgeTradeskillTooltip
+	local tip = GameTooltip -- CraftBenchTradeskillTooltip
 	tip:SetOwner(button, "ANCHOR_BOTTOMRIGHT")
-	if CraftForge.db.profile.scale_tooltip then
+	if CraftBench.db.profile.scale_tooltip then
 		local uiScale = 1.0;
 		if ( GetCVar("useUiScale") == "1" ) then
 			uiScale = tonumber(GetCVar("uiscale"))
 		end
-		if CraftForge.db.profile.ttscale then
-			uiScale = uiScale * CraftForge.db.profile.ttscale
+		if CraftBench.db.profile.ttscale then
+			uiScale = uiScale * CraftBench.db.profile.ttscale
 		end
 		tip:SetScale(uiScale)
 	end
@@ -326,11 +326,11 @@ end
 --
 -- called then the mouse leaves an optional button
 --
-function CraftForge:RequiredButtonOnLeave(button, skillIndex, optionalIndex)
+function CraftBench:RequiredButtonOnLeave(button, skillIndex, optionalIndex)
 	--DA.DEBUG(0,"RequiredButtonOnLeave("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(optionalIndex)..")")
-	local tip = GameTooltip -- CraftForgeTradeskillTooltip
-	if CraftForge.db.profile.scale_tooltip then
-		tip:SetScale(CraftForge.gttScale)
+	local tip = GameTooltip -- CraftBenchTradeskillTooltip
+	if CraftBench.db.profile.scale_tooltip then
+		tip:SetScale(CraftBench.gttScale)
 	end
 	tip:Hide()
 	ResetCursor()
@@ -342,7 +342,7 @@ end
 -- These all have the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function CraftForge:RequiredButtonOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:RequiredButtonOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"RequiredButtonOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	--DA.DEBUG(1,"RequiredButtonOnClick: cachedRequiredIndex= "..tostring(self.cachedRequiredIndex)..", cachedRequiredList= "..DA.DUMP(self.cachedRequiredList))
 	local oreagentID = self.cachedRequiredList.reagents[reagentIndex].itemID

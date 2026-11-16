@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 --
 -- Our own tables of skill levels:
---    CraftForge.db.global.SkillLevels
---    CraftForge.db.global.SkillLineAbility
---    CraftForge.db.global.NameToSpellID
+--    CraftBench.db.global.SkillLevels
+--    CraftBench.db.global.SkillLineAbility
+--    CraftBench.db.global.NameToSpellID
 --
 -- SkillLevels index is itemID
 -- SkillLineAbility index is recipeID
@@ -46,25 +46,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --   green  is the (numeric) skill level below which the recipe is green
 --   gray   is the (numeric) skill level above which the recipe is gray
 --
--- A global table, CraftForge.db.global.MissingSkillLevels, is added to when
+-- A global table, CraftBench.db.global.MissingSkillLevels, is added to when
 -- no other entry is found. The format of this table is the same as
--- the table CraftForge.db.global.SkillLevels to facilitate adding to this table.
+-- the table CraftBench.db.global.SkillLevels to facilitate adding to this table.
 --
 -- InitializeSkillLevels is called if the tables do not exist or
--- the CraftForge.SkillLevelBuild is different.
+-- the CraftBench.SkillLevelBuild is different.
 --
--- Force refresh with '/craftforge initskilllevels'
--- or '/run CraftForge:InitializeSkillLevels()'
--- or '/run CraftForge.db.global.SkillLevels = nil'
+-- Force refresh with '/craftbench initskilllevels'
+-- or '/run CraftBench:InitializeSkillLevels()'
+-- or '/run CraftBench.db.global.SkillLevels = nil'
 --
 
-CraftForge.SkillLevelVersion = 12
-CraftForge.SkillLevelBuild = 70892
+CraftBench.SkillLevelVersion = 12
+CraftBench.SkillLevelBuild = 70892
 
-function CraftForge:InitializeSkillLevels()
+function CraftBench:InitializeSkillLevels()
 DA.DEBUG(0,"InitializeSkillLevels()");
-CraftForge.db.global.MissingSkillLevels = {}
-CraftForge.db.global.SkillLevels = {
+CraftBench.db.global.MissingSkillLevels = {}
+CraftBench.db.global.SkillLevels = {
 		[0] = "orange/yellow/green/gray",
 -- alchemy
 [118] = "1/55/75/95",
@@ -6758,7 +6758,7 @@ CraftForge.db.global.SkillLevels = {
 	
 }
 -- SkillLineAbility.12.1.7.70892.lua
-CraftForge.db.global.SkillLineAbility = {
+CraftBench.db.global.SkillLineAbility = {
 [2018] = '1/1/1/1',    -- Blacksmithing
 [2108] = '1/1/1/1',    -- Leatherworking
 [2149] = '1/40/55/70',    -- Handstitched Leather Boots
@@ -18333,7 +18333,7 @@ CraftForge.db.global.SkillLineAbility = {
 [1317428] = '1/85/92/100',    -- Arcanist's Research Board
 }
 -- SpellName.12.1.7.70892.lua
-CraftForge.db.global.NameToSpellID = {
+CraftBench.db.global.NameToSpellID = {
 ["Blacksmithing"] = 2018,
 ["Leatherworking"] = 2108,
 ["Handstitched Leather Boots"] = 2149,

@@ -1,8 +1,8 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
 
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ]]--
 
-CraftForge.CIMIPlugin = {}
+CraftBench.CIMIPlugin = {}
 
-local plugin = CraftForge.CIMIPlugin
-local L = CraftForge.L
+local plugin = CraftBench.CIMIPlugin
+local L = CraftBench.L
 
 plugin.options =
 {
@@ -34,11 +34,11 @@ plugin.options =
 			type = "toggle",
 			name = L["Enabled"],
 			get = function()
-				return CraftForge.db.profile.plugins.CIMI.enabled
+				return CraftBench.db.profile.plugins.CIMI.enabled
 			end,
 			set = function(self,value)
-				CraftForge.db.profile.plugins.CIMI.enabled = value
-				CraftForge:UpdateTradeSkillWindow()
+				CraftBench.db.profile.plugins.CIMI.enabled = value
+				CraftBench:UpdateTradeSkillWindow()
 			end,
 			width = "double",
 			order = 1
@@ -48,17 +48,17 @@ plugin.options =
 
 function plugin.OnInitialize()
 	--DA.DEBUG(0,"CIMI:OnInitialize()")
-	if not CraftForge.db.profile.plugins.CIMI then
-		CraftForge.db.profile.plugins.CIMI = {}
-		CraftForge.db.profile.plugins.CIMI.enabled = true
+	if not CraftBench.db.profile.plugins.CIMI then
+		CraftBench.db.profile.plugins.CIMI = {}
+		CraftBench.db.profile.plugins.CIMI.enabled = true
 	end
-	CraftForge:AddPluginOptions(plugin.options)
+	CraftBench:AddPluginOptions(plugin.options)
 end
 
 function plugin.RecipeNamePrefix(skill, recipe)
 	--DA.DEBUG(0,"CIMI:RecipeNamePrefix("..tostring(skill)..", "..tostring(recipe)..")")
 	if not skill or not recipe then return end
-	if CanIMogIt and CanIMogIt.GetIconText and CraftForge.db.profile.plugins.CIMI.enabled then
+	if CanIMogIt and CanIMogIt.GetIconText and CraftBench.db.profile.plugins.CIMI.enabled then
 		local itemLink = select(2, C_Item.GetItemInfo(recipe.itemID))
 		if itemLink then
 			local icon = CanIMogIt:GetIconText(itemLink)
@@ -71,11 +71,11 @@ end
 
 function plugin.GetExtraText(skill, recipe)
 	--DA.DEBUG(0,"CIMI:GetExtraText("..tostring(skill)..", "..tostring(recipe)..")")
-	if CanIMogIt and CanIMogIt.GetIconText and CraftForge.db.profile.plugins.CIMI.enabled then
+	if CanIMogIt and CanIMogIt.GetIconText and CraftBench.db.profile.plugins.CIMI.enabled then
 		return "|rCanIMogIt:", (plugin.RecipeNamePrefix(skill, recipe) or "No")
 	end
 end
 
-CraftForge:RegisterRecipeNamePlugin("CIMIPlugin") -- we have a RecipeNamePrefix or a RecipeNameSuffix function
+CraftBench:RegisterRecipeNamePlugin("CIMIPlugin") -- we have a RecipeNamePrefix or a RecipeNameSuffix function
 
-CraftForge:RegisterDisplayDetailPlugin("CIMIPlugin") -- necessary for options
+CraftBench:RegisterDisplayDetailPlugin("CIMIPlugin") -- necessary for options

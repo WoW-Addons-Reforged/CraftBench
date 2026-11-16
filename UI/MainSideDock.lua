@@ -1,18 +1,18 @@
 ----------------------------------------------------------
--- CraftForge - Main Window All-in-One Side Dock        --
+-- CraftBench - Main Window All-in-One Side Dock        --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-local L = CraftForge.L
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+local L = CraftBench.L
 
 local sideDock
 
-function CraftForge:CreateMainSideToolsDock(parent)
+function CraftBench:CreateMainSideToolsDock(parent)
 	if sideDock or not parent then return sideDock end
-	local UIStyle = CraftForge.UIStyle
+	local UIStyle = CraftBench.UIStyle
 
-	local dock = CreateFrame("Frame", "CraftForgeSideToolsDock", parent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local dock = CreateFrame("Frame", "CraftBenchSideToolsDock", parent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	dock:SetPoint("TOPLEFT", parent, "TOPRIGHT", 4, 0)
 	dock:SetSize(168, 424)
 	if UIStyle then
@@ -40,15 +40,15 @@ function CraftForge:CreateMainSideToolsDock(parent)
 			key = "level",
 			icon = 136249,
 			label = L["LVL_TITLE"] or "Leveling Planner",
-			tip = "/cf level",
-			onClick = function() if CraftForge.ShowLeveling then CraftForge:ShowLeveling() end end,
+			tip = "/cb level",
+			onClick = function() if CraftBench.ShowLeveling then CraftBench:ShowLeveling() end end,
 		},
 		{
 			key = "cd",
 			icon = 136243,
 			label = L["CD_TITLE"] or "Cooldowns",
-			tip = "/cf cd",
-			onClick = function() if CraftForge.ShowCooldowns then CraftForge:ShowCooldowns() end end,
+			tip = "/cb cd",
+			onClick = function() if CraftBench.ShowCooldowns then CraftBench:ShowCooldowns() end end,
 		},
 		{
 			key = "watch",
@@ -56,10 +56,10 @@ function CraftForge:CreateMainSideToolsDock(parent)
 			label = L["WATCH_TITLE"] or "Recipe Watch",
 			tip = L["SIDE_WATCH_TIP"] or "Click: Toggle HUD | Shift-Click: Pin selected",
 			onClick = function()
-				if IsShiftKeyDown() and CraftForge.Watch and CraftForge.Watch.PinCurrentOrByName then
-					CraftForge.Watch:PinCurrentOrByName("")
-				elseif CraftForge.ToggleWatchHUD then
-					CraftForge:ToggleWatchHUD()
+				if IsShiftKeyDown() and CraftBench.Watch and CraftBench.Watch.PinCurrentOrByName then
+					CraftBench.Watch:PinCurrentOrByName("")
+				elseif CraftBench.ToggleWatchHUD then
+					CraftBench:ToggleWatchHUD()
 				end
 			end,
 		},
@@ -67,43 +67,43 @@ function CraftForge:CreateMainSideToolsDock(parent)
 			key = "gather",
 			icon = 136065,
 			label = L["GATHER_TITLE"] or "Gathering Guide",
-			tip = "/cf gather",
-			onClick = function() if CraftForge.ShowGathering then CraftForge:ShowGathering() end end,
+			tip = "/cb gather",
+			onClick = function() if CraftBench.ShowGathering then CraftBench:ShowGathering() end end,
 		},
 		{
 			key = "contacts",
 			icon = 133784,
 			label = L["CONTACTS_TITLE"] or "Trade Contacts",
-			tip = "/cf contacts",
-			onClick = function() if CraftForge.ShowContacts then CraftForge:ShowContacts() end end,
+			tip = "/cb contacts",
+			onClick = function() if CraftBench.ShowContacts then CraftBench:ShowContacts() end end,
 		},
 		{
 			key = "fish",
 			icon = 136245,
 			label = L["Fishing"] or "Fishing",
-			tip = "/cf fish",
-			onClick = function() if CraftForge.ShowFishing then CraftForge:ShowFishing() end end,
+			tip = "/cb fish",
+			onClick = function() if CraftBench.ShowFishing then CraftBench:ShowFishing() end end,
 		},
 		{
 			key = "camp",
 			icon = 135805,
 			label = L["CAMP_TITLE"] or "Camping",
-			tip = "/cf camp",
-			onClick = function() if CraftForge.ShowCamping then CraftForge:ShowCamping() end end,
+			tip = "/cb camp",
+			onClick = function() if CraftBench.ShowCamping then CraftBench:ShowCamping() end end,
 		},
 		{
 			key = "find",
 			icon = 134269,
 			label = L["SIDE_ALT_FINDER"] or "Alt Finder",
-			tip = "/cf find",
-			onClick = function() if CraftForge.ShowAltFinder then CraftForge:ShowAltFinder() end end,
+			tip = "/cb find",
+			onClick = function() if CraftBench.ShowAltFinder then CraftBench:ShowAltFinder() end end,
 		},
 		{
 			key = "gear",
 			icon = 132633,
 			label = L["GEAR_TITLE"] or "Crafted Gear",
-			tip = "/cf gear",
-			onClick = function() if CraftForge.ShowGear then CraftForge:ShowGear() end end,
+			tip = "/cb gear",
+			onClick = function() if CraftBench.ShowGear then CraftBench:ShowGear() end end,
 		},
 		{
 			key = "buffs",
@@ -111,11 +111,11 @@ function CraftForge:CreateMainSideToolsDock(parent)
 			label = L["BUFFS_ONLY"] or "Buffs only",
 			tip = L["BUFFS_ONLY_TIP"] or "Filter list to consumables & enhancements usable at your level",
 			onClick = function()
-				if CraftForge.SetTradeSkillOption and CraftForge.GetTradeSkillOption then
-					local cur = CraftForge:GetTradeSkillOption("buffsOnly")
-					CraftForge:SetTradeSkillOption("buffsOnly", not cur)
-					if CraftForge.SortAndFilterRecipes then CraftForge:SortAndFilterRecipes() end
-					if CraftForge.UpdateTradeSkillWindow then CraftForge:UpdateTradeSkillWindow() end
+				if CraftBench.SetTradeSkillOption and CraftBench.GetTradeSkillOption then
+					local cur = CraftBench:GetTradeSkillOption("buffsOnly")
+					CraftBench:SetTradeSkillOption("buffsOnly", not cur)
+					if CraftBench.SortAndFilterRecipes then CraftBench:SortAndFilterRecipes() end
+					if CraftBench.UpdateTradeSkillWindow then CraftBench:UpdateTradeSkillWindow() end
 				end
 			end,
 		},
@@ -123,8 +123,8 @@ function CraftForge:CreateMainSideToolsDock(parent)
 			key = "process",
 			icon = 132853,
 			label = L["SIDE_PROCESS"] or "Processing",
-			tip = "/cf process",
-			onClick = function() if CraftForge.ShowProcessPanel then CraftForge:ShowProcessPanel() end end,
+			tip = "/cb process",
+			onClick = function() if CraftBench.ShowProcessPanel then CraftBench:ShowProcessPanel() end end,
 		},
 	}
 
@@ -199,14 +199,14 @@ function CraftForge:CreateMainSideToolsDock(parent)
 	end
 
 	toggleBtn:SetScript("OnClick", function()
-		local dbp = CraftForge.db and CraftForge.db.profile
+		local dbp = CraftBench.db and CraftBench.db.profile
 		local nextState = not (dbp and dbp.sideDockCollapsed)
 		if dbp then dbp.sideDockCollapsed = nextState end
 		applyCollapsedState(nextState)
 	end)
 
 	dock:SetScript("OnShow", function()
-		local readyCD = (CraftForge.Cooldowns and CraftForge.Cooldowns.GetReadyCount and CraftForge.Cooldowns:GetReadyCount()) or 0
+		local readyCD = (CraftBench.Cooldowns and CraftBench.Cooldowns.GetReadyCount and CraftBench.Cooldowns:GetReadyCount()) or 0
 		for _, b in ipairs(dock._buttons) do
 			if b._key == "cd" then
 				if readyCD > 0 then
@@ -218,7 +218,7 @@ function CraftForge:CreateMainSideToolsDock(parent)
 		end
 	end)
 
-	local initCollapsed = CraftForge.db and CraftForge.db.profile and CraftForge.db.profile.sideDockCollapsed
+	local initCollapsed = CraftBench.db and CraftBench.db.profile and CraftBench.db.profile.sideDockCollapsed
 	applyCollapsedState(initCollapsed and true or false)
 
 	sideDock = dock

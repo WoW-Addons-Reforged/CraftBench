@@ -1,26 +1,26 @@
 ----------------------------------------------------------
--- CraftForge - Trade Contacts (Vendors & Trainers DB) --
+-- CraftBench - Trade Contacts (Vendors & Trainers DB) --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
 
-CraftForge.Contacts = CraftForge.Contacts or {}
-local Contacts = CraftForge.Contacts
+CraftBench.Contacts = CraftBench.Contacts or {}
+local Contacts = CraftBench.Contacts
 
 local RECIPE_CLASS_ID = (Enum and Enum.ItemClass and Enum.ItemClass.Recipe) or 9
 local TRADEGOODS_CLASS_ID = (Enum and Enum.ItemClass and Enum.ItemClass.Tradegoods) or 7
 
 local function ensureDB()
-	if not CraftForge.db then return nil end
-	if not CraftForge.db.global.contactsDB then
-		CraftForge.db.global.contactsDB = {
+	if not CraftBench.db then return nil end
+	if not CraftBench.db.global.contactsDB then
+		CraftBench.db.global.contactsDB = {
 			vendors = {},
 			trainers = {},
 			itemVendors = {},
 		}
 	end
-	local db = CraftForge.db.global.contactsDB
+	local db = CraftBench.db.global.contactsDB
 	db.vendors = db.vendors or {}
 	db.trainers = db.trainers or {}
 	db.itemVendors = db.itemVendors or {}
@@ -183,11 +183,11 @@ local function appendContactTooltip(tooltip, itemID)
 	for _, v in pairs(vendors) do
 		local coords = (v.x and v.y) and string.format(" (%.1f, %.1f)", v.x, v.y) or ""
 		local priceStr = ""
-		if v.price and v.price > 0 and CraftForge.FormatMoneyFull then
-			priceStr = " - " .. CraftForge:FormatMoneyFull(v.price, true)
+		if v.price and v.price > 0 and CraftBench.FormatMoneyFull then
+			priceStr = " - " .. CraftBench:FormatMoneyFull(v.price, true)
 		end
 		local limitStr = v.limited and (" |cffff9933[x" .. v.limited .. "]|r") or ""
-		tooltip:AddLine(string.format("|cffd4a94eCraftForge Vendor:|r %s — %s%s%s%s",
+		tooltip:AddLine(string.format("|cffd4a94eCraftBench Vendor:|r %s — %s%s%s%s",
 			v.npc or "?", v.zone or "?", coords, priceStr, limitStr), 0.9, 0.9, 0.9, true)
 		shown = shown + 1
 		if shown >= 3 then break end
@@ -314,7 +314,7 @@ end
 
 function Contacts:SetWaypoint(rec)
 	if not rec or not rec.mapID or not rec.x or not rec.y then
-		CraftForge:Print(CraftForge.L["CONTACTS_NO_COORDS"] or "No coordinates recorded for this contact.")
+		CraftBench:Print(CraftBench.L["CONTACTS_NO_COORDS"] or "No coordinates recorded for this contact.")
 		return
 	end
 	if _G.TomTom and _G.TomTom.AddWaypoint then
@@ -324,12 +324,12 @@ function Contacts:SetWaypoint(rec)
 			minimap = true,
 			world = true,
 		})
-		CraftForge:Print(string.format(CraftForge.L["CONTACTS_WAYPOINT_SET"] or "TomTom waypoint set: %s (%.1f, %.1f)", rec.name, rec.x, rec.y))
+		CraftBench:Print(string.format(CraftBench.L["CONTACTS_WAYPOINT_SET"] or "TomTom waypoint set: %s (%.1f, %.1f)", rec.name, rec.x, rec.y))
 	elseif C_Map and C_Map.SetUserWaypoint and UiMapPoint then
 		local point = UiMapPoint.CreateFromCoordinates(rec.mapID, rec.x / 100, rec.y / 100)
 		C_Map.SetUserWaypoint(point)
-		CraftForge:Print(string.format(CraftForge.L["CONTACTS_WAYPOINT_SET"] or "Waypoint set: %s (%.1f, %.1f)", rec.name, rec.x, rec.y))
+		CraftBench:Print(string.format(CraftBench.L["CONTACTS_WAYPOINT_SET"] or "Waypoint set: %s (%.1f, %.1f)", rec.name, rec.x, rec.y))
 	else
-		CraftForge:Print(string.format("%s — %s (%.1f, %.1f)", rec.name, rec.zone or "?", rec.x, rec.y))
+		CraftBench:Print(string.format("%s — %s (%.1f, %.1f)", rec.name, rec.zone or "?", rec.x, rec.y))
 	end
 end

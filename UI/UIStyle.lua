@@ -1,25 +1,25 @@
 ----------------------------------------------------------
--- CraftForge - Modern Dark-Gold UI Style              --
+-- CraftBench - Modern Dark-Gold UI Style              --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-CraftForge.UIStyle = CraftForge.UIStyle or {}
-local UIStyle = CraftForge.UIStyle
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+CraftBench.UIStyle = CraftBench.UIStyle or {}
+local UIStyle = CraftBench.UIStyle
 
 local WHITE_TEX = "Interface\\Buttons\\WHITE8X8"
 
 UIStyle._fontListeners = UIStyle._fontListeners or {}
 
 function UIStyle.GetFontSize()
-	local sz = (CraftForge and CraftForge.db and CraftForge.db.profile and tonumber(CraftForge.db.profile.uiFontSize)) or 13
+	local sz = (CraftBench and CraftBench.db and CraftBench.db.profile and tonumber(CraftBench.db.profile.uiFontSize)) or 13
 	return math.min(math.max(math.floor(sz), 10), 18)
 end
 
 function UIStyle.SetFontSize(size)
 	size = math.min(math.max(math.floor(tonumber(size) or 13), 10), 18)
-	if CraftForge and CraftForge.db and CraftForge.db.profile then
-		CraftForge.db.profile.uiFontSize = size
+	if CraftBench and CraftBench.db and CraftBench.db.profile then
+		CraftBench.db.profile.uiFontSize = size
 	end
 	for _, fn in ipairs(UIStyle._fontListeners) do
 		pcall(fn, size)

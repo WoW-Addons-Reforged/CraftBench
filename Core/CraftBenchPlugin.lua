@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = CraftForge.L
+local L = CraftBench.L
 
-CraftForge.registeredPlugins = {}		-- plugins that have registered a function
-CraftForge.updatePlugins = {}			-- each plugin will register if it has an Update function
-CraftForge.processQueuePlugins = {}	-- each plugin will register if it has a ProcessQueue function
-CraftForge.displayDetailPlugins = {}	-- each plugin will register if it has a GetExtraText function
-CraftForge.RecipeNamePrefixes = {}		-- each plugin will register, only one can be active
-CraftForge.RecipeNameSuffixes = {}		-- each plugin will register, only one can be active
+CraftBench.registeredPlugins = {}		-- plugins that have registered a function
+CraftBench.updatePlugins = {}			-- each plugin will register if it has an Update function
+CraftBench.processQueuePlugins = {}	-- each plugin will register if it has a ProcessQueue function
+CraftBench.displayDetailPlugins = {}	-- each plugin will register if it has a GetExtraText function
+CraftBench.RecipeNamePrefixes = {}		-- each plugin will register, only one can be active
+CraftBench.RecipeNameSuffixes = {}		-- each plugin will register, only one can be active
 
 local PLUGIN_ADDON_MAP = {
 	AckisRecipeList = { "AckisRecipeList", "AckisRecipeList_Classic" },
@@ -83,7 +83,7 @@ local function getAddonVersion(addon)
 	return nil
 end
 
-function CraftForge:IsPluginAddonInstalled(pluginName)
+function CraftBench:IsPluginAddonInstalled(pluginName)
 	local candidates = PLUGIN_ADDON_MAP[pluginName] or { pluginName }
 	for _, addon in ipairs(candidates) do
 		if isAddonInstalled(addon) then
@@ -93,7 +93,7 @@ function CraftForge:IsPluginAddonInstalled(pluginName)
 	return false
 end
 
-function CraftForge:GetPluginAddonVersion(pluginName)
+function CraftBench:GetPluginAddonVersion(pluginName)
 	local candidates = PLUGIN_ADDON_MAP[pluginName] or { pluginName }
 	for _, addon in ipairs(candidates) do
 		if isAddonInstalled(addon) then
@@ -189,8 +189,8 @@ local function hasDropdownEntries(values)
 	return false
 end
 
-CraftForge.pluginsOrder = 10
-CraftForge.pluginsOptions = {
+CraftBench.pluginsOrder = 10
+CraftBench.pluginsOptions = {
 		name = L["Plugins"],
 		type = "group",
 		childGroups = "tree",
@@ -210,11 +210,11 @@ CraftForge.pluginsOptions = {
 							return buildAddonValues(AH_ADDONS)
 						end,
 						get = function()
-							return CraftForge.db.profile.plugins.preferredAHAddon or "Auto"
+							return CraftBench.db.profile.plugins.preferredAHAddon or "Auto"
 						end,
 						set = function(_, value)
-							CraftForge.db.profile.plugins.preferredAHAddon = value
-							CraftForge:UpdateTradeSkillWindow()
+							CraftBench.db.profile.plugins.preferredAHAddon = value
+							CraftBench:UpdateTradeSkillWindow()
 						end,
 					},
 					bagAddon = {
@@ -227,28 +227,28 @@ CraftForge.pluginsOptions = {
 							return buildAddonValues(BAG_ADDONS)
 						end,
 						get = function()
-							return CraftForge.db.profile.plugins.preferredBagAddon or "Auto"
+							return CraftBench.db.profile.plugins.preferredBagAddon or "Auto"
 						end,
 						set = function(_, value)
-							CraftForge.db.profile.plugins.preferredBagAddon = value
+							CraftBench.db.profile.plugins.preferredBagAddon = value
 						end,
 					},
 					gatherAddon = {
 						type = "select",
 						name = L["PLUGIN_GATHER_ADDON"] or "Gathering Addon",
-						desc = L["PLUGIN_GATHER_ADDON_DESC"] or "Select which gathering node database (GatherMate2 or GathererReforged) CraftForge uses.",
+						desc = L["PLUGIN_GATHER_ADDON_DESC"] or "Select which gathering node database (GatherMate2 or GathererReforged) CraftBench uses.",
 						order = 2.5,
 						width = 1.6,
 						values = function()
 							return buildAddonValues(GATHER_ADDONS)
 						end,
 						get = function()
-							return CraftForge.db.profile.plugins.preferredGatherAddon or "Auto"
+							return CraftBench.db.profile.plugins.preferredGatherAddon or "Auto"
 						end,
 						set = function(_, value)
-							CraftForge.db.profile.plugins.preferredGatherAddon = value
-							if CraftForge.GatheringUI and CraftForge.GatheringUI.Refresh and _G.CraftForgeGatheringWindow and _G.CraftForgeGatheringWindow:IsShown() then
-								CraftForge.GatheringUI:Refresh()
+							CraftBench.db.profile.plugins.preferredGatherAddon = value
+							if CraftBench.GatheringUI and CraftBench.GatheringUI.Refresh and _G.CraftBenchGatheringWindow and _G.CraftBenchGatheringWindow:IsShown() then
+								CraftBench.GatheringUI:Refresh()
 							end
 						end,
 					},
@@ -272,7 +272,7 @@ CraftForge.pluginsOptions = {
 				name = L["PLUGIN_RECIPE_DISPLAY"],
 				order = 2,
 				hidden = function()
-					local args = CraftForge.pluginsOptions.args.RecipeDisplaySection.args
+					local args = CraftBench.pluginsOptions.args.RecipeDisplaySection.args
 					return not hasDropdownEntries(args.RecipeNamePrefix.values)
 						and not hasDropdownEntries(args.RecipeNameSuffix.values)
 				end,
@@ -290,20 +290,20 @@ CraftForge.pluginsOptions = {
 						order = 1,
 						width = 1.4,
 						hidden = function()
-							local args = CraftForge.pluginsOptions.args.RecipeDisplaySection.args
+							local args = CraftBench.pluginsOptions.args.RecipeDisplaySection.args
 							return not hasDropdownEntries(args.RecipeNamePrefix.values)
 						end,
 						get = function()
-							local args = CraftForge.pluginsOptions.args.RecipeDisplaySection.args
-							local val = CraftForge.db.profile.plugins.recipeNamePrefix
+							local args = CraftBench.pluginsOptions.args.RecipeDisplaySection.args
+							local val = CraftBench.db.profile.plugins.recipeNamePrefix
 							if val and args.RecipeNamePrefix.values[val] then
 								return val
 							end
 							return " "
 						end,
 						set = function(_, value)
-							CraftForge.db.profile.plugins.recipeNamePrefix = value
-							CraftForge:UpdateTradeSkillWindow()
+							CraftBench.db.profile.plugins.recipeNamePrefix = value
+							CraftBench:UpdateTradeSkillWindow()
 						end,
 						values = {
 							[" "] = L["None"],
@@ -316,20 +316,20 @@ CraftForge.pluginsOptions = {
 						order = 2,
 						width = 1.4,
 						hidden = function()
-							local args = CraftForge.pluginsOptions.args.RecipeDisplaySection.args
+							local args = CraftBench.pluginsOptions.args.RecipeDisplaySection.args
 							return not hasDropdownEntries(args.RecipeNameSuffix.values)
 						end,
 						get = function()
-							local args = CraftForge.pluginsOptions.args.RecipeDisplaySection.args
-							local val = CraftForge.db.profile.plugins.recipeNameSuffix
+							local args = CraftBench.pluginsOptions.args.RecipeDisplaySection.args
+							local val = CraftBench.db.profile.plugins.recipeNameSuffix
 							if val and args.RecipeNameSuffix.values[val] then
 								return val
 							end
 							return " "
 						end,
 						set = function(_, value)
-							CraftForge.db.profile.plugins.recipeNameSuffix = value
-							CraftForge:UpdateTradeSkillWindow()
+							CraftBench.db.profile.plugins.recipeNameSuffix = value
+							CraftBench:UpdateTradeSkillWindow()
 						end,
 						values = {
 							[" "] = L["None"],
@@ -355,18 +355,18 @@ local PLUGIN_DESCRIPTIONS = {
 	BeanCounter = "Uses BeanCounter historical AH purchase & sale records to show personal paid/earned averages in recipe details.",
 	BetterBags = "Uses BetterBags slot hooks for one-click modifier-key Material Processing (Disenchant, Prospect, Mill, Pick Lock).",
 	CanIMogIt = "Uses CanIMogIt transmog collection status (Known / Unknown) prefixes on craftable gear.",
-	DataStoreAuctions = "Uses DataStore_Auctions to show active alt auction counts in recipe prefixes and /cf find.",
-	ElvUI = "Optional ElvUI skin integration (CraftForge's native Dark-Gold UI stays active unless explicitly enabled).",
-	GatherMate2 = "Uses GatherMate2 node databases (Mining & Herbalism) in /cf gather to show node counts and set 1-click waypoints.",
-	GathererReforged = "Uses GathererReforged node storage (Mining & Herbalism) in /cf gather to show node counts and set 1-click waypoints.",
+	DataStoreAuctions = "Uses DataStore_Auctions to show active alt auction counts in recipe prefixes and /cb find.",
+	ElvUI = "Optional ElvUI skin integration (CraftBench's native Dark-Gold UI stays active unless explicitly enabled).",
+	GatherMate2 = "Uses GatherMate2 node databases (Mining & Herbalism) in /cb gather to show node counts and set 1-click waypoints.",
+	GathererReforged = "Uses GathererReforged node storage (Mining & Herbalism) in /cb gather to show node counts and set 1-click waypoints.",
 	OribosExchange = "Uses OribosExchange realm & region market prices for craft cost, sell value, and profit suffixes.",
 	Overachiever = "Uses Overachiever recipe achievement lookups (GetIconForRecipe) to mark recipes needed for achievements.",
 	Questie = "Uses QuestieDB (vendors, npcDrops, relatedQuests) to show vendor NPCs/zones, drops, and quest sources in recipe details.",
-	TomTom = "Uses TomTom (AddWaypoint) to create one-click map waypoints from visited Trade Contacts (/cf contacts).",
+	TomTom = "Uses TomTom (AddWaypoint) to create one-click map waypoints from visited Trade Contacts (/cb contacts).",
 	TSM = "Uses TradeSkillMaster (TSM_API) price sources (DBMarket, DBMinBuyout, Crafting, etc.) for reagent costs, sell value, and profit calculation.",
 }
 
-function CraftForge:AddPluginOptions(options)
+function CraftBench:AddPluginOptions(options)
 	if not options or not options.name then return end
 	local baseName = pluginBaseNames[options] or options.name
 	pluginBaseNames[options] = baseName
@@ -378,20 +378,20 @@ function CraftForge:AddPluginOptions(options)
 		options.name = baseName .. " |cff888888(" .. ver .. ")|r"
 	end
 	local desc = L["PLUGIN_DESC_" .. baseName] or PLUGIN_DESCRIPTIONS[baseName]
-	if desc and options.args and not options.args._craftforge_desc then
-		options.args._craftforge_desc = {
+	if desc and options.args and not options.args._craftbench_desc then
+		options.args._craftbench_desc = {
 			type = "description",
 			name = "|cffffd100" .. desc .. "|r",
 			order = 0,
 			fontSize = "medium",
 		}
 	end
-	options.order = CraftForge.pluginsOrder
-	CraftForge.pluginsOrder = CraftForge.pluginsOrder + 1
-	CraftForge.pluginsOptions.args[baseName] = options
+	options.order = CraftBench.pluginsOrder
+	CraftBench.pluginsOrder = CraftBench.pluginsOrder + 1
+	CraftBench.pluginsOptions.args[baseName] = options
 end
 
-function CraftForge:GetActiveGatherAddon()
+function CraftBench:GetActiveGatherAddon()
 	local pref = self.db and self.db.profile and self.db.profile.plugins and self.db.profile.plugins.preferredGatherAddon or "Auto"
 	if pref ~= "Auto" then
 		if pref == "GatherMate2" and self.GatherMate2Plugin and isAddonInstalled("GatherMate2") then
@@ -409,7 +409,7 @@ function CraftForge:GetActiveGatherAddon()
 	return nil
 end
 
-function CraftForge:FindGatherNodeLocation(searchName, gatherKind)
+function CraftBench:FindGatherNodeLocation(searchName, gatherKind)
 	local active = self:GetActiveGatherAddon()
 	if active == "GatherMate2" and self.GatherMate2Plugin and self.GatherMate2Plugin.FindBestZoneAndNode then
 		return self.GatherMate2Plugin.FindBestZoneAndNode(searchName, gatherKind)
@@ -419,11 +419,11 @@ function CraftForge:FindGatherNodeLocation(searchName, gatherKind)
 	return nil
 end
 
-function CraftForge:SetGatherWaypoint(info)
+function CraftBench:SetGatherWaypoint(info)
 	if not info or not info.mapID or not info.x or not info.y then return false end
 	if _G.TomTom and _G.TomTom.AddWaypoint then
 		_G.TomTom:AddWaypoint(info.mapID, info.x, info.y, {
-			title = info.title or "CraftForge Gather",
+			title = info.title or "CraftBench Gather",
 			persistent = false,
 			minimap = true,
 			world = true,
@@ -441,25 +441,25 @@ function CraftForge:SetGatherWaypoint(info)
 	return false
 end
 
-function CraftForge:RegisterRecipeNamePlugin(moduleName, priority)
+function CraftBench:RegisterRecipeNamePlugin(moduleName, priority)
 	DA.DEBUG(0,"RegisterRecipeNamePlugin("..tostring(moduleName)..", "..tostring(priority))
 	if not priority then priority = 100 end
 	if type(moduleName) == "string" then
-		local module = CraftForge[moduleName]
+		local module = CraftBench[moduleName]
 		if module and type(module) == "table" then
 			local baseName = module.options and (pluginBaseNames[module.options] or module.options.name)
 			local installed = baseName and self:IsPluginAddonInstalled(baseName)
-			local displayArgs = CraftForge.pluginsOptions.args.RecipeDisplaySection.args
+			local displayArgs = CraftBench.pluginsOptions.args.RecipeDisplaySection.args
 			if module.RecipeNamePrefix then
-				CraftForge.RecipeNamePrefixes[moduleName] = module
-				CraftForge.registeredPlugins[moduleName] = module
+				CraftBench.RecipeNamePrefixes[moduleName] = module
+				CraftBench.registeredPlugins[moduleName] = module
 				if installed then
 					displayArgs.RecipeNamePrefix.values[baseName] = baseName
 				end
 			end
 			if module.RecipeNameSuffix then
-				CraftForge.RecipeNameSuffixes[moduleName] = module
-				CraftForge.registeredPlugins[moduleName] = module
+				CraftBench.RecipeNameSuffixes[moduleName] = module
+				CraftBench.registeredPlugins[moduleName] = module
 				if installed then
 					displayArgs.RecipeNameSuffix.values[baseName] = baseName
 				end
@@ -468,83 +468,83 @@ function CraftForge:RegisterRecipeNamePlugin(moduleName, priority)
 	end
 end
 
-function CraftForge:IsRecipeNamePluginRegistered(moduleName)
+function CraftBench:IsRecipeNamePluginRegistered(moduleName)
 	if type(moduleName) == "string" then
-		return (CraftForge.RecipeNamePrefixes[moduleName] ~= nil) or (CraftForge.RecipeNameSuffixes[moduleName] ~= nil)
+		return (CraftBench.RecipeNamePrefixes[moduleName] ~= nil) or (CraftBench.RecipeNameSuffixes[moduleName] ~= nil)
 	end
 end
 
-function CraftForge:RegisterDisplayDetailPlugin(moduleName, priority)
+function CraftBench:RegisterDisplayDetailPlugin(moduleName, priority)
 	DA.DEBUG(0,"RegisterDisplayDetailPlugin("..tostring(moduleName)..", "..tostring(priority))
 	if not priority then priority = 100 end
 	if type(moduleName) == "string" then
-		local module = CraftForge[moduleName]
+		local module = CraftBench[moduleName]
 		if module and type(module) == "table" and module.GetExtraText then
-			CraftForge.displayDetailPlugins[moduleName] = module
-			CraftForge.registeredPlugins[moduleName] = module
+			CraftBench.displayDetailPlugins[moduleName] = module
+			CraftBench.registeredPlugins[moduleName] = module
 		end
 	end
 end
 
-function CraftForge:IsDisplayDetailPluginRegistered(moduleName)
+function CraftBench:IsDisplayDetailPluginRegistered(moduleName)
 	if type(moduleName)	 == "string" then
-		return CraftForge.displayDetailPlugins[moduleName] ~= nil
+		return CraftBench.displayDetailPlugins[moduleName] ~= nil
 	end
 end
 
-function CraftForge:RegisterUpdatePlugin(moduleName, priority)
+function CraftBench:RegisterUpdatePlugin(moduleName, priority)
 	DA.DEBUG(0,"RegisterUpdatePlugin("..tostring(moduleName)..", "..tostring(priority))
 	if not priority then priority = 100 end
 	if type(moduleName) == "string" then
-		local module = CraftForge[moduleName]
+		local module = CraftBench[moduleName]
 		if module and type(module) == "table" and module.Update then
-			CraftForge.updatePlugins[moduleName] = module
-			CraftForge.registeredPlugins[moduleName] = module
+			CraftBench.updatePlugins[moduleName] = module
+			CraftBench.registeredPlugins[moduleName] = module
 		end
 	end
 end
 
-function CraftForge:IsUpdatePluginRegistered(moduleName)
+function CraftBench:IsUpdatePluginRegistered(moduleName)
 	if type(moduleName)	 == "string" then
-		return CraftForge.updatePlugins[moduleName] ~= nil
+		return CraftBench.updatePlugins[moduleName] ~= nil
 	end
 end
 
-function CraftForge:UpdatePlugins()
+function CraftBench:UpdatePlugins()
 	--DA.DEBUG(0,"UpdatePlugins()")
-	for k,v in pairs(CraftForge.updatePlugins) do
+	for k,v in pairs(CraftBench.updatePlugins) do
 		v.Update()
 	end
 end
 
-function CraftForge:RegisterProcessQueuePlugin(moduleName, priority)
+function CraftBench:RegisterProcessQueuePlugin(moduleName, priority)
 	DA.DEBUG(0,"RegisterProcessQueuePlugin("..tostring(moduleName)..", "..tostring(priority))
 	if not priority then priority = 100 end
 	if type(moduleName) == "string" then
-		local module = CraftForge[moduleName]
+		local module = CraftBench[moduleName]
 		if module and type(module) == "table" and module.ProcessQueue then
-			CraftForge.processQueuePlugins[moduleName] = module
-			CraftForge.registeredPlugins[moduleName] = module
+			CraftBench.processQueuePlugins[moduleName] = module
+			CraftBench.registeredPlugins[moduleName] = module
 		end
 	end
 end
 
-function CraftForge:IsProcessQueuePluginRegistered(moduleName)
+function CraftBench:IsProcessQueuePluginRegistered(moduleName)
 	if type(moduleName)	 == "string" then
-		return CraftForge.processQueuePlugins[moduleName] ~= nil
+		return CraftBench.processQueuePlugins[moduleName] ~= nil
 	end
 end
 
-function CraftForge:ProcessQueuePlugins()
+function CraftBench:ProcessQueuePlugins()
 	--DA.DEBUG(0,"ProcessQueuePlugins()")
-	for k,v in pairs(CraftForge.processQueuePlugins) do
+	for k,v in pairs(CraftBench.processQueuePlugins) do
 		v.ProcessQueue()
 	end
 end
 
-function CraftForge:GetExtraText(skill, recipe)
+function CraftBench:GetExtraText(skill, recipe)
 	local lines = {}
-	for _, v in pairs(CraftForge.displayDetailPlugins) do
+	for _, v in pairs(CraftBench.displayDetailPlugins) do
 		local label, text = v.GetExtraText(skill, recipe)
 		local hasLabel = label and label ~= ""
 		local hasText = text and text ~= ""
@@ -563,11 +563,11 @@ function CraftForge:GetExtraText(skill, recipe)
 	return nil, nil
 end
 
-function CraftForge:RecipeNamePrefix(skill, recipe)
+function CraftBench:RecipeNamePrefix(skill, recipe)
 	local text
 	local recipeNamePrefix = self.db.profile.plugins.recipeNamePrefix
 	if recipeNamePrefix and recipeNamePrefix ~= " " then
-		for _, v in pairs(CraftForge.RecipeNamePrefixes) do
+		for _, v in pairs(CraftBench.RecipeNamePrefixes) do
 			local baseName = v.options and (pluginBaseNames[v.options] or v.options.name)
 			if v.RecipeNamePrefix and baseName == recipeNamePrefix then
 				text = v.RecipeNamePrefix(skill, recipe)
@@ -578,11 +578,11 @@ function CraftForge:RecipeNamePrefix(skill, recipe)
 	return text
 end
 
-function CraftForge:RecipeNameSuffix(skill, recipe)
+function CraftBench:RecipeNameSuffix(skill, recipe)
 	local text
 	local recipeNameSuffix = self.db.profile.plugins.recipeNameSuffix
 	if recipeNameSuffix and recipeNameSuffix ~= " " then
-		for _, v in pairs(CraftForge.RecipeNameSuffixes) do
+		for _, v in pairs(CraftBench.RecipeNameSuffixes) do
 			local baseName = v.options and (pluginBaseNames[v.options] or v.options.name)
 			if v.RecipeNameSuffix and baseName == recipeNameSuffix then
 				text = v.RecipeNameSuffix(skill, recipe)
@@ -593,9 +593,9 @@ function CraftForge:RecipeNameSuffix(skill, recipe)
 	return text
 end
 
-function CraftForge:InitializePlugins()
+function CraftBench:InitializePlugins()
 	DA.DEBUG(0,"InitializePlugins()")
-	for k,v in pairs(CraftForge.registeredPlugins) do
+	for k,v in pairs(CraftBench.registeredPlugins) do
 		if v and v.OnInitialize then
 			DA.DEBUG(1,"InitializePlugins: k= "..tostring(k)..", v= "..tostring(v))
 			v.OnInitialize()
@@ -603,9 +603,9 @@ function CraftForge:InitializePlugins()
 	end
 end
 
-function CraftForge:EnablePlugins()
+function CraftBench:EnablePlugins()
 	DA.DEBUG(0,"EnablePlugins()")
-	for k,v in pairs(CraftForge.registeredPlugins) do
+	for k,v in pairs(CraftBench.registeredPlugins) do
 		if v and v.OnEnable then
 			DA.DEBUG(1,"EnablePlugins: k= "..tostring(k)..", v= "..tostring(v))
 			v.OnEnable()
@@ -613,9 +613,9 @@ function CraftForge:EnablePlugins()
 	end
 end
 
-function CraftForge:DisablePlugins()
+function CraftBench:DisablePlugins()
 	DA.DEBUG(0,"DisablePlugins()")
-	for k,v in pairs(CraftForge.registeredPlugins) do
+	for k,v in pairs(CraftBench.registeredPlugins) do
 		if v and v.OnDisable then
 			DA.DEBUG(1,"DisablePlugins: k= "..tostring(k)..", v= "..tostring(v))
 			v.OnDisable()

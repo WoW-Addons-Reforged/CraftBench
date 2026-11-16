@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
 
-CRAFTFORGE_NUM_REAGENT_BUTTONS = 14
+CRAFTBENCH_NUM_REAGENT_BUTTONS = 14
 
 local COLORORANGE = "|cffff8040"
 local COLORYELLOW = "|cffffff00"
@@ -38,7 +38,7 @@ local CCRAFT =  "|cffffff80"	-- Yellow = How many you can make by crafting the r
 local CVENDOR = "|cffffa050"	-- Orange = How many you can make if you purchase materials from a vendor
 local CALTS = "|cffff80ff"		-- Purple = How many you can make using materials on your alts
 
-function CraftForge:SetReagentToolTip(reagentID, numNeeded, numCraftable)
+function CraftBench:SetReagentToolTip(reagentID, numNeeded, numCraftable)
 	--DA.DEBUG(0,"SetReagentToolTip("..tostring(reagentID)..", "..tostring(numNeeded)..", "..tostring(numCraftable)..")")
 	if not reagentID or type(reagentID) ~= "number" then return end
 	GameTooltip:ClearLines()
@@ -91,34 +91,34 @@ function CraftForge:SetReagentToolTip(reagentID, numNeeded, numCraftable)
 	end
 end
 
-function CraftForge:HideDetailWindow()
-	CraftForgeSkillName:SetText("")
-	CraftForgeSkillCooldown:SetText("")
-	CraftForgeDescriptionText:SetText("")
-	CraftForgeFirstCraft:Hide()
-	CraftForgeRequirementLabel:Hide()
-	CraftForgeRequirementText:SetText("")
-	CraftForgeSkillIcon:Hide()
-	CraftForgeReagentLabel:Hide()
-	CraftForgeOptionalLabel:Hide()
-	CraftForgeFinishingLabel:Hide()
-	CraftForgeRecipeNotesButton:Hide()
-	CraftForgePreviousItemButton:Hide()
-	CraftForgeExtraDetailTextLeft:Hide()
-	CraftForgeExtraDetailTextRight:Hide()
-	CraftForgeAuctionatorButton:Hide()
-	CraftForgeHighlightFrame:Hide()
-	CraftForgeFrame.selectedSkill = -1;
+function CraftBench:HideDetailWindow()
+	CraftBenchSkillName:SetText("")
+	CraftBenchSkillCooldown:SetText("")
+	CraftBenchDescriptionText:SetText("")
+	CraftBenchFirstCraft:Hide()
+	CraftBenchRequirementLabel:Hide()
+	CraftBenchRequirementText:SetText("")
+	CraftBenchSkillIcon:Hide()
+	CraftBenchReagentLabel:Hide()
+	CraftBenchOptionalLabel:Hide()
+	CraftBenchFinishingLabel:Hide()
+	CraftBenchRecipeNotesButton:Hide()
+	CraftBenchPreviousItemButton:Hide()
+	CraftBenchExtraDetailTextLeft:Hide()
+	CraftBenchExtraDetailTextRight:Hide()
+	CraftBenchAuctionatorButton:Hide()
+	CraftBenchHighlightFrame:Hide()
+	CraftBenchFrame.selectedSkill = -1;
 --
 -- Always want these set.
 --
-	CraftForgeItemCountInputBox:SetText("1");
-	for i=1, CRAFTFORGE_NUM_REAGENT_BUTTONS, 1 do
-		local button = _G["CraftForgeReagent"..i]
+	CraftBenchItemCountInputBox:SetText("1");
+	for i=1, CRAFTBENCH_NUM_REAGENT_BUTTONS, 1 do
+		local button = _G["CraftBenchReagent"..i]
 		button:Hide();
 	end
-	if CraftForgeRankFrame.subRanks then
-		for c,s in pairs(CraftForgeRankFrame.subRanks) do
+	if CraftBenchRankFrame.subRanks then
+		for c,s in pairs(CraftBenchRankFrame.subRanks) do
 			s:Hide()
 		end
 	end
@@ -128,7 +128,7 @@ end
 -- Called to get the item name appended with the quality icon (and the plain item name)
 -- The DetailFrame will be refreshed unless modified is true
 --
-function CraftForge:nameWithQuality(itemID, modified)
+function CraftBench:nameWithQuality(itemID, modified)
 	--DA.DEBUG(0,"nameWithQuality("..tostring(itemID)..", "..tostring(modified)..")")
 	local name, info
 	local bname, link = C_Item.GetItemInfo(itemID)
@@ -158,11 +158,11 @@ end
 --
 -- Updates the detail window with information about the currently selected skill
 --
-function CraftForge:UpdateDetailWindow(skillIndex)
+function CraftBench:UpdateDetailWindow(skillIndex)
 	--DA.DEBUG(0,"UpdateDetailWindow("..tostring(skillIndex)..")")
 	self.InProgress.detail = true
-	CraftForgeReagentParent.StarsFrame:Hide()
-	CraftForgeRecipeRankFrame:Hide()
+	CraftBenchReagentParent.StarsFrame:Hide()
+	CraftBenchRecipeRankFrame:Hide()
 	self.currentRecipeInfo = nil
 	local recipeInfo = nil
 	if not skillIndex or skillIndex < 0 then
@@ -188,7 +188,7 @@ function CraftForge:UpdateDetailWindow(skillIndex)
 	local recipe
 	local newInfo
 	local recipeSchematic
-	CraftForgeFrame.selectedSkill = skillIndex
+	CraftBenchFrame.selectedSkill = skillIndex
 	self.numItemsToCraft = 1
 	if self.recipeNotesFrame then
 		self.recipeNotesFrame:Hide()
@@ -215,8 +215,8 @@ function CraftForge:UpdateDetailWindow(skillIndex)
 --
 -- Name of the skill
 --
-		CraftForgeSkillName:SetText(recipe.name)
-		CraftForgeRecipeNotesButton:Show()
+		CraftBenchSkillName:SetText(recipe.name)
+		CraftBenchRecipeNotesButton:Show()
 		if recipe.spellID and recipe.itemID then
 			local orange,yellow,green,gray = self:GetTradeSkillLevels(recipe.itemID, recipe.spellID)
 			if not gray or not green or not yellow or not orange then
@@ -226,48 +226,48 @@ function CraftForge:UpdateDetailWindow(skillIndex)
 --
 -- Save the actual values
 --
-				CraftForgeRankFrame.itemID = recipe.itemID
-				CraftForgeRankFrame.spellID = recipe.spellID
-				CraftForgeRankFrame.gray = gray
-				CraftForgeRankFrame.green = green
-				CraftForgeRankFrame.yellow = yellow
-				CraftForgeRankFrame.orange = orange
+				CraftBenchRankFrame.itemID = recipe.itemID
+				CraftBenchRankFrame.spellID = recipe.spellID
+				CraftBenchRankFrame.gray = gray
+				CraftBenchRankFrame.green = green
+				CraftBenchRankFrame.yellow = yellow
+				CraftBenchRankFrame.orange = orange
 --
 -- Set the graphical values
 --
-				CraftForgeRankFrame.subRanks.green:SetValue(gray)
-				CraftForgeRankFrame.subRanks.yellow:SetValue(green)
-				CraftForgeRankFrame.subRanks.orange:SetValue(yellow)
-				CraftForgeRankFrame.subRanks.red:SetValue(orange)
-				for c,s in pairs(CraftForgeRankFrame.subRanks) do
+				CraftBenchRankFrame.subRanks.green:SetValue(gray)
+				CraftBenchRankFrame.subRanks.yellow:SetValue(green)
+				CraftBenchRankFrame.subRanks.orange:SetValue(yellow)
+				CraftBenchRankFrame.subRanks.red:SetValue(orange)
+				for c,s in pairs(CraftBenchRankFrame.subRanks) do
 					s:Show()
 				end
 				if self.db.profile.enhanced_chance_display then
 					local chance = self:getLvlUpChance()
 					chance = math.floor(chance*10)/10		-- one decimal is enough
-					CraftForgeRankFrameSkillChance:SetText(COLORORANGE..orange.."|r/"..COLORYELLOW..yellow.."|r/"..COLORGREEN..green.."|r/"..COLORGRAY..gray.."|r/ "..L["Chance"]..": "..chance.."|r%")
-					CraftForgeRankFrameSkillChance:Show()
+					CraftBenchRankFrameSkillChance:SetText(COLORORANGE..orange.."|r/"..COLORYELLOW..yellow.."|r/"..COLORGREEN..green.."|r/"..COLORGRAY..gray.."|r/ "..L["Chance"]..": "..chance.."|r%")
+					CraftBenchRankFrameSkillChance:Show()
 				else
-					CraftForgeRankFrameSkillChance:Hide()
+					CraftBenchRankFrameSkillChance:Hide()
 				end
 			end
 		end
-		recipeInfo = CraftForge.data.recipeInfo[self.currentTrade][recipe.spellID]
+		recipeInfo = CraftBench.data.recipeInfo[self.currentTrade][recipe.spellID]
 		self.currentRecipeInfo = recipeInfo
 		if recipeInfo and recipeInfo.upgradeable then
-			for i, starFrame in ipairs(CraftForgeReagentParent.StarsFrame.Stars) do
+			for i, starFrame in ipairs(CraftBenchReagentParent.StarsFrame.Stars) do
 				starFrame.EarnedStar:SetShown(i <= recipeInfo.learnedUpgrade);
 				starFrame.UnearnedStar:SetShown(i <= recipeInfo.maxUpgrade);
 			end
-			CraftForgeReagentParent.StarsFrame:Show();
+			CraftBenchReagentParent.StarsFrame:Show();
 		elseif newInfo.unlockedRecipeLevel then
 			self.recipeRankMax = newInfo.unlockedRecipeLevel
 			if self.recipeRank == 0 then
 				self.recipeRank = newInfo.unlockedRecipeLevel
-				CraftForgeRecipeRankLabel:SetText("Rank "..tostring(self.recipeRank))
+				CraftBenchRecipeRankLabel:SetText("Rank "..tostring(self.recipeRank))
 			end
-			CraftForge:RecipeRankSetExperience(newInfo.currentRecipeExperience, newInfo.nextLevelRecipeExperience, newInfo.unlockedRecipeLevel)
-			CraftForgeRecipeRankFrame:Show()
+			CraftBench:RecipeRankSetExperience(newInfo.currentRecipeExperience, newInfo.nextLevelRecipeExperience, newInfo.unlockedRecipeLevel)
+			CraftBenchRecipeRankFrame:Show()
 		end
 --
 -- Description
@@ -276,12 +276,12 @@ function CraftForge:UpdateDetailWindow(skillIndex)
 		description = C_TradeSkillUI.GetRecipeDescription(skill.id, {})
 		--DA.DEBUG(0,"UpdateDetailWindow: description= "..tostring(description))
 		if description then
-			description = description:gsub("\r","")	-- CraftForge frame has less space than Blizzard frame, so
+			description = description:gsub("\r","")	-- CraftBench frame has less space than Blizzard frame, so
 			description = description:gsub("\n","")	-- remove any extra blank lines, but
-			CraftForgeDescriptionText:SetMaxLines(4)	-- don't let the text get too big.
-			CraftForgeDescriptionText:SetText(description)
+			CraftBenchDescriptionText:SetMaxLines(4)	-- don't let the text get too big.
+			CraftBenchDescriptionText:SetText(description)
 		else
-			CraftForgeDescriptionText:SetText("")
+			CraftBenchDescriptionText:SetText("")
 		end
 --
 -- Is this recipe a First Craft
@@ -291,19 +291,19 @@ PROFESSIONS_FIRST_CRAFT = "First Craft";
 PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time will teach you something new.";
 --]]
 		if newInfo.firstCraft then
-			CraftForgeFirstCraft:Show()
+			CraftBenchFirstCraft:Show()
 		else
-			CraftForgeFirstCraft:Hide()
+			CraftBenchFirstCraft:Hide()
 		end
 --
 -- Whether or not it is on cooldown.
 --
-		self:UpdateCooldown(skill.id, newInfo, CraftForgeSkillCooldown)
+		self:UpdateCooldown(skill.id, newInfo, CraftBenchSkillCooldown)
 --
 -- Are special tools needed for this skill?
 --
-		CraftForgeRequirementText:Hide()
-		CraftForgeRequirementLabel:Hide()
+		CraftBenchRequirementText:Hide()
+		CraftBenchRequirementLabel:Hide()
 		local requirements = C_TradeSkillUI.GetRecipeRequirements(skill.id)
 		if requirements then
 			local tools = ""
@@ -317,9 +317,9 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 				sep = ", "
 			end
 			if tools ~= "" then
-				CraftForgeRequirementText:SetText(tools)
-				CraftForgeRequirementText:Show()
-				CraftForgeRequirementLabel:Show()
+				CraftBenchRequirementText:SetText(tools)
+				CraftBenchRequirementText:Show()
+				CraftBenchRequirementLabel:Show()
 			end
 		end
 	end
@@ -335,18 +335,18 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 		texture = C_Item.GetItemIconByID(recipe.itemID)
 	end
 	if texture then
-		CraftForgeSkillIcon:SetNormalTexture(texture)
-		CraftForgeSkillIcon:Show()
+		CraftBenchSkillIcon:SetNormalTexture(texture)
+		CraftBenchSkillIcon:Show()
 	else
-		CraftForgeSkillIcon:Hide()
+		CraftBenchSkillIcon:Hide()
 	end
 --
 -- Check for Auction House
 --
 	if self.auctionOpen and (AuctionHouseFrame or AuctionFrame) and Auctionator and self.ATRPlugin and self.db.profile.plugins.ATR.enabled then
-		CraftForgeAuctionatorButton:Show()
+		CraftBenchAuctionatorButton:Show()
 	else
-		CraftForgeAuctionatorButton:Hide()
+		CraftBenchAuctionatorButton:Hide()
 	end
 --
 -- How many of these items are produced at one time ..
@@ -359,29 +359,29 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 		if adjustNumMade then
 			text = string.format("|cffff8080%d|r",recipe.numMade)
 		end
-		CraftForgeSkillIconCount:SetText(text)
-		CraftForgeSkillIconCount:Show()
+		CraftBenchSkillIconCount:SetText(text)
+		CraftBenchSkillIconCount:Show()
 	else
-		CraftForgeSkillIconCount:SetText("")
-		CraftForgeSkillIconCount:Hide()
+		CraftBenchSkillIconCount:SetText("")
+		CraftBenchSkillIconCount:Hide()
 	end
 --
 -- How many can we queue/create?
 --
-	CraftForgeItemCountInputBox:SetText("" .. self.numItemsToCraft);
-	CraftForgeItemCountInputBox:HighlightText()
+	CraftBenchItemCountInputBox:SetText("" .. self.numItemsToCraft);
+	CraftBenchItemCountInputBox:HighlightText()
 --
 -- Required (Basic) Reagents
 --
 	local lastReagentIndex = 1
-	local lastReagentButton = _G["CraftForgeReagent1"]
-	local width = CraftForgeReagentParent:GetWidth()
+	local lastReagentButton = _G["CraftBenchReagent1"]
+	local width = CraftBenchReagentParent:GetWidth()
 	local numReagents = #recipe.reagentData
 	--DA.DEBUG(0,"UpdateDetailWindow: recipeID= "..tostring(recipe.spellID)..", name= "..tostring(recipe.name)..", numReagents="..tostring(numReagents))
-	CraftForgeReagentLabel:SetText(SPELL_REAGENTS)
-	CraftForgeReagentLabel:Show();
-	for i=1, CRAFTFORGE_NUM_REAGENT_BUTTONS, 1 do
-		local button = _G["CraftForgeReagent"..i]
+	CraftBenchReagentLabel:SetText(SPELL_REAGENTS)
+	CraftBenchReagentLabel:Show();
+	for i=1, CRAFTBENCH_NUM_REAGENT_BUTTONS, 1 do
+		local button = _G["CraftBenchReagent"..i]
 		local   text = _G[button:GetName() .. "Text"]
 		local   icon = _G[button:GetName() .. "Icon"]
 		local  count = _G[button:GetName() .. "Count"]
@@ -413,7 +413,7 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 			end
 			local bags, num, craftable = self:GetInventory(self.currentPlayer, reagent.reagentID)
 			local count_text
-			if CraftForge.isRetail then
+			if CraftBench.isRetail then
 				if craftable > 0 then
 					count_text = string.format("[%d/%d]", num, craftable)
 				else
@@ -488,8 +488,8 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 		--DA.DEBUG(0,"UpdateDetailWindow: categorySkillRank="..tostring(categorySkillRank))
 		lastReagentIndex = lastReagentIndex + 1
 		local j = 1
-		for i= lastReagentIndex, CRAFTFORGE_NUM_REAGENT_BUTTONS, 1 do
-			local button = _G["CraftForgeReagent"..i]
+		for i= lastReagentIndex, CRAFTBENCH_NUM_REAGENT_BUTTONS, 1 do
+			local button = _G["CraftBenchReagent"..i]
 			local   text = _G[button:GetName() .. "Text"]
 			local   icon = _G[button:GetName() .. "Icon"]
 			local  count = _G[button:GetName() .. "Count"]
@@ -612,10 +612,10 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 		local categorySkillRank = categoryInfo.skillLineCurrentLevel or 0
 		--DA.DEBUG(0,"UpdateDetailWindow: categorySkillRank="..tostring(categorySkillRank))
 		lastReagentIndex = lastReagentIndex + 1
-		lastReagentButton = _G["CraftForgeReagent"..tostring(lastReagentIndex)]
+		lastReagentButton = _G["CraftBenchReagent"..tostring(lastReagentIndex)]
 		local j = 1
-		for i= lastReagentIndex, CRAFTFORGE_NUM_REAGENT_BUTTONS, 1 do
-			local button = _G["CraftForgeReagent"..i]
+		for i= lastReagentIndex, CRAFTBENCH_NUM_REAGENT_BUTTONS, 1 do
+			local button = _G["CraftBenchReagent"..i]
 			local   text = _G[button:GetName() .. "Text"]
 			local   icon = _G[button:GetName() .. "Icon"]
 			local  count = _G[button:GetName() .. "Count"]
@@ -690,7 +690,7 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 -- Recipe has no required reagents.
 --
 		--DA.DEBUG(0,"UpdateDetailWindow: (none) recipeID= "..tostring(recipe.spellID)..", name= "..tostring(recipe.name)..", numRequired="..tostring(recipe.numRequired))
-		CraftForge.requiredSelected = {}
+		CraftBench.requiredSelected = {}
 	end
 	if self.RequiredList and self.RequiredList:IsVisible() then
 		self:UpdateRequiredListWindow()
@@ -707,14 +707,14 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 		local categorySkillRank = categoryInfo.skillLineCurrentLevel or 0
 		--DA.DEBUG(0,"UpdateDetailWindow: categorySkillRank="..tostring(categorySkillRank))
 		lastReagentIndex = lastReagentIndex + 1
-		lastReagentButton = _G["CraftForgeReagent"..tostring(lastReagentIndex)]
-		CraftForgeOptionalLabel:SetText(SPELL_REAGENTS_OPTIONAL.."  ("..tostring(recipe.numOptional)..")")
-		CraftForgeOptionalLabel:SetPoint("TOPLEFT",lastReagentButton,"TOPLEFT",0,-10)
-		CraftForgeOptionalLabel:Show()
+		lastReagentButton = _G["CraftBenchReagent"..tostring(lastReagentIndex)]
+		CraftBenchOptionalLabel:SetText(SPELL_REAGENTS_OPTIONAL.."  ("..tostring(recipe.numOptional)..")")
+		CraftBenchOptionalLabel:SetPoint("TOPLEFT",lastReagentButton,"TOPLEFT",0,-10)
+		CraftBenchOptionalLabel:Show()
 		lastReagentIndex = lastReagentIndex + 1
 		local j = 1
-		for i= lastReagentIndex, CRAFTFORGE_NUM_REAGENT_BUTTONS, 1 do
-			local button = _G["CraftForgeReagent"..i]
+		for i= lastReagentIndex, CRAFTBENCH_NUM_REAGENT_BUTTONS, 1 do
+			local button = _G["CraftBenchReagent"..i]
 			local   text = _G[button:GetName() .. "Text"]
 			local   icon = _G[button:GetName() .. "Icon"]
 			local  count = _G[button:GetName() .. "Count"]
@@ -801,9 +801,9 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 -- Recipe has no optional reagents.
 --
 		--DA.DEBUG(0,"UpdateDetailWindow: (none) recipeID= "..tostring(recipe.spellID)..", name= "..tostring(recipe.name)..", numOptional="..tostring(recipe.numOptional))
-		CraftForgeOptionalLabel:SetText("")
-		CraftForgeOptionalLabel:Hide()
-		CraftForge.optionalSelected = {}
+		CraftBenchOptionalLabel:SetText("")
+		CraftBenchOptionalLabel:Hide()
+		CraftBench.optionalSelected = {}
 	end
 	if self.OptionalList and self.OptionalList:IsVisible() then
 		self:UpdateOptionalListWindow()
@@ -821,14 +821,14 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 		local categorySkillRank = categoryInfo.skillLineCurrentLevel or 0
 		--DA.DEBUG(0,"UpdateDetailWindow: categorySkillRank="..tostring(categorySkillRank))
 		lastReagentIndex = lastReagentIndex + 1
-		lastReagentButton = _G["CraftForgeReagent"..tostring(lastReagentIndex)]
-		CraftForgeFinishingLabel:SetText(PROFESSIONS_CRAFTING_FINISHING_HEADER.."  ("..tostring(recipe.numFinishing)..")")
-		CraftForgeFinishingLabel:SetPoint("TOPLEFT",lastReagentButton,"TOPLEFT",0,-10)
-		CraftForgeFinishingLabel:Show()
+		lastReagentButton = _G["CraftBenchReagent"..tostring(lastReagentIndex)]
+		CraftBenchFinishingLabel:SetText(PROFESSIONS_CRAFTING_FINISHING_HEADER.."  ("..tostring(recipe.numFinishing)..")")
+		CraftBenchFinishingLabel:SetPoint("TOPLEFT",lastReagentButton,"TOPLEFT",0,-10)
+		CraftBenchFinishingLabel:Show()
 		lastReagentIndex = lastReagentIndex + 1
 		local j = 1
-		for i= lastReagentIndex, CRAFTFORGE_NUM_REAGENT_BUTTONS, 1 do
-			local button = _G["CraftForgeReagent"..i]
+		for i= lastReagentIndex, CRAFTBENCH_NUM_REAGENT_BUTTONS, 1 do
+			local button = _G["CraftBenchReagent"..i]
 			local   text = _G[button:GetName() .. "Text"]
 			local   icon = _G[button:GetName() .. "Icon"]
 			local  count = _G[button:GetName() .. "Count"]
@@ -902,8 +902,8 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 -- Recipe has no finishing reagents.
 --
 		--DA.DEBUG(0,"UpdateDetailWindow: (none) recipeID= "..tostring(recipe.spellID)..", name= "..tostring(recipe.name)..", numFinishing="..tostring(recipe.numFinishing))
-		CraftForgeFinishingLabel:SetText("")
-		CraftForgeFinishingLabel:Hide()
+		CraftBenchFinishingLabel:SetText("")
+		CraftBenchFinishingLabel:Hide()
 		self.finishingSelected = {}
 	end
 	if self.FinishingList and self.FinishingList:IsVisible() then
@@ -925,10 +925,10 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 		--DA.DEBUG(0,"UpdateDetailWindow: categorySkillRank="..tostring(categorySkillRank))
 		--DA.DEBUG(0,"UpdateDetailWindow: lastReagentIndex="..tostring(lastReagentIndex))
 		lastReagentIndex = lastReagentIndex + 1
-		lastReagentButton = _G["CraftForgeReagent"..tostring(lastReagentIndex)]
+		lastReagentButton = _G["CraftBenchReagent"..tostring(lastReagentIndex)]
 		local j = 1
-		for i= lastReagentIndex, CRAFTFORGE_NUM_REAGENT_BUTTONS, 1 do
-			local button = _G["CraftForgeReagent"..i]
+		for i= lastReagentIndex, CRAFTBENCH_NUM_REAGENT_BUTTONS, 1 do
+			local button = _G["CraftBenchReagent"..i]
 			local   text = _G[button:GetName() .. "Text"]
 			local   icon = _G[button:GetName() .. "Icon"]
 			local  count = _G[button:GetName() .. "Count"]
@@ -1002,22 +1002,22 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 -- If we have stack of recipes, show the button pop the stack.
 --
 	if #self.skillStack > 0 then
-		CraftForgePreviousItemButton:Show()
+		CraftBenchPreviousItemButton:Show()
 	else
-		CraftForgePreviousItemButton:Hide()
+		CraftBenchPreviousItemButton:Hide()
 	end
 --
 -- Generate any extra text 
 --
 	local label, extra_text
-	if CraftForge.GetSkillUpDetailText then
-		label = CraftForge:GetSkillUpDetailText(skill, recipe)
+	if CraftBench.GetSkillUpDetailText then
+		label = CraftBench:GetSkillUpDetailText(skill, recipe)
 	end
 --
 --	Do any plugins want to add extra info to the details window?
 --
-	if not CraftForge.db.profile.recipe_source_first then
-		local pl, pe = CraftForge:GetExtraText(skill, recipe)
+	if not CraftBench.db.profile.recipe_source_first then
+		local pl, pe = CraftBench:GetExtraText(skill, recipe)
 		if pl then
 			label = label and (label .. "\n" .. pl) or pl
 		end
@@ -1029,7 +1029,7 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 -- Is there any source info from the recipe?
 --
 	local sourceText
-	if CraftForge.db.profile.show_recipe_source_for_learned then
+	if CraftBench.db.profile.show_recipe_source_for_learned then
 		sourceText = C_TradeSkillUI.GetRecipeSourceText(skill.id)
 	else
 		if newInfo and not newInfo.learned then
@@ -1058,8 +1058,8 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 --
 --	Do any plugins want to add extra info to the details window?
 --
-	if CraftForge.db.profile.recipe_source_first then
-		local l, e = CraftForge:GetExtraText(skill, recipe)
+	if CraftBench.db.profile.recipe_source_first then
+		local l, e = CraftBench:GetExtraText(skill, recipe)
 		if label and l then
 			label = label.."\n\n"..l
 		else
@@ -1075,29 +1075,29 @@ PROFESSIONS_FIRST_CRAFT_DESCRIPTION = "Crafting this recipe for the first time w
 -- Output any extra text 
 --
 	if label then
-		CraftForgeExtraDetailTextLeft:ClearAllPoints()
-		CraftForgeExtraDetailTextLeft:SetPoint("TOPLEFT",lastReagentButton,"BOTTOMLEFT",0,-10)
-		CraftForgeExtraDetailTextLeft:SetPoint("RIGHT",CraftForgeReagentParent,"RIGHT",-10,0)
-		CraftForgeExtraDetailTextLeft:SetJustifyH("LEFT")
-		CraftForgeExtraDetailTextLeft:SetText(label)
-		CraftForgeExtraDetailTextLeft:Show()
+		CraftBenchExtraDetailTextLeft:ClearAllPoints()
+		CraftBenchExtraDetailTextLeft:SetPoint("TOPLEFT",lastReagentButton,"BOTTOMLEFT",0,-10)
+		CraftBenchExtraDetailTextLeft:SetPoint("RIGHT",CraftBenchReagentParent,"RIGHT",-10,0)
+		CraftBenchExtraDetailTextLeft:SetJustifyH("LEFT")
+		CraftBenchExtraDetailTextLeft:SetText(label)
+		CraftBenchExtraDetailTextLeft:Show()
 	else
-		CraftForgeExtraDetailTextLeft:Hide()
+		CraftBenchExtraDetailTextLeft:Hide()
 	end
 	if extra_text and extra_text ~= "" then
-		CraftForgeExtraDetailTextRight:SetPoint("TOPLEFT",lastReagentButton,"BOTTOMLEFT",50,-10)
-		CraftForgeExtraDetailTextRight:SetText(extra_text)
-		CraftForgeExtraDetailTextRight:Show()
+		CraftBenchExtraDetailTextRight:SetPoint("TOPLEFT",lastReagentButton,"BOTTOMLEFT",50,-10)
+		CraftBenchExtraDetailTextRight:SetText(extra_text)
+		CraftBenchExtraDetailTextRight:Show()
 	else
-		CraftForgeExtraDetailTextRight:Hide()
+		CraftBenchExtraDetailTextRight:Hide()
 	end
-	CraftForge.InProgress.detail = false
+	CraftBench.InProgress.detail = false
 --	self.InProgress.detailDepth = self.InProgress.detailDepth - 1
 	--DA.DEBUG(3,"UpdateDetailWindow Complete")
 end
 
-function CraftForge:ChangeItemCount(this, button, count)
-	local val = CraftForgeItemCountInputBox:GetNumber()
+function CraftBench:ChangeItemCount(this, button, count)
+	local val = CraftBenchItemCountInputBox:GetNumber()
 	if button == "RightButton" then
 		count = count * 10
 	end
@@ -1108,22 +1108,22 @@ function CraftForge:ChangeItemCount(this, button, count)
 	if val < 1 then
 		val = 1
 	end
-	CraftForgeItemCountInputBox:SetText(val)
+	CraftBenchItemCountInputBox:SetText(val)
 end
 
 --
 -- Called to set the tooltip when the mouse enters a reagent button
 --
-function CraftForge:ReagentButtonOnEnter(button, skillIndex, reagentIndex)
+function CraftBench:ReagentButtonOnEnter(button, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"ReagentButtonOnEnter("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	GameTooltip:SetOwner(button, "ANCHOR_TOPLEFT")
-	if CraftForge.db.profile.scale_tooltip then
+	if CraftBench.db.profile.scale_tooltip then
 		local uiScale = 1.0;
 		if ( GetCVar("useUiScale") == "1" ) then
 			uiScale = tonumber(GetCVar("uiscale"))
 		end
-		if CraftForge.db.profile.ttscale then
-			uiScale = uiScale * CraftForge.db.profile.ttscale
+		if CraftBench.db.profile.ttscale then
+			uiScale = uiScale * CraftBench.db.profile.ttscale
 		end
 		GameTooltip:SetScale(uiScale)
 	end
@@ -1227,27 +1227,27 @@ end
 --
 -- Called then the mouse leaves a reagent button
 --
-function CraftForge:ReagentButtonOnLeave(button, skillIndex, reagentIndex)
+function CraftBench:ReagentButtonOnLeave(button, skillIndex, reagentIndex)
 	--DA.DEBUG(1,"ReagentButtonOnLeave("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	self.gearTexture:Hide()
-	if CraftForge.db.profile.scale_tooltip then
-		GameTooltip:SetScale(CraftForge.gttScale)
+	if CraftBench.db.profile.scale_tooltip then
+		GameTooltip:SetScale(CraftBench.gttScale)
 	end
 	GameTooltip:Hide()
 	ResetCursor()
 end
 
-function CraftForge:ReagentButtonSkillSelect(player, id)
+function CraftBench:ReagentButtonSkillSelect(player, id)
 	--DA.DEBUG(0,"ReagentButtonSkillSelect("..tostring(player)..", "..tostring(id)..")")
-	if player == CraftForge.currentPlayer then -- Blizzard's 5.4 update prevents us from changing away from the current player
-		local skillIndexLookup = CraftForge.data.skillIndexLookup
+	if player == CraftBench.currentPlayer then -- Blizzard's 5.4 update prevents us from changing away from the current player
+		local skillIndexLookup = CraftBench.data.skillIndexLookup
 		self.gearTexture:Hide()
 		GameTooltip:Hide()
-		local newRecipe = CraftForge:GetRecipe(id)
+		local newRecipe = CraftBench:GetRecipe(id)
 		--DA.DEBUG(0,"ReagentButtonSkillSelect: newRecipe= "..DA.DUMP1(newRecipe))
 		if newRecipe then
-			CraftForge:PushSkill(CraftForge.currentPlayer, CraftForge.currentTrade, CraftForge.selectedSkill)
-			CraftForge:SetTradeSkill(player, newRecipe.tradeID, skillIndexLookup[id])
+			CraftBench:PushSkill(CraftBench.currentPlayer, CraftBench.currentTrade, CraftBench.selectedSkill)
+			CraftBench:SetTradeSkill(player, newRecipe.tradeID, skillIndexLookup[id])
 		end
 	end
 end
@@ -1256,9 +1256,9 @@ end
 -- Called when the reagent button is control-clicked
 -- (not sure if this is worth anything)
 --
-function CraftForge:ReagentButtonControlClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:ReagentButtonControlClick(button, mouse, skillIndex, reagentIndex)
 	DA.DEBUG(0,"ReagentButtonControlClick("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
-	local link = CraftForge:GetRecipeReagentItemLink(skillIndex, reagentIndex)
+	local link = CraftBench:GetRecipeReagentItemLink(skillIndex, reagentIndex)
 	if link then
 		DA.DEBUG(1,"ReagentButtonControlClick: link= "..tostring(link))
 		DressUpItemLink(link)
@@ -1268,14 +1268,14 @@ end
 --
 -- Called when the reagent button is shift-clicked
 --
-function CraftForge:ReagentButtonShiftClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:ReagentButtonShiftClick(button, mouse, skillIndex, reagentIndex)
 	DA.DEBUG(0,"ReagentButtonShiftClick("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
-	local link = CraftForge:GetRecipeReagentItemLink(skillIndex, reagentIndex)
+	local link = CraftBench:GetRecipeReagentItemLink(skillIndex, reagentIndex)
 	if link and not ChatEdit_InsertLink(link) then
 		DA.DEBUG(1,"ReagentButtonShiftClick: ChatEdit_InsertLink returned false. link= "..DA.PLINK(link))
 		local name = C_Item.GetItemInfo(link)
-		if CraftForgeSearchBox:HasFocus() then
-			CraftForgeSearchBox:SetText(name)
+		if CraftBenchSearchBox:HasFocus() then
+			CraftBenchSearchBox:SetText(name)
 		end
 	end
 end
@@ -1283,7 +1283,7 @@ end
 --
 -- Called when the reagent button is right-clicked
 --
-function CraftForge:ReagentButtonRightClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:ReagentButtonRightClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"ReagentButtonRightClick("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
 	if not recipe then
@@ -1295,37 +1295,37 @@ function CraftForge:ReagentButtonRightClick(button, mouse, skillIndex, reagentIn
 --
 -- Salvage reagent (reagentIndex < 0 and recipe.salvage)
 --
-			CraftForge:DisplaySalvageList()
-			CraftForge:SalvageReagentOnClick(button, mouse, skillIndex, reagentIndex)
+			CraftBench:DisplaySalvageList()
+			CraftBench:SalvageReagentOnClick(button, mouse, skillIndex, reagentIndex)
 			return
 		elseif reagentIndex < -100 then
 --
 -- Required reagent (reagentIndex < -100)
 --
-				CraftForge:DisplayRequiredList()
-				CraftForge:RequiredReagentOnClick(button, mouse, skillIndex, reagentIndex)
+				CraftBench:DisplayRequiredList()
+				CraftBench:RequiredReagentOnClick(button, mouse, skillIndex, reagentIndex)
 				return
 		else
 --
 -- Optional reagent (reagentIndex < 0)
 --
-			CraftForge:DisplayOptionalList()
-			CraftForge:OptionalReagentOnClick(button, mouse, skillIndex, reagentIndex)
+			CraftBench:DisplayOptionalList()
+			CraftBench:OptionalReagentOnClick(button, mouse, skillIndex, reagentIndex)
 			return
 		end
 	elseif reagentIndex > 100 and reagentIndex < 200 then
 --
 -- Modified reagent (reagentIndex + 100)
 --
-		CraftForge:DisplayModifiedList()
-		CraftForge:ModifiedReagentOnClick(button, mouse, skillIndex, reagentIndex)
+		CraftBench:DisplayModifiedList()
+		CraftBench:ModifiedReagentOnClick(button, mouse, skillIndex, reagentIndex)
 		return
 	elseif reagentIndex > 200 then
 --
 -- Finishing reagent (reagentIndex + 200)
 --
-		CraftForge:DisplayFinishingList()
-		CraftForge:FinishingReagentOnClick(button, mouse, skillIndex, reagentIndex)
+		CraftBench:DisplayFinishingList()
+		CraftBench:FinishingReagentOnClick(button, mouse, skillIndex, reagentIndex)
 		return
 	end
 --
@@ -1337,7 +1337,7 @@ end
 -- Called when the reagent button is left-clicked
 -- (shift-click and control-click handled elsewhere)
 --
-function CraftForge:ReagentButtonOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:ReagentButtonOnClick(button, mouse, skillIndex, reagentIndex)
 	DA.DEBUG(0,"ReagentButtonOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
 	if not recipe then
@@ -1353,37 +1353,37 @@ function CraftForge:ReagentButtonOnClick(button, mouse, skillIndex, reagentIndex
 --
 -- Salvage reagent (reagentIndex < 0 and recipe.salvage)
 --
-				CraftForge:DisplaySalvageList()
-				CraftForge:SalvageReagentOnClick(button, mouse, skillIndex, reagentIndex)
+				CraftBench:DisplaySalvageList()
+				CraftBench:SalvageReagentOnClick(button, mouse, skillIndex, reagentIndex)
 				return
 			elseif reagentIndex < -100 then
 --
 -- Required reagent (reagentIndex < -100)
 --
-				CraftForge:DisplayRequiredList()
-				CraftForge:RequiredReagentOnClick(button, mouse, skillIndex, reagentIndex)
+				CraftBench:DisplayRequiredList()
+				CraftBench:RequiredReagentOnClick(button, mouse, skillIndex, reagentIndex)
 				return
 			else
 --
 -- Optional reagent (reagentIndex < 0)
 --
-				CraftForge:DisplayOptionalList()
-				CraftForge:OptionalReagentOnClick(button, mouse, skillIndex, reagentIndex)
+				CraftBench:DisplayOptionalList()
+				CraftBench:OptionalReagentOnClick(button, mouse, skillIndex, reagentIndex)
 				return
 			end
 		elseif reagentIndex > 100 and reagentIndex < 200 then
 --
 -- Modified reagent (reagentIndex + 100)
 --
-			CraftForge:DisplayModifiedList()
-			CraftForge:ModifiedReagentOnClick(button, mouse, skillIndex, reagentIndex)
+			CraftBench:DisplayModifiedList()
+			CraftBench:ModifiedReagentOnClick(button, mouse, skillIndex, reagentIndex)
 			return
 		elseif reagentIndex > 200 then
 --
 -- Finishing reagent (reagentIndex + 200)
 --
-			CraftForge:DisplayFinishingList()
-			CraftForge:FinishingReagentOnClick(button, mouse, skillIndex, reagentIndex)
+			CraftBench:DisplayFinishingList()
+			CraftBench:FinishingReagentOnClick(button, mouse, skillIndex, reagentIndex)
 			return
 		end
 	end
@@ -1414,7 +1414,7 @@ function CraftForge:ReagentButtonOnClick(button, mouse, skillIndex, reagentIndex
 		local recipeCount = 0
 		self.data.recipeMenuTable = {}
 		if not self.recipeMenu then
-			self.recipeMenu = CreateFrame("Frame", "CraftForgeRecipeMenu", _G["UIParent"], "UIDropDownMenuTemplate")
+			self.recipeMenu = CreateFrame("Frame", "CraftBenchRecipeMenu", _G["UIParent"], "UIDropDownMenuTemplate")
 		end
 --
 -- Popup with selection if there is more than 1 potential recipe source for the reagent (small prismatic shards, for example)
@@ -1429,7 +1429,7 @@ function CraftForge:ReagentButtonOnClick(button, mouse, skillIndex, reagentIndex
 				self.data.recipeMenuTable[recipeCount].text = player .." : " .. newRecipe.name or "Unknown"
 				self.data.recipeMenuTable[recipeCount].arg1 = player
 				self.data.recipeMenuTable[recipeCount].arg2 = id
-				self.data.recipeMenuTable[recipeCount].func = function(arg1,arg2) CraftForge.ReagentButtonSkillSelect(arg1,arg2) end
+				self.data.recipeMenuTable[recipeCount].func = function(arg1,arg2) CraftBench.ReagentButtonSkillSelect(arg1,arg2) end
 				myRecipeID = id
 				self.data.recipeMenuTable[recipeCount].textr = 1.0
 				self.data.recipeMenuTable[recipeCount].textg = 1.0
@@ -1471,7 +1471,7 @@ end
 --
 -- Called when the icon button is clicked
 --
-function CraftForge:ReagentsLinkOnClick(button, skillIndex, reagentIndex, recurse)
+function CraftBench:ReagentsLinkOnClick(button, skillIndex, reagentIndex, recurse)
 	DA.DEBUG(0,"ReagentLinkOnClick("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..", "..tostring(recurse)..")")
 	if not self.db.profile.link_craftable_reagents then
 		--DA.DEBUG(1,"ReagentsLinkOnClick: link_craftable_reagents= "..tostring(self.db.profile.link_craftable_reagents))
@@ -1499,12 +1499,12 @@ function CraftForge:ReagentsLinkOnClick(button, skillIndex, reagentIndex, recurs
 	end
 end
 
-function CraftForge:ReagentStarsFrame_OnMouseEnter(starsFrame)
+function CraftBench:ReagentStarsFrame_OnMouseEnter(starsFrame)
 	GameTooltip:SetOwner(starsFrame, "ANCHOR_TOPLEFT");
 	GameTooltip:SetRecipeRankInfo(self.currentRecipeInfo.recipeID, self.currentRecipeInfo.learnedUpgrade);
 end
 
-function CraftForge:GetReagentSlotStatus(reagentSlotSchematic, recipeInfo)
+function CraftBench:GetReagentSlotStatus(reagentSlotSchematic, recipeInfo)
 	--DA.DEBUG(0,"GetReagentSlotStatus("..tostring(reagentSlotSchematic)..", "..tostring(recipeInfo)..")")
 	--DA.DEBUG(1,"GetReagentSlotStatus("..DA.DUMP1(reagentSlotSchematic)..", "..DA.DUMP1(recipeInfo)..")")
 	local slotInfo = reagentSlotSchematic.slotInfo;

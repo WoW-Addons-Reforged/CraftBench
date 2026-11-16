@@ -1,21 +1,21 @@
 ----------------------------------------------------------
--- CraftForge - Native Dark-Gold Gathering Window       --
+-- CraftBench - Native Dark-Gold Gathering Window       --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-local L = CraftForge.L
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+local L = CraftBench.L
 
-CraftForge.GatheringUI = CraftForge.GatheringUI or {}
-local GatheringUI = CraftForge.GatheringUI
+CraftBench.GatheringUI = CraftBench.GatheringUI or {}
+local GatheringUI = CraftBench.GatheringUI
 
 local gatherFrame
 local activeTab = "herbalism"
 
 local function ensureFrame()
 	if gatherFrame then return gatherFrame end
-	local UIStyle = CraftForge.UIStyle
-	local f = CreateFrame("Frame", "CraftForgeGatheringWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local UIStyle = CraftBench.UIStyle
+	local f = CreateFrame("Frame", "CraftBenchGatheringWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	f:SetSize(720, 480)
 	f:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	f:SetFrameStrata("DIALOG")
@@ -26,11 +26,11 @@ local function ensureFrame()
 	f:RegisterForDrag("LeftButton")
 	f:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-	tinsert(UISpecialFrames, "CraftForgeGatheringWindow")
+	tinsert(UISpecialFrames, "CraftBenchGatheringWindow")
 
 	if UIStyle then
 		UIStyle.SkinFrame(f, false)
-		UIStyle.CreateHeader(f, "CraftForge — " .. (L["GATHER_TITLE"] or "Gathering Guide"), 136065, function()
+		UIStyle.CreateHeader(f, "CraftBench — " .. (L["GATHER_TITLE"] or "Gathering Guide"), 136065, function()
 			f:Hide()
 		end)
 	end
@@ -70,7 +70,7 @@ local function ensureFrame()
 	body:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -10, 10)
 	if UIStyle then UIStyle.SkinInset(body) end
 
-	local scroll = CreateFrame("ScrollFrame", "CraftForgeGatheringScroll", body, "UIPanelScrollFrameTemplate")
+	local scroll = CreateFrame("ScrollFrame", "CraftBenchGatheringScroll", body, "UIPanelScrollFrameTemplate")
 	scroll:SetPoint("TOPLEFT", body, "TOPLEFT", 8, -8)
 	scroll:SetPoint("BOTTOMRIGHT", body, "BOTTOMRIGHT", -26, 8)
 	if UIStyle and UIStyle.StyleScrollBar then UIStyle.StyleScrollBar(scroll) end
@@ -87,9 +87,9 @@ end
 
 function GatheringUI:Refresh()
 	if not gatherFrame or not gatherFrame:IsShown() then return end
-	local Gathering = CraftForge.Gathering
+	local Gathering = CraftBench.Gathering
 	if not Gathering then return end
-	local UIStyle = CraftForge.UIStyle
+	local UIStyle = CraftBench.UIStyle
 
 	for id, btn in pairs(gatherFrame._tabs) do
 		if btn.SetBackdropBorderColor then
@@ -144,7 +144,7 @@ function GatheringUI:Refresh()
 		row:ClearAllPoints()
 		row:SetPoint("TOPLEFT", gatherFrame._child, "TOPLEFT", 0, y)
 		local col = Gathering:GetDifficultyColor(node, rank)
-		local nodeInfo = CraftForge.FindGatherNodeLocation and CraftForge:FindGatherNodeLocation(node.name, activeTab)
+		local nodeInfo = CraftBench.FindGatherNodeLocation and CraftBench:FindGatherNodeLocation(node.name, activeTab)
 		if nodeInfo then
 			local distText = ""
 			if nodeInfo.dist then
@@ -156,8 +156,8 @@ function GatheringUI:Refresh()
 			end
 			row._name:SetText(col .. node.name .. "|r  |cff66ccff[" .. nodeInfo.addon .. ": " .. nodeInfo.totalCount .. distText .. "]|r")
 			row._wpBtn:SetScript("OnClick", function()
-				if CraftForge.SetGatherWaypoint then
-					CraftForge:SetGatherWaypoint(nodeInfo)
+				if CraftBench.SetGatherWaypoint then
+					CraftBench:SetGatherWaypoint(nodeInfo)
 				end
 			end)
 			row._wpBtn:Show()
@@ -173,8 +173,8 @@ function GatheringUI:Refresh()
 	gatherFrame._child:SetHeight(math.max(100, -y + 10))
 end
 
-function CraftForge:ShowGathering(tab)
-	if tab and CraftForge.Gathering and CraftForge.Gathering.DATA[tab] then
+function CraftBench:ShowGathering(tab)
+	if tab and CraftBench.Gathering and CraftBench.Gathering.DATA[tab] then
 		activeTab = tab
 	end
 	local f = ensureFrame()

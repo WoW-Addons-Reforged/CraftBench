@@ -1,20 +1,20 @@
 ----------------------------------------------------------
--- CraftForge - Account-Wide Crafting Cooldown Tracker --
+-- CraftBench - Account-Wide Crafting Cooldown Tracker --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-local L = CraftForge.L
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+local L = CraftBench.L
 
-CraftForge.Cooldowns = CraftForge.Cooldowns or {}
-local Cooldowns = CraftForge.Cooldowns
+CraftBench.Cooldowns = CraftBench.Cooldowns or {}
+local Cooldowns = CraftBench.Cooldowns
 
 local function ensureDB()
-	if not CraftForge.db then return nil end
-	if not CraftForge.db.global.cooldownsDB then
-		CraftForge.db.global.cooldownsDB = {}
+	if not CraftBench.db then return nil end
+	if not CraftBench.db.global.cooldownsDB then
+		CraftBench.db.global.cooldownsDB = {}
 	end
-	return CraftForge.db.global.cooldownsDB
+	return CraftBench.db.global.cooldownsDB
 end
 
 local function playerKey()
@@ -71,14 +71,14 @@ function Cooldowns:ScanCurrentProfession()
 	if not db then return end
 	local pKey = playerKey()
 	db[pKey] = db[pKey] or {}
-	local tradeID = CraftForge.currentTrade
-	local player = CraftForge.currentPlayer or (CraftForge.unitName and CraftForge:unitName("player"))
-	if not tradeID or not player or not CraftForge.GetNumSkills then return end
+	local tradeID = CraftBench.currentTrade
+	local player = CraftBench.currentPlayer or (CraftBench.unitName and CraftBench:unitName("player"))
+	if not tradeID or not player or not CraftBench.GetNumSkills then return end
 
-	local n = CraftForge:GetNumSkills(player, tradeID) or 0
+	local n = CraftBench:GetNumSkills(player, tradeID) or 0
 	local now = time and time() or 0
 	for i = 1, n do
-		local skill = CraftForge:GetSkill(player, tradeID, i)
+		local skill = CraftBench:GetSkill(player, tradeID, i)
 		if skill and skill.id and skill.id ~= 0 then
 			local cd
 			if C_TradeSkillUI and C_TradeSkillUI.GetRecipeCooldown then
@@ -122,12 +122,12 @@ function Cooldowns:ClearExpired()
 end
 
 function Cooldowns:NotifyReadyOnLogin()
-	if CraftForge.db and CraftForge.db.profile and CraftForge.db.profile.cooldownNotify == false then
+	if CraftBench.db and CraftBench.db.profile and CraftBench.db.profile.cooldownNotify == false then
 		return
 	end
 	local ready = self:GetAllEntries(true)
 	if #ready > 0 then
-		CraftForge:Print(string.format(L["CD_READY_LOGIN_FMT"] or "%d crafting cooldown(s) are ready! (/cf cd)", #ready))
+		CraftBench:Print(string.format(L["CD_READY_LOGIN_FMT"] or "%d crafting cooldown(s) are ready! (/cb cd)", #ready))
 	end
 end
 

@@ -1,4 +1,4 @@
-package-as: CraftForge
+package-as: CraftBench
 
 ignore:
     - "Scripts"

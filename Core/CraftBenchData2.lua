@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,14 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
 local PT = LibStub("LibPeriodicTable-3.1")
-local L = CraftForge.L
+local L = CraftBench.L
 
 --[[ == Global Tables for Debugging == ]]--
 
--- This file is not included in the normal CraftForge build.
+-- This file is not included in the normal CraftBench build.
 -- If included, it is used to verify some of the tables in the normal build.
 
-CraftForge.enchantingItemIDs = {
+CraftBench.enchantingItemIDs = {
 	-- "Borrowed" from TradeSkillMaster_Crafting\Modules\EnchantingInfo.lua
 	-- Scraped from Wowhead (http://www.wowhead.com/items/consumables/item-enhancements-permanent?filter=86;4;0) using the following javascript:
 	-- for (i=0; i<listviewitems.length; i++) console.log("["+listviewitems[i].sourcemore[0].ti+"] = \"i:"+listviewitems[i].id+"\",  -- "+listviewitems[i].name.substr(1));
@@ -449,40 +449,40 @@ CraftForge.enchantingItemIDs = {
 	[191022] = "i:128550",  -- Enchant Cloak - Binding Of Intellect Rank 3
 }
 
--- The following function can be used (/run CraftForge:CountEnchants()) to check for missing items
--- in either CraftForge's or TradeSkillMaster's table of enchant recipe IDs to enchant (scroll) item IDs
-CraftForge.missing_enchantingItemIDs = {}
-CraftForge.missing_scrollData = {}
-function CraftForge:CountEnchants()
+-- The following function can be used (/run CraftBench:CountEnchants()) to check for missing items
+-- in either CraftBench's or TradeSkillMaster's table of enchant recipe IDs to enchant (scroll) item IDs
+CraftBench.missing_enchantingItemIDs = {}
+CraftBench.missing_scrollData = {}
+function CraftBench:CountEnchants()
 	local i,j = 0,0
-	for rid,eid in pairs(CraftForge.scrollData) do
+	for rid,eid in pairs(CraftBench.scrollData) do
 		i = i + 1
-		if not CraftForge.enchantingItemIDs[rid] then
-			table.insert(CraftForge.missing_enchantingItemIDs, rid)
+		if not CraftBench.enchantingItemIDs[rid] then
+			table.insert(CraftBench.missing_enchantingItemIDs, rid)
 		end
 	end
-	for rid,eid in pairs(CraftForge.enchantingItemIDs) do
+	for rid,eid in pairs(CraftBench.enchantingItemIDs) do
 		j = j + 1
-		if not CraftForge.scrollData[rid] then
-			table.insert(CraftForge.missing_scrollData, rid)
+		if not CraftBench.scrollData[rid] then
+			table.insert(CraftBench.missing_scrollData, rid)
 		end
 	end
-	DA.CHAT("scrollData count= "..tostring(i)..", missing= "..DA.DUMP1(CraftForge.missing_scrollData))
-	DA.CHAT("enchantingItemIDs count= "..tostring(j)..", missing= "..DA.DUMP1(CraftForge.missing_enchantingItemIDs))
+	DA.CHAT("scrollData count= "..tostring(i)..", missing= "..DA.DUMP1(CraftBench.missing_scrollData))
+	DA.CHAT("enchantingItemIDs count= "..tostring(j)..", missing= "..DA.DUMP1(CraftBench.missing_enchantingItemIDs))
 end
 
--- The following function can be used (/run CraftForge:DumpRecipeInfo()) to get Blizzard's original recipeInfo
+-- The following function can be used (/run CraftBench:DumpRecipeInfo()) to get Blizzard's original recipeInfo
 -- Note: The trade skill frame needs to be open to the correct set of recipes for this to work.
-function CraftForge:DumpRecipeInfo()
+function CraftBench:DumpRecipeInfo()
 	local recipeInfoDump = {102698, 102699, 201683, 201684, 201685} -- two from First-aid, three from Cooking (unlearned in 7.0.3)
-	if not CraftForge.db.global.recipeInfoDump then
-		CraftForge.db.global.recipeInfoDump = {}
+	if not CraftBench.db.global.recipeInfoDump then
+		CraftBench.db.global.recipeInfoDump = {}
 	end
 	for i=1,#recipeInfoDump,1 do
 		local id = recipeInfoDump[i]
 		local info = C_TradeSkillUI.GetRecipeInfo(id)
 		if info then
-			CraftForge.db.global.recipeInfoDump[id] = info
+			CraftBench.db.global.recipeInfoDump[id] = info
 		end
 	end
 end

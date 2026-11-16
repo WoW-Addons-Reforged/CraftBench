@@ -1,7 +1,7 @@
 local addonName, addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge")
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench")
 --[[
-CraftForge: All-in-One Profession, Crafting & Material-Processing Suite.
+CraftBench: All-in-One Profession, Crafting & Material-Processing Suite.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
 local AceGUI = LibStub("AceGUI-3.0", true)
 
 local altFinderFrame
@@ -44,7 +44,7 @@ local function populateAltResults(scroll, query)
 		return
 	end
 
-	local realmDB = CraftForge.db and CraftForge.db.realm
+	local realmDB = CraftBench.db and CraftBench.db.realm
 	if not realmDB then return end
 
 	local recipeHits = {}
@@ -58,7 +58,7 @@ local function populateAltResults(scroll, query)
 						or tostring(tradeID)
 					for _, raw in ipairs(list) do
 						local recipeID = parseRecipeID(raw)
-						local recipe = recipeID and CraftForge:GetRecipe(recipeID)
+						local recipe = recipeID and CraftBench:GetRecipe(recipeID)
 						if recipe and recipe.name and recipe.name:lower():find(q, 1, true) then
 							table.insert(recipeHits, {
 								name = recipe.name,
@@ -102,7 +102,7 @@ local function populateAltResults(scroll, query)
 		or (IsAddOnLoaded and IsAddOnLoaded("Altoholic"))
 	if hasAltoholic and _G.DataStore and _G.DataStore.GetCharacters then
 		for charName, charKey in pairs(_G.DataStore:GetCharacters()) do
-			-- Altoholic / DataStore_Crafts: search learned recipes on alts not yet in CraftForge skillDB
+			-- Altoholic / DataStore_Crafts: search learned recipes on alts not yet in CraftBench skillDB
 			if not skillDB[charName] and _G.DataStore.GetProfessions and _G.DataStore.GetNumCraftLines and _G.DataStore.GetCraftLineInfo then
 				local profs = _G.DataStore:GetProfessions(charKey)
 				if type(profs) == "table" then
@@ -128,8 +128,8 @@ local function populateAltResults(scroll, query)
 			end
 
 			-- Altoholic / DataStore_Containers + DataStore_Mails: search bags, bank, and mail
-			if not invDB[charName] and _G.DataStore.GetContainerItemCount and CraftForge.data and CraftForge.data.reagentToRecipe then
-				for itemID in pairs(CraftForge.data.reagentToRecipe) do
+			if not invDB[charName] and _G.DataStore.GetContainerItemCount and CraftBench.data and CraftBench.data.reagentToRecipe then
+				for itemID in pairs(CraftBench.data.reagentToRecipe) do
 					if type(itemID) == "number" then
 						local itemName = C_Item.GetItemInfo(itemID)
 						if itemName and itemName:lower():find(q, 1, true) then
@@ -200,7 +200,7 @@ local function populateAltResults(scroll, query)
 	end
 end
 
-function CraftForge:ShowAltFinder()
+function CraftBench:ShowAltFinder()
 	if not AceGUI then return end
 	if altFinderFrame then
 		altFinderFrame:Show()
@@ -208,7 +208,7 @@ function CraftForge:ShowAltFinder()
 	end
 
 	local frame = AceGUI:Create("Frame")
-	frame:SetTitle("CraftForge — " .. L["ALT_FINDER_TITLE"])
+	frame:SetTitle("CraftBench — " .. L["ALT_FINDER_TITLE"])
 	frame:SetLayout("Flow")
 	frame:SetWidth(540)
 	frame:SetHeight(440)

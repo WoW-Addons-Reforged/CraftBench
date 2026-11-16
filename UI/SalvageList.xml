@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	CraftForge: A tradeskill window replacement.
+	CraftBench: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #  Template for all the buttons we use to display items in the salvage list
 #
 -->
-	<Frame name="CraftForgeSalvageListItemTemplate" hidden="false" virtual="true">
+	<Frame name="CraftBenchSalvageListItemTemplate" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="190" y="20"/>
 		</Size>
@@ -89,10 +89,10 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 			</OnLoad>
 			<OnEnter>
-				CraftForge:SalvageButtonOnEnter(self, CraftForgeFrame.selectedSkill, self:GetID())
+				CraftBench:SalvageButtonOnEnter(self, CraftBenchFrame.selectedSkill, self:GetID())
 			</OnEnter>
 			<OnLeave>
-				CraftForge:SalvageButtonOnLeave(self, CraftForgeFrame.selectedSkill, self:GetID())
+				CraftBench:SalvageButtonOnLeave(self, CraftBenchFrame.selectedSkill, self:GetID())
 			</OnLeave>
 			<OnUpdate>
 				CursorOnUpdate(self)
@@ -100,19 +100,19 @@
 			<OnClick>
 				if ( button == "LeftButton" and IsShiftKeyDown() ) then
 				<!-- Put a link to the *item* in chat into the current chat edit box -->
-					local link = CraftForge:GetSalvageItemLink(CraftForge.selectedSkill, self:GetID())
+					local link = CraftBench:GetSalvageItemLink(CraftBench.selectedSkill, self:GetID())
 					if not ChatEdit_InsertLink(link) then
-						CraftForge:XMLDebugLink("SalvageItemLink: link= ", link)
+						CraftBench:XMLDebugLink("SalvageItemLink: link= ", link)
 					end
 				else
 				<!-- generic click action -->
-					CraftForge:SalvageButtonOnClick(self, button, CraftForge.selectedSkill, self:GetID())
+					CraftBench:SalvageButtonOnClick(self, button, CraftBench.selectedSkill, self:GetID())
 				end
 			</OnClick>
 		</Scripts>
 	</Frame>
 
-<CheckButton name="CraftForgeSalvageListCheckButtonTemplate" virtual="true">
+<CheckButton name="CraftBenchSalvageListCheckButtonTemplate" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -136,7 +136,7 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<CheckButton name="CraftForgeSalvageListCheckButtonTemplate2" virtual="true">
+<CheckButton name="CraftBenchSalvageListCheckButtonTemplate2" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -160,15 +160,15 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<Frame name="CraftForgeSalvageList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
+<Frame name="CraftBenchSalvageList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
 	<Size><AbsDimension x="420" y="240"/></Size>
 	<Anchors>
 		<Anchor point="CENTER"/>
 	</Anchors>
 	<Frames>
-		<Button name="CraftForgeSalvageListCloseButton" inherits="UIPanelCloseButton" parent="CraftForgeSalvageList">
+		<Button name="CraftBenchSalvageListCloseButton" inherits="UIPanelCloseButton" parent="CraftBenchSalvageList">
 			<Anchors>
-				<Anchor point="TOPRIGHT" relativeTo="CraftForgeSalvageList" relativePoint="TOPRIGHT">
+				<Anchor point="TOPRIGHT" relativeTo="CraftBenchSalvageList" relativePoint="TOPRIGHT">
 					<Offset>
 						<AbsDimension x="-2" y="-2"/>
 					</Offset>
@@ -176,13 +176,13 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					HideUIPanel(CraftForgeSalvageList)
+					HideUIPanel(CraftBenchSalvageList)
 				</OnClick>
 			</Scripts>
 		</Button>
-		<CheckButton name="CraftForgeSalvageHaveItems" inherits="CraftForgeSalvageListCheckButtonTemplate2">
+		<CheckButton name="CraftBenchSalvageHaveItems" inherits="CraftBenchSalvageListCheckButtonTemplate2">
 			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeSalvageList" relativePoint="BOTTOMLEFT">
+				<Anchor point="BOTTOMLEFT" relativeTo="CraftBenchSalvageList" relativePoint="BOTTOMLEFT">
 					<Offset>
 						<AbsDimension x="10" y="10"/>
 					</Offset>
@@ -190,33 +190,33 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					CraftForge:SalvageListToggleHaveItems()
-					CraftForge:UpdateSalvageListWindow()
+					CraftBench:SalvageListToggleHaveItems()
+					CraftBench:UpdateSalvageListWindow()
 				</OnClick>
 			</Scripts>
 		</CheckButton>
-		<Frame name="CraftForgeSalvageListParent" parent="CraftForgeSalvageList">
+		<Frame name="CraftBenchSalvageListParent" parent="CraftBenchSalvageList">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeSalvageList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchSalvageList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-35"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeSalvageList" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchSalvageList" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-5" y="35"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
 		</Frame>
-		<ScrollFrame name="CraftForgeSalvageListList" inherits="FauxScrollFrameTemplate" parent="CraftForgeSalvageListParent">
+		<ScrollFrame name="CraftBenchSalvageListList" inherits="FauxScrollFrameTemplate" parent="CraftBenchSalvageListParent">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeSalvageListParent" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchSalvageListParent" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-5"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeSalvageListParent" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchSalvageListParent" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-27" y="5"/>
 					</Offset>
@@ -224,13 +224,13 @@
 			</Anchors>
 			<Scripts>
 				<OnVerticalScroll>
-					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_SALVAGE_LIST_HEIGHT, CraftForge.SalvageList_OnScroll)
+					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTBENCH_SALVAGE_LIST_HEIGHT, CraftBench.SalvageList_OnScroll)
 				</OnVerticalScroll>
 			</Scripts>
 		</ScrollFrame>
-		<Button name="CraftForgeSalvageListButton1" inherits="CraftForgeSalvageListItemTemplate">
+		<Button name="CraftBenchSalvageListButton1" inherits="CraftBenchSalvageListItemTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeSalvageListList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchSalvageListList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
 					</Offset>

@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 -- A table of SkillLineIDs returned by C_TradeSkillUI.GetTradeSkillLine() mapped to the Skill SpellID
 --
-if CraftForge.isRetail then
-	CraftForge.SkillLineIDList = {
+if CraftBench.isRetail then
+	CraftBench.SkillLineIDList = {
 		[171] = 2259,		-- alchemy
 		[164] = 2018,		-- blacksmithing
 		[333] = 7411,		-- enchanting
@@ -37,8 +37,8 @@ if CraftForge.isRetail then
 	}
 end
 
-if CraftForge.isForever then
-	CraftForge.SkillLineIDList = {
+if CraftBench.isForever then
+	CraftBench.SkillLineIDList = {
 		[171] = 2259,		-- alchemy
 		[164] = 2018,		-- blacksmithing
 		[333] = 7411,		-- enchanting
@@ -59,8 +59,8 @@ end
 --
 -- Table of tradeskills that should use the Blizzard frame
 --
-if CraftForge.isRetail then
-	CraftForge.BlizzardSkillList = {
+if CraftBench.isRetail then
+	CraftBench.BlizzardSkillList = {
 		[182]    = true,		-- herbalism skills
 		[393]    = true,		-- skinning skills
 		[356]    = true,		-- fishing skills
@@ -68,8 +68,8 @@ if CraftForge.isRetail then
 	}
 end
 
-if CraftForge.isForever then
-	CraftForge.BlizzardSkillList = {
+if CraftBench.isForever then
+	CraftBench.BlizzardSkillList = {
 --		[40]	 = true,		-- poisons?
 	}
 end
@@ -77,21 +77,21 @@ end
 --
 -- Table of follower (C_TradeSkillUI.IsNPCCrafting) tradeskills that should use the Blizzard frame
 --
-CraftForge.FollowerSkillList = {
+CraftBench.FollowerSkillList = {
 }
 
 --
 -- In case the previous table is too broad
 -- Table of follower (C_TradeSkillUI.IsNPCCrafting) NPC IDs (from GUID) that should use the Blizzard frame
 --
-CraftForge.FollowerNPC = {
+CraftBench.FollowerNPC = {
 	[79826] = true,  -- Pozzlow (Engineering, Horde)
 	[77365] = true,  -- Zaren Hoffle (Engineering, Alliance)
 }
 
 --
 -- Table of additional abilities used to create more buttons
--- after the trade skill buttons on the CraftForge main frame.
+-- after the trade skill buttons on the CraftBench main frame.
 --
 -- Each entry is {spellID, "Name", isToy, isPet, isKnown}
 --   isToy is true if the spellID is a toyID instead
@@ -100,8 +100,8 @@ CraftForge.FollowerNPC = {
 -- use for testing:
 --				{883,"Call Pet",false,true},	-- Hunter skill
 --
-if CraftForge.isRetail then
-	CraftForge.TradeSkillAdditionalAbilities = {
+if CraftBench.isRetail then
+	CraftBench.TradeSkillAdditionalAbilities = {
 		[7411]	=	{13262,"Disenchant"},		-- enchanting = disenchant
 		[2550]	=	{
 					{818,"Basic_Campfire"},				-- cooking = basic campfire
@@ -121,8 +121,8 @@ if CraftForge.isRetail then
 	}
 end
 
-if CraftForge.isForever then	
-	CraftForge.TradeSkillAdditionalAbilities = {
+if CraftBench.isForever then	
+	CraftBench.TradeSkillAdditionalAbilities = {
 		[7411]	=	{13262,"Disenchant"},		-- enchanting = disenchant
 		[2018]	=	{126462,"Thermal_Anvil"},	-- blacksmithing = thermal anvil (item:87216)
 		[4036]	=	{126462,"Thermal_Anvil"},	-- engineering = thermal anvil (item:87216)
@@ -133,7 +133,7 @@ end
 --
 -- Table of magic for Enchanting, Prospecting, Milling
 --
-CraftForge.TradeSkillAutoTarget = {
+CraftBench.TradeSkillAutoTarget = {
 	[7411] =  {	  -- Enchanting
 		[38682] = 1, -- Enchanting Vellum
 	},
@@ -261,7 +261,7 @@ CraftForge.TradeSkillAutoTarget = {
 	}
 }
 
-if CraftForge.isRetail then
+if CraftBench.isRetail then
 --
 -- Table used by Enchanting to target Enchanting Vellum
 --
@@ -273,7 +273,7 @@ if CraftForge.isRetail then
 -- Generated from Wago Tools using generate-scrollData-retail.py
 --
 -- 12.1.0.69933
-CraftForge.scrollData = {
+CraftBench.scrollData = {
 	[2831] = 2304, -- Apply Armor Kit 
 	[2832] = 2313, -- Apply Armor Kit 
 	[2833] = 4265, -- Apply Armor Kit 
@@ -1177,12 +1177,12 @@ CraftForge.scrollData = {
 	[1281334] = 268034, -- Conjured Illusory Adornment - Voidtouched 
 }
 else
-CraftForge.scrollData = {} -- CraftForge.isForever
+CraftBench.scrollData = {} -- CraftBench.isForever
 end
 --
 -- Items in this list are ignored because they can cause infinite loops.
 --
-CraftForge.TradeSkillIgnoredMats = {
+CraftBench.TradeSkillIgnoredMats = {
 	[11479] = 1 , -- Transmute: Iron to Gold
 	[11480] = 1 , -- Transmute: Mithril to Truesilver
 	[60350] = 1 , -- Transmute: Titanium
@@ -1248,7 +1248,7 @@ CraftForge.TradeSkillIgnoredMats = {
 -- Table used by Inscription to convert inks
 --
 local topink = 173058				-- Umbral Ink
-CraftForge.SpecialVendorItems = {
+CraftBench.SpecialVendorItems = {
 	[37101] = {1, topink},			--Ivory Ink (obsolete?)
 	[39469] = {1, topink},			--Moonglow Ink
 	[39774] = {1, topink},			--Midnight Ink

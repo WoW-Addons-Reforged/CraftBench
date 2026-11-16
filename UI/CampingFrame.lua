@@ -1,20 +1,20 @@
 ----------------------------------------------------------
--- CraftForge - Native Dark-Gold Forever Camping UI     --
+-- CraftBench - Native Dark-Gold Forever Camping UI     --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-local L = CraftForge.L
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+local L = CraftBench.L
 
-CraftForge.CampingUI = CraftForge.CampingUI or {}
-local CampingUI = CraftForge.CampingUI
+CraftBench.CampingUI = CraftBench.CampingUI or {}
+local CampingUI = CraftBench.CampingUI
 
 local campFrame
 
 local function ensureFrame()
 	if campFrame then return campFrame end
-	local UIStyle = CraftForge.UIStyle
-	local f = CreateFrame("Frame", "CraftForgeCampingWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local UIStyle = CraftBench.UIStyle
+	local f = CreateFrame("Frame", "CraftBenchCampingWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	f:SetSize(620, 420)
 	f:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	f:SetFrameStrata("DIALOG")
@@ -25,11 +25,11 @@ local function ensureFrame()
 	f:RegisterForDrag("LeftButton")
 	f:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-	tinsert(UISpecialFrames, "CraftForgeCampingWindow")
+	tinsert(UISpecialFrames, "CraftBenchCampingWindow")
 
 	if UIStyle then
 		UIStyle.SkinFrame(f, false)
-		UIStyle.CreateHeader(f, "CraftForge — " .. (L["CAMP_TITLE"] or "Camping (WoW Forever)"), 135805, function()
+		UIStyle.CreateHeader(f, "CraftBench — " .. (L["CAMP_TITLE"] or "Camping (WoW Forever)"), 135805, function()
 			f:Hide()
 		end)
 	end
@@ -50,7 +50,7 @@ local function ensureFrame()
 	body:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -10, 10)
 	if UIStyle then UIStyle.SkinInset(body) end
 
-	local scroll = CreateFrame("ScrollFrame", "CraftForgeCampingScroll", body, "UIPanelScrollFrameTemplate")
+	local scroll = CreateFrame("ScrollFrame", "CraftBenchCampingScroll", body, "UIPanelScrollFrameTemplate")
 	scroll:SetPoint("TOPLEFT", body, "TOPLEFT", 8, -8)
 	scroll:SetPoint("BOTTOMRIGHT", body, "BOTTOMRIGHT", -26, 8)
 	if UIStyle and UIStyle.StyleScrollBar then UIStyle.StyleScrollBar(scroll) end
@@ -67,9 +67,9 @@ end
 
 function CampingUI:Refresh()
 	if not campFrame or not campFrame:IsShown() then return end
-	local Camping = CraftForge.Camping
+	local Camping = CraftBench.Camping
 	if not Camping then return end
-	local UIStyle = CraftForge.UIStyle
+	local UIStyle = CraftBench.UIStyle
 
 	local rank, maxRank, list = Camping:GetStatusList()
 	if rank > 0 then
@@ -114,7 +114,7 @@ function CampingUI:Refresh()
 	campFrame._child:SetHeight(math.max(100, -y + 10))
 end
 
-function CraftForge:ShowCamping()
+function CraftBench:ShowCamping()
 	local f = ensureFrame()
 	f:Show()
 	CampingUI:Refresh()

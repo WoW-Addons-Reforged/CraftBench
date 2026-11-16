@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-CRAFTFORGE_IGNORE_LIST_HEIGHT = 16
+CRAFTBENCH_IGNORE_LIST_HEIGHT = 16
 
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
 
 local num_buttons = 0
 
@@ -27,12 +27,12 @@ local num_buttons = 0
 --    Window creation and update methods
 -- ===========================================================================================
 local function get_button(i)
-	local button = _G["CraftForgeIgnoreListButton"..i]
+	local button = _G["CraftBenchIgnoreListButton"..i]
 	if not button then
-		button = CreateFrame("Button", "CraftForgeIgnoreListButton"..i, CraftForgeIgnoreListParent, "CraftForgeIgnoreListItemButtonTemplate")
-		button:SetParent(CraftForgeIgnoreListParent)
-		button:SetPoint("TOPLEFT", "CraftForgeIgnoreListButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(CraftForgeIgnoreListParent:GetFrameLevel() + 1)
+		button = CreateFrame("Button", "CraftBenchIgnoreListButton"..i, CraftBenchIgnoreListParent, "CraftBenchIgnoreListItemButtonTemplate")
+		button:SetParent(CraftBenchIgnoreListParent)
+		button:SetPoint("TOPLEFT", "CraftBenchIgnoreListButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftBenchIgnoreListParent:GetFrameLevel() + 1)
 	end
 	return button
 end
@@ -53,35 +53,35 @@ local FrameBackdrop = {
 
 local function createIgnoreListFrame(self)
 	--DA.DEBUG(0,"createIgnoreListFrame")
-	local frame = CraftForgeIgnoreList
+	local frame = CraftBenchIgnoreList
 	if not frame then
 		return nil
 	end
-	local UIStyle = CraftForge.UIStyle
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local UIStyle = CraftBench.UIStyle
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		frame:SetFrameStrata("TOOLTIP")
 	else
 		frame:SetFrameStrata("HIGH")
 	end
 	UIStyle.SkinFrame(frame, false)
-	local titletext = frame:CreateFontString("CraftForgeIgnoreListTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = frame:CreateFontString("CraftBenchIgnoreListTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -1)
 	titletext:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -36, -1)
 	titletext:SetHeight(26)
 	titletext:SetJustifyH("CENTER")
-	titletext:SetText("CraftForge: Ignored Materials")
+	titletext:SetText("CraftBench: Ignored Materials")
 	UIStyle.StyleHeaderBar(frame, titletext, 1)
-	if CraftForgeIgnoreListCloseButton then UIStyle.SkinCloseButton(CraftForgeIgnoreListCloseButton) end
+	if CraftBenchIgnoreListCloseButton then UIStyle.SkinCloseButton(CraftBenchIgnoreListCloseButton) end
 --
 -- The frame enclosing the scroll list needs a border and a background .....
 --
-	local backdrop = CraftForgeIgnoreListParent
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local backdrop = CraftBenchIgnoreListParent
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		backdrop:SetFrameStrata("HIGH")
 	end
 	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
-	if CraftForgeIgnoreList then UIStyle.StyleScrollBar(CraftForgeIgnoreList) end
+	if CraftBenchIgnoreList then UIStyle.StyleScrollBar(CraftBenchIgnoreList) end
 --
 -- Ace Window manager library, allows the window position (and size)
 -- to be automatically saved
@@ -96,7 +96,7 @@ local function createIgnoreListFrame(self)
 --
 -- lets play the resize me game!
 --
-	CraftForge:EnableResize(frame, 320,150, CraftForge.UpdateIgnoreListWindow)
+	CraftBench:EnableResize(frame, 320,150, CraftBench.UpdateIgnoreListWindow)
 --
 -- so hitting [ESC] will close the window
 --
@@ -104,7 +104,7 @@ local function createIgnoreListFrame(self)
 	return frame
 end
 
-function CraftForge:GetIgnoreList(player)
+function CraftBench:GetIgnoreList(player)
 	--DA.DEBUG(0,"GetIgnoreList("..tostring(player)..")")
 	local list = {}
 	local playerList
@@ -131,7 +131,7 @@ function CraftForge:GetIgnoreList(player)
 	return list
 end
 
-function CraftForge:DeleteIgnoreEntry(index, player, id)
+function CraftBench:DeleteIgnoreEntry(index, player, id)
 	--DA.DEBUG(0,"DeleteIgnoreEntry("..tostring(index)..", "..tostring(player)..", "..tostring(id)..")")
 	table.remove(self.cachedIgnoreList,index)
 	self.db.realm.userIgnoredMats[player][id] = nil
@@ -139,7 +139,7 @@ function CraftForge:DeleteIgnoreEntry(index, player, id)
 	self:UpdateTradeSkillWindow()
 end
 
-function CraftForge:ClearIgnoreList(player)
+function CraftBench:ClearIgnoreList(player)
 	--DA.DEBUG(0,"ClearIgnoreList("..tostring(player)..")")
 	local playerList
 	if player then
@@ -163,21 +163,21 @@ end
 --
 -- Called to add a count to the Ignored List button in the main frame
 --
-function CraftForge:UpdateIgnoredMatsButton()
+function CraftBench:UpdateIgnoredMatsButton()
 	--DA.DEBUG(0,"UpdateIgnoredMatsButton()")
 	self.cachedIgnoreList = self:GetIgnoreList()
 	local numItems = #self.cachedIgnoreList
 	if numItems > 0 then
-		CraftForgeIgnoredMatsButton:SetText(L["Ignored List"].." ("..tostring(numItems)..")")
+		CraftBenchIgnoredMatsButton:SetText(L["Ignored List"].." ("..tostring(numItems)..")")
 	else
-		CraftForgeIgnoredMatsButton:SetText(L["Ignored List"])
+		CraftBenchIgnoredMatsButton:SetText(L["Ignored List"])
 	end
 end
 
 --
 -- Called to update the ignore list window
 --
-function CraftForge:UpdateIgnoreListWindow()
+function CraftBench:UpdateIgnoreListWindow()
 	--DA.DEBUG(0,"UpdateIgnoreListWindow()")
 	self.cachedIgnoreList = self:GetIgnoreList()
 	local numItems = #self.cachedIgnoreList
@@ -186,20 +186,20 @@ function CraftForge:UpdateIgnoreListWindow()
 		return
 	end
 	self:UpdateIgnoredMatsButton()
-	local button_count = CraftForgeIgnoreListList:GetHeight() / CRAFTFORGE_IGNORE_LIST_HEIGHT
+	local button_count = CraftBenchIgnoreListList:GetHeight() / CRAFTBENCH_IGNORE_LIST_HEIGHT
 	button_count = math.floor(button_count)
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(CraftForgeIgnoreListList,			-- frame
+	FauxScrollFrame_Update(CraftBenchIgnoreListList,			-- frame
 							numItems,						-- num items
 							button_count,					-- num to display
-							CRAFTFORGE_IGNORE_LIST_HEIGHT)	-- value step (item height)
+							CRAFTBENCH_IGNORE_LIST_HEIGHT)	-- value step (item height)
 --
 -- Where in the list of items to start counting.
 --
-	local itemOffset = FauxScrollFrame_GetOffset(CraftForgeIgnoreListList)
-	local width = CraftForgeIgnoreListParent:GetWidth()
+	local itemOffset = FauxScrollFrame_GetOffset(CraftBenchIgnoreListList)
+	local width = CraftBenchIgnoreListParent:GetWidth()
 	for i=1, button_count, 1 do
 		num_buttons = math.max(num_buttons, i)
 		local itemIndex = i + itemOffset
@@ -249,14 +249,14 @@ end
 --
 -- Updates the scrollbar when a scroll event happens
 --
-function CraftForge:IgnoreList_OnScroll()
-	CraftForge:UpdateIgnoreListWindow()
+function CraftBench:IgnoreList_OnScroll()
+	CraftBench:UpdateIgnoreListWindow()
 end
 
 --
 -- Functions to show and hide the Ignorelist
 --
-function CraftForge:DisplayIgnoreList()
+function CraftBench:DisplayIgnoreList()
 	--DA.DEBUG(0,"DisplayIgnoreList()")
 	if not self.ignoreList then
 		self.ignoreList = createIgnoreListFrame(self)
@@ -270,7 +270,7 @@ function CraftForge:DisplayIgnoreList()
 	self:UpdateIgnoreListWindow()
 end
 
-function CraftForge:HideIgnoreList()
+function CraftBench:HideIgnoreList()
 	--DA.DEBUG(0,"HideIgnoreList()")
 	local closed
 	if self.ignoreList and self.ignoreList:IsVisible() then

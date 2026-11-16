@@ -1,7 +1,7 @@
 local addonName, addonTable = ...
-local DA = LibStub("AceAddon-3.0"):GetAddon("CraftForge") -- for DebugAids.lua
+local DA = LibStub("AceAddon-3.0"):GetAddon("CraftBench") -- for DebugAids.lua
 --[[
-CraftForge: All-in-One Profession, Crafting & Material-Processing Suite.
+CraftBench: All-in-One Profession, Crafting & Material-Processing Suite.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
 
 local SPELL_DISENCHANT = 13262
 local SPELL_PROSPECT   = 31252
@@ -155,7 +155,7 @@ local function getContainerItemInfoSafe(bag, slot)
 end
 
 local function isModifierActive()
-	local mod = CraftForge.db and CraftForge.db.profile and CraftForge.db.profile.process_modifier or "ALT"
+	local mod = CraftBench.db and CraftBench.db.profile and CraftBench.db.profile.process_modifier or "ALT"
 	local fn = MODIFIER_CHECKS[mod] or IsAltKeyDown
 	return fn()
 end
@@ -188,7 +188,7 @@ end
 
 local function resolveActionForItem(itemLink, bag, slot, tooltip, tooltipData)
 	if not itemLink or not bag or not slot then return nil end
-	local profile = CraftForge.db and CraftForge.db.profile
+	local profile = CraftBench.db and CraftBench.db.profile
 	if not profile or not profile.process_enabled then return nil end
 
 	local count, _, isLocked = getContainerItemInfoSafe(bag, slot)
@@ -343,7 +343,7 @@ local function showProcessButton(owner, bag, slot, spellName, r, g, b)
 	processButton:SetAttribute("shift-macrotext", macro)
 
 	if processButton.glowFrame then
-		if CraftForge.db.profile.process_glow then
+		if CraftBench.db.profile.process_glow then
 			local cr, cg, cb = r or 1, g or 0.85, b or 0.25
 			if processButton.glowOuter then
 				processButton.glowOuter:SetVertexColor(cr, cg, cb, 0.95)
@@ -420,8 +420,8 @@ local function getBuiltInDisenchantYields(quality, itemLevel)
 end
 
 local function getMatUnitPrice(matID)
-	if CraftForge.GetItemMarketOrVendorPrice then
-		local price, isMarket = CraftForge:GetItemMarketOrVendorPrice(matID)
+	if CraftBench.GetItemMarketOrVendorPrice then
+		local price, isMarket = CraftBench:GetItemMarketOrVendorPrice(matID)
 		if isMarket and type(price) == "number" and price > 0 then
 			return price
 		end
@@ -435,7 +435,7 @@ end
 
 local function appendYieldTooltip(tooltip, itemLink)
 	if not tooltip or not itemLink or tooltipProcessed[tooltip] then return end
-	local profile = CraftForge.db and CraftForge.db.profile
+	local profile = CraftBench.db and CraftBench.db.profile
 	if not profile then return end
 
 	local itemID = tonumber(itemLink:match("item:(%d+)"))
@@ -492,14 +492,14 @@ local function appendYieldTooltip(tooltip, itemLink)
 	local valueText = ""
 	if profile.process_tooltip_value and expectedValue >= 1 then
 		local copper = math.floor(expectedValue)
-		if CraftForge.FormatMoneyFull then
-			valueText = L["PROCESSYIELDVALUE"] .. ": " .. CraftForge:FormatMoneyFull(copper, true)
+		if CraftBench.FormatMoneyFull then
+			valueText = L["PROCESSYIELDVALUE"] .. ": " .. CraftBench:FormatMoneyFull(copper, true)
 		elseif GetCoinTextureString then
 			valueText = L["PROCESSYIELDVALUE"] .. ": " .. GetCoinTextureString(copper)
 		end
 	end
 
-	tooltip:AddDoubleLine("|cff9966ffCraftForge:|r " .. (actionTitle or L["Material Processing"]), valueText, 0.9, 0.8, 1.0, 1.0, 0.85, 0.3)
+	tooltip:AddDoubleLine("|cff9966ffCraftBench:|r " .. (actionTitle or L["Material Processing"]), valueText, 0.9, 0.8, 1.0, 1.0, 0.85, 0.3)
 	for _, entry in ipairs(yields) do
 		local matID, pct, minC, maxC = entry[1], entry[2], entry[3], entry[4]
 		local matName, _, matQuality = getItemInfoSafe(matID)
@@ -531,7 +531,7 @@ local function handleTooltipItem(tooltip, tooltipData)
 	end
 
 	if InCombatLockdown() then return end
-	if not CraftForge.db or not CraftForge.db.profile or not CraftForge.db.profile.process_enabled then
+	if not CraftBench.db or not CraftBench.db.profile or not CraftBench.db.profile.process_enabled then
 		return
 	end
 	if not isModifierActive() then
@@ -557,7 +557,7 @@ local function handleTooltipItem(tooltip, tooltipData)
 	end
 end
 
-function CraftForge:InitializeProcessing()
+function CraftBench:InitializeProcessing()
 	if processInitialized then return end
 	processInitialized = true
 
@@ -567,7 +567,7 @@ function CraftForge:InitializeProcessing()
 		processButton:RegisterForClicks(useDown and "LeftButtonDown" or "LeftButtonUp")
 	end
 
-	processButton = CreateFrame("Button", "CraftForgeProcessButton", UIParent, "SecureActionButtonTemplate")
+	processButton = CreateFrame("Button", "CraftBenchProcessButton", UIParent, "SecureActionButtonTemplate")
 	processButton:Hide()
 	updateProcessClicks()
 
@@ -636,14 +636,14 @@ function CraftForge:InitializeProcessing()
 		if C_Timer and C_Timer.After then
 			C_Timer.After(delay or 0.3, function()
 				pendingCheck = false
-				if CraftForge.CheckAutoProcessPrompt then
-					CraftForge:CheckAutoProcessPrompt()
+				if CraftBench.CheckAutoProcessPrompt then
+					CraftBench:CheckAutoProcessPrompt()
 				end
 			end)
 		else
 			pendingCheck = false
-			if CraftForge.CheckAutoProcessPrompt then
-				CraftForge:CheckAutoProcessPrompt()
+			if CraftBench.CheckAutoProcessPrompt then
+				CraftBench:CheckAutoProcessPrompt()
 			end
 		end
 	end
@@ -657,8 +657,8 @@ function CraftForge:InitializeProcessing()
 	processEventFrame:SetScript("OnEvent", function(_, event, arg1)
 		if event == "PLAYER_REGEN_DISABLED" then
 			hideProcessButton()
-			if CraftForge.HideAutoProcessPrompt then
-				CraftForge:HideAutoProcessPrompt()
+			if CraftBench.HideAutoProcessPrompt then
+				CraftBench:HideAutoProcessPrompt()
 			end
 		elseif event == "MODIFIER_STATE_CHANGED" then
 			if not isModifierActive() then
@@ -719,7 +719,7 @@ end
 
 local function refreshProcessPanel()
 	if not processPanelFrame or InCombatLockdown() then return end
-	local profile = CraftForge.db and CraftForge.db.profile
+	local profile = CraftBench.db and CraftBench.db.profile
 	if not profile then return end
 
 	local items = {}
@@ -769,11 +769,11 @@ local function refreshProcessPanel()
 	end
 end
 
-function CraftForge:ShowProcessPanel()
+function CraftBench:ShowProcessPanel()
 	if InCombatLockdown() then return end
 	if not processPanelFrame then
-		local UIStyle = CraftForge.UIStyle
-		local f = CreateFrame("Frame", "CraftForgeProcessPanelFrame", UIParent, "BackdropTemplate")
+		local UIStyle = CraftBench.UIStyle
+		local f = CreateFrame("Frame", "CraftBenchProcessPanelFrame", UIParent, "BackdropTemplate")
 		f:SetSize(400, 340)
 		f:SetPoint("CENTER")
 		f:SetFrameStrata("DIALOG")
@@ -788,7 +788,7 @@ function CraftForge:ShowProcessPanel()
 
 		local title = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 		title:SetPoint("TOPLEFT", f, "TOPLEFT", 14, -12)
-		title:SetText("|cffffd100CraftForge|r — " .. L["Material Processing"])
+		title:SetText("|cffffd100CraftBench|r — " .. L["Material Processing"])
 
 		local closeBtn = CreateFrame("Button", nil, f, "UIPanelCloseButton")
 		closeBtn:SetPoint("TOPRIGHT", f, "TOPRIGHT", -4, -4)
@@ -821,7 +821,7 @@ function CraftForge:ShowProcessPanel()
 			lbl:SetJustifyH("LEFT")
 			row.label = lbl
 
-			local btn = CreateFrame("Button", "CraftForgeProcessPanelBtn" .. i, row, "SecureActionButtonTemplate,UIPanelButtonTemplate")
+			local btn = CreateFrame("Button", "CraftBenchProcessPanelBtn" .. i, row, "SecureActionButtonTemplate,UIPanelButtonTemplate")
 			btn:SetSize(110, 22)
 			btn:SetPoint("RIGHT", row, "RIGHT", 0, 0)
 			btn:RegisterForClicks("LeftButtonUp")
@@ -851,8 +851,8 @@ local autoSessionIgnore = {}
 local function formatPromptMoney(copper)
 	local absC = math.floor(math.max(0, copper or 0))
 	if absC == 0 then return "|cff888888-|r" end
-	if CraftForge.FormatMoneyFull then
-		return CraftForge:FormatMoneyFull(absC, true)
+	if CraftBench.FormatMoneyFull then
+		return CraftBench:FormatMoneyFull(absC, true)
 	elseif GetCoinTextureString then
 		return GetCoinTextureString(absC)
 	end
@@ -889,16 +889,16 @@ local function computeExpectedYieldValue(itemLink, itemID)
 	return expected
 end
 
-function CraftForge:HideAutoProcessPrompt()
+function CraftBench:HideAutoProcessPrompt()
 	if autoPromptFrame and not InCombatLockdown() then
 		autoPromptFrame:Hide()
 	end
 end
 
-function CraftForge:ClearAutoProcessIgnores()
+function CraftBench:ClearAutoProcessIgnores()
 	wipe(autoSessionIgnore)
-	if CraftForge.db and CraftForge.db.profile then
-		CraftForge.db.profile.process_autopopup_ignore = {}
+	if CraftBench.db and CraftBench.db.profile then
+		CraftBench.db.profile.process_autopopup_ignore = {}
 	end
 	DA.MARK2(L["PROCESS_AUTOPOPUP_CLEARED"])
 	if self.CheckAutoProcessPrompt then
@@ -906,9 +906,9 @@ function CraftForge:ClearAutoProcessIgnores()
 	end
 end
 
-function CraftForge:CheckAutoProcessPrompt()
+function CraftBench:CheckAutoProcessPrompt()
 	if InCombatLockdown() then return end
-	local profile = CraftForge.db and CraftForge.db.profile
+	local profile = CraftBench.db and CraftBench.db.profile
 	if not profile or not profile.process_enabled or not profile.process_autopopup then
 		self:HideAutoProcessPrompt()
 		return
@@ -970,8 +970,8 @@ function CraftForge:CheckAutoProcessPrompt()
 	end
 
 	if not autoPromptFrame then
-		local UIStyle = CraftForge.UIStyle
-		local f = CreateFrame("Frame", "CraftForgeAutoProcessPrompt", UIParent, "BackdropTemplate")
+		local UIStyle = CraftBench.UIStyle
+		local f = CreateFrame("Frame", "CraftBenchAutoProcessPrompt", UIParent, "BackdropTemplate")
 		f:SetSize(340, 148)
 		f:SetPoint("CENTER", UIParent, "CENTER", 0, 140)
 		f:SetFrameStrata("DIALOG")
@@ -986,7 +986,7 @@ function CraftForge:CheckAutoProcessPrompt()
 
 		local title = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 		title:SetPoint("TOPLEFT", f, "TOPLEFT", 12, -10)
-		title:SetText("|cffffd100CraftForge|r — " .. L["PROCESS_AUTOPOPUP_TITLE"])
+		title:SetText("|cffffd100CraftBench|r — " .. L["PROCESS_AUTOPOPUP_TITLE"])
 
 		local closeBtn = CreateFrame("Button", nil, f, "UIPanelCloseButton")
 		closeBtn:SetPoint("TOPRIGHT", f, "TOPRIGHT", -3, -3)
@@ -1029,7 +1029,7 @@ function CraftForge:CheckAutoProcessPrompt()
 		valLbl:SetJustifyH("LEFT")
 		f.valLabel = valLbl
 
-		local actBtn = CreateFrame("Button", "CraftForgeAutoProcessActionBtn", f, "SecureActionButtonTemplate,UIPanelButtonTemplate")
+		local actBtn = CreateFrame("Button", "CraftBenchAutoProcessActionBtn", f, "SecureActionButtonTemplate,UIPanelButtonTemplate")
 		actBtn:SetSize(112, 24)
 		actBtn:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", 12, 12)
 		local useDown = GetCVarBool and GetCVarBool("ActionButtonUseKeyDown")
@@ -1039,7 +1039,7 @@ function CraftForge:CheckAutoProcessPrompt()
 		end
 		actBtn:HookScript("PostClick", function()
 			C_Timer.After(0.5, function()
-				CraftForge:CheckAutoProcessPrompt()
+				CraftBench:CheckAutoProcessPrompt()
 			end)
 		end)
 		f.actBtn = actBtn
@@ -1055,7 +1055,7 @@ function CraftForge:CheckAutoProcessPrompt()
 			if f.currentItemID then
 				autoSessionIgnore[f.currentItemID] = true
 			end
-			CraftForge:CheckAutoProcessPrompt()
+			CraftBench:CheckAutoProcessPrompt()
 		end)
 
 		local ignBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
@@ -1066,13 +1066,13 @@ function CraftForge:CheckAutoProcessPrompt()
 			UIStyle.SkinButton(ignBtn)
 		end
 		ignBtn:SetScript("OnClick", function()
-			if f.currentItemID and CraftForge.db and CraftForge.db.profile then
-				if not CraftForge.db.profile.process_autopopup_ignore then
-					CraftForge.db.profile.process_autopopup_ignore = {}
+			if f.currentItemID and CraftBench.db and CraftBench.db.profile then
+				if not CraftBench.db.profile.process_autopopup_ignore then
+					CraftBench.db.profile.process_autopopup_ignore = {}
 				end
-				CraftForge.db.profile.process_autopopup_ignore[f.currentItemID] = true
+				CraftBench.db.profile.process_autopopup_ignore[f.currentItemID] = true
 			end
-			CraftForge:CheckAutoProcessPrompt()
+			CraftBench:CheckAutoProcessPrompt()
 		end)
 
 		autoPromptFrame = f

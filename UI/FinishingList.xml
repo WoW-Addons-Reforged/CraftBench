@@ -2,7 +2,7 @@
 ..\..\FrameXML\UI.xsd">
 
 	<!--
-	CraftForge: A tradeskill window replacement.
+	CraftBench: A tradeskill window replacement.
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #  Template for all the buttons we use to display items in the finishing list
 #
 -->
-	<Frame name="CraftForgeFinishingListItemTemplate" hidden="false" virtual="true">
+	<Frame name="CraftBenchFinishingListItemTemplate" hidden="false" virtual="true">
 		<Size>
 			<AbsDimension x="190" y="20"/>
 		</Size>
@@ -89,10 +89,10 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 			</OnLoad>
 			<OnEnter>
-				CraftForge:FinishingButtonOnEnter(self, CraftForgeFrame.selectedSkill, self:GetID())
+				CraftBench:FinishingButtonOnEnter(self, CraftBenchFrame.selectedSkill, self:GetID())
 			</OnEnter>
 			<OnLeave>
-				CraftForge:FinishingButtonOnLeave(self, CraftForgeFrame.selectedSkill, self:GetID())
+				CraftBench:FinishingButtonOnLeave(self, CraftBenchFrame.selectedSkill, self:GetID())
 			</OnLeave>
 			<OnUpdate>
 				CursorOnUpdate(self)
@@ -100,19 +100,19 @@
 			<OnClick>
 				if ( button == "LeftButton" and IsShiftKeyDown() ) then
 				<!-- Put a link to the *item* in chat into the current chat edit box -->
-					local link = CraftForge:GetFinishingItemLink(CraftForge.selectedSkill, self:GetID())
+					local link = CraftBench:GetFinishingItemLink(CraftBench.selectedSkill, self:GetID())
 					if not ChatEdit_InsertLink(link) then
-						CraftForge:XMLDebugLink("FinishingItemLink: link= ", link)
+						CraftBench:XMLDebugLink("FinishingItemLink: link= ", link)
 					end
 				else
 				<!-- generic click action -->
-					CraftForge:FinishingButtonOnClick(self, button, CraftForge.selectedSkill, self:GetID())
+					CraftBench:FinishingButtonOnClick(self, button, CraftBench.selectedSkill, self:GetID())
 				end
 			</OnClick>
 		</Scripts>
 	</Frame>
 
-<CheckButton name="CraftForgeFinishingListCheckButtonTemplate" virtual="true">
+<CheckButton name="CraftBenchFinishingListCheckButtonTemplate" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -136,7 +136,7 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<CheckButton name="CraftForgeFinishingListCheckButtonTemplate2" virtual="true">
+<CheckButton name="CraftBenchFinishingListCheckButtonTemplate2" virtual="true">
 	<Size>
 		<AbsDimension x="20" y="20"/>
 	</Size>
@@ -160,15 +160,15 @@
 	<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 </CheckButton>
 
-<Frame name="CraftForgeFinishingList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
+<Frame name="CraftBenchFinishingList" parent="UIParent" toplevel="true" movable="true" enableMouse="true" resizable="true" hidden="true" clampedToScreen="true" inherits="BackdropTemplate">
 	<Size><AbsDimension x="420" y="240"/></Size>
 	<Anchors>
 		<Anchor point="CENTER"/>
 	</Anchors>
 	<Frames>
-		<Button name="CraftForgeFinishingListCloseButton" inherits="UIPanelCloseButton" parent="CraftForgeFinishingList">
+		<Button name="CraftBenchFinishingListCloseButton" inherits="UIPanelCloseButton" parent="CraftBenchFinishingList">
 			<Anchors>
-				<Anchor point="TOPRIGHT" relativeTo="CraftForgeFinishingList" relativePoint="TOPRIGHT">
+				<Anchor point="TOPRIGHT" relativeTo="CraftBenchFinishingList" relativePoint="TOPRIGHT">
 					<Offset>
 						<AbsDimension x="-2" y="-2"/>
 					</Offset>
@@ -176,13 +176,13 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					HideUIPanel(CraftForgeFinishingList)
+					HideUIPanel(CraftBenchFinishingList)
 				</OnClick>
 			</Scripts>
 		</Button>
-		<CheckButton name="CraftForgeFinishingHaveItems" inherits="CraftForgeFinishingListCheckButtonTemplate2">
+		<CheckButton name="CraftBenchFinishingHaveItems" inherits="CraftBenchFinishingListCheckButtonTemplate2">
 			<Anchors>
-				<Anchor point="BOTTOMLEFT" relativeTo="CraftForgeFinishingList" relativePoint="BOTTOMLEFT">
+				<Anchor point="BOTTOMLEFT" relativeTo="CraftBenchFinishingList" relativePoint="BOTTOMLEFT">
 					<Offset>
 						<AbsDimension x="10" y="10"/>
 					</Offset>
@@ -190,33 +190,33 @@
 			</Anchors>
 			<Scripts>
 				<OnClick>
-					CraftForge:FinishingListToggleHaveItems()
-					CraftForge:UpdateFinishingListWindow()
+					CraftBench:FinishingListToggleHaveItems()
+					CraftBench:UpdateFinishingListWindow()
 				</OnClick>
 			</Scripts>
 		</CheckButton>
-		<Frame name="CraftForgeFinishingListParent" parent="CraftForgeFinishingList">
+		<Frame name="CraftBenchFinishingListParent" parent="CraftBenchFinishingList">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeFinishingList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchFinishingList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-35"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeFinishingList" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchFinishingList" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-5" y="35"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
 		</Frame>
-		<ScrollFrame name="CraftForgeFinishingListList" inherits="FauxScrollFrameTemplate" parent="CraftForgeFinishingListParent">
+		<ScrollFrame name="CraftBenchFinishingListList" inherits="FauxScrollFrameTemplate" parent="CraftBenchFinishingListParent">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeFinishingListParent" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchFinishingListParent" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="5" y="-5"/>
 					</Offset>
 				</Anchor>
-				<Anchor point="BOTTOMRIGHT" relativeTo="CraftForgeFinishingListParent" relativePoint="BOTTOMRIGHT">
+				<Anchor point="BOTTOMRIGHT" relativeTo="CraftBenchFinishingListParent" relativePoint="BOTTOMRIGHT">
 					<Offset>
 						<AbsDimension x="-27" y="5"/>
 					</Offset>
@@ -224,13 +224,13 @@
 			</Anchors>
 			<Scripts>
 				<OnVerticalScroll>
-					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTFORGE_FINISHING_LIST_HEIGHT, CraftForge.FinishingList_OnScroll)
+					FauxScrollFrame_OnVerticalScroll(self, offset, CRAFTBENCH_FINISHING_LIST_HEIGHT, CraftBench.FinishingList_OnScroll)
 				</OnVerticalScroll>
 			</Scripts>
 		</ScrollFrame>
-		<Button name="CraftForgeFinishingListButton1" inherits="CraftForgeFinishingListItemTemplate">
+		<Button name="CraftBenchFinishingListButton1" inherits="CraftBenchFinishingListItemTemplate">
 			<Anchors>
-				<Anchor point="TOPLEFT" relativeTo="CraftForgeFinishingListList" relativePoint="TOPLEFT">
+				<Anchor point="TOPLEFT" relativeTo="CraftBenchFinishingListList" relativePoint="TOPLEFT">
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
 					</Offset>

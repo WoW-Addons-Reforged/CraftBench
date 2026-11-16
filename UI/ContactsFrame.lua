@@ -1,13 +1,13 @@
 ----------------------------------------------------------
--- CraftForge - Native Dark-Gold Trade Contacts Window  --
+-- CraftBench - Native Dark-Gold Trade Contacts Window  --
 ----------------------------------------------------------
 
 local addonName, addonTable = ...
-local CraftForge = _G.CraftForge or LibStub("AceAddon-3.0"):GetAddon("CraftForge")
-local L = CraftForge.L
+local CraftBench = _G.CraftBench or LibStub("AceAddon-3.0"):GetAddon("CraftBench")
+local L = CraftBench.L
 
-CraftForge.ContactsUI = CraftForge.ContactsUI or {}
-local ContactsUI = CraftForge.ContactsUI
+CraftBench.ContactsUI = CraftBench.ContactsUI or {}
+local ContactsUI = CraftBench.ContactsUI
 
 local contactsFrame
 local kindFilter = "all"
@@ -16,8 +16,8 @@ local selectedContactKey
 local function formatMoneyShort(copper)
 	copper = math.floor(tonumber(copper) or 0)
 	if copper <= 0 then return "|cff888888-|r" end
-	if CraftForge.FormatMoneyFull then
-		return CraftForge:FormatMoneyFull(copper, true)
+	if CraftBench.FormatMoneyFull then
+		return CraftBench:FormatMoneyFull(copper, true)
 	end
 	local g = math.floor(copper / 10000)
 	local s = math.floor((copper % 10000) / 100)
@@ -32,8 +32,8 @@ end
 
 local function ensureFrame()
 	if contactsFrame then return contactsFrame end
-	local UIStyle = CraftForge.UIStyle
-	local f = CreateFrame("Frame", "CraftForgeContactsWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local UIStyle = CraftBench.UIStyle
+	local f = CreateFrame("Frame", "CraftBenchContactsWindow", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	f:SetSize(800, 500)
 	f:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	f:SetFrameStrata("DIALOG")
@@ -44,11 +44,11 @@ local function ensureFrame()
 	f:RegisterForDrag("LeftButton")
 	f:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-	tinsert(UISpecialFrames, "CraftForgeContactsWindow")
+	tinsert(UISpecialFrames, "CraftBenchContactsWindow")
 
 	if UIStyle then
 		UIStyle.SkinFrame(f, false)
-		UIStyle.CreateHeader(f, "CraftForge — " .. (L["CONTACTS_TITLE"] or "Trade Contacts"), 133784, function()
+		UIStyle.CreateHeader(f, "CraftBench — " .. (L["CONTACTS_TITLE"] or "Trade Contacts"), 133784, function()
 			f:Hide()
 		end)
 	end
@@ -96,7 +96,7 @@ local function ensureFrame()
 	leftBody:SetWidth(370)
 	if UIStyle then UIStyle.SkinInset(leftBody) end
 
-	local scroll = CreateFrame("ScrollFrame", "CraftForgeContactsScroll", leftBody, "UIPanelScrollFrameTemplate")
+	local scroll = CreateFrame("ScrollFrame", "CraftBenchContactsScroll", leftBody, "UIPanelScrollFrameTemplate")
 	scroll:SetPoint("TOPLEFT", leftBody, "TOPLEFT", 8, -8)
 	scroll:SetPoint("BOTTOMRIGHT", leftBody, "BOTTOMRIGHT", -26, 8)
 	if UIStyle and UIStyle.StyleScrollBar then UIStyle.StyleScrollBar(scroll) end
@@ -120,7 +120,7 @@ local function ensureFrame()
 	detailHdr:SetTextColor(0.95, 0.80, 0.25)
 	f._detailHdr = detailHdr
 
-	local itemScroll = CreateFrame("ScrollFrame", "CraftForgeContactsItemScroll", rightBody, "UIPanelScrollFrameTemplate")
+	local itemScroll = CreateFrame("ScrollFrame", "CraftBenchContactsItemScroll", rightBody, "UIPanelScrollFrameTemplate")
 	itemScroll:SetPoint("TOPLEFT", rightBody, "TOPLEFT", 8, -30)
 	itemScroll:SetPoint("BOTTOMRIGHT", rightBody, "BOTTOMRIGHT", -26, 8)
 	if UIStyle and UIStyle.StyleScrollBar then UIStyle.StyleScrollBar(itemScroll) end
@@ -136,7 +136,7 @@ local function ensureFrame()
 end
 
 local function refreshDetailPanel(activeRec)
-	local UIStyle = CraftForge.UIStyle
+	local UIStyle = CraftBench.UIStyle
 	for _, r in ipairs(contactsFrame._itemRows) do r:Hide() end
 	if not activeRec then
 		contactsFrame._detailHdr:SetText(L["CONTACTS_NO_ITEMS"] or "Select a vendor or trainer to view their recipes & goods.")
@@ -227,9 +227,9 @@ end
 
 function ContactsUI:Refresh()
 	if not contactsFrame or not contactsFrame:IsShown() then return end
-	local Contacts = CraftForge.Contacts
+	local Contacts = CraftBench.Contacts
 	if not Contacts or not Contacts.GetAllEntries then return end
-	local UIStyle = CraftForge.UIStyle
+	local UIStyle = CraftBench.UIStyle
 
 	for id, btn in pairs(contactsFrame._tabs) do
 		if btn.SetBackdropBorderColor then
@@ -323,7 +323,7 @@ function ContactsUI:Refresh()
 	refreshDetailPanel(activeRec)
 end
 
-function CraftForge:ShowContacts()
+function CraftBench:ShowContacts()
 	local f = ensureFrame()
 	f:Show()
 	ContactsUI:Refresh()

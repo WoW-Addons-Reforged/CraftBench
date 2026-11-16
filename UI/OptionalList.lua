@@ -1,7 +1,7 @@
 local addonName,addonTable = ...
 local DA = _G[addonName] -- for DebugAids.lua
 --[[
-CraftForge: A tradeskill window replacement.
+CraftBench: A tradeskill window replacement.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-local L = LibStub("AceLocale-3.0"):GetLocale("CraftForge")
+local L = LibStub("AceLocale-3.0"):GetLocale("CraftBench")
 
-function CraftForge:OptionalListToggleHaveItems()
+function CraftBench:OptionalListToggleHaveItems()
 	self.db.profile.hide_unowned = not self.db.profile.hide_unowned
 	self:HideOptionalList()
 end
@@ -29,12 +29,12 @@ end
 -- ===========================================================================================
 local num_buttons = 0
 local function get_button(i)
-	local button = _G["CraftForgeOptionalListButton"..i]
+	local button = _G["CraftBenchOptionalListButton"..i]
 	if not button then
-		button = CreateFrame("Button", "CraftForgeOptionalListButton"..i, CraftForgeOptionalListParent, "CraftForgeOptionalListItemTemplate")
-		button:SetParent(CraftForgeOptionalListParent)
-		button:SetPoint("TOPLEFT", "CraftForgeOptionalListButton"..(i-1), "BOTTOMLEFT")
-		button:SetFrameLevel(CraftForgeOptionalListParent:GetFrameLevel() + 1)
+		button = CreateFrame("Button", "CraftBenchOptionalListButton"..i, CraftBenchOptionalListParent, "CraftBenchOptionalListItemTemplate")
+		button:SetParent(CraftBenchOptionalListParent)
+		button:SetPoint("TOPLEFT", "CraftBenchOptionalListButton"..(i-1), "BOTTOMLEFT")
+		button:SetFrameLevel(CraftBenchOptionalListParent:GetFrameLevel() + 1)
 	end
 	return button
 end
@@ -55,41 +55,41 @@ local FrameBackdrop = {
 	insets = { left = 3, right = 3, top = 30, bottom = 3 }
 }
 
-CRAFTFORGE_OPTIONAL_LIST_HEIGHT = 16
+CRAFTBENCH_OPTIONAL_LIST_HEIGHT = 16
 local function createOptionalListFrame(self)
 	--DA.DEBUG(0,"createOptionalListFrame")
-	local frame = CraftForgeOptionalList
+	local frame = CraftBenchOptionalList
 	if not frame then
 		return nil
 	end
-	local UIStyle = CraftForge.UIStyle
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local UIStyle = CraftBench.UIStyle
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		frame:SetFrameStrata("TOOLTIP")
 	else
 		frame:SetFrameStrata("HIGH")
 	end
 	UIStyle.SkinFrame(frame, false)
-	local titletext = frame:CreateFontString("CraftForgeOptionalListTitleText", "OVERLAY", "GameFontNormalLarge")
+	local titletext = frame:CreateFontString("CraftBenchOptionalListTitleText", "OVERLAY", "GameFontNormalLarge")
 	titletext:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -1)
 	titletext:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -36, -1)
 	titletext:SetHeight(26)
 	titletext:SetJustifyH("CENTER")
-	titletext:SetText("CraftForge: Optional Reagents")
+	titletext:SetText("CraftBench: Optional Reagents")
 	UIStyle.StyleHeaderBar(frame, titletext, 1)
-	if CraftForgeOptionalListCloseButton then UIStyle.SkinCloseButton(CraftForgeOptionalListCloseButton) end
+	if CraftBenchOptionalListCloseButton then UIStyle.SkinCloseButton(CraftBenchOptionalListCloseButton) end
 	frame.titletext = titletext
-	CraftForgeOptionalHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
-	CraftForgeOptionalHaveItems:SetChecked(CraftForge.db.profile.hide_unowned)
+	CraftBenchOptionalHaveItemsText:SetText(OPTIONAL_REAGENT_LIST_HIDE_UNOWNED)
+	CraftBenchOptionalHaveItems:SetChecked(CraftBench.db.profile.hide_unowned)
 --
 -- The frame enclosing the scroll list needs a border and a background .....
 --
-	local backdrop = CraftForgeOptionalListParent
-	if TSM_API and CraftForge.db.profile.tsm_compat then
+	local backdrop = CraftBenchOptionalListParent
+	if TSM_API and CraftBench.db.profile.tsm_compat then
 		backdrop:SetFrameStrata("HIGH")
 	end
 	UIStyle.SkinInset(backdrop)
 	backdrop:SetResizable(true)
-	if CraftForgeOptionalList then UIStyle.StyleScrollBar(CraftForgeOptionalList) end
+	if CraftBenchOptionalList then UIStyle.StyleScrollBar(CraftBenchOptionalList) end
 	local OptionalListLocation = {
 		prefix = "OptionalListLocation_"
 	}
@@ -104,7 +104,7 @@ local function createOptionalListFrame(self)
 --
 -- lets play the resize me game!
 --
-	CraftForge:EnableResize(frame, 420, 240, CraftForge.UpdateOptionalListWindow)
+	CraftBench:EnableResize(frame, 420, 240, CraftBench.UpdateOptionalListWindow)
 --
 -- so hitting [ESC] will close the window
 --
@@ -112,14 +112,14 @@ local function createOptionalListFrame(self)
 --
 -- Adjust the button height
 --
-	CRAFTFORGE_OPTIONAL_LIST_HEIGHT = math.max(CraftForgeOptionalListButton1:GetHeight(), CRAFTFORGE_OPTIONAL_LIST_HEIGHT)
+	CRAFTBENCH_OPTIONAL_LIST_HEIGHT = math.max(CraftBenchOptionalListButton1:GetHeight(), CRAFTBENCH_OPTIONAL_LIST_HEIGHT)
 	return frame
 end
 
 --
 -- Called to update the optional list window
 --
-function CraftForge:UpdateOptionalListWindow()
+function CraftBench:UpdateOptionalListWindow()
 	--DA.DEBUG(0,"UpdateOptionalListWindow()")
 	self.InProgress.optional = true
 	local numItems
@@ -130,9 +130,9 @@ function CraftForge:UpdateOptionalListWindow()
 	else
 		return
 	end
-	local height = CraftForgeOptionalListParent:GetHeight()
-	local buttonH = CraftForgeOptionalListButton1:GetHeight()
-	local width = CraftForgeOptionalListParent:GetWidth() - 30 -- Allow for scrollbars
+	local height = CraftBenchOptionalListParent:GetHeight()
+	local buttonH = CraftBenchOptionalListButton1:GetHeight()
+	local width = CraftBenchOptionalListParent:GetWidth() - 30 -- Allow for scrollbars
 	--DA.DEBUG(1,"UpdateOptionalListWindow: height= "..tostring(height)..", buttonH= "..tostring(buttonH))
 	--DA.DEBUG(1,"UpdateOptionalListWindow: width= "..tostring(width))
 	local button_count = height / buttonH
@@ -141,14 +141,14 @@ function CraftForge:UpdateOptionalListWindow()
 --
 -- Update the scroll frame
 --
-	FauxScrollFrame_Update(CraftForgeOptionalListList,		-- frame
+	FauxScrollFrame_Update(CraftBenchOptionalListList,		-- frame
 							numItems,					-- num items
 							button_count,				-- num to display
 							buttonH)					-- value step (item height)
 --
 -- Where in the list of items to start counting.
 --
-	local itemOffset = FauxScrollFrame_GetOffset(CraftForgeOptionalListList)
+	local itemOffset = FauxScrollFrame_GetOffset(CraftBenchOptionalListList)
 	--DA.DEBUG(1,"UpdateOptionalListWindow: itemOffset= "..tostring(itemOffset))
 	for i=1, button_count, 1 do
 		num_buttons = math.max(num_buttons, i)
@@ -166,7 +166,7 @@ function CraftForge:UpdateOptionalListWindow()
 				local oreagentName, oreagentLink = C_Item.GetItemInfo(oreagentID)
 				local oreagentQuality
 				if not oreagentName then
-					CraftForge.optionalDataNeeded = true
+					CraftBench.optionalDataNeeded = true
 					C_Item.RequestLoadItemDataByID(oreagentID)
 					oreagentName = "item:"..tostring(oreagentID)
 				end
@@ -246,25 +246,25 @@ end
 --
 -- Updates the scrollbar when a scroll event happens
 --
-function CraftForge:OptionalList_OnScroll()
-	CraftForge:UpdateOptionalListWindow()
+function CraftBench:OptionalList_OnScroll()
+	CraftBench:UpdateOptionalListWindow()
 end
 
 --
 -- Functions to show and hide the OptionalList
 --
-function CraftForge:DisplayOptionalList()
+function CraftBench:DisplayOptionalList()
 	--DA.DEBUG(0,"DisplayOptionalList()")
 	if not self.OptionalList then
 		self.OptionalList = createOptionalListFrame(self)
 	end
 	if not self.OptionalList:IsVisible() then
-		self.OptionalList.titletext:SetText("CraftForge: Optional Reagents")
+		self.OptionalList.titletext:SetText("CraftBench: Optional Reagents")
 		self.OptionalList:Show()
 	end
 end
 
-function CraftForge:HideOptionalList(clear)
+function CraftBench:HideOptionalList(clear)
 	--DA.DEBUG(0,"HideOptionalList()")
 	if self.OptionalList then
 		self.OptionalList:Hide()
@@ -275,15 +275,15 @@ function CraftForge:HideOptionalList(clear)
 end
 
 --
--- Called when an optional reagent button in the CraftForge detail frame is clicked.
+-- Called when an optional reagent button in the CraftBench detail frame is clicked.
 -- This optional list is used for selecting Optional reagents.
 -- This has the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function CraftForge:OptionalReagentOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:OptionalReagentOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"OptionalReagentOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
-	CraftForgeOptionalHaveItems:Hide()
+	CraftBenchOptionalHaveItems:Hide()
 	local thisOptional
 --
 -- Optional reagents are identified with a negative index.
@@ -312,7 +312,7 @@ end
 -- Returns a link for the optional reagent required to create the specified
 -- item, the index'th reagent required for the item is returned
 --
-function CraftForge:GetOptionalItemLink(skillIndex, index)
+function CraftBench:GetOptionalItemLink(skillIndex, index)
 	--DA.DEBUG(0,"GetOptionalItemLink("..tostring(skillIndex)..", "..tostring(index)..")")
 	if skillIndex and index then
 		local recipe = self:GetRecipeDataByTradeIndex(self.currentTrade, skillIndex)
@@ -333,17 +333,17 @@ end
 --
 -- Called when then mouse enters a optional button
 --
-function CraftForge:OptionalButtonOnEnter(button, skillIndex, optionalIndex)
+function CraftBench:OptionalButtonOnEnter(button, skillIndex, optionalIndex)
 	--DA.DEBUG(0,"OptionalButtonOnEnter("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(optionalIndex)..")")
-	local tip = GameTooltip -- CraftForgeTradeskillTooltip
+	local tip = GameTooltip -- CraftBenchTradeskillTooltip
 	tip:SetOwner(button, "ANCHOR_BOTTOMRIGHT")
-	if CraftForge.db.profile.scale_tooltip then
+	if CraftBench.db.profile.scale_tooltip then
 		local uiScale = 1.0;
 		if ( GetCVar("useUiScale") == "1" ) then
 			uiScale = tonumber(GetCVar("uiscale"))
 		end
-		if CraftForge.db.profile.ttscale then
-			uiScale = uiScale * CraftForge.db.profile.ttscale
+		if CraftBench.db.profile.ttscale then
+			uiScale = uiScale * CraftBench.db.profile.ttscale
 		end
 		tip:SetScale(uiScale)
 	end
@@ -360,11 +360,11 @@ end
 --
 -- called then the mouse leaves an optional button
 --
-function CraftForge:OptionalButtonOnLeave(button, skillIndex, optionalIndex)
+function CraftBench:OptionalButtonOnLeave(button, skillIndex, optionalIndex)
 	--DA.DEBUG(0,"OptionalButtonOnLeave("..tostring(button)..", "..tostring(skillIndex)..", "..tostring(optionalIndex)..")")
-	local tip = GameTooltip -- CraftForgeTradeskillTooltip
-	if CraftForge.db.profile.scale_tooltip then
-		tip:SetScale(CraftForge.gttScale)
+	local tip = GameTooltip -- CraftBenchTradeskillTooltip
+	if CraftBench.db.profile.scale_tooltip then
+		tip:SetScale(CraftBench.gttScale)
 	end
 	tip:Hide()
 	ResetCursor()
@@ -376,7 +376,7 @@ end
 -- These all have the property that only one item is selected and 
 -- the quantity (per craft) is one.
 --
-function CraftForge:OptionalButtonOnClick(button, mouse, skillIndex, reagentIndex)
+function CraftBench:OptionalButtonOnClick(button, mouse, skillIndex, reagentIndex)
 	--DA.DEBUG(0,"OptionalButtonOnClick("..tostring(button)..", "..tostring(mouse)..", "..tostring(skillIndex)..", "..tostring(reagentIndex)..")")
 	--DA.DEBUG(1,"OptionalButtonOnClick: cachedOptionalIndex= "..tostring(self.cachedOptionalIndex)..", cachedOptionalList= "..DA.DUMP(self.cachedOptionalList))
 	local oreagentID = self.cachedOptionalList.reagents[reagentIndex].itemID
