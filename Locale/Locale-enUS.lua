@@ -564,3 +564,5 @@ L["PLUGIN_GATHER_ADDON_DESC"] = "Select which gathering node database (GatherMat
 L["PLUGIN_DESC_GatherMate2"] = "Uses GatherMate2 node databases (Mining & Herbalism) in /cb gather to show node counts and set 1-click waypoints."
 L["PLUGIN_DESC_GathererReforged"] = "Uses GathererReforged node storage (Mining & Herbalism) in /cb gather to show node counts and set 1-click waypoints."
 L["Waypoint"] = "Waypoint"
+L["Route"] = "Route"
+L["PLUGIN_DESC_GatherRoutes"] = "Integrates GatherRoutes with /cb gather to launch zone farm routes in one click."

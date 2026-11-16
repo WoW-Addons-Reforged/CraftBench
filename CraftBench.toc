@@ -31,7 +31,7 @@
 ## X-Website: https://github.com/gOOvER/CraftBench
 ## SavedVariables: CraftBenchDB
 ## SavedVariablesPerCharacter: CraftBenchWho, CraftBenchDBPC, CraftBenchMemory, CraftBenchProfile
-## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, AchievementsUtils, AckisRecipeList, AtlasLootClassic, AuctionDB, Auctionator, Baganator, BeanCounter, CanIMogIt, CraftInfoAnywhere, DataStore, DataStore_Auctions, GatherMate2, GathererReforged, Journalator, OribosExchange, Overachiever, Questie, Syndicator, TradeSkillMaster, tekDebug
+## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, AchievementsUtils, AckisRecipeList, AtlasLootClassic, AuctionDB, Auctionator, Baganator, BeanCounter, CanIMogIt, CraftInfoAnywhere, DataStore, DataStore_Auctions, GatherMate2, GatherRoutes, GathererReforged, Journalator, OribosExchange, Overachiever, Questie, Syndicator, TradeSkillMaster, tekDebug
 ## X-Embeds: Ace3, LibStub, CallbackHandler-1.0, LibWindow-1.1, LibPeriodicTable-3.1, HereBeDragons-2.0
 
 #### List of embedded libraries
@@ -130,6 +130,7 @@ Plugins\Questie.lua
 Plugins\AtlasLoot.lua
 Plugins\GatherMate2.lua
 Plugins\GathererReforged.lua
+Plugins\GatherRoutes.lua
 
 #### UI files
 UI\UIStyle.lua

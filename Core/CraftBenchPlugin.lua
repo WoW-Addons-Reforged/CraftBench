@@ -165,6 +165,7 @@ local function buildInstalledSummary()
 		{ "AtlasLootClassic", "AtlasLootClassic" },
 		{ "GatherMate2", "GatherMate2" },
 		{ "GathererReforged", "GathererReforged" },
+		{ "GatherRoutes", "GatherRoutes" },
 		{ "TomTom", "TomTom" },
 		{ "Pawn", "Pawn" },
 	}
@@ -359,6 +360,7 @@ local PLUGIN_DESCRIPTIONS = {
 	ElvUI = "Optional ElvUI skin integration (CraftBench's native Dark-Gold UI stays active unless explicitly enabled).",
 	GatherMate2 = "Uses GatherMate2 node databases (Mining & Herbalism) in /cb gather to show node counts and set 1-click waypoints.",
 	GathererReforged = "Uses GathererReforged node storage (Mining & Herbalism) in /cb gather to show node counts and set 1-click waypoints.",
+	GatherRoutes = "Integrates GatherRoutes with /cb gather to launch zone farm routes in one click.",
 	OribosExchange = "Uses OribosExchange realm & region market prices for craft cost, sell value, and profit suffixes.",
 	Overachiever = "Uses Overachiever recipe achievement lookups (GetIconForRecipe) to mark recipes needed for achievements.",
 	Questie = "Uses QuestieDB (vendors, npcDrops, relatedQuests) to show vendor NPCs/zones, drops, and quest sources in recipe details.",
@@ -436,6 +438,38 @@ function CraftBench:SetGatherWaypoint(info)
 			C_SuperTrack.SetSuperTrackedUserWaypoint(true)
 		end
 		self:Print(string.format("%s: %s (%.1f, %.1f)", info.title or "Waypoint", info.zoneName or "", info.x * 100, info.y * 100))
+		return true
+	end
+	return false
+end
+
+function CraftBench:CanStartGatherRoute()
+	if self.GatherRoutesPlugin and _G.GatherRoutes and self.db and self.db.profile
+		and self.db.profile.plugins and self.db.profile.plugins.GatherRoutes
+		and self.db.profile.plugins.GatherRoutes.enabled then
+		return true
+	end
+	if _G.Gatherer and _G.Gatherer.Routes and _G.Gatherer.Routes.BuildZoneRoute then
+		return true
+	end
+	return false
+end
+
+function CraftBench:StartGatherRoute(gatherKind)
+	if self.GatherRoutesPlugin and _G.GatherRoutes and self.GatherRoutesPlugin.OpenRouteUI then
+		if self.GatherRoutesPlugin.OpenRouteUI() then
+			return true
+		end
+	end
+	if _G.Gatherer and _G.Gatherer.Routes and _G.Gatherer.Routes.BuildZoneRoute then
+		local gType = (gatherKind == "mining" and "MINE") or (gatherKind == "herbalism" and "HERB") or "ALL"
+		local route = _G.Gatherer.Routes.BuildZoneRoute(gType)
+		if _G.Gatherer.RouteSessionUI and _G.Gatherer.RouteSessionUI.Toggle then
+			_G.Gatherer.RouteSessionUI.Toggle()
+		end
+		if route then
+			self:Print(string.format("Gatherer Route: %s (%d nodes)", route.zoneName or "?", #route.points))
+		end
 		return true
 	end
 	return false

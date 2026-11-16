@@ -564,3 +564,5 @@ L["PLUGIN_GATHER_ADDON_DESC"] = "Wähle aus, welche Sammel-Datenbank (GatherMate
 L["PLUGIN_DESC_GatherMate2"] = "Übernimmt Erz- & Kräuter-Fundorte aus GatherMate2 für den Sammel-Guide (/cb gather) inkl. Node-Anzahl und Ein-Klick-Wegpunkten."
 L["PLUGIN_DESC_GathererReforged"] = "Übernimmt Erz- & Kräuter-Fundorte aus GathererReforged für den Sammel-Guide (/cb gather) inkl. Node-Anzahl und Ein-Klick-Wegpunkten."
 L["Waypoint"] = "Wegpunkt"
+L["Route"] = "Route"
+L["PLUGIN_DESC_GatherRoutes"] = "Verbindet GatherRoutes mit /cb gather, um Zonen-Farmrouten per Klick zu starten."

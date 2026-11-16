@@ -65,6 +65,7 @@ All integrations are **optional** and automatically activate only when the respe
 | **AtlasLootClassic** | Reads recipe scroll item IDs (`Data.Recipe.GetRecipeForSpell`) and vendor prices (`Data.VendorPrice.GetVendorPriceForItem`) for recipe details |
 | **GatherMate2** | Reads Mining & Herbalism node databases (`gmdbs`, `nodeIDs`, `DecodeLoc`) for `/cb gather` node counts and 1-click waypoints (selectable in **Plugins → Active Sources**) |
 | **GathererReforged** | Reads Mining & Herbalism node storage (`Gatherer.Storage`) for `/cb gather` node counts and 1-click waypoints (selectable in **Plugins → Active Sources**) |
+| **GatherRoutes** | Launches zone farm routes directly from `/cb gather` (also integrates with Gatherer Reforged's `/gather route`) |
 | **SkillUp Forever** | Reads exact `orange / yellow / green / grey` skill-up thresholds (`GetThresholds`) when installed to refine skill-up chance % and `/cb level` planning |
 | **BeanCounter** | Reads personal historical AH purchase & sale prices (`BeanCounter.API.search`) to show actual paid/earned averages in recipe details |
 | **TomTom** | Creates map waypoints (`TomTom:AddWaypoint`) with a single click from visited Trade Contacts (`/cb contacts`) |

@@ -130,7 +130,7 @@ function GatheringUI:Refresh()
 
 			row._zones = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
 			row._zones:SetPoint("BOTTOMLEFT", row, "BOTTOMLEFT", 8, 4)
-			row._zones:SetPoint("RIGHT", row, "RIGHT", -96, 0)
+			row._zones:SetPoint("RIGHT", row, "RIGHT", -168, 0)
 			row._zones:SetJustifyH("LEFT")
 			row._zones:SetTextColor(0.72, 0.76, 0.82)
 
@@ -138,6 +138,11 @@ function GatheringUI:Refresh()
 				or CreateFrame("Button", nil, row, "UIPanelButtonTemplate")
 			wpBtn:SetPoint("BOTTOMRIGHT", row, "BOTTOMRIGHT", -6, 3)
 			row._wpBtn = wpBtn
+
+			local routeBtn = UIStyle and UIStyle.CreateButton and UIStyle.CreateButton(row, 70, 20, L["Route"] or "Route", "secondary")
+				or CreateFrame("Button", nil, row, "UIPanelButtonTemplate")
+			routeBtn:SetPoint("RIGHT", wpBtn, "LEFT", -4, 0)
+			row._routeBtn = routeBtn
 
 			gatherFrame._rows[idx] = row
 		end
@@ -164,6 +169,14 @@ function GatheringUI:Refresh()
 		else
 			row._name:SetText(col .. node.name .. "|r")
 			row._wpBtn:Hide()
+		end
+		if CraftBench.CanStartGatherRoute and CraftBench:CanStartGatherRoute() and (activeTab == "mining" or activeTab == "herbalism") then
+			row._routeBtn:SetScript("OnClick", function()
+				CraftBench:StartGatherRoute(activeTab)
+			end)
+			row._routeBtn:Show()
+		else
+			row._routeBtn:Hide()
 		end
 		row._req:SetText(string.format("%s %d  |cff9d9d9d(%d / %d / %d)|r", L["GATHER_REQ"] or "Req", node.req, node.yellow, node.green, node.grey))
 		row._zones:SetText(node.zones)
