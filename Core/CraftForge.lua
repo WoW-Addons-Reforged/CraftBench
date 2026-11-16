@@ -163,6 +163,7 @@ CraftForge.defaultOptions = {
 	["filterLevel"] = 1,
 	["hideuncraftable"] = false,
 	["favoritesOnly"] = false,
+	["buffsOnly"] = false,
 	["isfirstcraft"] = false,
 }
 

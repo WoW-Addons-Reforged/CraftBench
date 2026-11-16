@@ -439,6 +439,7 @@ function CraftForge:RecipeGroupFlatten(group, depth, list, index)
 					local filterLevel = ((skillLevel[entry.difficulty] or skillLevel[skillData.difficulty] or 0) < (self:GetTradeSkillOption("filterLevel")))
 					local filterCraftable = false
 					local filterFavoritesOnly = self:GetTradeSkillOption("favoritesOnly") and not CraftForge:IsFavorite(entry.recipeID)
+					local filterBuffsOnly = self:GetTradeSkillOption("buffsOnly") and CraftForge.IsBuffRecipe and not CraftForge:IsBuffRecipe(recipe)
 					local filterFirstCraftOnly = self:GetTradeSkillOption("isfirstcraft") and not CraftForge:IsFirstCraft(entry.recipeID)
 					if CraftForge:GetTradeSkillOption("hideuncraftable") then
 						--DA.DEBUG(1,"RecipeGroupFlatten: name="..tostring(skillData.name)..", numCraftable="..tostring(skillData.numCraftable)..", numRecursive="..tostring(skillData.numRecursive)..", numCraftableVendor="..tostring(skillData.numCraftableVendor)..", numCraftableAlts="..tostring(skillData.numCraftableAlts))
@@ -465,7 +466,7 @@ function CraftForge:RecipeGroupFlatten(group, depth, list, index)
 					else
 						newSkill.parentIndex = nil
 					end
-					if not (filterLevel or filterCraftable or filterFavoritesOnly or filterFirstCraftOnly or CraftForge:IsUpgradeHidden(newSkill.spellID)) then
+					if not (filterLevel or filterCraftable or filterFavoritesOnly or filterBuffsOnly or filterFirstCraftOnly or CraftForge:IsUpgradeHidden(newSkill.spellID)) then
 						num = num + 1
 						list[num + index] = newSkill
 					end

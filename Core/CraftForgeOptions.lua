@@ -2557,6 +2557,15 @@ CraftForge.options =
 			end,
 			order = 126
 		},
+		gear = {
+			type = 'execute',
+			name = L["GEAR_TITLE"] or "Crafted Gear",
+			desc = "Open Crafted Gear overview by slot (/cf gear)",
+			func = function()
+				if CraftForge.ShowGear then CraftForge:ShowGear() end
+			end,
+			order = 126.5
+		},
 		contacts = {
 			type = 'execute',
 			name = L["CONTACTS_TITLE"] or "Trade Contacts",

@@ -61,6 +61,12 @@ function Leveling:BuildPlan(currentSkill, targetSkill)
 			if recipe and recipe.reagentData and #recipe.reagentData > 0 then
 				local cost = estimateRecipeCost(recipe)
 				local gain = DIFF_GAIN[skill.difficulty]
+				if CraftForge.GetSkillUpChance then
+					local chance = CraftForge:GetSkillUpChance(recipe, currentSkill, skill.difficulty)
+					if chance and chance > 0 then
+						gain = chance
+					end
+				end
 				table.insert(candidates, {
 					recipeID = skill.id,
 					name = skill.name or ("Recipe #" .. tostring(skill.id)),

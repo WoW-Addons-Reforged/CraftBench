@@ -14,7 +14,7 @@ function CraftForge:CreateMainSideToolsDock(parent)
 
 	local dock = CreateFrame("Frame", "CraftForgeSideToolsDock", parent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	dock:SetPoint("TOPLEFT", parent, "TOPRIGHT", 4, 0)
-	dock:SetSize(168, 360)
+	dock:SetSize(168, 424)
 	if UIStyle then
 		UIStyle.SkinFrame(dock, false)
 	end
@@ -97,6 +97,27 @@ function CraftForge:CreateMainSideToolsDock(parent)
 			label = L["SIDE_ALT_FINDER"] or "Alt Finder",
 			tip = "/cf find",
 			onClick = function() if CraftForge.ShowAltFinder then CraftForge:ShowAltFinder() end end,
+		},
+		{
+			key = "gear",
+			icon = 132633,
+			label = L["GEAR_TITLE"] or "Crafted Gear",
+			tip = "/cf gear",
+			onClick = function() if CraftForge.ShowGear then CraftForge:ShowGear() end end,
+		},
+		{
+			key = "buffs",
+			icon = 134830,
+			label = L["BUFFS_ONLY"] or "Buffs only",
+			tip = L["BUFFS_ONLY_TIP"] or "Filter list to consumables & enhancements usable at your level",
+			onClick = function()
+				if CraftForge.SetTradeSkillOption and CraftForge.GetTradeSkillOption then
+					local cur = CraftForge:GetTradeSkillOption("buffsOnly")
+					CraftForge:SetTradeSkillOption("buffsOnly", not cur)
+					if CraftForge.SortAndFilterRecipes then CraftForge:SortAndFilterRecipes() end
+					if CraftForge.UpdateTradeSkillWindow then CraftForge:UpdateTradeSkillWindow() end
+				end
+			end,
 		},
 		{
 			key = "process",

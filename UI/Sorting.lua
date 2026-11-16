@@ -273,6 +273,10 @@ local function SkillIsFilteredOut(skillIndex)
 		return true
 	end
 
+	if CraftForge:GetTradeSkillOption("buffsOnly") and CraftForge.IsBuffRecipe and not CraftForge:IsBuffRecipe(recipe) then
+		return true
+	end
+
 	if CraftForge:GetTradeSkillOption("isfirstcraft") and not CraftForge:IsFirstCraft(recipeID) then
 		return true
 	end

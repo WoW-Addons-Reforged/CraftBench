@@ -1401,6 +1401,9 @@ function CraftForge:SkillButton_OnEnter(button)
 			tip:AddLine("  " .. line, 0.96, 0.77, 0.43, false)
 		end
 	end
+	if self.AddSkillUpTooltipInfo then
+		self:AddSkillUpTooltipInfo(tip, skill, recipe)
+	end
 	if self.GetRecipeCostAndProfit then
 		local cost, value, profit = self:GetRecipeCostAndProfit(recipe)
 		if cost and value then

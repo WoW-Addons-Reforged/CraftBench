@@ -31,7 +31,7 @@
 ## X-Website: https://github.com/gOOvER/CraftForge
 ## SavedVariables: CraftForgeDB
 ## SavedVariablesPerCharacter: CraftForgeWho, CraftForgeDBPC, CraftForgeMemory, CraftForgeProfile
-## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, AchievementsUtils, AckisRecipeList, AuctionDB, Auctionator, Baganator, BeanCounter, CanIMogIt, CraftInfoAnywhere, DataStore, DataStore_Auctions, Journalator, OribosExchange, Overachiever, Syndicator, TradeSkillMaster, tekDebug
+## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, AchievementsUtils, AckisRecipeList, AtlasLootClassic, AuctionDB, Auctionator, Baganator, BeanCounter, CanIMogIt, CraftInfoAnywhere, DataStore, DataStore_Auctions, Journalator, OribosExchange, Overachiever, Questie, Syndicator, TradeSkillMaster, tekDebug
 ## X-Embeds: Ace3, LibStub, CallbackHandler-1.0, LibWindow-1.1, LibPeriodicTable-3.1
 
 #### List of embedded libraries
@@ -84,6 +84,8 @@ Core\CraftForgeContacts.lua
 Core\CraftForgeCooldowns.lua
 Core\CraftForgeWatch.lua
 Core\CraftForgeLeveling.lua
+Core\CraftForgeSkillUp.lua
+Core\CraftForgeGear.lua
 Core\CraftForgeGathering.lua
 Core\CraftForgeCamping.lua
 Core\TradeskillInfo.lua
@@ -123,6 +125,8 @@ Plugins\TSM.lua
 Plugins\ElvUI.lua
 Plugins\BetterBags.lua
 Plugins\TomTom.lua
+Plugins\Questie.lua
+Plugins\AtlasLoot.lua
 
 #### UI files
 UI\UIStyle.lua
@@ -132,6 +136,7 @@ UI\CooldownsFrame.lua
 UI\WatchFrame.lua
 UI\LevelingFrame.lua
 UI\GatheringFrame.lua
+UI\GearFrame.lua
 UI\ContactsFrame.lua
 UI\CampingFrame.lua
 UI\AltFinder.lua
