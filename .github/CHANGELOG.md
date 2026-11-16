@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **Profession Rank StatusBar Fill (`UI/MainFrame.lua`)**: Set `CraftBenchRankFrame` texture to `WHITE8x8` on `ARTWORK` layer (and `SkillRank` text to `OVERLAY`) so `UIStyle.SkinInset` no longer covers the `BACKGROUND` status bar fill.
 - **Combat Lockdown Guard on Fishing Bar Drag (`UI/FishingFrame.lua`)**: Guarded `CraftBenchFishingBar:StartMoving()` and `StopMovingOrSizing()` with `InCombatLockdown()` so dragging the floating fishing bar (which hosts a `SecureActionButtonTemplate` cast button) during combat never triggers `ADDON_ACTION_BLOCKED`.
 - **Options Plugin Selector Dropdown (`UI/OptionsFrame.lua`)**: Replaced multi-row stacked plugin sub-tabs with a compact single-row bar (`Active Sources`, `Recipe Display`, and a `Plugins (N)` dropdown selector) so any number of installed plugins fits cleanly on one line.
 - **Threshold Bar Formatting (`Core/CraftBenchSkillUp.lua`)**: Added direct `SkillLineAbility` / `SkillLevels` fallback parsing and removed the placeholder `###` bar when no numeric thresholds are present.

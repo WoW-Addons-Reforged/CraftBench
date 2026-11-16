@@ -288,11 +288,21 @@ function CraftBench:CreateTradeSkillWindow()
 --
 -- Progression status bar
 --
+	CraftBenchRankFrame:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
+	local rankTex = CraftBenchRankFrame:GetStatusBarTexture()
+	if rankTex then
+		rankTex:SetDrawLayer("ARTWORK", 1)
+	end
 	CraftBenchRankFrame:SetStatusBarColor(0.22, 0.45, 0.85, 0.95)
-	CraftBenchRankFrameBackground:SetVertexColor(0.05, 0.06, 0.09, 0.95)
+	if CraftBenchRankFrameBackground then
+		CraftBenchRankFrameBackground:SetVertexColor(0.05, 0.06, 0.09, 0.95)
+	end
 	if CraftBenchRankFrameBorder then CraftBenchRankFrameBorder:Hide() end
 	UIStyle.SkinInset(CraftBenchRankFrame)
-	if CraftBenchRankFrameSkillRank then UIStyle.ApplyFont(CraftBenchRankFrameSkillRank, -1) end
+	if CraftBenchRankFrameSkillRank then
+		CraftBenchRankFrameSkillRank:SetDrawLayer("OVERLAY")
+		UIStyle.ApplyFont(CraftBenchRankFrameSkillRank, -1)
+	end
 	if not CraftBenchRankFrame.subRanks then
 		CraftBenchRankFrame.subRanks = {}
 		CraftBenchRankFrame.subRanks.red = CreateFrame("StatusBar", "CraftBenchRankFrameRed", CraftBenchFrame, "CraftBenchRankFrameTemplate")
