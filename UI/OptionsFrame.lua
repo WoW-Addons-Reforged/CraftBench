@@ -857,10 +857,18 @@ function OptionsUI:Refresh()
 		optionsFrame._scroll:SetPoint("TOPLEFT", optionsFrame._subTabBar, "BOTTOMLEFT", 2, -8)
 		optionsFrame._scroll:SetPoint("BOTTOMRIGHT", optionsFrame._subTabBar:GetParent(), "BOTTOMRIGHT", -28, 12)
 
-		local sx = 0
+		local maxBarW = optionsFrame._subTabBar:GetWidth()
+		if not maxBarW or maxBarW < 100 then maxBarW = 540 end
+		local sx, sy = 0, 0
+		local rowStep = 26
 		for idx, sub in ipairs(subGroups) do
 			local sb = optionsFrame._subTabButtons[idx]
-			local w = math.max(76, (string.len(sub.name) * 6.5) + 18)
+			local visName = sub.name:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
+			local w = math.max(72, math.min(210, (string.len(visName) * 6.5) + 18))
+			if sx > 0 and (sx + w) > maxBarW then
+				sx = 0
+				sy = sy - rowStep
+			end
 			if not sb then
 				if UIStyle and UIStyle.CreateButton then
 					sb = UIStyle.CreateButton(optionsFrame._subTabBar, w, 24, sub.name, "secondary")
@@ -873,7 +881,7 @@ function OptionsUI:Refresh()
 			end
 			sb:SetSize(w, 24)
 			sb:ClearAllPoints()
-			sb:SetPoint("LEFT", optionsFrame._subTabBar, "LEFT", sx, 0)
+			sb:SetPoint("TOPLEFT", optionsFrame._subTabBar, "TOPLEFT", sx, sy)
 			sb:SetText(sub.name)
 			local isSel = (sub.key == activeSubKey)
 			if sb.SetBackdropColor then
@@ -895,6 +903,7 @@ function OptionsUI:Refresh()
 			sb:Show()
 			sx = sx + w + 4
 		end
+		optionsFrame._subTabBar:SetHeight(math.abs(sy) + 26)
 
 		targetOpt = activeSub.opt
 		table.insert(parentChain, targetOpt)
