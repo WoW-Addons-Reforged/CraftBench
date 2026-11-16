@@ -123,6 +123,11 @@ local BAG_ADDONS = {
 	{ key = "LiteBag", label = "LiteBag", addon = "LiteBag" },
 }
 
+local GATHER_ADDONS = {
+	{ key = "GatherMate2", label = "GatherMate2", addon = "GatherMate2" },
+	{ key = "GathererReforged", label = "GathererReforged", addon = "GathererReforged" },
+}
+
 local function buildAddonValues(list)
 	local vals = { Auto = L["PLUGIN_AUTO"] }
 	for _, entry in ipairs(list) do
@@ -155,6 +160,11 @@ local function buildInstalledSummary()
 		{ "AckisRecipeList", "AckisRecipeList" },
 		{ "CanIMogIt", "CanIMogIt" },
 		{ "Overachiever", "Overachiever" },
+		{ "AchievementsUtils", "AchievementsUtils" },
+		{ "Questie", "Questie" },
+		{ "AtlasLootClassic", "AtlasLootClassic" },
+		{ "GatherMate2", "GatherMate2" },
+		{ "GathererReforged", "GathererReforged" },
 		{ "TomTom", "TomTom" },
 		{ "Pawn", "Pawn" },
 	}
@@ -221,6 +231,25 @@ CraftForge.pluginsOptions = {
 						end,
 						set = function(_, value)
 							CraftForge.db.profile.plugins.preferredBagAddon = value
+						end,
+					},
+					gatherAddon = {
+						type = "select",
+						name = L["PLUGIN_GATHER_ADDON"] or "Gathering Addon",
+						desc = L["PLUGIN_GATHER_ADDON_DESC"] or "Select which gathering node database (GatherMate2 or GathererReforged) CraftForge uses.",
+						order = 2.5,
+						width = 1.6,
+						values = function()
+							return buildAddonValues(GATHER_ADDONS)
+						end,
+						get = function()
+							return CraftForge.db.profile.plugins.preferredGatherAddon or "Auto"
+						end,
+						set = function(_, value)
+							CraftForge.db.profile.plugins.preferredGatherAddon = value
+							if CraftForge.GatheringUI and CraftForge.GatheringUI.Refresh and _G.CraftForgeGatheringWindow and _G.CraftForgeGatheringWindow:IsShown() then
+								CraftForge.GatheringUI:Refresh()
+							end
 						end,
 					},
 					installedHeader = {
@@ -328,6 +357,8 @@ local PLUGIN_DESCRIPTIONS = {
 	CanIMogIt = "Uses CanIMogIt transmog collection status (Known / Unknown) prefixes on craftable gear.",
 	DataStoreAuctions = "Uses DataStore_Auctions to show active alt auction counts in recipe prefixes and /cf find.",
 	ElvUI = "Optional ElvUI skin integration (CraftForge's native Dark-Gold UI stays active unless explicitly enabled).",
+	GatherMate2 = "Uses GatherMate2 node databases (Mining & Herbalism) in /cf gather to show node counts and set 1-click waypoints.",
+	GathererReforged = "Uses GathererReforged node storage (Mining & Herbalism) in /cf gather to show node counts and set 1-click waypoints.",
 	OribosExchange = "Uses OribosExchange realm & region market prices for craft cost, sell value, and profit suffixes.",
 	Overachiever = "Uses Overachiever recipe achievement lookups (GetIconForRecipe) to mark recipes needed for achievements.",
 	Questie = "Uses QuestieDB (vendors, npcDrops, relatedQuests) to show vendor NPCs/zones, drops, and quest sources in recipe details.",
@@ -358,6 +389,56 @@ function CraftForge:AddPluginOptions(options)
 	options.order = CraftForge.pluginsOrder
 	CraftForge.pluginsOrder = CraftForge.pluginsOrder + 1
 	CraftForge.pluginsOptions.args[baseName] = options
+end
+
+function CraftForge:GetActiveGatherAddon()
+	local pref = self.db and self.db.profile and self.db.profile.plugins and self.db.profile.plugins.preferredGatherAddon or "Auto"
+	if pref ~= "Auto" then
+		if pref == "GatherMate2" and self.GatherMate2Plugin and isAddonInstalled("GatherMate2") then
+			return "GatherMate2"
+		elseif pref == "GathererReforged" and self.GathererReforgedPlugin and isAddonInstalled("GathererReforged") then
+			return "GathererReforged"
+		end
+	end
+	if self.GatherMate2Plugin and isAddonInstalled("GatherMate2") then
+		return "GatherMate2"
+	end
+	if self.GathererReforgedPlugin and isAddonInstalled("GathererReforged") then
+		return "GathererReforged"
+	end
+	return nil
+end
+
+function CraftForge:FindGatherNodeLocation(searchName, gatherKind)
+	local active = self:GetActiveGatherAddon()
+	if active == "GatherMate2" and self.GatherMate2Plugin and self.GatherMate2Plugin.FindBestZoneAndNode then
+		return self.GatherMate2Plugin.FindBestZoneAndNode(searchName, gatherKind)
+	elseif active == "GathererReforged" and self.GathererReforgedPlugin and self.GathererReforgedPlugin.FindBestZoneAndNode then
+		return self.GathererReforgedPlugin.FindBestZoneAndNode(searchName, gatherKind)
+	end
+	return nil
+end
+
+function CraftForge:SetGatherWaypoint(info)
+	if not info or not info.mapID or not info.x or not info.y then return false end
+	if _G.TomTom and _G.TomTom.AddWaypoint then
+		_G.TomTom:AddWaypoint(info.mapID, info.x, info.y, {
+			title = info.title or "CraftForge Gather",
+			persistent = false,
+			minimap = true,
+			world = true,
+		})
+		self:Print(string.format("%s: %s (%.1f, %.1f)", info.title or "Waypoint", info.zoneName or "", info.x * 100, info.y * 100))
+		return true
+	elseif C_Map and C_Map.SetUserWaypoint and UiMapPoint then
+		C_Map.SetUserWaypoint(UiMapPoint.CreateFromCoordinates(info.mapID, info.x, info.y))
+		if C_SuperTrack and C_SuperTrack.SetSuperTrackedUserWaypoint then
+			C_SuperTrack.SetSuperTrackedUserWaypoint(true)
+		end
+		self:Print(string.format("%s: %s (%.1f, %.1f)", info.title or "Waypoint", info.zoneName or "", info.x * 100, info.y * 100))
+		return true
+	end
+	return false
 end
 
 function CraftForge:RegisterRecipeNamePlugin(moduleName, priority)

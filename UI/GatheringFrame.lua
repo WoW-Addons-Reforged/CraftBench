@@ -130,15 +130,33 @@ function GatheringUI:Refresh()
 
 			row._zones = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
 			row._zones:SetPoint("BOTTOMLEFT", row, "BOTTOMLEFT", 8, 4)
-			row._zones:SetPoint("RIGHT", row, "RIGHT", -8, 0)
+			row._zones:SetPoint("RIGHT", row, "RIGHT", -96, 0)
 			row._zones:SetJustifyH("LEFT")
 			row._zones:SetTextColor(0.72, 0.76, 0.82)
+
+			local wpBtn = UIStyle and UIStyle.CreateButton and UIStyle.CreateButton(row, 82, 20, L["Waypoint"] or "Waypoint", "secondary")
+				or CreateFrame("Button", nil, row, "UIPanelButtonTemplate")
+			wpBtn:SetPoint("BOTTOMRIGHT", row, "BOTTOMRIGHT", -6, 3)
+			row._wpBtn = wpBtn
+
 			gatherFrame._rows[idx] = row
 		end
 		row:ClearAllPoints()
 		row:SetPoint("TOPLEFT", gatherFrame._child, "TOPLEFT", 0, y)
 		local col = Gathering:GetDifficultyColor(node, rank)
-		row._name:SetText(col .. node.name .. "|r")
+		local nodeInfo = CraftForge.FindGatherNodeLocation and CraftForge:FindGatherNodeLocation(node.name, activeTab)
+		if nodeInfo then
+			row._name:SetText(col .. node.name .. "|r  |cff66ccff[" .. nodeInfo.addon .. ": " .. nodeInfo.totalCount .. "]|r")
+			row._wpBtn:SetScript("OnClick", function()
+				if CraftForge.SetGatherWaypoint then
+					CraftForge:SetGatherWaypoint(nodeInfo)
+				end
+			end)
+			row._wpBtn:Show()
+		else
+			row._name:SetText(col .. node.name .. "|r")
+			row._wpBtn:Hide()
+		end
 		row._req:SetText(string.format("%s %d  |cff9d9d9d(%d / %d / %d)|r", L["GATHER_REQ"] or "Req", node.req, node.yellow, node.green, node.grey))
 		row._zones:SetText(node.zones)
 		row:Show()

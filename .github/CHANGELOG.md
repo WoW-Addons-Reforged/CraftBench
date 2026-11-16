@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Detailed Addon Integration Documentation (`README.md`)**: Expanded the **Supported Addons & Integrations** table to explicitly document what data/APIs CraftForge uses from every supported addon (including `SkillUp Forever` thresholds).
 
 ### Added
+- **GatherMate2 & GathererReforged Integration + Gathering Addon Selector (`Plugins/GatherMate2.lua`, `Plugins/GathererReforged.lua`, `Core/CraftForgePlugin.lua`, `UI/GatheringFrame.lua`, `CraftForge.toc`)**: Added a **Gathering Addon** selector (`Auto`, `GatherMate2`, `GathererReforged`) under **Plugins → Active Sources & Addons**, integrated Mining & Herbalism node counts into `/cf gather`, and added 1-click TomTom/WoW map waypoints to matching nodes.
 - **Skill-Up Sorting, Leveling Exclusions, Free Gathered Toggle & Gathering Node Colors (`UI/Sorting.lua`, `Core/CraftForgeLeveling.lua`, `UI/LevelingFrame.lua`, `Core/CraftForgeGathering.lua`)**:
   - Added **By Skill-Up Chance** and **By Cost / Skill-Up** sort modes to the recipe list.
   - Added per-step **Exclude (`✕`)** + **Reset Excluded** and a **Gathered = 0g** toggle in `/cf level` so gathered mats can be priced at 0g and unwanted recipes skipped.
