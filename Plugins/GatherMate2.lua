@@ -99,31 +99,47 @@ function plugin.FindBestZoneAndNode(searchName, gatherKind)
 		end
 	end
 
+	local HBD = LibStub and LibStub("HereBeDragons-2.0", true)
+	local px, py, pMap
+	if HBD and HBD.GetPlayerZonePosition then
+		px, py, pMap = HBD:GetPlayerZonePosition()
+	end
+
 	local totalCount = 0
-	local bestZone, bestCount, bestCoord, bestTitle = nil, 0, nil, nil
-	local playerMap = C_Map and C_Map.GetBestMapForUnit and C_Map.GetBestMapForUnit("player")
+	local bestZone, bestCount, bestCoord, bestTitle, bestDist = nil, 0, nil, nil, nil
+	local playerMap = pMap or (C_Map and C_Map.GetBestMapForUnit and C_Map.GetBestMapForUnit("player"))
 
 	for mapID, coords in pairs(gm.gmdbs[gmType]) do
 		if type(coords) == "table" then
 			local zoneMatches = 0
-			local firstCoord, firstTitle
+			local closestCoord, closestTitle, closestDist
 			for coord, nodeID in pairs(coords) do
 				if matchingNodeIDs[nodeID] then
 					zoneMatches = zoneMatches + 1
-					if not firstCoord then
-						firstCoord = coord
-						firstTitle = matchingNodeIDs[nodeID]
+					local d
+					if HBD and HBD.GetZoneDistance and px and py and pMap and gm.DecodeLoc then
+						local nx, ny = gm:DecodeLoc(coord)
+						if nx and ny then
+							d = HBD:GetZoneDistance(pMap, px, py, mapID, nx, ny)
+						end
+					end
+					if not closestCoord or (d and (not closestDist or d < closestDist)) then
+						closestCoord = coord
+						closestTitle = matchingNodeIDs[nodeID]
+						closestDist = d
 					end
 				end
 			end
 			if zoneMatches > 0 then
 				totalCount = totalCount + zoneMatches
+				local betterByDist = closestDist and (not bestDist or closestDist < bestDist)
 				local isCurrent = (playerMap and mapID == playerMap)
-				if isCurrent or (not bestZone) or (zoneMatches > bestCount and bestZone ~= playerMap) then
+				if betterByDist or (not bestDist and (isCurrent or not bestZone or (zoneMatches > bestCount and bestZone ~= playerMap))) then
 					bestZone = mapID
 					bestCount = zoneMatches
-					bestCoord = firstCoord
-					bestTitle = firstTitle
+					bestCoord = closestCoord
+					bestTitle = closestTitle
+					bestDist = closestDist
 				end
 			end
 		end
@@ -143,6 +159,7 @@ function plugin.FindBestZoneAndNode(searchName, gatherKind)
 		zoneName = zoneInfo and zoneInfo.name or ("Map #" .. tostring(bestZone)),
 		x = x,
 		y = y,
+		dist = bestDist,
 		title = bestTitle or searchName,
 	}
 end

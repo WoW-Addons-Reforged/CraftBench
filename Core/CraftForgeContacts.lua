@@ -237,6 +237,11 @@ end
 function Contacts:GetAllEntries(kindFilter, query)
 	local db = ensureDB()
 	if not db then return {} end
+	local HBD = LibStub and LibStub("HereBeDragons-2.0", true)
+	local px, py, pMap
+	if HBD and HBD.GetPlayerZonePosition then
+		px, py, pMap = HBD:GetPlayerZonePosition()
+	end
 	local list = {}
 	local q = query and query ~= "" and string.lower(query) or nil
 	local function addBucket(bucket, kind)
@@ -264,6 +269,10 @@ function Contacts:GetAllEntries(kindFilter, query)
 					end
 				end
 				if match then
+					local dist
+					if HBD and HBD.GetZoneDistance and px and py and pMap and rec.mapID and rec.x and rec.y then
+						dist = HBD:GetZoneDistance(pMap, px, py, rec.mapID, rec.x / 100, rec.y / 100)
+					end
 					table.insert(list, {
 						id = id,
 						kind = kind,
@@ -273,6 +282,7 @@ function Contacts:GetAllEntries(kindFilter, query)
 						mapID = rec.mapID,
 						x = rec.x,
 						y = rec.y,
+						distance = dist,
 						skill = rec.skill,
 						items = rec.items,
 						recipes = rec.recipes,
@@ -289,6 +299,11 @@ function Contacts:GetAllEntries(kindFilter, query)
 		addBucket(db.trainers, "trainer")
 	end
 	table.sort(list, function(a, b)
+		if a.distance and b.distance and a.distance ~= b.distance then
+			return a.distance < b.distance
+		elseif (a.distance ~= nil) ~= (b.distance ~= nil) then
+			return a.distance ~= nil
+		end
 		if (a.seen or 0) ~= (b.seen or 0) then
 			return (a.seen or 0) > (b.seen or 0)
 		end

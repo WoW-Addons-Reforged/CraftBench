@@ -146,7 +146,15 @@ function GatheringUI:Refresh()
 		local col = Gathering:GetDifficultyColor(node, rank)
 		local nodeInfo = CraftForge.FindGatherNodeLocation and CraftForge:FindGatherNodeLocation(node.name, activeTab)
 		if nodeInfo then
-			row._name:SetText(col .. node.name .. "|r  |cff66ccff[" .. nodeInfo.addon .. ": " .. nodeInfo.totalCount .. "]|r")
+			local distText = ""
+			if nodeInfo.dist then
+				if nodeInfo.dist >= 1000 then
+					distText = string.format(" • %.1fk yd", nodeInfo.dist / 1000)
+				else
+					distText = string.format(" • %d yd", math.floor(nodeInfo.dist + 0.5))
+				end
+			end
+			row._name:SetText(col .. node.name .. "|r  |cff66ccff[" .. nodeInfo.addon .. ": " .. nodeInfo.totalCount .. distText .. "]|r")
 			row._wpBtn:SetScript("OnClick", function()
 				if CraftForge.SetGatherWaypoint then
 					CraftForge:SetGatherWaypoint(nodeInfo)

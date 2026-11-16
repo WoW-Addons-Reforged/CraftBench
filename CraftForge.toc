@@ -32,7 +32,7 @@
 ## SavedVariables: CraftForgeDB
 ## SavedVariablesPerCharacter: CraftForgeWho, CraftForgeDBPC, CraftForgeMemory, CraftForgeProfile
 ## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, AchievementsUtils, AckisRecipeList, AtlasLootClassic, AuctionDB, Auctionator, Baganator, BeanCounter, CanIMogIt, CraftInfoAnywhere, DataStore, DataStore_Auctions, GatherMate2, GathererReforged, Journalator, OribosExchange, Overachiever, Questie, Syndicator, TradeSkillMaster, tekDebug
-## X-Embeds: Ace3, LibStub, CallbackHandler-1.0, LibWindow-1.1, LibPeriodicTable-3.1
+## X-Embeds: Ace3, LibStub, CallbackHandler-1.0, LibWindow-1.1, LibPeriodicTable-3.1, HereBeDragons-2.0
 
 #### List of embedded libraries
 Libs\LibStub\LibStub.lua
@@ -56,6 +56,7 @@ Libs\LibDBIcon-1.0\lib.xml
 Libs\LibDeflate\lib.xml
 Libs\LibWindow-1.1\LibWindow-1.1\LibWindow-1.1.lua
 Libs\LibPeriodicTable-3.1\LibPeriodicTable-3.1.lua
+Libs\HereBeDragons\HereBeDragons-2.0.lua
 Libs\LibPeriodicTable-3.1\LibPeriodicTable-3.1-Tradeskill\LibPeriodicTable-3.1-Tradeskill.lua
 Libs\LibPeriodicTable-3.1\LibPeriodicTable-3.1-TradeskillResultMats\LibPeriodicTable-3.1-TradeskillResultMats.lua
 Libs\LibPeriodicTable-3.1\LibPeriodicTable-3.1-TradeskillLevels\LibPeriodicTable-3.1-TradeskillLevels.lua

@@ -76,9 +76,15 @@ function plugin.FindBestZoneAndNode(searchName, gatherKind)
 		end
 	end
 
+	local HBD = LibStub and LibStub("HereBeDragons-2.0", true)
+	local px, py, pMap
+	if HBD and HBD.GetPlayerZonePosition then
+		px, py, pMap = HBD:GetPlayerZonePosition()
+	end
+
 	local totalCount = 0
-	local bestZoneToken, bestMapID, bestCount, bestX, bestY, bestTitle = nil, nil, 0, nil, nil, nil
-	local playerMap = C_Map and C_Map.GetBestMapForUnit and C_Map.GetBestMapForUnit("player")
+	local bestZoneToken, bestMapID, bestCount, bestX, bestY, bestTitle, bestDist = nil, nil, 0, nil, nil, nil, nil
+	local playerMap = pMap or (C_Map and C_Map.GetBestMapForUnit and C_Map.GetBestMapForUnit("player"))
 
 	if not g.Storage.GetAreaIndices or not g.Storage.ZoneGatherNames then
 		return nil
@@ -100,15 +106,21 @@ function plugin.FindBestZoneAndNode(searchName, gatherKind)
 		end
 
 		if next(matchedGatherIDs) and g.Storage.ZoneGatherNodes and g.Storage.GetNodeGatherNames then
+			local mapID = g.ZoneTokens and g.ZoneTokens.GetZoneMapID and g.ZoneTokens.GetZoneMapID(zoneToken)
 			local zoneMatches = 0
-			local firstX, firstY, firstTitle
+			local closestX, closestY, closestTitle, closestDist
 			for index, xPos, yPos in g.Storage.ZoneGatherNodes(zoneToken, gType) do
 				for _, gatherID in g.Storage.GetNodeGatherNames(zoneToken, gType, index) do
 					if matchedGatherIDs[gatherID] then
 						zoneMatches = zoneMatches + 1
-						if not firstX then
-							firstX, firstY = xPos, yPos
-							firstTitle = matchedGatherIDs[gatherID]
+						local d
+						if HBD and HBD.GetZoneDistance and px and py and pMap and mapID and xPos and yPos then
+							d = HBD:GetZoneDistance(pMap, px, py, mapID, xPos, yPos)
+						end
+						if not closestX or (d and (not closestDist or d < closestDist)) then
+							closestX, closestY = xPos, yPos
+							closestTitle = matchedGatherIDs[gatherID]
+							closestDist = d
 						end
 						break
 					end
@@ -116,14 +128,15 @@ function plugin.FindBestZoneAndNode(searchName, gatherKind)
 			end
 			if zoneMatches > 0 then
 				totalCount = totalCount + zoneMatches
-				local mapID = g.ZoneTokens and g.ZoneTokens.GetZoneMapID and g.ZoneTokens.GetZoneMapID(zoneToken)
+				local betterByDist = closestDist and (not bestDist or closestDist < bestDist)
 				local isCurrent = (playerMap and mapID == playerMap)
-				if isCurrent or (not bestZoneToken) or (zoneMatches > bestCount and bestMapID ~= playerMap) then
+				if betterByDist or (not bestDist and (isCurrent or not bestZoneToken or (zoneMatches > bestCount and bestMapID ~= playerMap))) then
 					bestZoneToken = zoneToken
 					bestMapID = mapID
 					bestCount = zoneMatches
-					bestX, bestY = firstX, firstY
-					bestTitle = firstTitle
+					bestX, bestY = closestX, closestY
+					bestTitle = closestTitle
+					bestDist = closestDist
 				end
 			end
 		end
@@ -142,6 +155,7 @@ function plugin.FindBestZoneAndNode(searchName, gatherKind)
 		zoneName = (zoneInfo and zoneInfo.name) or tostring(bestZoneToken),
 		x = bestX,
 		y = bestY,
+		dist = bestDist,
 		title = bestTitle or searchName,
 	}
 end

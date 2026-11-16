@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Detailed Addon Integration Documentation (`README.md`)**: Expanded the **Supported Addons & Integrations** table to explicitly document what data/APIs CraftForge uses from every supported addon (including `SkillUp Forever` thresholds).
 
 ### Added
+- **HereBeDragons-2.0 Integration (`Libs/HereBeDragons`, `.pkgmeta`, `CraftForge.toc`, `Plugins/GatherMate2.lua`, `Plugins/GathererReforged.lua`, `UI/GatheringFrame.lua`, `Core/CraftForgeContacts.lua`)**: Embedded `HereBeDragons-2.0` to compute exact world distances for selecting the closest gathering node in `/cf gather` (displaying distance in yards) and sorting visited Trade Contacts (`/cf contacts`) by proximity.
 - **GatherMate2 & GathererReforged Integration + Gathering Addon Selector (`Plugins/GatherMate2.lua`, `Plugins/GathererReforged.lua`, `Core/CraftForgePlugin.lua`, `UI/GatheringFrame.lua`, `CraftForge.toc`)**: Added a **Gathering Addon** selector (`Auto`, `GatherMate2`, `GathererReforged`) under **Plugins → Active Sources & Addons**, integrated Mining & Herbalism node counts into `/cf gather`, and added 1-click TomTom/WoW map waypoints to matching nodes.
 - **Skill-Up Sorting, Leveling Exclusions, Free Gathered Toggle & Gathering Node Colors (`UI/Sorting.lua`, `Core/CraftForgeLeveling.lua`, `UI/LevelingFrame.lua`, `Core/CraftForgeGathering.lua`)**:
   - Added **By Skill-Up Chance** and **By Cost / Skill-Up** sort modes to the recipe list.

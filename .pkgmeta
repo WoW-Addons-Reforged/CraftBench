@@ -62,6 +62,7 @@ externals:
     # Other Libraries (GitHub & WowAce)
     Libs/LibDataBroker-1.1:      https://github.com/tekkub/libdatabroker-1-1
     Libs/LibDeflate:             https://github.com/SafeteeWoW/LibDeflate
+    Libs/HereBeDragons:          https://github.com/Nevcairiel/HereBeDragons
     Libs/LibDBIcon-1.0:          https://repos.wowace.com/wow/libdbicon-1-0/trunk
     Libs/LibWindow-1.1:          https://repos.wowace.com/wow/libwindow-1-1/trunk
     Libs/LibPeriodicTable-3.1:   https://repos.wowace.com/wow/libperiodictable-3-1/trunk/LibPeriodicTable-3.1
