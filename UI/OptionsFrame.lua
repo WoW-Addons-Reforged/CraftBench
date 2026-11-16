@@ -857,33 +857,11 @@ function OptionsUI:Refresh()
 		optionsFrame._scroll:SetPoint("TOPLEFT", optionsFrame._subTabBar, "BOTTOMLEFT", 2, -8)
 		optionsFrame._scroll:SetPoint("BOTTOMRIGHT", optionsFrame._subTabBar:GetParent(), "BOTTOMRIGHT", -28, 12)
 
-		local maxBarW = optionsFrame._subTabBar:GetWidth()
-		if not maxBarW or maxBarW < 100 then maxBarW = 540 end
-		local sx, sy = 0, 0
-		local rowStep = 26
-		for idx, sub in ipairs(subGroups) do
-			local sb = optionsFrame._subTabButtons[idx]
-			local visName = sub.name:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
-			local w = math.max(72, math.min(210, (string.len(visName) * 6.5) + 18))
-			if sx > 0 and (sx + w) > maxBarW then
-				sx = 0
-				sy = sy - rowStep
-			end
-			if not sb then
-				if UIStyle and UIStyle.CreateButton then
-					sb = UIStyle.CreateButton(optionsFrame._subTabBar, w, 24, sub.name, "secondary")
-				else
-					sb = CreateFrame("Button", nil, optionsFrame._subTabBar, "UIPanelButtonTemplate")
-					sb:SetSize(w, 24)
-				end
-				sb._fs = sb.GetFontString and sb:GetFontString()
-				optionsFrame._subTabButtons[idx] = sb
-			end
-			sb:SetSize(w, 24)
-			sb:ClearAllPoints()
-			sb:SetPoint("TOPLEFT", optionsFrame._subTabBar, "TOPLEFT", sx, sy)
-			sb:SetText(sub.name)
-			local isSel = (sub.key == activeSubKey)
+		for _, sb in ipairs(optionsFrame._subTabButtons) do sb:Hide() end
+		if optionsFrame._subTabDropdown then optionsFrame._subTabDropdown:Hide() end
+		optionsFrame._subTabBar:SetHeight(28)
+
+		local function styleSubBtn(sb, isSel)
 			if sb.SetBackdropColor then
 				if isSel then
 					sb:SetBackdropColor(0.24, 0.20, 0.08, 1)
@@ -896,14 +874,93 @@ function OptionsUI:Refresh()
 			if sb._fs then
 				sb._fs:SetTextColor(isSel and 1 or 0.80, isSel and 0.85 or 0.84, isSel and 0.30 or 0.90)
 			end
+		end
+
+		local function ensureSubBtn(idx, w, text)
+			local sb = optionsFrame._subTabButtons[idx]
+			if not sb then
+				if UIStyle and UIStyle.CreateButton then
+					sb = UIStyle.CreateButton(optionsFrame._subTabBar, w, 24, text, "secondary")
+				else
+					sb = CreateFrame("Button", nil, optionsFrame._subTabBar, "UIPanelButtonTemplate")
+					sb:SetSize(w, 24)
+				end
+				sb._fs = sb.GetFontString and sb:GetFontString()
+				optionsFrame._subTabButtons[idx] = sb
+			end
+			sb:SetSize(w, 24)
+			sb:SetText(text)
+			return sb
+		end
+
+		local sx = 0
+		local directCount = (#subGroups > 4) and 2 or #subGroups
+		for idx = 1, directCount do
+			local sub = subGroups[idx]
+			local visName = sub.name:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
+			local w = math.max(76, math.min(200, (string.len(visName) * 6.5) + 18))
+			local sb = ensureSubBtn(idx, w, sub.name)
+			sb:ClearAllPoints()
+			sb:SetPoint("LEFT", optionsFrame._subTabBar, "LEFT", sx, 0)
+			styleSubBtn(sb, sub.key == activeSubKey)
 			sb:SetScript("OnClick", function()
+				closeDropdownMenu()
 				activeSubKey = sub.key
 				OptionsUI:Refresh()
 			end)
 			sb:Show()
-			sx = sx + w + 4
+			sx = sx + w + 6
 		end
-		optionsFrame._subTabBar:SetHeight(math.abs(sy) + 26)
+
+		if #subGroups > 4 then
+			local dd = optionsFrame._subTabDropdown
+			if not dd then
+				if UIStyle and UIStyle.CreateButton then
+					dd = UIStyle.CreateButton(optionsFrame._subTabBar, 180, 24, "", "secondary")
+				else
+					dd = CreateFrame("Button", nil, optionsFrame._subTabBar, "UIPanelButtonTemplate")
+					dd:SetSize(180, 24)
+				end
+				dd._fs = dd.GetFontString and dd:GetFontString()
+				if dd._fs then
+					dd._fs:ClearAllPoints()
+					dd._fs:SetPoint("LEFT", dd, "LEFT", 10, 0)
+					dd._fs:SetPoint("RIGHT", dd, "RIGHT", -22, 0)
+					dd._fs:SetJustifyH("LEFT")
+				end
+				local arrow = dd:CreateTexture(nil, "ARTWORK")
+				arrow:SetSize(12, 12)
+				arrow:SetPoint("RIGHT", dd, "RIGHT", -6, 0)
+				arrow:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
+				arrow:SetTexCoord(0.2, 0.8, 0.2, 0.8)
+				dd._arrow = arrow
+				optionsFrame._subTabDropdown = dd
+			end
+			dd:ClearAllPoints()
+			dd:SetPoint("LEFT", optionsFrame._subTabBar, "LEFT", sx, 0)
+			dd:SetPoint("RIGHT", optionsFrame._subTabBar, "RIGHT", 0, 0)
+
+			local pluginItems = {}
+			local selectedInDropdown = false
+			local ddLabel = string.format("%s (%d)", L["Plugins"] or "Plugins", #subGroups - 2)
+			for idx = 3, #subGroups do
+				local sub = subGroups[idx]
+				table.insert(pluginItems, { value = sub.key, label = sub.name })
+				if sub.key == activeSubKey then
+					selectedInDropdown = true
+					ddLabel = sub.name
+				end
+			end
+			dd:SetText(ddLabel)
+			styleSubBtn(dd, selectedInDropdown)
+			dd:SetScript("OnClick", function(selfBtn)
+				openDropdownMenu(selfBtn, pluginItems, activeSubKey, function(val)
+					activeSubKey = val
+					OptionsUI:Refresh()
+				end)
+			end)
+			dd:Show()
+		end
 
 		targetOpt = activeSub.opt
 		table.insert(parentChain, targetOpt)

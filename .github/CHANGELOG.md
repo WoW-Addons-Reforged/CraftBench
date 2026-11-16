@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- **Options Sub-Tab Wrapping (`UI/OptionsFrame.lua`)**: Wrapped plugin sub-tabs into multiple rows inside `CraftForgeOptionsWindow` and stripped color codes when measuring tab widths so many installed plugins no longer overflow past the right window edge.
+- **Options Plugin Selector Dropdown (`UI/OptionsFrame.lua`)**: Replaced multi-row stacked plugin sub-tabs with a compact single-row bar (`Active Sources`, `Recipe Display`, and a `Plugins (N)` dropdown selector) so any number of installed plugins fits cleanly on one line.
 - **Threshold Bar Formatting (`Core/CraftForgeSkillUp.lua`)**: Added direct `SkillLineAbility` / `SkillLevels` fallback parsing and removed the placeholder `###` bar when no numeric thresholds are present.
 - **Developer Scripts (`Scripts/generate-scrollData-retail.py`, `Scripts/SkillLevelsConverter2.py`)**: Replaced leftover `Skillet` namespace references with `CraftForge`, added UTF-8 encoding (`encoding="utf-8"`) and context-managed file handles, fixed a stale `spell_name` variable and missing `ItemEffectID` `KeyError` in `generate-scrollData-retail.py`, and replaced duplicated argument blocks in `SkillLevelsConverter2.py` with a loop.
 - **Threshold Lookup in `Core/CraftForgeSkillUp.lua`**: Connected `GetSkillUpThresholds` to `CraftForge:GetTradeSkillLevels(itemID, spellID)` so `SkillLevelData*.lua` thresholds directly power exact skill-up % and threshold bars.
