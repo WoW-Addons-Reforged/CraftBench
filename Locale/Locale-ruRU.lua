@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 local L = LibStub("AceLocale-3.0"):NewLocale("CraftBench", "ruRU")
 if not L then return end
 
---@localization(locale="ruRU", format="lua_additive_table", handle-unlocalized="english", handle-subnamespaces="concat")@
-
 -- Synchronized fallback keys from enUS
 L["APPEARANCEDESC"] = "Options that change how CraftBench is displayed"
 L["CONFIGDESC"] = "Open CraftBench configuration window"

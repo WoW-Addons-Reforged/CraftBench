@@ -14,7 +14,7 @@
 ## Notes-esES: Suite todo en uno para profesiones y fabricación
 ## Notes-ruRU: Универсальный интерфейс профессий и крафта
 ## Author: gOOvER
-## Version: 1.0.0-beta1
+## Version: 1.0.0-beta2
 ## Category-enUS: Professions
 ## Category-deDE: Berufe
 ## Category-esES: Profesiones
