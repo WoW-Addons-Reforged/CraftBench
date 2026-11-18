@@ -30,6 +30,7 @@
 ## X-Credits: Based on Skillet (yossa, bsmorgan, lilsparky, nogudnik, Slartie)
 ## X-Website: https://github.com/gOOvER/CraftBench
 ## X-Curse-Project-ID: 1813987
+## X-Wago-ID: O67b70N3
 ## SavedVariables: CraftBenchDB
 ## SavedVariablesPerCharacter: CraftBenchWho, CraftBenchDBPC, CraftBenchMemory, CraftBenchProfile
 ## OptionalDeps: Ace3, LibWindow-1.1, LibPeriodicTable-3.1, AchievementsUtils, AckisRecipeList, AtlasLootClassic, AuctionDB, Auctionator, Baganator, BeanCounter, CanIMogIt, CraftInfoAnywhere, DataStore, DataStore_Auctions, GatherMate2, GatherRoutes, GathererReforged, Journalator, OribosExchange, Overachiever, Questie, Syndicator, TradeSkillMaster, tekDebug

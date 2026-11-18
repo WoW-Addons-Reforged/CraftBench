@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- **CurseForge Project Metadata (`CraftBench.toc`)**: Added `## X-Curse-Project-ID: 1813987` for automated CurseForge packaging and release uploads.
+- **CurseForge & Wago.io Project Metadata (`CraftBench.toc`)**: Added `## X-Curse-Project-ID: 1813987` and `## X-Wago-ID: O67b70N3` for automated CurseForge/Wago.io packaging and release uploads.
 
 ### Fixed
 - **Retail 12.x Secret String Guard in Gathering Tooltip (`Core/CraftBenchGathering.lua`)**: Guarded `GameTooltipTextLeft*:GetText()` with `issecretvalue` / `canaccessvalue` / `pcall` and skipped non-world-owned tooltips (such as action bar buttons) to prevent `"attempt to compare local 'text' (a secret string value)"`.
