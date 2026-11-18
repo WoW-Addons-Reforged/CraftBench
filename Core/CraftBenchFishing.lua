@@ -484,14 +484,22 @@ function Fishing:Initialize()
 			if IsFishingLoot and IsFishingLoot() then
 				logFishingLoot()
 			end
-		elseif event == "UNIT_SPELLCAST_SUCCEEDED" and arg1 == "player" then
-			if FISHING_SPELLS[arg3] or getSpellNameSafe(arg3) == FISHING_SPELL_NAME then
+		elseif event == "UNIT_SPELLCAST_SUCCEEDED" and not (issecretvalue and issecretvalue(arg1)) and arg1 == "player" then
+			if not (issecretvalue and issecretvalue(arg3)) and (FISHING_SPELLS[arg3] or getSpellNameSafe(arg3) == FISHING_SPELL_NAME) then
 				local rec = currentZoneRecord()
 				if rec then rec.casts = (rec.casts or 0) + 1 end
 				updateCastButton()
 			end
-		elseif event == "CHAT_MSG_SKILL" and type(arg1) == "string" then
-			if arg1:find(FISHING_SPELL_NAME, 1, true) or arg1:find("Fishing", 1, true) or arg1:find("Angeln", 1, true) then
+		elseif event == "CHAT_MSG_SKILL" then
+			local isFishingUp = false
+			if type(arg1) == "string" and not (issecretvalue and issecretvalue(arg1)) then
+				isFishingUp = arg1:find(FISHING_SPELL_NAME, 1, true) ~= nil
+					or arg1:find("Fishing", 1, true) ~= nil
+					or arg1:find("Angeln", 1, true) ~= nil
+			elseif (GetTime() - (session.lastLootAt or -100)) < 5 then
+				isFishingUp = true
+			end
+			if isFishingUp then
 				session.ups = session.ups + 1
 				if CraftBench.FishingUI and CraftBench.FishingUI.Refresh then
 					CraftBench.FishingUI:Refresh()

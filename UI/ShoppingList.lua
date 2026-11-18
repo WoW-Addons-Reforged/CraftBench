@@ -139,6 +139,9 @@ local function createShoppingListFrame(self)
 	local windowManager = LibStub("LibWindow-1.1")
 	windowManager.RegisterConfig(frame, self.db.profile, shoppingListLocation)
 	windowManager.RestorePosition(frame)  -- restores scale also
+	if frame:GetNumPoints() == 0 then
+		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+	end
 	windowManager.MakeDraggable(frame)
 --
 -- lets play the resize me game!
@@ -1482,8 +1485,16 @@ function CraftBench:DisplayShoppingList(atBank, includeTools)
 	end
 	cache_list(self, includeTools)
 	local frame = self.shoppingList
-	if not frame:IsVisible() then
-		frame:Show()
+	if frame then
+		if frame:GetNumPoints() == 0 then
+			frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+		end
+		if not frame:IsVisible() then
+			frame:Show()
+		end
+		if frame.Raise then
+			frame:Raise()
+		end
 	end
 --
 -- true == use cached recipes, we just loaded them after all

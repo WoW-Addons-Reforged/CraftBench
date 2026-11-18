@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-11-18
+
+### Fixed
+- **Missing Anchor & Raise on Shopping List Window (`UI/ShoppingList.lua`, `UI/MainFrame.xml`)**: Added a default `CENTER` anchor fallback when `LibWindow-1.1` has no saved position yet (`GetNumPoints() == 0`), raised `CraftBenchShoppingList` to front on open, and fixed empty `y=""` offset in `MainFrame.xml`.
+- **Nil `currentTrade` / `tradeID` Guard in `GetSpellName` (`Core/TradeskillInfo.lua`)**: Guarded `GetTradeSkillLine()` and `GetTradeName()` against `nil` `self.currentTrade` / `tradeID` before calling `C_Spell.GetSpellName`.
+- **Secret Value Guard in Fishing Skill Event (`Core/CraftBenchFishing.lua`)**: Guarded `CHAT_MSG_SKILL` and `UNIT_SPELLCAST_SUCCEEDED` arguments with `issecretvalue` before indexing or comparing strings (falling back to recent fishing loot window timing for skill-up counting when `arg1` is a secret string).
+
 ## [1.0.0-beta2] - 2026-11-18
 
 ### Fixed

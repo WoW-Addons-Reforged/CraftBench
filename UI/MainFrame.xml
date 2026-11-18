@@ -2938,7 +2938,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="CraftBenchStartQueueButton" relativePoint="TOPRIGHT">
 						<Offset>
-							<AbsDimension x="5" y=""/>
+							<AbsDimension x="5" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -2962,7 +2962,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="CraftBenchEmptyQueueButton" relativePoint="TOPRIGHT">
 						<Offset>
-							<AbsDimension x="5" y=""/>
+							<AbsDimension x="5" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -2984,7 +2984,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="CraftBenchQueueOnlyButton" relativePoint="TOPRIGHT">
 						<Offset>
-							<AbsDimension x="5" y=""/>
+							<AbsDimension x="5" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>

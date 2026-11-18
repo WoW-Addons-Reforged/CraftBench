@@ -58,7 +58,9 @@ end
 
 -- Returns the name of the current trade skill
 function CraftBench:GetTradeName(tradeID)
-	local tradeName = C_Spell.GetSpellName(tonumber(tradeID))
+	local id = tonumber(tradeID)
+	if not id then return nil end
+	local tradeName = C_Spell.GetSpellName(id)
 	return tradeName
 end
 
@@ -124,6 +126,9 @@ end
 -- Gets the trade skill line, and knows how to do the right
 -- thing depending on whether or not this is a craft.
 function CraftBench:GetTradeSkillLine()
+	if not self.currentTrade then
+		return nil, 0, 0
+	end
 	local tradeName = C_Spell.GetSpellName(self.currentTrade)
 	local ranks = self:GetSkillRanks(self.currentPlayer, self.currentTrade)
 	local rank, maxRank
