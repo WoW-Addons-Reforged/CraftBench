@@ -5,9 +5,9 @@
 
   **All-in-One World of Warcraft Profession, Crafting Queue, Shopping List & Material-Processing Suite.**
 
-  [![Code Quality](https://github.com/gOOvER/CraftBench/actions/workflows/quality.yml/badge.svg)](https://github.com/gOOvER/CraftBench/actions/workflows/quality.yml)
-  [![Release](https://github.com/gOOvER/CraftBench/actions/workflows/release.yml/badge.svg)](https://github.com/gOOvER/CraftBench/actions/workflows/release.yml)
-  [![GitHub Release](https://img.shields.io/github/v/release/gOOvER/CraftBench?include_prereleases&label=Version&color=brightgreen&logo=github)](https://github.com/gOOvER/CraftBench/releases/latest)
+  [![Code Quality](https://github.com/WoW-Addons-Reforged/CraftBench/actions/workflows/quality.yml/badge.svg)](https://github.com/WoW-Addons-Reforged/CraftBench/actions/workflows/quality.yml)
+  [![Release](https://github.com/WoW-Addons-Reforged/CraftBench/actions/workflows/release.yml/badge.svg)](https://github.com/WoW-Addons-Reforged/CraftBench/actions/workflows/release.yml)
+  [![GitHub Release](https://img.shields.io/github/v/release/WoW-Addons-Reforged/CraftBench?include_prereleases&label=Version&color=brightgreen&logo=github)](https://github.com/WoW-Addons-Reforged/CraftBench/releases/latest)
   [![CurseForge](https://img.shields.io/badge/CurseForge-CraftBench-f16436?logo=curseforge&logoColor=white)](https://www.curseforge.com/wow/addons/craftbench)
   [![Wago.io](https://img.shields.io/badge/Wago.io-CraftBench-c1272d?logo=wagtail&logoColor=white)](https://addons.wago.io/addons/craftbench)
   [![WoW Versions](https://img.shields.io/badge/WoW-Retail%20%7C%20Classic%20%7C%20BCC%20%7C%20Wrath%20%7C%20Cata%20%7C%20MoP%20%7C%20Forever-f8b700?logo=battle.net&logoColor=white)](#-supported-wow-versions)

@@ -14,7 +14,7 @@
 ## Notes-esES: Suite todo en uno para profesiones y fabricación
 ## Notes-ruRU: Универсальный интерфейс профессий и крафта
 ## Author: gOOvER
-## Version: 1.0.0
+## Version: 1.0.0-beta1
 ## Category-enUS: Professions
 ## Category-deDE: Berufe
 ## Category-esES: Profesiones
@@ -28,7 +28,7 @@
 ## Category-zhTW: 專業技能
 ## X-License: GPL-3.0
 ## X-Credits: Based on Skillet (yossa, bsmorgan, lilsparky, nogudnik, Slartie)
-## X-Website: https://github.com/gOOvER/CraftBench
+## X-Website: https://github.com/WoW-Addons-Reforged/CraftBench
 ## X-Curse-Project-ID: 1813987
 ## X-Wago-ID: O67b70N3
 ## SavedVariables: CraftBenchDB
